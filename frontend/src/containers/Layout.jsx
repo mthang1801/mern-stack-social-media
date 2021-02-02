@@ -1,9 +1,12 @@
 import React from 'react'
-
-const Layout = () => {
+import Header from "../components/Header/Header";
+const Layout = ({children}) => {
   return (
     <div>
-      
+      <Header/>
+      <div>
+      {children}
+      </div>      
     </div>
   )
 }

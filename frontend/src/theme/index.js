@@ -1,4 +1,4 @@
-export default {
+const theme = {
   useCustomProperties : false ,
   useColorSchemeMediaQuery: true,
   colors: {
@@ -14,3 +14,5 @@ export default {
     },
   }
 }
+
+export {theme as default}

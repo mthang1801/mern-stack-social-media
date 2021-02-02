@@ -7,7 +7,7 @@ export const setLanguage = (lng) =>
     ? window.localStorage.setItem("blog-language", lng)
     : null;
 
-export const getLanguage = () => {
+const getLanguage = () => {
   if (typeof window !== "undefined") {
     const lang = window.localStorage.getItem("blog-language");
     if (!listLanguages.includes(lang)) {
@@ -18,7 +18,9 @@ export const getLanguage = () => {
   return null;
 };
 
-export default {
+const resources = {
   en,
   vi,
 };
+
+export {resources as default, getLanguage }

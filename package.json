@@ -4,8 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "installation": "npm install --prefix frontend && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node"
+    "server": "nodemon -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
+    "start": "node -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run client\" \"npm run server\" "
   },
   "keywords": [],
   "author": "",

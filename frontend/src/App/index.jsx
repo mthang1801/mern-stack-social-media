@@ -1,14 +1,19 @@
-import React, {useState} from "react" ;
+import React, { lazy, Suspense } from "react";
 import GlobalStyles from "./GlobalStyles";
-import {useColorMode} from "theme-ui"
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {useThemeUI} from "theme-ui"
+const HomePage = lazy(() => import("../pages/home"));
 function App() {
-  const [colorMode, setColorMode] = useColorMode()
+  const {colorMode} = useThemeUI()
   return (
-    <div>     
-      <GlobalStyles/>
-      <div>
-      </div>
-    </div>
+    <Router>
+      <GlobalStyles theme={colorMode}/>
+      <Switch>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Route exact path="/" component={HomePage} />
+        </Suspense>
+      </Switch>
+    </Router>
   );
 }
 
