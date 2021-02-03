@@ -8,10 +8,11 @@ import SettingAccount from "./SettingAccount";
 import Button from "../Controls/ButtonHeader";
 import { FaArrowLeft } from "react-icons/fa";
 import ButtonMenu from "../Controls/ButtonMenu"
-
+import {mutations} from "../../apollo/operations/mutations"
 import classNames from "classnames";
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
+  const {toggleButtonMenuMobile} = mutations
   return (
     <Wrapper>
       <div className={classNames("nav-header", { shorten: !openSearch })}>
@@ -42,7 +43,7 @@ const Header = () => {
             <Navigation />
           </div>
           <div className="nav-toggle">
-            <ButtonMenu/>
+            <ButtonMenu onClick={toggleButtonMenuMobile}/>
           </div>          
           <div className="control">
             <MessengerAndNotification />

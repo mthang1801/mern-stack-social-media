@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import classNames from "classnames";
-const Search = ({ openSearch, setOpenSearch }) => {
-  const [open, setOpen] = useState(false);
+const Search = ({ openSearch, setOpenSearch }) => {  
   return (
     <SearchForm openSearch={openSearch}>
       <input
@@ -51,6 +50,7 @@ const SearchForm = styled.form`
     background-color: transparent;
     cursor: pointer;
     transition: var(--mainTransition);
+    padding : 0 0.5rem;
     &:hover {
       opacity: 0.8;
     }
@@ -63,10 +63,10 @@ const SearchForm = styled.form`
       transition: var(--mainTransition);
     }
   }
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 768px) {    
     width : 100% ; 
     height : auto;
-    border-radius : 20px;
+    border-radius : 20px;    
   }
 `;
 

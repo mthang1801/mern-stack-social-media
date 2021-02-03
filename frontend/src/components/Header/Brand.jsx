@@ -5,7 +5,7 @@ import styled from "styled-components"
 const Brand = ({className}) => {
   return (
     <Link to="/" className={className}>
-      <img src={Image} alt="brand image"/>
+      <img src={Image} alt="brand"/>
     </Link>
   )
 }

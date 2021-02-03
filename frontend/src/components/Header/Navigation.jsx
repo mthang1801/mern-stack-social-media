@@ -7,7 +7,7 @@ const Navigation = () => {
   const [menu, setMenu] = useState([]);
   useEffect(() => {
     setMenu(i18n.store.data[lang].translation.navigationAuth);
-  }, [lang]);
+  }, [lang, i18n.store.data]);
   if (!menu.length) return null;
   return (
     <NavigationWrapper>
@@ -36,8 +36,9 @@ const NavigationWrapper = styled.ul`
   .nav-link {
     transition: var(--mainTransition);
     display: flex;    
+    flex-direction : column; 
     align-items: center;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     border-bottom: 2px solid transparent ;
     &:hover {
       border-bottom: 2px solid var(--dark);
@@ -48,6 +49,9 @@ const NavigationWrapper = styled.ul`
     font-size: 1.2rem;
     margin-top: 0.1rem;
     margin-right:0.15rem;
+  }
+  .nav-name{
+    font-size : 0.85rem;
   }
   .nav-link-active {
     color: var(--primary);

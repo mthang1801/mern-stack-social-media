@@ -1,7 +1,7 @@
 {
-  "name": "apollo",
+  "name": "mern-stack-social-media",
   "version": "1.0.0",
-  "description": "",
+  "description": "Social Media using MERN stack",
   "main": "index.js",
   "scripts": {
     "installation": "npm install --prefix frontend && npm install",
@@ -21,6 +21,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "graphql": "^15.5.0",
+    "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.13"
   },
