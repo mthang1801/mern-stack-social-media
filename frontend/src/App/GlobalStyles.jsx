@@ -55,6 +55,10 @@ export default createGlobalStyle`
   --color-heading-black: black;
   --color-accent: #d1dce5;
   --abyss : #07223d;
+  --color-background-default: #f0f0f0;
+  --color-text-default : #000;
+  --color-background-dark : #202020;
+  --color-text-dark : #fff;
   --gray-light: #dedede;
   --gray-deep : #bfbfbf;
   --mainTransition: 0.15s all;

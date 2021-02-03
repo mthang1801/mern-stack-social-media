@@ -1,10 +1,12 @@
 import React from "react";
-import {FaHome, FaUserFriends} from "react-icons/fa"
+import {FaHome, FaUserFriends, FaShopify} from "react-icons/fa"
 import {AiOutlineGlobal} from "react-icons/ai"
 import {ImNewspaper} from "react-icons/im"
 import {HiOutlineUserGroup} from "react-icons/hi"
-import {IoIosNotifications} from "react-icons/io"
+import {IoIosNotifications, IoMdApps, IoMdTrendingUp} from "react-icons/io"
 import {CgMoreO} from "react-icons/cg"
+import {MdCardMembership} from "react-icons/md"
+
 export const en = {
   translation: {
     navigationAuth: [
@@ -70,6 +72,28 @@ export const en = {
         name: "More",
         icon: () => <CgMoreO />,
       },
+    ],
+    explores : [
+      {
+        path : "/apps",
+        name : "Apps",
+        icon : () => <IoMdApps/>
+      },
+      {
+        path : "/upgrade-member",
+        name : "Upgrade member",
+        icon : () => <MdCardMembership/>
+      },
+      {
+        path : "/shop",
+        name : "Shop", 
+        icon : () => <FaShopify/>
+      },
+      {
+        path : "/trends",
+        name : "Trends", 
+        icon : () => <IoMdTrendingUp/>
+      }
     ],
     menu : "Menu"
   },

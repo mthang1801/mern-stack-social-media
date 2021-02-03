@@ -1,19 +1,15 @@
 import React , {useState, useEffect } from 'react'
 import styled from "styled-components";
-import useLanguage from "./useLanguage";
-import {Link} from "react-router-dom"
-const MobileMenuList = () => {
-  const {t, i18n, lang} = useLanguage();
-  const [menu, setMenu] = useState([]);
-  useEffect(() => {
-    setMenu(i18n.store.data[lang].translation.menuList)
-  }, [lang, setMenu, i18n.store.data])
- 
+import {Link} from "react-router-dom";
+import {useThemeUI} from "theme-ui"
+const MobileMenuList = ({aside, title, list}) => {  
+  const {colorMode} = useThemeUI()
+  if(!list || !list.length || !title) return null
   return (
-    <Wrapper>
-      <h5 className="menu-title">{t("menu")}</h5>
+    <Wrapper aside={!!aside} theme={colorMode}>
+      <h5 className="menu-title">{title}</h5>
       <ul>
-        {menu.map(item => (
+        {list.map(item => (
           <li key={item.name}>
             <Link to={item.path} className={"link-item"}>
               <span className="link-icon">{item.icon()}</span>
@@ -27,8 +23,12 @@ const MobileMenuList = () => {
 }
 
 const Wrapper = styled.div`  
+  background-color : ${({theme}) => theme==="default" ? "var(--color-background-default)" : "var(--color-background-dark)"};
+  color : ${({theme}) => theme==="default" ? "var(--color-text-default)" : "var(--color-text-dark)"};
   .menu-title{
-    padding : 1rem 1.6rem;
+    padding : 0.5rem 1.6rem;
+    font-size : var(--fontSize-1);
+    opacity : 0.5;
   }
   ul{
     list-style:  none ; 
@@ -38,7 +38,7 @@ const Wrapper = styled.div`
     margin : 0 1rem;
     justify-content : flex-start;
     align-items :center;  
-    padding : 0.6rem;  
+    padding : ${({aside}) => aside ? "0.25rem 0.6rem" : "0.6rem"};  
     transition : var(--mainTransition);
     &:hover{
       background-color : var(--gray-deep);
