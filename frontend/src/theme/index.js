@@ -3,7 +3,7 @@ const theme = {
   useColorSchemeMediaQuery: true,
   colors: {
     text: "#000",
-    background: "#fff",
+    background: "#f0f0f0",
     primary: '#07c',              
     modes: {
       dark: {
