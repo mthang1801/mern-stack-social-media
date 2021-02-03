@@ -7,12 +7,12 @@ import MessengerAndNotification from "./MessengerAndNotification";
 import SettingAccount from "./SettingAccount";
 import Button from "../Controls/ButtonHeader";
 import { FaArrowLeft } from "react-icons/fa";
-import ButtonMenu from "../Controls/ButtonMenu"
-import {mutations} from "../../apollo/operations/mutations"
+import ButtonMenu from "../Controls/ButtonMenu";
+import { mutations } from "../../apollo/operations/mutations";
 import classNames from "classnames";
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
-  const {toggleButtonMenuMobile} = mutations
+  const { toggleButtonMenuMobile } = mutations;
   return (
     <Wrapper>
       <div className={classNames("nav-header", { shorten: !openSearch })}>
@@ -43,8 +43,8 @@ const Header = () => {
             <Navigation />
           </div>
           <div className="nav-toggle">
-            <ButtonMenu onClick={toggleButtonMenuMobile}/>
-          </div>          
+            <ButtonMenu onClick={toggleButtonMenuMobile} />
+          </div>
           <div className="control">
             <MessengerAndNotification />
           </div>
@@ -65,11 +65,10 @@ const Wrapper = styled.header`
   display: flex;
   align-items: center;
   flex-wrap: no-wrap;
-  overflow: hidden;
 
   .nav-header {
     display: flex;
-    align-items: center;    
+    align-items: center;
     transition: var(--mainTransition);
     flex-wrap: nowrap;
     .nav-brand,
@@ -89,26 +88,28 @@ const Wrapper = styled.header`
   }
 
   .nav-controls {
-    flex : 1 ;    
-    display : flex;    
-    justify-content : space-between;
-    align-items: center;    
-    transition : var(--mainTransition);
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--mainTransition);
+    height: 100%;
     .nav-bar {
       display: none;
-    }    
-    .center{
-      display : flex;
+    }
+    .center {
+      display: flex;
+      height: 100%;
       align-items: center;
-      justify-content : space-between;
-      flex: 1 ;           
-      padding : 0 0.5rem;
-    }          
-    .nav-toggle{
-      margin-right : 0.75rem;
-    }  
+      justify-content: space-between;
+      flex: 1;
+      padding: 0 0.5rem;
+    }
+    .nav-toggle {
+      margin-right: 0.75rem;
+    }
   }
-  
+
   @media screen and (max-width: 768px) {
     .hide {
       width: 0 !important;
@@ -129,19 +130,27 @@ const Wrapper = styled.header`
     }
     .nav-controls {
       .nav-bar {
-        display: block;                           
+        display: block;
+        height: 100%;
       }
-      .nav-toggle{
-        display : none;        
+      .nav-toggle {
+        display: none;
       }
-      .center{
-        justify-content: flex-end ;
+      .center {
+        justify-content: flex-end;
       }
-      .control{
-        padding : 0 0.5rem;
+      .control {
+        padding: 0 0.5rem;
       }
     }
-    
+  }
+  @media screen and (min-width: 992px) {
+    .nav-header{
+      width : 35%;
+    }
+    .nav-controls{
+      width : 65%;
+    }
   }
 `;
 
