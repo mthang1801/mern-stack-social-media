@@ -12,7 +12,7 @@ import { mutations } from "../../apollo/operations/mutations";
 import classNames from "classnames";
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
-  const { toggleButtonMenuMobile } = mutations;
+  const { toggleButtonMenu } = mutations;
   return (
     <Wrapper>
       <div className={classNames("nav-header", { shorten: !openSearch })}>
@@ -39,12 +39,13 @@ const Header = () => {
       </div>
       <div className="nav-controls">
         <div className="center">
+        <div className="nav-toggle">
+            <ButtonMenu onClick={toggleButtonMenu} />
+          </div>
           <div className="nav-bar">
             <Navigation />
           </div>
-          <div className="nav-toggle">
-            <ButtonMenu onClick={toggleButtonMenuMobile} />
-          </div>
+        
           <div className="control">
             <MessengerAndNotification />
           </div>
@@ -128,14 +129,15 @@ const Wrapper = styled.header`
     .close-search {
       display: none;
     }
+    .nav-header{
+      width  :40%;
+    }
     .nav-controls {
+      width : 60%; 
       .nav-bar {
         display: block;
         height: 100%;
-      }
-      .nav-toggle {
-        display: none;
-      }
+      }      
       .center {
         justify-content: flex-end;
       }
@@ -148,8 +150,11 @@ const Wrapper = styled.header`
     .nav-header{
       width : 35%;
     }
-    .nav-controls{
+    .nav-controls{      
       width : 65%;
+      .nav-toggle {
+        display: none;
+      }
     }
   }
 `;

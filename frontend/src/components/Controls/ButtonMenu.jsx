@@ -25,6 +25,7 @@ const ToggleButton = styled.div`
     height: 2px; 
     background-color : var(--purple);        
   }
+
   &:hover{
     span {
       background-color : var(--indigo);     

@@ -1,8 +1,10 @@
-import createToggleButtonMenuMobile from "./toggleButtonMenuMobile";
-import {toggleButtonMenuMobileVar} from "../../cache"
+import createToggleButtonMenu from "./toggleButtonMenu";
+import createSetPostStatus from "./setPostStatus";
+import {toggleButtonMenuVar, setPostStatusVar} from "../../cache"
 
 const mutations = {
-  toggleButtonMenuMobile : createToggleButtonMenuMobile(toggleButtonMenuMobileVar)
+  toggleButtonMenu : createToggleButtonMenu(toggleButtonMenuVar),
+  setPostStatus : createSetPostStatus(setPostStatusVar)
 }
 
 export {mutations}

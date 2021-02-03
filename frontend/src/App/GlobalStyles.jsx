@@ -55,6 +55,10 @@ export default createGlobalStyle`
   --color-heading-black: black;
   --color-accent: #d1dce5;
   --abyss : #07223d;
+  --color-background-default: #f0f0f0;
+  --color-text-default : #000;
+  --color-background-dark : #202020;
+  --color-text-dark : #fff;
   --gray-light: #dedede;
   --gray-deep : #bfbfbf;
   --mainTransition: 0.15s all;
@@ -87,7 +91,7 @@ export default createGlobalStyle`
     Times, serif;
   --fontFamily: system-ui,-apple-system,BlinkMacSystemFont,Roboto,Ubuntu,"Helvetica Neue",sans-serif;
   --gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-  --lightShadow: 2px 5px 3px 1px rgba(0, 0, 0, 0.5);
+  --lightShadow: 2px 3px 3px 1px rgba(0, 0, 0, 0.2);
   --darkShadow: 4px 10px 5px 1px rgba(0, 0, 0, 0.5);    
   font-size : ${({rootFont}) => rootFont ? `${rootFont}px` : "16px"}
 }

@@ -17,6 +17,7 @@ const Button = styled.button`
   border: none ; 
   transition: var(--mainTransition);
   cursor: pointer;
+  
   &:hover {
     background-color: var(--gray-deep);
   }

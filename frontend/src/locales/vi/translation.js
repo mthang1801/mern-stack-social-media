@@ -1,10 +1,12 @@
 import React from "react";
-import {FaHome, FaUserFriends} from "react-icons/fa"
+import {FaHome, FaUserFriends, FaShopify, FaGlobeAmericas} from "react-icons/fa"
 import {AiOutlineGlobal} from "react-icons/ai"
 import {ImNewspaper} from "react-icons/im"
 import {HiOutlineUserGroup} from "react-icons/hi"
-import {IoIosNotifications} from "react-icons/io"
+import {IoIosNotifications, IoMdApps, IoMdTrendingUp, IoMdPhotos} from "react-icons/io"
 import {CgMoreO} from "react-icons/cg"
+import {MdCardMembership, MdInsertEmoticon} from "react-icons/md"
+
 export const vi = {
   translation : {
     navigationAuth : [
@@ -71,6 +73,49 @@ export const vi = {
         icon: () => <CgMoreO />,
       },
     ],
+    explores : [
+      {
+        path : "/apps",
+        name : "Apps",
+        icon : () => <IoMdApps/>
+      },
+      {
+        path : "/upgrade-member",
+        name : "Upgrade member",
+        icon : () => <MdCardMembership/>
+      },
+      {
+        path : "/shop",
+        name : "Shop", 
+        icon : () => <FaShopify/>
+      },
+      {
+        path : "/trends",
+        name : "Trends", 
+        icon : () => <IoMdTrendingUp/>
+      }
+    ],
+    status : [
+      {
+        name : "Công khai", 
+        icon : () => <FaGlobeAmericas/>
+      },
+      {
+        name : "Riêng tư", 
+        icon : () => <FaUserFriends/>
+      }
+    ],
+    statusFooter: [
+      {
+        name : "Hình ảnh/ Videos", 
+        icon : () => <IoMdPhotos/>
+      },
+      {
+        name : "Cảm xúc",
+        icon : () => <MdInsertEmoticon/>
+      }      
+    ],
+    mindText:  "Bạn đang nghĩ gì?",
     menu : "Danh mục"
   }
 }

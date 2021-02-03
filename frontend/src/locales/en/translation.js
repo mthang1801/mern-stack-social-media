@@ -1,10 +1,12 @@
 import React from "react";
-import {FaHome, FaUserFriends} from "react-icons/fa"
+import {FaHome, FaUserFriends, FaShopify, FaGlobeAmericas} from "react-icons/fa"
 import {AiOutlineGlobal} from "react-icons/ai"
 import {ImNewspaper} from "react-icons/im"
 import {HiOutlineUserGroup} from "react-icons/hi"
-import {IoIosNotifications} from "react-icons/io"
+import {IoIosNotifications, IoMdApps, IoMdTrendingUp, IoMdPhotos} from "react-icons/io"
 import {CgMoreO} from "react-icons/cg"
+import {MdCardMembership, MdInsertEmoticon} from "react-icons/md"
+
 export const en = {
   translation: {
     navigationAuth: [
@@ -71,6 +73,51 @@ export const en = {
         icon: () => <CgMoreO />,
       },
     ],
+    explores : [
+      {
+        path : "/apps",
+        name : "Apps",
+        icon : () => <IoMdApps/>
+      },
+      {
+        path : "/upgrade-member",
+        name : "Upgrade member",
+        icon : () => <MdCardMembership/>
+      },
+      {
+        path : "/shop",
+        name : "Shop", 
+        icon : () => <FaShopify/>
+      },
+      {
+        path : "/trends",
+        name : "Trends", 
+        icon : () => <IoMdTrendingUp/>
+      }
+    ],
+    status : [
+      {
+        name : "public", 
+        icon : () => <FaGlobeAmericas/>
+      },
+      {
+        name : "private", 
+        icon : () => <FaUserFriends/>
+      }
+    ],
+    statusFooter: [
+      {
+        name : "Photos/Videos", 
+        icon : () => <IoMdPhotos/>,
+        color : "var(--success)"
+      },
+      {
+        name : "Emoji",
+        icon : () => <MdInsertEmoticon/>,
+        color : "var(--orange)"
+      }      
+    ],
+    mindText:  "What's on your mind?",
     menu : "Menu"
   },
 };
