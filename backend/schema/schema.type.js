@@ -48,6 +48,7 @@ export const schemaType = gql`
   type UserAuthPayload{
     user : User! 
     token : String!
+    tokenExpire : String! 
   }
   type PostSubscriptionPayload{
     action : ActionEnum! 

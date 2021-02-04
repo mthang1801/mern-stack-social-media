@@ -243,5 +243,5 @@ export default createGlobalStyle`
   }
   button{
     color : inherit;     
-  }  
+  }    
 `

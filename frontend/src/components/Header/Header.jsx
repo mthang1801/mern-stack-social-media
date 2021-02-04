@@ -8,7 +8,7 @@ import SettingAccount from "./SettingAccount";
 import Button from "../Controls/ButtonHeader";
 import { FaArrowLeft } from "react-icons/fa";
 import ButtonMenu from "../Controls/ButtonMenu";
-import { mutations } from "../../apollo/operations/mutations";
+import mutations from "../../apollo/operations/mutations";
 import classNames from "classnames";
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);

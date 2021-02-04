@@ -1,3 +1,5 @@
 export {GET_TOGGLE_BUTTON_MENU} from "./getToggleButtonMenu"
 export {GET_POST_STATUS} from "./getPostStatus"
 export {GET_POSTS} from "./getPosts"
+export {GET_USER} from "./getUser"
+export {LOGIN} from "./login"

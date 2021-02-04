@@ -115,6 +115,11 @@ export const vi = {
         icon : () => <MdInsertEmoticon/>
       }      
     ],
+    auth : {
+      login : "Đăng nhập",
+      signup : "Đăng ký",
+      signout : "Đăng xuất"
+    },    
     mindText:  "Bạn đang nghĩ gì?",
     menu : "Danh mục"
   }
