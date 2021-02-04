@@ -1,7 +1,8 @@
 import {InMemoryCache, makeVar} from "@apollo/client"
-import {ToggleButtonMenu, PostStatus} from "./models"
+import {ToggleButtonMenu, PostStatus, User} from "./models"
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 const setPostStatusVar = makeVar(PostStatus)
+const setUserVar = makeVar(User);
 const cache = new InMemoryCache({
   typePolicies : {
     Query : {
@@ -11,10 +12,13 @@ const cache = new InMemoryCache({
         },
         postStatus : {
           read : () => setPostStatusVar()
+        },
+        user : {
+          read : () => setUserVar()
         }
       }
     }
   }
 })
 
-export {cache, toggleButtonMenuVar, setPostStatusVar}
+export {cache, toggleButtonMenuVar, setPostStatusVar, setUserVar}

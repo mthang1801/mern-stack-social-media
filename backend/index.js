@@ -4,8 +4,7 @@ import connectDB from "./config/connectDB";
 import schema from "./schema";
 import resolvers from "./resolvers";
 import { createServer } from "http";
-import getAuthUser from "./utils/getAuthUser"
-import jwt from "jsonwebtoken"
+import path from "path"
 const schemas = mergeSchemas({
   resolvers,
   schemas: [schema],
@@ -15,6 +14,8 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/images", express.static(path.join(__dirname, "images")))
 
 const server = new ApolloServer({
   schema: schemas,

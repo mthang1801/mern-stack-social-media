@@ -117,6 +117,11 @@ export const en = {
         color : "var(--orange)"
       }      
     ],
+    auth : {
+      login : "Login", 
+      signup : "Sign up",
+      signout : "Sign Out"
+    },
     mindText:  "What's on your mind?",
     menu : "Menu"
   },
