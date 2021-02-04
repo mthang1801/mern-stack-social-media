@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from "../containers/Layout";
 import styled from "styled-components";
-import PostToolbar from "../components/Body/PostToolbar";
+import PostToolbar from "../components/Post/PostToolbar";
 const Home = () => {
   return (
     <Layout>
