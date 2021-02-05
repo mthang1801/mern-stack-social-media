@@ -8,6 +8,7 @@ export const schemaType = gql`
     password : String
     friends : [User!]!
     posts : [Post!]!
+    avatar: String
     comments : [Comment!]!    
     createdAt : String
     updatedAt : String

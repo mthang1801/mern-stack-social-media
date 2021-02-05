@@ -6,6 +6,9 @@ export const userResolvers = {
     },
     loginUser : (_, args, ctx, info) => {
       return userController.loginUser(args.data)
+    },
+    fetchCurrentUser : (_, args, {req}, info) => {     
+      return userController.fetchCurrentUser(req)
     }
   },
   Mutation : {

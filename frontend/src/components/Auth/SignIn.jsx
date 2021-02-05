@@ -23,14 +23,14 @@ import mutations from "../../apollo/operations/mutations";
 function withLoginQuery(WrappedComponent) {
   return function QueryWrapper(props) {
     const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN);
-    const { setUser } = mutations;
+    const { setCurrentUser } = mutations;
     return (
       <WrappedComponent
         data={data}
         loading={loading}
         error={error}
         loginUser={loginUser}
-        setUser={setUser}
+        setCurrentUser={setCurrentUser}
         {...props}
       />
     );
@@ -64,7 +64,7 @@ const SignIn = withLoginQuery(
       }
     }
     componentWillUnmount() {
-      clearTimeout(this.timer);
+      clearTimeout(this.timer);      
     }
 
     handleChange = (e) => {
@@ -77,8 +77,11 @@ const SignIn = withLoginQuery(
       }
       if (prevProps.data !== this.props.data && this.props.data) {
         const { user, token, tokenExpire } = this.props.data.loginUser;
+        console.log(Date.now() + tokenExpire * 1000)
         this.clearForm();
-        this.props.setUser({ variables: { user } });
+        this.props.setCurrentUser({ variables: { user } });
+        localStorage.removeItem("token");
+        localStorage.removeItem("tokenExpire");
         localStorage.setItem("token", token);
         localStorage.setItem(
           "tokenExpire",
@@ -90,7 +93,8 @@ const SignIn = withLoginQuery(
       this.setState({
         email: "",
         password: "",
-        disabled : true
+        disabled : true,
+        loaded : false 
       });
       setTimeout(() => {
         this.setState({ loaded: true });

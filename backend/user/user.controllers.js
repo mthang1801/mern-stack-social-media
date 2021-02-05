@@ -1,5 +1,5 @@
 import {User} from "./user.model"
-import { UserInputError} from "apollo-server-express"
+import { UserInputError, AuthenticationError} from "apollo-server-express"
 import {generateToken} from "../utils/token"
 import bcrypt from "bcryptjs"
 import getAuthUser from "../utils/getAuthUser"
@@ -51,5 +51,15 @@ export const userController = {
       tokenExpire : process.env.JWT_TOKEN_EXPIRE
     }
   },
+  fetchCurrentUser : async (req) => {  
+    const userId = getAuthUser(req);    
+    
+    const user = await User.findById(userId);
+    if(!user){
+      throw new AuthenticationError("User not found");
+    }    
+    return user;
+  },
   hidePassword : () => "***"
+ 
 }

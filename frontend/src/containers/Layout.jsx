@@ -11,7 +11,7 @@ const Layout = ({children, className}) => {
   const getToggleButtonMenu = useQuery(GET_TOGGLE_BUTTON_MENU);   
   const {toggleButtonMenu} = getToggleButtonMenu.data;
   const {menu, explores} = useMenuList()
-  
+    
   return (
     <div className={className}>
       <Header/>

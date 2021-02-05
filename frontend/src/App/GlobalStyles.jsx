@@ -59,6 +59,8 @@ export default createGlobalStyle`
   --color-text-default : #000;
   --color-background-dark : #202020;
   --color-text-dark : #fff;
+  --color-card-dark : #2d2f31;
+  --gray-dark : #454545;
   --gray-light: #dedede;
   --gray-deep : #bfbfbf;
   --mainTransition: 0.15s all;
@@ -90,9 +92,9 @@ export default createGlobalStyle`
   --fontFamily-serif: "Merriweather", "Georgia", Cambria, "Times New Roman",
     Times, serif;
   --fontFamily: system-ui,-apple-system,BlinkMacSystemFont,Roboto,Ubuntu,"Helvetica Neue",sans-serif;
-  --gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-  --lightShadow: 2px 3px 3px 1px rgba(0, 0, 0, 0.2);
-  --darkShadow: 4px 10px 5px 1px rgba(0, 0, 0, 0.5);    
+  --gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));  
+  --lightShadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.05);
+  --darkShadow: 4px 10px 5px 1px rgba(0, 0, 0, 0.3);    
   font-size : ${({rootFont}) => rootFont ? `${rootFont}px` : "16px"}
 }
   *,:after, :before {
@@ -237,6 +239,10 @@ export default createGlobalStyle`
     &:hover{             
       opacity : 0.85;
     }    
+  }
+
+  small{
+    color : var(--gray);
   }
   span.link{
     color : inherit;
