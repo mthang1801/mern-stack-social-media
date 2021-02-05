@@ -5,6 +5,7 @@ import {useThemeUI} from "theme-ui"
 const MobileMenuList = ({aside, title, list}) => {  
   const {colorMode} = useThemeUI()
   if(!list || !list.length || !title) return null
+  console.log(colorMode)
   return (
     <Wrapper aside={!!aside} theme={colorMode}>
       <h5 className="menu-title">{title}</h5>
@@ -23,8 +24,8 @@ const MobileMenuList = ({aside, title, list}) => {
 }
 
 const Wrapper = styled.div`  
-  background-color : ${({theme}) => theme==="default" ? "var(--color-background-default)" : "var(--color-background-dark)"};
-  color : ${({theme}) => theme==="default" ? "var(--color-text-default)" : "var(--color-text-dark)"};
+  background-color : ${({theme}) => theme=== "dark" ? "var(--color-background-dark)" : "var(--color-background-default)"  };
+  color : ${({theme}) => theme=== "dark" ? "var(--color-text-dark)" : "var(--color-text-default)" };  
   .menu-title{
     padding : 0.5rem 1.6rem;
     font-size : var(--fontSize-1);
@@ -40,8 +41,9 @@ const Wrapper = styled.div`
     align-items :center;  
     padding : ${({aside}) => aside ? "0.25rem 0.6rem" : "0.6rem"};  
     transition : var(--mainTransition);
+    border : 1px solid transparent ;
     &:hover{
-      background-color : var(--gray-deep);
+      border : 1px solid var(--gray-light);
       border-radius : 4px;      
     }        
   }

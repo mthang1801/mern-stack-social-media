@@ -3,17 +3,18 @@ import useLanguage from "../Global/useLanguage";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import Tooltips from "./Tooltips";
+import {useThemeUI} from "theme-ui"
 const Navigation = () => {
   const { i18n, lang } = useLanguage();
   const [menu, setMenu] = useState([]);
   const [showTooltips, setshowTooltips] = useState("") ; 
-
+  const {colorMode} = useThemeUI()
   useEffect(() => {
     setMenu(i18n.store.data[lang].translation.navigationAuth);
   }, [lang, i18n.store.data]);
   if (!menu.length) return null;
   return (
-    <NavigationWrapper>
+    <NavigationWrapper theme={colorMode}>
       {menu.map((item) => (
         <li key={item.name} className="nav-item">
           <NavLink
@@ -57,7 +58,7 @@ const NavigationWrapper = styled.ul`
 
     border-bottom: 2px solid transparent;
     &:hover {
-      border-bottom: 2px solid var(--dark);
+      border-bottom: 2px solid ${({theme}) => theme === "dark" ? "var(--light)" : "var(--dark)"} ;
     }
   }
   .nav-icon {
@@ -71,6 +72,7 @@ const NavigationWrapper = styled.ul`
   }
   .nav-link-active {
     color: var(--primary);
+    border-bottom: 2px solid var(--primary) !important ;
   }
   @media screen and (min-width: 768px) and (max-width: 992px) {
     .nav-name {

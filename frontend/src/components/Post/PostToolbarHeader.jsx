@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import Button from "../Controls/ButtonHeader";
+import Button from "../Controls/ButtonDefault";
 import Avatar from "../../assets/images/mvt-icon.png";
 import { BsArrowsFullscreen } from "react-icons/bs";
 import { GET_POST_STATUS } from "../../apollo/operations/queries";
@@ -7,6 +7,8 @@ import { useQuery } from "@apollo/client";
 import useLanguage from "../Global/useLanguage";
 import styled from "styled-components";
 import classNames from "classnames";
+import { useThemeUI } from "theme-ui";
+import {darken} from "polished"
 const PostToolbarHeader = () => {
   const getPostStatus = useQuery(GET_POST_STATUS);
   const { i18n, lang } = useLanguage();
@@ -15,6 +17,7 @@ const PostToolbarHeader = () => {
   const [listStatus, setListStatus] = useState([]);
   const [toggleStatus, setToggleStatus] = useState(false);
   const btnStatusRef = useRef(false);
+  const { colorMode } = useThemeUI();
   useEffect(() => {
     setCurrentStatus(
       i18n.store.data[lang].translation.status.find(
@@ -39,7 +42,7 @@ const PostToolbarHeader = () => {
       });
   }, []);
   return (
-    <ToolbarHeading>
+    <ToolbarHeading theme={colorMode}>
       <div className="user-btn-avatar">
         <Button>
           <img src={Avatar} alt="user" />
@@ -80,6 +83,7 @@ const PostToolbarHeader = () => {
 
 const ToolbarHeading = styled.div`
   display: flex;
+  padding : 0.25rem 0.5rem;
   align-items: center;
   .user-btn-avatar {
     margin-right: 1rem;
@@ -92,13 +96,19 @@ const ToolbarHeading = styled.div`
     display: inline-flex;
     align-items: center;
     padding: 0.25rem 0.5rem;
-    background-color: var(--gray-light);
+    background-color: ${({ theme }) =>
+      theme === "dark" ? "var(--gray-dark)" : "var(--white)"};
     border-radius: 0.6rem;
     outline: none;
     border: none;
     cursor: pointer;
     &:hover {
-      background-color: var(--gray-deep);
+      &:hover {
+        background-color: ${({ theme }) =>
+          theme === "dark"
+            ? `${darken(0.1, "#454545")}`
+            : `${darken(0.005, "#dedede")}`};
+      }
     }
   }
   .status {
@@ -117,7 +127,8 @@ const ToolbarHeading = styled.div`
     border-radius: 0.5rem;
     overflow: hidden;
     transition: var(--mainTransition);
-    background-color : var(--white);
+    background-color: ${({ theme }) =>
+      theme === "dark" ? "var(--gray-dark)" : "var(--white)"};
   }
   .show-status {
     visibility: visible;
@@ -133,7 +144,10 @@ const ToolbarHeading = styled.div`
     }
     cursor: pointer;
     &:hover {
-      background-color: var(--gray-deep);
+      background-color: ${({ theme }) =>
+          theme === "dark"
+            ? `${darken(0.1, "#454545")}`
+            : `${darken(0.005, "#dedede")}`};
     }
   }
   .status-name {

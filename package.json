@@ -26,7 +26,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.13",
     "react-custom-scrollbars": "^4.2.1",
-    "react-google-recaptcha": "^2.1.0"
+    "react-google-recaptcha": "^2.1.0",
+    "react-switch": "^6.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",

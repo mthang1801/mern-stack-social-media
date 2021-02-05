@@ -2,7 +2,7 @@ import React from 'react'
 import styled from "styled-components";
 import {FaFacebookMessenger} from "react-icons/fa"
 import {IoMdNotifications} from "react-icons/io"
-import Button from "../Controls/ButtonHeader"
+import Button from "../Controls/ButtonDefault"
 const Control = () => {
   
   return (
