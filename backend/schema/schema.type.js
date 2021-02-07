@@ -15,13 +15,20 @@ export const schemaType = gql`
   }
   type Post{
     _id : ID! 
-    title : String! 
-    content : String!
+    text : String!
+    tags : [String!]
+    mentions : [User!]
     status : PostStatus!
+    files : [File!]
     author : User! 
     comments : [Comment]
     createdAt : String!
     updatedAt : String!
+  }
+  type File{
+    filename: String!
+    mimetype: String!
+    encoding: String!
   }
   type Comment {
     _id : ID! 

@@ -7,7 +7,7 @@ export const postResolvers = {
     posts: (_, args, { req }, info) => postControllers.posts(req, args.query),
   },
   Mutation: {
-    createPost: (_, args, { req }, info) =>
+    createPost: (_, args, { req }, info) =>    
       postControllers.createPost(
         req,
         args.data,

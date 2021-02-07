@@ -6,6 +6,7 @@ import theme from "./theme";
 import reportWebVitals from "./reportWebVitals";
 import { client } from "./apollo/client";
 import { ApolloProvider } from "@apollo/client";
+
 import "./i18n";
 ReactDOM.render(
   <React.StrictMode>
