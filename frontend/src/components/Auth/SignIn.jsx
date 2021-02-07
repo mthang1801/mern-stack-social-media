@@ -20,6 +20,7 @@ import GoogleAuth from "./FacebookAuth";
 import { LOGIN } from "../../apollo/operations/queries";
 import { useLazyQuery } from "@apollo/client";
 import mutations from "../../apollo/operations/mutations";
+import {login} from "../../utils/auth"
 function withLoginQuery(WrappedComponent) {
   return function QueryWrapper(props) {
     const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN);
@@ -76,17 +77,10 @@ const SignIn = withLoginQuery(
         this.clearForm();
       }
       if (prevProps.data !== this.props.data && this.props.data) {
-        const { user, token, tokenExpire } = this.props.data.loginUser;
-        console.log(Date.now() + tokenExpire * 1000)
-        this.clearForm();
-        this.props.setCurrentUser({ variables: { user } });
-        localStorage.removeItem("token");
-        localStorage.removeItem("tokenExpire");
-        localStorage.setItem("token", token);
-        localStorage.setItem(
-          "tokenExpire",
-          new Date(Date.now() + tokenExpire * 1000)
-        );
+        const { user, token, tokenExpire } = this.props.data.loginUser;                
+        this.props.setCurrentUser({...user});
+        login(token, tokenExpire)        
+        this.clearForm();        
       }
     }
     clearForm = () => {
