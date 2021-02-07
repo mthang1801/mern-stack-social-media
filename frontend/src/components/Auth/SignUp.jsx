@@ -20,6 +20,7 @@ import GoogleLogin from "./FacebookAuth";
 import { useMutation } from "@apollo/client";
 import { SIGNUP } from "../../apollo/operations/mutations";
 import mutations from "../../apollo/operations/mutations";
+import {login} from "../../utils/auth"
 const INITIAL_STATE = {
   controls: {
     name: {
@@ -86,14 +87,14 @@ const INITIAL_STATE = {
 function withSignUpMutation(WrappedComponent) {
   return function MutationWrapper(props) {
     const [createUser, { data, loading, error }] = useMutation(SIGNUP, {errorPolicy : "all"});
-    const {setCurrentUser} = mutations
+    const {setCurrentUser} = mutations    
     return (
       <WrappedComponent
         createUser={createUser}        
         data={data}
         setCurrentUser={setCurrentUser}
         loading={loading}        
-        error={error}
+        error={error}        
         {...props}
       />
     );
@@ -117,13 +118,10 @@ const SignUp = withSignUpMutation(
         this.clearForm();        
       }
       if(prevProps.data !== this.props.data && this.props.data )  {
-        const { user, token, tokenExpire} = this.props.data.createUser;     
+        const { user, token, tokenExpire} = this.props.data.createUser;             
+        this.props.setCurrentUser({...user})
+        login(token, tokenExpire)
         this.clearForm() ;
-        this.props.setCurrentUser({variables : {user}})
-        localStorage.removeItem("token");
-        localStorage.removeItem("tokenExpire");
-        localStorage.setItem("token", token);
-        localStorage.setItem("tokenExpire", new Date (Date.now() + tokenExpire * 1000 ) )
       }
     }
 

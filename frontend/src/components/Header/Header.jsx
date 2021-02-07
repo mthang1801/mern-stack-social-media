@@ -26,12 +26,14 @@ const Header = () => {
     }
     return () => _isMounted = false ;
   }, [])
-  useEffect(() => {    
-    console.log(data)    
+  useEffect(() => {        
     if(data && data.user){
       setCurrentUser({...data.user})
-    }        
+    }else{
+      setCurrentUser(null)
+    }
   },[data])
+  
   const location = useLocation();  
   const history = useHistory()
   const { toggleButtonMenu } = mutations;     
@@ -64,6 +66,9 @@ const Header = () => {
       <div className="nav-auth">
         <button className="btn btn-login" onClick={directToLogin}>Login</button>
         <button className="btn btn-signup" onClick={directToSignUp}>Sign up</button>
+        <div className="setting-account">
+        <SettingAccount />
+      </div>
       </div>
     </div>
   );
