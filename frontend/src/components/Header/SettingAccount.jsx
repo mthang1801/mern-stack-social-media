@@ -165,7 +165,8 @@ const SettingWrapper = styled.div`
   }
 
   .user-profile{
-    border-bottom : 1px solid var(--gray-light);    
+    border-bottom : 1px solid var(--gray-light);   
+    margin-bottom: 0.5rem; 
   }
   
   .direct-user-profile{    

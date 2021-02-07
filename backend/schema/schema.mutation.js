@@ -3,8 +3,8 @@ import {gql} from "apollo-server-express";
 export const schemaMutation = gql`
   type Mutation{
     createUser(data : CreateUserInput!) : UserAuthPayload!
-    createPost(data : CreatePostInput!) : Post!
-    updatePost(postId : ID!, data : UpdatePostInput) : Post!
+    createPost(data : PostInput!) : Post!
+    updatePost(postId : ID!, data : PostInput!) : Post!
     deletePost(postId: ID!) : Post!
     createComment(postId : ID!, data : CommentInput!) : Comment! 
     updateComment(commentId : ID!, data : CommentInput!) : Comment!

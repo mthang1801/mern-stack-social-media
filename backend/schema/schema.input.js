@@ -10,16 +10,17 @@ export const schemaInput = gql`
     email : String! 
     password : String!
   }
-  input CreatePostInput{
-    title : String! 
-    content : String! 
+  
+  input PostInput{
+    text : String !
+    mentions : [String!]!
+    tags : [String!]
+    fileNames : [String!]
+    fileEncoding : [String!]
+    fileMimetype : [String!]
     status : String    
   }
-  input UpdatePostInput{
-    title : String 
-    content : String
-    status : String
-  }
+  
   input CommentInput{
     content : String!
   }

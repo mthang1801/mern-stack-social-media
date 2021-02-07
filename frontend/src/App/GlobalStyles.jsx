@@ -241,6 +241,17 @@ export default createGlobalStyle`
     }    
   }
 
+  textarea{
+    width : 100%;
+    background-color : ${({ theme }) =>
+    theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
+    border:  none ;
+    outline : none  ;
+    color : inherit ; 
+    font-family : var(--fontFamily);
+    font-size : 1em;
+  }
+
   small{
     color : var(--gray);
   }
@@ -250,4 +261,7 @@ export default createGlobalStyle`
   button{
     color : inherit;     
   }    
+  .slick-next:before, .slick-prev:before{
+    font-size : 30px;
+  }
 `

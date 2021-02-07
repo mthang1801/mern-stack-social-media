@@ -8,7 +8,8 @@ import useLanguage from "../Global/useLanguage";
 import styled from "styled-components";
 import classNames from "classnames";
 import { useThemeUI } from "theme-ui";
-import {darken} from "polished"
+import { darken } from "polished";
+
 const PostToolbarHeader = () => {
   const getPostStatus = useQuery(GET_POST_STATUS);
   const { i18n, lang } = useLanguage();
@@ -83,7 +84,7 @@ const PostToolbarHeader = () => {
 
 const ToolbarHeading = styled.div`
   display: flex;
-  padding : 0.25rem 0.5rem;
+  padding: 0.25rem 0.5rem;
   align-items: center;
   .user-btn-avatar {
     margin-right: 1rem;
@@ -119,6 +120,7 @@ const ToolbarHeading = styled.div`
     opacity: 0;
     position: absolute;
     top: 110%;
+    z-index: 1;
     left: -0.75rem;
     width: 120px;
     text-align: center;
@@ -145,9 +147,9 @@ const ToolbarHeading = styled.div`
     cursor: pointer;
     &:hover {
       background-color: ${({ theme }) =>
-          theme === "dark"
-            ? `${darken(0.1, "#454545")}`
-            : `${darken(0.005, "#dedede")}`};
+        theme === "dark"
+          ? `${darken(0.1, "#454545")}`
+          : `${darken(0.005, "#dedede")}`};
     }
   }
   .status-name {

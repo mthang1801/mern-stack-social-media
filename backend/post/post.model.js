@@ -1,20 +1,40 @@
 import mongoose from "mongoose";
-
+export const statusEnum = ["public", "private"]
 const PostSchema = new mongoose.Schema(
   {
-    title: {
+    text: {
       type: String,
       required: true,
     },
-    content: {
-      type: String,
-      required: true,
-    },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-      required: true,
-    },
+    tags: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    mentions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+        required: true,
+      },
+    ],
+    files: [
+      {
+        filename : {
+          type : String, 
+          required : true 
+        },
+        mimetype : {
+          type : String ,
+          required : true 
+        },
+        encoding : {
+          type : String,
+          required : true 
+        }
+      }
+    ],
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -24,7 +44,7 @@ const PostSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["public", "private"],
+      enum: statusEnum,
       default: "public",
     },
   },
