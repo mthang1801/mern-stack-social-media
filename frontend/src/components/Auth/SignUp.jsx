@@ -216,7 +216,7 @@ const SignUp = withSignUpMutation(
     render() {      
       const { formIsValid, loaded, disabled } = this.state;
       let formInputArray = [];
-      Object.keys(this.state.controls).map((controlItem) => {
+      Object.keys(this.state.controls).forEach((controlItem) => {
         formInputArray.push(this.state.controls[controlItem]);
       });
       const { error, loading } = this.props;   

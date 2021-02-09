@@ -16,7 +16,7 @@ import {useLocation, useHistory} from "react-router-dom"
 import {useThemeUI} from "theme-ui"
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
-  const [getCurrentUser, {data, loading, error}] = useLazyQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"});
+  const [getCurrentUser, {data, loading}] = useLazyQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"});
   const [currentUser, setCurrentUser] = useState(null)
   const {colorMode} = useThemeUI()
   
@@ -26,7 +26,7 @@ const Header = () => {
       getCurrentUser();
     }
     return () => _isMounted = false ;
-  }, [])
+  }, [getCurrentUser])
   useEffect(() => {        
     if(data && data.user){
       setCurrentUser({...data.user})
