@@ -18,13 +18,13 @@ function App() {
       fetchCurrentUser()
     }
     return () => _isMounted = false ;
-  }, [])
+  }, [fetchCurrentUser])
 
   useEffect(() => {    
     if(data && data.fetchCurrentUser){    
       setCurrentUser({...data.fetchCurrentUser})
     }
-  },[data])
+  },[data, setCurrentUser])
   if(loading) return <div>Loading...</div>
   return (
     <Router>

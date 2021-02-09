@@ -7,18 +7,18 @@ const SignUp = lazy(() => import("../components/Auth/SignUp"));
 
 const AuthPage = (props) => {
   const { match, location, history } = props;
-  const [getCurrentUser, { data, loading }] = useLazyQuery(GET_CURRENT_USER, {
+  const [getCurrentUser, { data }] = useLazyQuery(GET_CURRENT_USER, {
     fetchPolicy: "cache-only",
   });
-  let _isMounted = true;
+  
   useEffect(() => {
+    let _isMounted = true;
     if (_isMounted) {
       getCurrentUser();
     }
     return () => (_isMounted = false);
-  }, []);
-  useEffect(() => {
-    console.log(data)
+  }, [getCurrentUser]);
+  useEffect(() => {    
     if (data) {
       if (data.user && location.state && location.state.from) {
         history.replace(location.state.from);
@@ -26,7 +26,7 @@ const AuthPage = (props) => {
         history.replace("/");
       }
     }
-  }, [data]);  
+  }, [data, history, location.state]);  
   return (
     <Switch>
       <Route

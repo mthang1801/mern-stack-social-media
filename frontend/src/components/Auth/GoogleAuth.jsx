@@ -18,8 +18,7 @@ const GGAuth = ({loginGoogle}) => {
   }
   return (
     <GoogleLogin
-    clientId="660605287272-bcknbfn9c01uuf8rimiefiblh5587gij.apps.googleusercontent.com"
-    buttonText="Login"   
+    clientId="660605287272-bcknbfn9c01uuf8rimiefiblh5587gij.apps.googleusercontent.com"    
     onSuccess={responseGoogle}
     onFailure={responseGoogle}
     cookiePolicy={'single_host_origin'}    

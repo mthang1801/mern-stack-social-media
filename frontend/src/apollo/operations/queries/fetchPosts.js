@@ -17,6 +17,11 @@ export const FETCH_POSTS = gql`
         email
         avatar
       }
+      files{
+        filename
+        mimetype
+        encoding
+      }
       status
       createdAt
     }
