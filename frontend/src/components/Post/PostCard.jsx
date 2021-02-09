@@ -1,0 +1,164 @@
+import React from "react";
+import styled from "styled-components";
+import Moment from "react-moment";
+import Button from "../Controls/ButtonDefault";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { Mentions } from "antd";
+import { useThemeUI } from "theme-ui";
+import {BiLike, BiCommentDetail, BiShare} from "react-icons/bi"
+const PostCard = ({ post }) => {
+  const { colorMode } = useThemeUI();
+  return (
+    <PostCardWrapper theme={colorMode}>
+      <div className="card-header">
+        <Button className="card-header__avatar">
+          <img src={`/images/${post.author.avatar}`} />
+        </Button>
+        <div className="card-header__center">
+          <div className="card-header__center-author">{post.author.name}</div>
+          <div className="card-header__center-date">
+            {Date.now() - +post.createdAt > 3600000 ? (
+              <Moment format="DD/MM/YYYY HH:MM">{+post.createdAt}</Moment>
+            ) : (
+              <Moment fromNow>{+post.createdAt}</Moment>
+            )}
+          </div>
+        </div>
+        <div className="card-header__options-btn">
+          <Button variant="outlined">
+            <HiOutlineDotsHorizontal />
+          </Button>
+        </div>
+      </div>
+      <div className="card-body">
+        <Mentions
+          value={post.text}
+          className="card-body__text"
+          autoSize={{ minRows: 3, maxRows: 10 }}
+          readOnly={true}
+        />
+      </div>
+      <div className="card-footer">
+        <div className="card-footer__actions">
+          <button><BiLike/> Like</button>
+          <button><BiCommentDetail/> Comment</button>
+          <button><BiShare/> Share</button>
+        </div>
+        <div className="card-footer__input">
+          <div className="card-footer__input-user-avatar">
+            <img src={"/images/avatar-default.png"}/>
+          </div>
+          <div className="card-footer__input-type-text">
+            <Mentions autoSize={{ minRows: 1, maxRows: 5 }} placeholder="What's on your mind?" />
+          </div>
+        </div>
+      </div>
+    </PostCardWrapper>
+  );
+};
+
+const PostCardWrapper = styled.article`
+  border-radius: 0.5rem;
+  background-color: ${({ theme }) =>
+    theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
+  width: 95%;
+  padding-bottom: 1rem;
+  overflow: hidden;
+  box-shadow: var(--lightShadow);
+  margin: 1rem auto;
+  .card-header {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    &__avatar {
+      margin-right: 0.75rem;
+      & img {
+        border-radius: 50%;
+      }
+    }
+    &__center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      &-author {
+        text-transform: capitalize;
+      }
+      &-date {
+        font-size: 0.9em;
+        color: var(--gray);
+      }
+    }
+  }
+  .card-body {
+    margin: 0.25rem 0 0.5rem 0;
+    width: 100%;
+    position: relative;
+    background-color: ${({ theme }) =>
+      theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
+    color: inherit;
+    outline: none;
+    border: none;
+    padding: 0.5rem 0;
+    resize: none;
+    font-family: var(--fontFamily);
+    font-size: 1rem;
+    &__text{
+      border: none ;
+    }
+  }
+  .card-footer{
+    &__actions{
+      display : grid; 
+      grid-template-columns : repeat(3,1fr);
+      grid-gap : 0.1rem;    
+      border : 1px solid var(--gray-light);
+      border-left : none; 
+      border-right : none ;
+      margin: 0.5rem 0;
+      button{
+        display : flex;
+        justify-content:center;
+        align-items : center;
+        outline : none ; 
+        border : none  ;
+        padding : 0.75rem 1rem;
+        cursor : pointer;
+        border-radius : 4px;
+        background-color : transparent;
+        color: var(--color-text-light);
+        font-weight : 600;
+        & svg{
+          font-size : 1.2em;
+          margin-right : 0.2rem;
+        }
+        &:hover{
+          background-color : var(--light)
+        }
+      }      
+    }
+    &__input{
+      display : flex;
+      align-items: center;
+      justify-content: space-between;
+      padding : 0.25rem 0.5rem;      
+      &-user-avatar{
+        width : 32px;
+        height :32px;
+        & img{
+          width : 100% ; 
+          height : 100%;
+          border-radius : 50%;
+        }
+      }
+      &-type-text{
+        flex:1;
+        margin-left: 0.5rem;
+        .ant-mentions{
+          border-radius : 8px;
+        }
+      }
+    }
+  }
+`;
+
+export default PostCard;

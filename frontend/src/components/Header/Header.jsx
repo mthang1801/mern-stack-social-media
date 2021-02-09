@@ -19,8 +19,9 @@ const Header = () => {
   const [getCurrentUser, {data, loading, error}] = useLazyQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"});
   const [currentUser, setCurrentUser] = useState(null)
   const {colorMode} = useThemeUI()
-  let _isMounted = true ;
+  
   useEffect(() => {
+    let _isMounted = true ;
     if(_isMounted){
       getCurrentUser();
     }

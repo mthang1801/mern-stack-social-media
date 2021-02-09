@@ -4,7 +4,7 @@ import { withFilter } from "apollo-server-express";
 import { subscriptionActions } from "../schema";
 export const postResolvers = {
   Query: {
-    posts: (_, args, { req }, info) => postControllers.posts(req, args.query),
+    fetchPosts: (_, args, { req }, info) => postControllers.fetchPosts(req, args.skip = 0 ),        
   },
   Mutation: {
     createPost: (_, args, { req }, info) =>    

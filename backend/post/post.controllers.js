@@ -5,46 +5,24 @@ import mongoose from "mongoose";
 import { statusEnum } from "./post.model";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
 import { pubsub } from "../pubsub";
+const POST_PER_PAGE = +process.env.POST_PER_PAGE || 10;
 export const postControllers = {
-  posts: async (req, query) => {
-    const userId = getAuthUser(req);
-    let PostFilter;
-    let MyPost;
-    if (query) {
-      PostFilter = await Post.find({
-        $or: [
-          { text: new RegExp(`${query}`, "i") },
-          { author: new RegExp(`${query}`, "i") },
-        ],
-        status: "public",
-        author: { $ne: userId },
-      })
+  fetchPosts: async (req, skip) => {        
+    const userId = getAuthUser(req, false);    
+    const user = await User.findById(userId);
+    if (user) {
+      const friendsID = user.friends;
+      const Posts = await Post.find(
+        { author: { $in: friendsID }, status: "public" },        
+      )
         .populate("author")
-        .populate("mentions");
-      MyPost = await Post.find({
-        $or: [
-          {
-            $and: [{ text: new RegExp(query, "i") }, { author: userId }],
-          },
-          {
-            $and: [{ text: new RegExp(query, "i") }, { author: userId }],
-          },
-        ],
-      })
-        .populate("author")
-        .populate("mentions");
-    } else {
-      PostFilter = await Post.find({
-        author: { $ne: userId },
-        status: "public",
-      }).populate("author");
-      MyPost = await Post.find({
-        author: userId,
-      })
-        .populate("author")
-        .populate("mentions");
-    }
-    return MyPost.concat(PostFilter);
+        .populate("mentions")
+        .sort({createdAt : -1})
+        .skip(+skip)
+        .limit(POST_PER_PAGE);      
+      return Posts;
+    }    
+    return [];
   },
   createPost: async (req, data, pubsub, postActions) => {
     const {
@@ -55,34 +33,35 @@ export const postControllers = {
       fileMimetype,
       fileEncoding,
       status,
-    } = data;
+    } = data;    
     const userId = getAuthUser(req);
-    const user = await User.findById(userId);
-    
-    
+    const user = await User.findById(userId);    
     if (!user) {
       throw new AuthenticationError("User not found");
     }
     const postData = {
       text,
     };
+    
     if (mentions && mentions.length) {
       // Check mention item has match with user's friends
       const friends = user.friends.map((friend) => friend.toString());
-      const setFriends = new Set(friends);
-      let checkMentionsIsMatchUserFriend = true;
-
+      
+      const setFriends = new Set(friends);      
+      let checkMentionsIsMatchUserFriend = true;      
       mentions.forEach((userId) => {
         checkMentionsIsMatchUserFriend =
           setFriends.has(userId.toString()) && checkMentionsIsMatchUserFriend;
       });
+      
       if (!checkMentionsIsMatchUserFriend) {
         throw new UserInputError(
           "Mentions has item not match with User's friends"
         );
       }
+      console.log(checkMentionsIsMatchUserFriend)
       postData.mentions = mentions;
-    }
+    }    
     if (tags && tags.length) {
       postData.tags = tags;
     }
@@ -108,7 +87,7 @@ export const postControllers = {
         });
       }
       postData.files = files;
-    }
+    }    
     const session = await mongoose.startSession();
     session.startTransaction();
     const newPost = new Post({
@@ -122,7 +101,7 @@ export const postControllers = {
       .populate("mentions")
       .execPopulate();
     await session.commitTransaction();
-    session.endSession();
+    session.endSession();   
     return newPost;
   },
   updatePost: async (req, postId, data, pubsub, postActions) => {

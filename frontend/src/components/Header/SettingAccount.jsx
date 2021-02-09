@@ -32,10 +32,9 @@ const SettingAccount = ({ className, currentUser }) => {
       });
   }, []);
 
-  const onLogout = () => {
-    console.log("OK")
+  const onLogout = async () => {    
     setCurrentUser(null);
-    logout();
+    await logout();
   }
 
   return (
@@ -146,6 +145,7 @@ const SettingWrapper = styled.div`
         ? "var(--color-text-dark)"
         : "var(--color-text-default)"};
     box-shadow: var(--lightShadow);
+    z-index: 2;
     & li {
       width: 100%;
       display: flex;

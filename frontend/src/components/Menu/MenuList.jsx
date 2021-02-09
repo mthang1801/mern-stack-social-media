@@ -4,8 +4,7 @@ import {Link} from "react-router-dom";
 import {useThemeUI} from "theme-ui"
 const MobileMenuList = ({aside, title, list}) => {  
   const {colorMode} = useThemeUI()
-  if(!list || !list.length || !title) return null
-  console.log(colorMode)
+  if(!list || !list.length || !title) return null  
   return (
     <Wrapper aside={!!aside} theme={colorMode}>
       <h5 className="menu-title">{title}</h5>

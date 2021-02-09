@@ -42,6 +42,11 @@ const PostSchema = new mongoose.Schema(
         required: true,
       },
     ],
+    author : {
+      type : String, 
+      ref : "users",
+      required : true 
+    },
     status: {
       type: String,
       enum: statusEnum,
