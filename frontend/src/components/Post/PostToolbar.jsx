@@ -88,12 +88,13 @@ const PostToolbar = () => {
     const fileNames = listBase64Images.map(({ name }) => name);
     const fileMimetype = listBase64Images.map(({ mimetype }) => mimetype);
     const fileEncoding = listBase64Images.map(({ src }) => src);      
-    const updatedMentions = compareAndUpdateMentions(text, mentions)        
+    const updatedMentions = compareAndUpdateMentions(text, mentions) 
+    const tagsValue = tags.map(({value}) => value);        
     createPost({
       variables: {
         text,
         mentions: updatedMentions,
-        tags,
+        tags : tagsValue,
         fileNames,
         fileMimetype,
         fileEncoding,
@@ -121,20 +122,20 @@ const PostToolbar = () => {
           }}
           prefix={["@", "#"]}
         >
-          <Option userId="601c9ae8aa16e718d91ee6ad" value="mthang1801.dev">
+          <Option userId="602097c740303021c0dcebed" value="mthang1801.dev">
             mthang1801.dev@gmail.com
           </Option>
-          <Option userId="601c1b2fa335463b18bd2e0f" value="mthang1801">
+          <Option userId="602097ad40303021c0dcebec" value="mthang1801">
             mthang1801@gmail.com
           </Option>
-          <Option userId="601c309b04f42e57b2bde26d" value="maivthang95">
+          <Option userId="602097f140303021c0dcebee" value="maivthang95">
             maivthang95@gmail.com
           </Option>
-          <Option userId="601ed0f03cd3484ff65a92c2" value="maithang1">
-            maithang1@gmail.com
+          <Option userId="6020980040303021c0dcebef" value="maithang1">
+            maivthang1@gmail.com
           </Option>
 
-          <Option userId="601ed11b3cd3484ff65a92c3" value="maivthang2">
+          <Option userId="6020980d40303021c0dcebf0" value="maivthang2">
             maivthang2@gmail.com
           </Option>
         </Mentions>

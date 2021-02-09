@@ -25,7 +25,9 @@
     "express": "^4.17.1",
     "graphql": "^15.5.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.11.13"
+    "moment": "^2.29.1",
+    "mongoose": "^5.11.13",
+    "react-moment": "^1.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",

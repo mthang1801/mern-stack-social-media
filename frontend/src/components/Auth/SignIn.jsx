@@ -23,8 +23,8 @@ import mutations from "../../apollo/operations/mutations";
 import {login} from "../../utils/auth"
 function withLoginQuery(WrappedComponent) {
   return function QueryWrapper(props) {
-    const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN);
-    const { setCurrentUser } = mutations;
+    const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN, {fetchPolicy : "cache-and-network"});
+    const { setCurrentUser } = mutations;        
     return (
       <WrappedComponent
         data={data}
@@ -72,14 +72,14 @@ const SignIn = withLoginQuery(
       const { name, value } = e.target;
       this.setState({ [name]: value });
     };
-    componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
       if (prevProps.error !== this.props.error) {
         this.clearForm();
       }
       if (prevProps.data !== this.props.data && this.props.data) {
         const { user, token, tokenExpire } = this.props.data.loginUser;                
         this.props.setCurrentUser({...user});
-        login(token, tokenExpire)        
+        await login(token, tokenExpire)        
         this.clearForm();        
       }
     }

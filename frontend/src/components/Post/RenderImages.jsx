@@ -6,7 +6,7 @@ const RenderImage = ({images, className}) => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
+    slidesToShow: images && images.length === 1 ? 1 : 2,
     slidesToScroll: 1
   };
   if(!images || !images.length) return null;
