@@ -27,13 +27,12 @@ export const postControllers = {
   createPost: async (req, data, pubsub, postActions) => {
     const {
       text,
-      mentions,
-      tags,
+      mentions,     
       fileNames,
       fileMimetype,
       fileEncoding,
       status,
-    } = data;    
+    } = data;        
     const userId = getAuthUser(req);
     const user = await User.findById(userId);    
     if (!user) {
@@ -61,10 +60,7 @@ export const postControllers = {
       }
       console.log(checkMentionsIsMatchUserFriend)
       postData.mentions = mentions;
-    }    
-    if (tags && tags.length) {
-      postData.tags = tags;
-    }
+    }        
     if (status && status in statusEnum) {
       postData.status = status;
     }

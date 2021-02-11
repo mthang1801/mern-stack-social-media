@@ -9,8 +9,7 @@ export const FETCH_POSTS = gql`
         _id
         name
         email
-      }
-      tags
+      }      
       author {
         _id
         name

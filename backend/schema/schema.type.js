@@ -15,8 +15,7 @@ export const schemaType = gql`
   }
   type Post{
     _id : ID! 
-    text : String!
-    tags : [String!]
+    text : String!   
     mentions : [User!]
     status : PostStatus!
     files : [File!]

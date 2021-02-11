@@ -7,7 +7,7 @@ import { Mentions } from "antd";
 import { useThemeUI } from "theme-ui";
 import { BiLike, BiCommentDetail, BiShare } from "react-icons/bi";
 import ImageGallery from "react-image-gallery";
-
+import {Link} from "react-router-dom"
 const PostCard = ({ post }) => {
   const { colorMode } = useThemeUI();
   const [imagesGalerry, setImagesGalerry] = useState([]);
@@ -26,14 +26,17 @@ const PostCard = ({ post }) => {
   const handleClickImageGallery = (e) => {
     imageRef.current.fullScreen();
   };
+  const createMarkup = (textHTML) => {
+    return {__html: textHTML}
+  }
   return (
     <PostCardWrapper theme={colorMode}>
       <div className="card-header">
-        <Button className="card-header__avatar">
+        <Link to={`/user/${post.author._id}`} className="card-header__avatar">
           <img src={`/images/${post.author.avatar}`} alt="avatar"/>
-        </Button>
+        </Link>
         <div className="card-header__center">
-          <div className="card-header__center-author">{post.author.name}</div>
+          <Link to={`/user/${post.author._id}`} className="card-header__center-author">{post.author.name}</Link>
           <div className="card-header__center-date">
             {Date.now() - +post.createdAt > 3600000 ? (
               <Moment format="DD/MM/YYYY HH:MM">{+post.createdAt}</Moment>
@@ -49,12 +52,7 @@ const PostCard = ({ post }) => {
         </div>
       </div>
       <div className="card-body">
-        <Mentions
-          value={post.text}
-          className="card-body__text"
-          autoSize={{ minRows: 3, maxRows: 10 }}
-          readOnly={true}
-        />
+        <div dangerouslySetInnerHTML={createMarkup(post.text)} className="card-body__render-text"></div>
         <div className="card-body__images">
           <ImageGallery
             items={imagesGalerry}
@@ -110,7 +108,11 @@ const PostCardWrapper = styled.article`
     padding: 0.5rem 1rem;
     &__avatar {
       margin-right: 0.75rem;
+      width : 40px;
+      height : 40px;
       & img {
+        height : 100%;
+        width : 100%;
         border-radius: 50%;
       }
     }
@@ -143,9 +145,22 @@ const PostCardWrapper = styled.article`
     &__text {
       border: none;
     }
-    .image-gallery-svg {
+    .image-gallery-svg {      
       height: 30px;
-    }            
+    }       
+    &__render-text{
+      padding : 0.5rem 1rem;
+      p{
+        margin: unset;
+      }
+      a{
+        color : var(--primary);
+        &:hover{
+          color : var(--color-primary);
+        }
+      }     
+    }
+    
   }
   .card-footer {
     &__actions {
