@@ -1,17 +1,11 @@
 import mongoose from "mongoose";
-export const statusEnum = ["public", "private"]
+export const statusEnum = ["public", "private", "friends"]
 const PostSchema = new mongoose.Schema(
   {
     text: {
       type: String,
       required: true,
-    },
-    tags: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    },   
     mentions: [
       {
         type: mongoose.Schema.Types.ObjectId,

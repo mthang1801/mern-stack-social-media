@@ -4,17 +4,15 @@ export const CREATE_POST = gql`
   mutation CreatePost(
     $text: String!
     $mentions: [String!]!
-    $tags: [String!]!
     $fileNames: [String!]
     $fileMimetype: [String!]
     $fileEncoding: [String!]
-    $status : String!
+    $status : String
   ) {
     createPost(
       data: {
         text: $text
         mentions: $mentions
-        tags: $tags
         fileNames: $fileNames
         fileMimetype: $fileMimetype
         fileEncoding: $fileEncoding
@@ -28,7 +26,6 @@ export const CREATE_POST = gql`
         name
         email
       }
-      tags
       status
       createdAt
     }

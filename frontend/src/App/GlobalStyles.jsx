@@ -113,6 +113,8 @@ export default createGlobalStyle`
     font-family: var(--fontFamily);            
     font-weight: 400 !important;
     font-size: var(--fontSize-1);    
+    width : 100vw;
+    overflow-x : hidden;
   }
 
   input{
@@ -264,5 +266,8 @@ export default createGlobalStyle`
   .slick-next:before, .slick-prev:before{
     font-size : 30px;
   }
- 
+  .image-gallery-image{
+    cursor: pointer;
+    width : 80%;
+  }
 `

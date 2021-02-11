@@ -5,7 +5,7 @@ import Posts from "../components/Post/Posts"
 import {useLazyQuery} from "@apollo/client"
 import {FETCH_POSTS, GET_CURRENT_USER} from "../apollo/operations/queries"
 import mutations from "../apollo/operations/mutations"
-import BoxCreatePost from "../components/Post/BoxCreatePost"
+import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost"
 const Home = () => {
   const [getCurrentUser, {data : userData}] = useLazyQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"});
   const [fetchPosts, {data : postData}] = useLazyQuery(FETCH_POSTS);
