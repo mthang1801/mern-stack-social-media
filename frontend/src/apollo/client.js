@@ -1,9 +1,11 @@
-import {createHttpLink, ApolloClient} from "@apollo/client";
+import {HttpLink, ApolloClient, split} from "@apollo/client";
+import {getMainDefinition} from "@apollo/client/utilities"
 import {cache} from "./cache"
 import {setContext} from "@apollo/client/link/context"
 import fetch from "isomorphic-fetch"
+import {WebSocketLink} from "apollo-link-ws"
 
-const link = createHttpLink({
+const httpLink = new HttpLink({
   uri : "http://localhost:5000/graphql",
   fetch
 })
@@ -25,8 +27,23 @@ const authLink = setContext((_, {headers}) => {
   }
 })
 
+const wsLink = new WebSocketLink({
+  uri : "ws://localhost:5000/graphql",
+  options : {
+    reconnect: true
+  }
+})
+
+const link = split(
+  ({query}) =>  {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === 'OperationDefinition' && operation === 'subscription';
+  },
+  wsLink,
+  authLink.concat(httpLink),
+)
 const client = new ApolloClient({
-  link : authLink.concat(link),
+  link ,
   cache
 })
 
