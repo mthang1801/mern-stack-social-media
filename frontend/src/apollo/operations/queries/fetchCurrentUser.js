@@ -5,7 +5,21 @@ export const FETCH_CURRENT_USER = gql`
     fetchCurrentUser {
       _id
       name
-      email      
+      email       
+      notifications{
+        _id
+        field
+        action
+        hasSeen
+        creator{
+          _id
+          name 
+          avatar
+        }
+        href 
+        acceptInvite        
+        createdAt
+      }    
       avatar      
     }
   }

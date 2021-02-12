@@ -54,7 +54,7 @@ export const userController = {
   fetchCurrentUser : async (req) => {  
     const userId = getAuthUser(req);    
     
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate({path : "notifications", populate : { path : "creator"}});    
     if(!user){
       throw new AuthenticationError("User not found");
     }    

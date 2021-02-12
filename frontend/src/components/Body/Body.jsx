@@ -15,7 +15,8 @@ const Body = ({children}) => {
 }
 
 const BodyWrapper = styled.div`  
-  display : flex;
+  margin-top: 60px;
+  display : flex;  
   .aside{
     display : none ;     
   }

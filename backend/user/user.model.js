@@ -38,6 +38,13 @@ const UserSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  notifications: [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "notifications", 
+      required : true 
+    }
+  ],
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,

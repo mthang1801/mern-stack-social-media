@@ -94,6 +94,7 @@ export default createGlobalStyle`
   --fontFamily: system-ui,-apple-system,BlinkMacSystemFont,Roboto,Ubuntu,"Helvetica Neue",sans-serif;
   --gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));  
   --lightShadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.05);
+  --mediumShadow : 2px 3px 3px 1px rgba(0,0,0,0.2);
   --darkShadow: 4px 10px 5px 1px rgba(0, 0, 0, 0.3);    
   font-size : ${({rootFont}) => rootFont ? `${rootFont}px` : "16px"}
 }

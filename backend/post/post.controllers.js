@@ -1,10 +1,11 @@
 import getAuthUser from "../utils/getAuthUser";
 import { User } from "../user/user.model";
 import { Post } from "../post/post.model";
+import {Notification} from "../notification/notification.model"
 import mongoose from "mongoose";
 import { statusEnum } from "./post.model";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
-import { pubsub } from "../pubsub";
+
 const POST_PER_PAGE = +process.env.POST_PER_PAGE || 10;
 export const postControllers = {
   fetchPosts: async (req, skip) => {        
@@ -24,7 +25,7 @@ export const postControllers = {
     }    
     return [];
   },
-  createPost: async (req, data, pubsub, postActions) => {
+  createPost: async (req, data, pubsub, notifyCreatedPost) => {
     const {
       text,
       mentions,     
@@ -57,8 +58,7 @@ export const postControllers = {
         throw new UserInputError(
           "Mentions has item not match with User's friends"
         );
-      }
-      console.log(checkMentionsIsMatchUserFriend)
+      }      
       postData.mentions = mentions;
     }        
     if (status && status in statusEnum) {
@@ -86,16 +86,41 @@ export const postControllers = {
     }    
     const session = await mongoose.startSession();
     session.startTransaction();
+
     const newPost = new Post({
       ...postData,
       author: userId,
     });
+
+    const newNotification = new Notification({
+      field : "post", 
+      action : "CREATED", 
+      creator: userId, 
+      receivers : user.friends,
+      href : `/${userId}/posts/${newPost._id}`,      
+    })
     user.posts.push(newPost._id);
+    for(let friendId of user.friends){
+      const friend = await User.findById(friendId); 
+      if(friend){
+        friend.notifications.push(newNotification._id);
+        await friend.save();
+      }
+    }
     await user.save();
     await (await newPost.save())
       .populate("author")
       .populate("mentions")
       .execPopulate();
+    await (await newNotification.save()).populate("creator").execPopulate();
+    pubsub.publish(notifyCreatedPost, {
+      notifyCreatedPost : {        
+        type : "Post",
+        action : "CREATED",  
+        users : user.friends,                     
+        notification : newNotification
+      }
+    })
     await session.commitTransaction();
     session.endSession();   
     return newPost;

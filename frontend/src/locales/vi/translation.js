@@ -121,6 +121,7 @@ export const vi = {
       signout : "Đăng xuất"
     },    
     mindText:  "Bạn đang nghĩ gì?",
-    menu : "Danh mục"
+    menu : "Danh mục",
+    postCreated : (name) => `${name} vừa đăng một trạng thái mới.`
   }
 }
