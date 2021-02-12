@@ -123,6 +123,7 @@ export const en = {
       signout : "Sign Out"
     },
     mindText:  "What's on your mind?",
-    menu : "Menu"
+    menu : "Menu",
+    postCreated : (name) => `${name} has just posted a new status.`
   },
 };

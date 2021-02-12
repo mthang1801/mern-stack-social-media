@@ -194,7 +194,7 @@ const PostCardWrapper = styled.article`
     }
     &__input {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       padding: 0.25rem 0.5rem;
       &-user-avatar {
@@ -212,7 +212,7 @@ const PostCardWrapper = styled.article`
         .ant-mentions {
           border-radius: 8px;
         }
-      }
+      }      
     }
   }
 `;

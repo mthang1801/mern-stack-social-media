@@ -2,8 +2,7 @@ import styled from "styled-components";
 
 const Box = styled.div`
   width: 95%;
-  margin: auto;
-  
+  margin: auto;  
   background-color: ${({ theme }) =>
     theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
   border-radius: 8px;
@@ -15,6 +14,9 @@ const Box = styled.div`
       ${({ theme }) =>
         theme === "dark" ? "var(--gray-dark)" : "var(--gray-light)"};
     }
+  }
+  .submit{
+    padding: 0.75rem;
   }
   .box-header {
     display: flex;
@@ -35,6 +37,7 @@ const Box = styled.div`
         text-transform: capitalize;
         font-size: 0.95rem;
         font-weight: 600;
+        margin-left : 0.5rem;
       }
       &-current-position {
         padding: 0.2rem 0.6rem;

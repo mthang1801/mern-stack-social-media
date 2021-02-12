@@ -12,19 +12,16 @@ export const postResolvers = {
         req,
         args.data,
         pubsub,
-        subscriptionActions.POST_ACTIONS
-      ),
-    updatePost: (_, args, { req }, info) =>
-      postControllers.updatePost(req, args.postId, args.data, pubsub , subscriptionActions.POST_ACTIONS),
-    deletePost: (_, args, { req }, info) =>
-      postControllers.deletePost(req, args.postId, pubsub, subscriptionActions.POST_ACTIONS),
+        subscriptionActions.NOTIFY_POST_CREATED
+      ),   
   },
   Subscription: {
-    postActions: {
+    notifyCreatedPost: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.POST_ACTIONS),
-        (payload, {userId}) => {     
-          return payload.postActions.node.author._id.toString() === userId.toString()
+        () => pubsub.asyncIterator(subscriptionActions.NOTIFY_POST_CREATED),
+        (payload, {userId}) => {       
+          console.log(payload)        
+          return userId ? payload.notifyCreatedPost.users.includes(userId.toString()) : false
         }
       ),
     },

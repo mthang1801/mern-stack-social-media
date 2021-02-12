@@ -30,7 +30,10 @@ const authLink = setContext((_, {headers}) => {
 const wsLink = new WebSocketLink({
   uri : "ws://localhost:5000/graphql",
   options : {
-    reconnect: true
+    reconnect: true,
+    connectionParams : {
+      authToken : localStorage.getItem("token") ? `Bearer ${localStorage.getItem("token")}` : ""
+    }
   }
 })
 

@@ -10,6 +10,7 @@ export const schemaType = gql`
     posts : [Post!]!
     avatar: String
     comments : [Comment!]!    
+    notifications : [Notification!]!
     createdAt : String
     updatedAt : String
   }
@@ -44,6 +45,18 @@ export const schemaType = gql`
     createdAt : String!
     updatedAt : String!
   } 
+
+  type Notification{
+    _id : ID!
+    field : String! 
+    action: String! 
+    creator : User!
+    href : String!
+    hasSeen : Boolean! 
+    acceptInvite : Boolean!
+    createdAt : String!     
+  }
+
   type PrivateChat{
     sender : User! 
     receiver : User!
@@ -52,14 +65,17 @@ export const schemaType = gql`
     createdAt : String!
     updatedAt : String!
   }
+
   type UserAuthPayload{
     user : User! 
     token : String!
     tokenExpire : String! 
   }
-  type PostSubscriptionPayload{
-    action : ActionEnum! 
-    node : Post!
+  type PostSubscriptionPayload{    
+    type : String! 
+    action : ActionEnum!   
+    users : [ID!]
+    notification : Notification!
   }  
   type CommentSubscriptionPayload{
     action : ActionEnum!

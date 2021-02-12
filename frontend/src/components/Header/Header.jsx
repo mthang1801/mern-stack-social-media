@@ -55,7 +55,7 @@ const Header = () => {
         </div>
 
         <div className="control">
-          <MessengerAndNotification />
+          <MessengerAndNotification user={currentUser}/>
         </div>
       </div>
       <div className="setting-account">
@@ -108,11 +108,13 @@ const Wrapper = styled.header`
   height: 60px;
   background-color: ${({theme}) => theme=== "dark" ? "var(--color-background-dark)" : "var(--color-background-default)"  };
   border-bottom : 1px solid ${({theme}) => theme==="dark" ? "var(--gray)" : "var(--gray-light)"};
-  
+  position : fixed;
+  top : 0;
   padding: 0 0.4rem;
   display: flex;
   align-items: center;
   flex-wrap: no-wrap;
+  z-index: 100;
   .btn{
     border-radius : 1.5rem;
     padding : 0.75rem 1.5rem;

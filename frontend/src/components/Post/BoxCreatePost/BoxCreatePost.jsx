@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Box } from "./BoxCreatePost.styles";
 import BoxCreatePostHeader from "./BoxCreatePost.header";
 import BoxCreatePostBody from "./BoxCreatePost.body";
-import BoxCreatePostFooter from "./BoxCreatePost.footer"
+import BoxCreatePostFooter from "./BoxCreatePost.footer";
 
 import useLanguage from "../../Global/useLanguage";
 import "emoji-mart/css/emoji-mart.css";
@@ -14,14 +14,13 @@ import compareAndUpdateMentions from "../../../utils/listMentionsFromText";
 
 import { convertPlainTextToHTML } from "../../../utils/convertPlainTextToHTML";
 
-
 const BoxCreatePost = ({ user }) => {
   const { i18n, lang } = useLanguage();
   const [createPost, { data }] = useMutation(CREATE_POST, {
     errorPolicy: "all",
   });
   const [mindText, setMindText] = useState("");
-  
+
   const [text, setText] = useState("");
   const [listBase64Images, setListBase64Images] = useState([]);
   const [imagesGalerry, setImagesGalerry] = useState([]);
@@ -30,7 +29,7 @@ const BoxCreatePost = ({ user }) => {
   const [statusFooter, setStatusFooter] = useState([]);
   const [prefix, setPrefix] = useState(null);
   const { colorMode } = useThemeUI();
-  
+
   useEffect(() => {
     setMindText(i18n.store.data[lang].translation.mindText);
     setStatusFooter(i18n.store.data[lang].translation.statusFooter);
@@ -68,23 +67,24 @@ const BoxCreatePost = ({ user }) => {
       <BoxCreatePostFooter
         setText={setText}
         colorMode={colorMode}
-        status={status}   
+        status={status}
         setStatus={setStatus}
         setImagesGalerry={setImagesGalerry}
         setListBase64Images={setListBase64Images}
-        
       />
       {text && (
-        <Button
-          type="button"
-          color="primary"
-          variant="contained"
-          style={{ display: "block", width: "100%" }}
-          onClick={handlePost}
-        >
-          Post
-        </Button>
-      )}      
+        <div className="submit">
+          <Button
+            type="button"
+            color="primary"
+            variant="contained"
+            style={{ display: "block", width: "100%" }}
+            onClick={handlePost}
+          >
+            Post
+          </Button>
+        </div>
+      )}
     </Box>
   );
 };
