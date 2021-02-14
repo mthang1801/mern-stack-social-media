@@ -84,4 +84,4 @@ const NavigationWrapper = styled.ul`
   }
 `;
 
-export default Navigation;
+export default React.memo(Navigation);

@@ -219,4 +219,4 @@ const SettingWrapper = styled.div`
   }
 `;
 
-export default SettingAccount;
+export default React.memo(SettingAccount);

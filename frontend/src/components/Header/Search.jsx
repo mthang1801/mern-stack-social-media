@@ -71,4 +71,4 @@ const SearchForm = styled.form`
   }
 `;
 
-export default Search;
+export default React.memo(Search);

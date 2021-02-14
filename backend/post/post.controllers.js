@@ -6,21 +6,21 @@ import mongoose from "mongoose";
 import { statusEnum } from "./post.model";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
 
-const POST_PER_PAGE = +process.env.POST_PER_PAGE || 10;
 export const postControllers = {
-  fetchPosts: async (req, skip) => {        
+  fetchPosts: async (req, limit, skip) => {          
     const userId = getAuthUser(req, false);    
     const user = await User.findById(userId);
+    console.log(limit, skip)
     if (user) {
-      const friendsID = user.friends;
+      const friendsID = user.friends;    
       const Posts = await Post.find(
-        { author: { $in: friendsID }, status: "public" },        
+        { author: { $in: friendsID }, status: {$in : ["public", "friends"]} },        
       )
         .populate("author")
         .populate("mentions")
         .sort({createdAt : -1})
         .skip(+skip)
-        .limit(POST_PER_PAGE);      
+        .limit(+limit);           
       return Posts;
     }    
     return [];

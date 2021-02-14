@@ -11,7 +11,7 @@ const Tooltips = ({ className, children, showTooltips }) => {
   );
 };
 
-export default styled(Tooltips)`
+export default styled(React.memo(Tooltips))`
   display: none;
   @media screen and (min-width: 768px) and (max-width: 992px) {
     position: absolute;

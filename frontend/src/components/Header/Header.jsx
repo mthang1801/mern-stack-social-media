@@ -187,6 +187,7 @@ const Wrapper = styled.header`
     align-items: center;
     transition: var(--mainTransition);
     height: 100%;
+    padding : 0 1.5rem;
     .nav-bar {
       display: none;
     }
@@ -227,10 +228,10 @@ const Wrapper = styled.header`
       display: none;
     }
     .nav-header {
-      width: 40%;
+      width: 30%;
     }
     .nav-controls {
-      width: 60%;
+      width: 70%;
       .nav-bar {
         display: block;
         height: 100%;
@@ -256,4 +257,4 @@ const Wrapper = styled.header`
   }
 `;
 
-export default Header;
+export default React.memo(Header);
