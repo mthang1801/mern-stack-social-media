@@ -4,23 +4,32 @@ import { withFilter } from "apollo-server-express";
 import { subscriptionActions } from "../schema";
 export const postResolvers = {
   Query: {
-    fetchPosts: (_, args, { req }, info) => postControllers.fetchPosts(req, args.skip = 0 ),        
+    fetchPosts: (_, args, { req }, info) =>  {      
+      return    postControllers.fetchPosts(
+        req,
+        args.limit || +process.env.POSTS_PER_PAGE ,
+        args.skip || 0
+      )
+    }  
+   
   },
   Mutation: {
-    createPost: (_, args, { req }, info) =>    
+    createPost: (_, args, { req }, info) =>
       postControllers.createPost(
         req,
         args.data,
         pubsub,
         subscriptionActions.NOTIFY_POST_CREATED
-      ),   
+      ),
   },
   Subscription: {
     notifyCreatedPost: {
       subscribe: withFilter(
         () => pubsub.asyncIterator(subscriptionActions.NOTIFY_POST_CREATED),
-        (payload, {userId}) => {                
-          return userId ? payload.notifyCreatedPost.users.includes(userId.toString()) : false
+        (payload, { userId }) => {
+          return userId
+            ? payload.notifyCreatedPost.users.includes(userId.toString())
+            : false;
         }
       ),
     },

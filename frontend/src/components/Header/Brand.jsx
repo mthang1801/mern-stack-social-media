@@ -9,7 +9,7 @@ const Brand = ({className}) => {
     </Link>
   )
 }
-export default styled(Brand)`
+export default styled(React.memo(Brand))`
   display : flex ; 
   img{
     width : 80% ; 

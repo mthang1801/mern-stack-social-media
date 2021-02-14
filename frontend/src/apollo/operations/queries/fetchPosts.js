@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_POSTS = gql`
-  query {
-    fetchPosts {
+  query ($limit : Int, $skip: Int){
+    fetchPosts(limit : $limit, skip: $skip) {
       _id
       text
       mentions {

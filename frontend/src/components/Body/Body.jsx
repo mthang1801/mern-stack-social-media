@@ -15,8 +15,7 @@ const Body = ({children}) => {
 }
 
 const BodyWrapper = styled.div`  
-  margin-top: 60px;
-  display : flex;  
+  margin-top: 60px;  
   .aside{
     display : none ;     
   }
@@ -26,12 +25,14 @@ const BodyWrapper = styled.div`
 
   @media screen and (min-width : 992px){
     .aside{
-      display : fixed;
+      display : -webkit-box;
+      position: fixed;
       width : 320px;
       height: calc(100vh - 60px);
       padding : 1rem 1.5rem;
     }
     .main-content{
+      margin-left : 320px;
       padding : 1.5rem 0;
       width : calc(100% - 320px);          
     }
