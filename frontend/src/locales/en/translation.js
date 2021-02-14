@@ -124,6 +124,9 @@ export const en = {
     },
     mindText:  "What's on your mind?",
     menu : "Menu",
-    postCreated : (name) => `${name} has just posted a new status.`
+    postCreated : "has just posted a new status.",
+    notification: {
+      message : "You have just received a new message."
+    }
   },
 };

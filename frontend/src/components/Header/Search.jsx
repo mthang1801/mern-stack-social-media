@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import classNames from "classnames";
+
 const Search = ({ openSearch, setOpenSearch }) => {  
   return (
     <SearchForm openSearch={openSearch}>

@@ -12,38 +12,43 @@ import mutations from "../../apollo/operations/mutations";
 import classNames from "classnames";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries";
 import { useLazyQuery } from "@apollo/client";
-import {useLocation, useHistory} from "react-router-dom"
-import {useThemeUI} from "theme-ui"
+import { useLocation, useHistory } from "react-router-dom";
+import { useThemeUI } from "theme-ui";
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
-  const [getCurrentUser, {data, loading}] = useLazyQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"});
-  const [currentUser, setCurrentUser] = useState(null)
-  const {colorMode} = useThemeUI()
-  
+  const [getCurrentUser, { data, loading }] = useLazyQuery(GET_CURRENT_USER, {
+    fetchPolicy: "cache-only",
+  });
+  const [currentUser, setCurrentUser] = useState(null);
+  const { colorMode } = useThemeUI();
+
   useEffect(() => {
-    let _isMounted = true ;
-    if(_isMounted){
+    let _isMounted = true;
+    if (_isMounted) {
       getCurrentUser();
     }
-    return () => _isMounted = false ;
-  }, [getCurrentUser])
-  useEffect(() => {        
-    if(data && data.user){
-      setCurrentUser({...data.user})
-    }else{
-      setCurrentUser(null)
+    return () => (_isMounted = false);
+  }, [getCurrentUser]);
+  useEffect(() => {
+    if (data && data.user) {
+      setCurrentUser({ ...data.user });
+    } else {
+      setCurrentUser(null);
     }
-  },[data])
-  
-  const location = useLocation();  
-  const history = useHistory()
-  const { toggleButtonMenu } = mutations;     
+  }, [data]);
+
+  const location = useLocation();
+  const history = useHistory();
+  const { toggleButtonMenu } = mutations;
   const directToLogin = () => {
-    history.push({pathname : "/auth", state : {from : location.pathname}})
-  }
+    history.push({ pathname: "/auth", state: { from: location.pathname } });
+  };
   const directToSignUp = () => {
-    history.push({pathname : "/auth/signup", state : {from : location.pathname}})
-  }
+    history.push({
+      pathname: "/auth/signup",
+      state: { from: location.pathname },
+    });
+  };
   const NavControls = currentUser ? (
     <div className="nav-controls">
       <div className="center">
@@ -55,25 +60,29 @@ const Header = () => {
         </div>
 
         <div className="control">
-          <MessengerAndNotification user={currentUser}/>
+          <MessengerAndNotification user={currentUser} />
         </div>
       </div>
       <div className="setting-account">
-        <SettingAccount currentUser={currentUser}/>
+        <SettingAccount currentUser={currentUser} />
       </div>
     </div>
   ) : (
     <div className="nav-controls">
       <div className="nav-auth">
-        <button className="btn btn-login" onClick={directToLogin}>Login</button>
-        <button className="btn btn-signup" onClick={directToSignUp}>Sign up</button>
+        <button className="btn btn-login" onClick={directToLogin}>
+          Login
+        </button>
+        <button className="btn btn-signup" onClick={directToSignUp}>
+          Sign up
+        </button>
         <div className="setting-account">
-        <SettingAccount />
-      </div>
+          <SettingAccount />
+        </div>
       </div>
     </div>
   );
-  if(loading) return <div>Loading...</div>
+  if (loading) return <div>Loading...</div>;
   return (
     <Wrapper theme={colorMode}>
       <div className={classNames("nav-header", { shorten: !openSearch })}>
@@ -106,43 +115,47 @@ const Header = () => {
 const Wrapper = styled.header`
   width: 100vw;
   height: 60px;
-  background-color: ${({theme}) => theme=== "dark" ? "var(--color-background-dark)" : "var(--color-background-default)"  };
-  border-bottom : 1px solid ${({theme}) => theme==="dark" ? "var(--gray)" : "var(--gray-light)"};
-  position : fixed;
-  top : 0;
+  background-color: ${({ theme }) =>
+    theme === "dark"
+      ? "var(--color-background-dark)"
+      : "var(--color-background-default)"};
+  border-bottom: 1px solid
+    ${({ theme }) => (theme === "dark" ? "var(--gray)" : "var(--gray-light)")};
+  position: fixed;
+  top: 0;
   padding: 0 0.4rem;
   display: flex;
   align-items: center;
   flex-wrap: no-wrap;
   z-index: 100;
-  .btn{
-    border-radius : 1.5rem;
-    padding : 0.75rem 1.5rem;
-    outline : none ; 
-    border : none ; 
-    cursor : pointer;
-    transition : var(--mainTransition);
-    text-transform : uppercase ;
-    font-weight : bolder;
-    &:not(:last-child){
-      margin-right : 1rem;
+  .btn {
+    border-radius: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: var(--mainTransition);
+    text-transform: uppercase;
+    font-weight: bolder;
+    &:not(:last-child) {
+      margin-right: 1rem;
     }
-    &-login{
-      border : 1px solid var(--primary);
-      color : var(--primary);      
-      &:hover{
-        color : var(--light);
-        background-color : var(--primary);
-        box-shadow : var(--lightShadow);
+    &-login {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      &:hover {
+        color: var(--light);
+        background-color: var(--primary);
+        box-shadow: var(--lightShadow);
       }
     }
-    &-signup{
-      border : 1px solid var(--success);
-      color : var(--success);      
-      &:hover{
-        color : var(--light);
-        background-color : var(--success);
-        box-shadow : var(--lightShadow);
+    &-signup {
+      border: 1px solid var(--success);
+      color: var(--success);
+      &:hover {
+        color: var(--light);
+        background-color: var(--success);
+        box-shadow: var(--lightShadow);
       }
     }
   }
@@ -188,10 +201,10 @@ const Wrapper = styled.header`
     .nav-toggle {
       margin-right: 0.75rem;
     }
-    .nav-auth{
-      width : 100%;
-      display : flex;
-      justify-content : flex-end;
+    .nav-auth {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
     }
   }
 

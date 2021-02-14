@@ -19,8 +19,7 @@ export const postResolvers = {
     notifyCreatedPost: {
       subscribe: withFilter(
         () => pubsub.asyncIterator(subscriptionActions.NOTIFY_POST_CREATED),
-        (payload, {userId}) => {       
-          console.log(payload)        
+        (payload, {userId}) => {                
           return userId ? payload.notifyCreatedPost.users.includes(userId.toString()) : false
         }
       ),

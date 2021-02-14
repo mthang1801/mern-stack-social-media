@@ -122,6 +122,9 @@ export const vi = {
     },    
     mindText:  "Bạn đang nghĩ gì?",
     menu : "Danh mục",
-    postCreated : (name) => `${name} vừa đăng một trạng thái mới.`
+    postCreated : "vừa đăng một trạng thái mới.",
+    notification: {
+      message : "Bạn vừa nhận được một thông báo mới"
+    }
   }
 }

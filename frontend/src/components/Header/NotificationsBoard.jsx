@@ -1,4 +1,4 @@
-import React from "react";
+import React, {memo} from "react";
 import styled from "styled-components";
 import Button from "../Controls/ButtonDefault";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
@@ -7,16 +7,18 @@ import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import useLanguage from "../Global/useLanguage";
 import Moment from "react-moment";
-
-const NotificationsBoard = ({ notifications }) => {
+import classNames from "classnames"
+const NotificationsBoard = ({ notifications, newNotificationsList }) => {
   const { colorMode } = useThemeUI();
   const { lang, i18n, t } = useLanguage();
 
-  const notificationContent = (field, action, creatorName, notification) => {
+  const notificationContent = (field, action, notification) => {
     if (field === "post" && action === "CREATED") {
-      return notification.postCreated(creatorName);
+      return notification.postCreated;
     }
   };
+  
+  console.log(notifications)
   return (
     <Wrapper theme={colorMode}>
       <div className="board-header">
@@ -30,7 +32,7 @@ const NotificationsBoard = ({ notifications }) => {
           <Link
             to={notification.href}
             key={notification._id}
-            className="notification-link"
+            className={classNames("notification-link")}
           >
             <div className="avatar-container">
               <LazyLoadImage
@@ -42,16 +44,16 @@ const NotificationsBoard = ({ notifications }) => {
               />
             </div>
             <div className="notification-content">
-              <div>
+              <span className="creator-name">{notification.creator.name} </span>
+              <span>
                 {notificationContent(
                   notification.field,
-                  notification.action,
-                  notification.creator.name,
+                  notification.action,                
                   i18n.store.data[lang].translation
                 )}
-              </div>
+              </span>
               <div className="notification-datetime">
-                <Moment fromNow>{new Date(+notification.createdAt)}</Moment>
+                <Moment fromNow className={newNotificationsList.has(notification._id) ? "new" : ""}>{new Date(+notification.createdAt)}</Moment>
               </div>
             </div>
           </Link>
@@ -105,6 +107,13 @@ const Wrapper = styled.div`
     font-size: 0.85rem;
     opacity: 0.7;
   }
+  .new{
+    font-weight: bold;
+    color : red;  
+  }
+  .creator-name{
+    font-weight : bolder;
+  }
 `;
 
-export default NotificationsBoard;
+export default memo(NotificationsBoard);
