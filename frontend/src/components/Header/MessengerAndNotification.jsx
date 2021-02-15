@@ -6,39 +6,58 @@ import Button from "../Controls/ButtonDefault";
 import NotificationsBoard from "./NotificationsBoard";
 import classNames from "classnames";
 import { useQuery } from "@apollo/client";
-import { FETCH_NOTIFICATIONS } from "../../apollo/operations/queries";
+import { FETCH_NOTIFICATIONS, COUNT_NOTIFICATIONS_UNSEEN } from "../../apollo/operations/queries";
 import subcriptions from "../../apollo/operations/subscriptions";
 import { Scrollbars } from "react-custom-scrollbars";
 import FlashPopUpNotification from "./FlashPopUpNotification";
-const Control = ({ user }) => {
-  const [countUnseenNotification, setCountUnseenNotification] = useState(0);
+const Control = ({ user }) => {  
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
-  const [newNotificationsList, setNewNotificationList] = useState(new Set()) ; 
-  const { data, subscribeToMore } = useQuery(FETCH_NOTIFICATIONS, {
-    variables: { userId: user._id },
-  });
+  const [newNotificationsList, setNewNotificationList] = useState(new Set());
+  const { data, loading, subscribeToMore : subscribeToMoreNotifications, fetchMore } = useQuery(
+    FETCH_NOTIFICATIONS,
+    {
+      variables: { skip : 0, limit : +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE },
+    }    
+  );
+  const {data : countNotificationsUnseenData, subscribeToMore : subscribeToMoreCountNotificationsUnseen } = useQuery(COUNT_NOTIFICATIONS_UNSEEN, {fetchPolicy : "network-only"})
+  
+  const [loadingMore, setLoadingMore] = useState(false);
   const [openPopupNotification, setOpenPopupNotification] = useState(false);
   const notificationRef = useRef(false);
 
   useEffect(() => {
-    subscribeToMore({
+    const unsubscribePostCreated = subscribeToMoreNotifications({
       document:
         subcriptions.notificationSubscription.POST_CREATED_SUBSCRIPTIONS,
       variables: { userId: user._id },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
-        const newNotification = subscriptionData.data.notifyCreatedPost.notification;
+        const newNotification =
+          subscriptionData.data.notifyCreatedPost.notification;
         setOpenPopupNotification(true);
-        
-        setNewNotificationList(prevList => prevList.add(newNotification._id));
+
+        setNewNotificationList((prevList) => prevList.add(newNotification._id));
         return {
           fetchNotifications: [
-            { ...newNotification, new : true },
+            { ...newNotification, new: true },
             ...prev.fetchNotifications,
           ],
         };
       },
     });
+    const unsubscribeCountNotificationsUnseen = subscribeToMoreCountNotificationsUnseen({
+      document : subcriptions.notificationSubscription.UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN_SUBSCRIPTION,
+      variables : {userId : user._id},
+      updateQuery : (prev, {subscriptionData}) => {
+        if(subscriptionData.data && subscriptionData.data.updateCountNotificationsWhenSeen.toString() === user._id.toString()){
+          return {countNotificationsUnseen : prev.countNotificationsUnseen- 1} ;
+        }
+      }
+    }) 
+    return () => {
+      unsubscribePostCreated();
+      unsubscribeCountNotificationsUnseen();
+    }
   }, []);
 
   useEffect(() => {
@@ -49,16 +68,6 @@ const Control = ({ user }) => {
     return () => clearTimeout(timer);
   }, [openPopupNotification]);
 
-  useEffect(() => {
-    if (data && data.fetchNotifications.length) {
-      setCountUnseenNotification(
-        data.fetchNotifications.reduce(
-          (acc, notification) => (!notification.hasSeen.includes(user._id) ? (acc += 1) : acc),
-          0
-        )
-      );
-    }
-  }, [data]);
   useEffect(() => {
     function handleClickOutsideNotificationBoard(e) {
       if (
@@ -78,33 +87,60 @@ const Control = ({ user }) => {
   }, []);
 
   const handleClickNotification = () => {
-    setOpenNotificationBoard((prevStatus) => !prevStatus)   
-  }
+    setOpenNotificationBoard((prevStatus) => !prevStatus);
+  };
 
   const handleClickFlashPopupNotification = () => {
     setOpenNotificationBoard(true);
     setOpenPopupNotification(false);
-  }
+  };
+
+  const handleScrollBoard = (e) => {
+    const { target } = e;
+    if (target.clientHeight + target.scrollTop > target.scrollHeight * 0.75) {
+      setLoadingMore(true);
+    }
+  };
+
+  useEffect(() => {
+    if (loadingMore) {
+      if (fetchMore) {
+        fetchMore({
+          query: FETCH_NOTIFICATIONS,
+          variables: {
+            skip:
+              data && data.fetchNotifications.length
+                ? data.fetchNotifications.length
+                : 0,
+            limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            return {fetchNotifications : [...prev.fetchNotifications, ...fetchMoreResult.fetchNotifications]}
+          },
+        }).then(() => setLoadingMore(false));
+      }
+    }
+  }, [loadingMore]);
   return (
-    <Wrapper>
+    <Wrapper onScroll={handleScrollBoard}>
       <Button>
         <FaFacebookMessenger />
       </Button>
       <div className="notification" ref={notificationRef}>
-        <Button
-          onClick={handleClickNotification}
-        >
+        <Button onClick={handleClickNotification}>
           <IoMdNotifications />
-          {countUnseenNotification ? (
-            <div className="unseen-noti">{countUnseenNotification}</div>
+          {countNotificationsUnseenData && countNotificationsUnseenData.countNotificationsUnseen ? (
+            <div className="unseen-noti">{countNotificationsUnseenData.countNotificationsUnseen}</div>
           ) : null}
         </Button>
 
         <div
-          className={classNames("flash-popup" , {"open-flash-popup": openPopupNotification})}
+          className={classNames("flash-popup", {
+            "open-flash-popup": openPopupNotification,
+          })}
           onClick={handleClickFlashPopupNotification}
-        >          
-          <FlashPopUpNotification />          
+        >
+          <FlashPopUpNotification />
         </div>
         {data ? (
           <div
@@ -112,7 +148,6 @@ const Control = ({ user }) => {
               "open-board": openNotificationBoard,
             })}
           >
-            
             <Scrollbars
               autoHide
               autoHideTimeout={1000}
@@ -120,8 +155,12 @@ const Control = ({ user }) => {
               autoHeightMin={0}
               autoHeightMax={200}
             >
-              <NotificationsBoard user={user} notifications={data.fetchNotifications} newNotificationsList={newNotificationsList}/>
-            </Scrollbars>            
+              <NotificationsBoard
+                user={user}
+                notifications={data.fetchNotifications}
+                newNotificationsList={newNotificationsList}
+              />
+            </Scrollbars>
           </div>
         ) : null}
       </div>
@@ -166,19 +205,19 @@ const Wrapper = styled.div`
     visibility: visible;
     opacity: 1;
   }
-  .flash-popup{
+  .flash-popup {
     position: fixed;
     bottom: 5%;
     right: 5%;
     z-index: 1;
     -webkit-transition: var(--mainTransition);
-    transition: var(--mainTransition); 
-    cursor : pointer;
-    transform : translateX(200%);
+    transition: var(--mainTransition);
+    cursor: pointer;
+    transform: translateX(200%);
     transition: 0.5s all;
   }
-  .open-flash-popup{
-    transform : translateX(0);
+  .open-flash-popup {
+    transform: translateX(0);
     transition: 0.5s all;
   }
 `;

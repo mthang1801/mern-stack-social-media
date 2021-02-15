@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Layout from "../containers/Layout";
 import styled from "styled-components";
 import Posts from "../components/Post/Posts";
-import { useLazyQuery } from "@apollo/client";
-import { FETCH_POSTS, GET_CURRENT_USER } from "../apollo/operations/queries";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { FETCH_POSTS, GET_CURRENT_USER, GET_POSTS} from "../apollo/operations/queries";
 import mutations from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
 const Home = () => {
@@ -12,53 +12,64 @@ const Home = () => {
   });
   const [
     fetchPosts,
-    { data: postsData, loading, fetchMore },
+    { data: fetchedPosts, loading, fetchMore },
   ] = useLazyQuery(FETCH_POSTS, { fetchPolicy: "cache-and-network" });  
+  const {data : postsData} = useQuery(GET_POSTS)
   const [loadingMore, setLoadingMore] = useState(false);
   const { setPosts } = mutations;
   useEffect(() => {
     let _isMounted = true;
     if (_isMounted) {
-      getCurrentUser();
-      fetchPosts();
+      getCurrentUser();      
     }
     return () => (_isMounted = false);
-  }, [userData, fetchPosts, getCurrentUser]);
+  }, [userData, getCurrentUser]);
+  useEffect(() => {    
+    if (fetchedPosts && fetchedPosts.fetchPosts) {
+      setPosts([...fetchedPosts.fetchPosts]);
+    }
+  }, [setPosts, fetchedPosts]);
 
   useEffect(() => {
-    if (postsData && postsData.fetchPosts) {
-      setPosts([...postsData.fetchPosts]);
+    window.addEventListener("scroll", async (e) => {
+      const docEl = document.documentElement;
+      if (docEl.clientHeight + docEl.scrollTop > docEl.scrollHeight * 0.8) {
+        setLoadingMore(true);
+      }
+    });
+  }, [setLoadingMore]);
+  useEffect(() => {
+    if (postsData && !postsData.posts.length) {
+      fetchPosts();
+    }
+  }, [postsData, fetchPosts]);
+
+  useEffect(() => {
+    if (loadingMore) {
       if (fetchMore) {
-        window.addEventListener("scroll", async (e) => {
-          const docEl = document.documentElement;        
-          if (docEl.clientHeight + docEl.scrollTop > docEl.scrollHeight * 0.8) {                       
-            setLoadingMore(true);
-          }
+        fetchMore({
+          query: FETCH_POSTS,
+          variables: {
+            skip: postsData.posts.length,
+            limit: +process.env.REACT_APP_POSTS_PER_PAGE,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            setPosts([...prev.fetchPosts, ...fetchMoreResult.fetchPosts]);
+            return {
+              fetchPosts: [...prev.fetchPosts, ...fetchMoreResult.fetchPosts],
+            };
+          },
+        }).then(() => setLoadingMore(false));
+      } else {
+        fetchPosts({
+          variables: {
+            skip: postsData.posts.length,
+            limit: +process.env.REACT_APP_POSTS_PER_PAGE,
+          },
         });
       }
     }
-  }, [postsData, setPosts]);
-
-  useEffect(()=>{
-    if(loadingMore){
-      fetchMore({
-        query: FETCH_POSTS,
-        variables: {
-          skip: postsData.fetchPosts.length,
-          limit: +process.env.REACT_APP_POSTS_PER_PAGE,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {          
-          setPosts([...prev.fetchPosts, ...fetchMoreResult.fetchPosts]);
-          return {
-            fetchPosts: [
-              ...prev.fetchPosts,
-              ...fetchMoreResult.fetchPosts,
-            ],
-          };
-        },
-      }).then(() => setLoadingMore(false));
-    }
-  },[loadingMore, fetchMore])
+  }, [loadingMore, fetchMore]);
   return (
     <Layout>
       <MainContent>

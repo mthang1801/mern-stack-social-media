@@ -1,7 +1,7 @@
 import {gql} from "@apollo/client";
 
 export const POST_CREATED_SUBSCRIPTIONS = gql`
-subscription NotifyCreatedPost($userId : ID){
+subscription NotifyCreatedPost($userId : ID!){
   notifyCreatedPost(userId : $userId){
     action
     type    

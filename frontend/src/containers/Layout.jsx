@@ -10,13 +10,12 @@ import useMenuList from "../components/Menu/useMenuList"
 const Layout = ({children, className}) => {
   const getToggleButtonMenu = useQuery(GET_TOGGLE_BUTTON_MENU);   
   const {toggleButtonMenu} = getToggleButtonMenu.data;
-  const {menu, explores} = useMenuList()
-    
+  const {menu, explores} = useMenuList();
   return (
     <div className={className}>
       <Header/>
       <div className={classNames("small-viewport-menu-list", {"hide-small-viewport-list" : toggleButtonMenu})}>
-        <MenuList  list={menu} title="Menu"/>  
+        <MenuList list={menu} title="Menu"/>  
         <MenuList list={explores} title="Explores"/>
       </div>      
       <Body>{children}</Body>

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_NOTIFICATIONS = gql`
-  query FetchNotifications {
-    fetchNotifications {
+  query FetchNotifications($skip : Int, $limit: Int) {
+    fetchNotifications(skip : $skip, limit : $limit ) {
       _id
       field
       action

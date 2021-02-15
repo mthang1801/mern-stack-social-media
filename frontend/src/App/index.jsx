@@ -21,10 +21,10 @@ function App() {
   }, [fetchCurrentUser])
 
   useEffect(() => {    
-    if(data && data.fetchCurrentUser){    
+    if(data && data.fetchCurrentUser){       
       setCurrentUser({...data.fetchCurrentUser})
     }
-  },[data, setCurrentUser])
+  },[data, setCurrentUser])  
   if(loading) return <div>Loading...</div>
   return (
     <Router>

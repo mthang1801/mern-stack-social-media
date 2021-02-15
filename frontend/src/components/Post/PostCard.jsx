@@ -57,7 +57,7 @@ const PostCard = ({ post }) => {
           <ImageGallery
             items={imagesGalerry}
             lazyLoad={true}
-            ref={imageRef}
+            ref={imageRef}            
             showFullscreenButton={false}
             showThumbnails={false}
             showPlayButton={false}

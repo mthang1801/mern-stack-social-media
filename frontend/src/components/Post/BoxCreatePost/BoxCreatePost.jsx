@@ -89,4 +89,4 @@ const BoxCreatePost = ({ user }) => {
   );
 };
 
-export default BoxCreatePost;
+export default React.memo(BoxCreatePost);
