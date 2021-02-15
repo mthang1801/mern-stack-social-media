@@ -58,7 +58,7 @@ const Home = () => {
         },
       }).then(() => setLoadingMore(false));
     }
-  },[loadingMore])
+  },[loadingMore, fetchMore])
   return (
     <Layout>
       <MainContent>

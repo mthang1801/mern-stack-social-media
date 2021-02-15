@@ -53,7 +53,7 @@ const Control = ({ user }) => {
     if (data && data.fetchNotifications.length) {
       setCountUnseenNotification(
         data.fetchNotifications.reduce(
-          (acc, notification) => (!notification.hasSeen ? (acc += 1) : acc),
+          (acc, notification) => (!notification.hasSeen.includes(user._id) ? (acc += 1) : acc),
           0
         )
       );
@@ -120,7 +120,7 @@ const Control = ({ user }) => {
               autoHeightMin={0}
               autoHeightMax={200}
             >
-              <NotificationsBoard notifications={data.fetchNotifications} newNotificationsList={newNotificationsList}/>
+              <NotificationsBoard user={user} notifications={data.fetchNotifications} newNotificationsList={newNotificationsList}/>
             </Scrollbars>            
           </div>
         ) : null}
