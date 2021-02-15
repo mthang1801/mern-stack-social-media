@@ -6,6 +6,7 @@ export const schemaMutation = gql`
     createPost(data : PostInput!) : Post!
     updatePost(postId : ID!, data : PostInput!) : Post!
     deletePost(postId: ID!) : Post!
+    updateUserHasSeenNotification(notificationId : ID!) : Notification!
     createComment(postId : ID!, data : CommentInput!) : Comment! 
     updateComment(commentId : ID!, data : CommentInput!) : Comment!
     deleteComment(commentId: ID!) : Comment!     

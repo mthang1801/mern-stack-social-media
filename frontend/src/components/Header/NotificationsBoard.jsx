@@ -8,17 +8,23 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import useLanguage from "../Global/useLanguage";
 import Moment from "react-moment";
 import classNames from "classnames"
-const NotificationsBoard = ({ notifications, newNotificationsList }) => {
+import {UPDATE_USER_HAS_SEEN_NOTIFICATION} from "../../apollo/operations/mutations"
+import {useMutation} from "@apollo/client"
+const NotificationsBoard = ({user, notifications, newNotificationsList }) => {
   const { colorMode } = useThemeUI();
   const { lang, i18n, t } = useLanguage();
-
+  const [updateToHasSeen] = useMutation(UPDATE_USER_HAS_SEEN_NOTIFICATION)
   const notificationContent = (field, action, notification) => {
     if (field === "post" && action === "CREATED") {
       return notification.postCreated;
     }
   };
   
-  console.log(notifications)
+  const handleUserClickHasSeen = (notification, notificationId) => {
+    if(!notification.hasSeen.includes(user._id)){
+      updateToHasSeen({variables : {notificationId }})
+    }
+  }
   return (
     <Wrapper theme={colorMode}>
       <div className="board-header">
@@ -31,8 +37,9 @@ const NotificationsBoard = ({ notifications, newNotificationsList }) => {
         {notifications.map((notification) => (
           <Link
             to={notification.href}
-            key={notification._id}
-            className={classNames("notification-link")}
+            key={notification._id}            
+            className={classNames("notification-link", {"unseen" : !notification.hasSeen.includes(user._id) })}          
+            onClick={() => handleUserClickHasSeen(notification,notification._id)}
           >
             <div className="avatar-container">
               <LazyLoadImage
@@ -70,6 +77,8 @@ const Wrapper = styled.div`
   border-radius: 0.5rem;
   box-shadow: var(--mediumShadow);
   color: inherit;
+  border : 1px solid ${({ theme }) =>
+  theme === "dark" ? "var(--dark)" : "var(--light)"};
   .board-header {
     display: flex;
     justify-content: space-between;
@@ -89,6 +98,12 @@ const Wrapper = styled.div`
     &:last-child{
       overflow: hidden;
     }
+  }
+  .unseen{
+    background-color: ${({ theme }) =>
+    theme === "dark"
+      ? "var(--dark)"
+      : "var(--light)"};
   }
   .avatar-container {
     width: 40px;

@@ -52,7 +52,7 @@ export const schemaType = gql`
     action: String! 
     creator : User!
     href : String!
-    hasSeen : Boolean! 
+    hasSeen : [ID!]! 
     acceptInvite : Boolean!
     createdAt : String!     
   }
