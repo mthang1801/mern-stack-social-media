@@ -1,0 +1,2 @@
+const Notifications = [];
+export {Notifications}
