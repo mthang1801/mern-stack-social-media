@@ -9,13 +9,11 @@ import { ApolloProvider } from "@apollo/client";
 import "react-image-gallery/styles/css/image-gallery.css";
 import "./i18n";
 ReactDOM.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <ApolloProvider client={client}>
-        <App />
-      </ApolloProvider>
-    </ThemeProvider>
-  </React.StrictMode>,
+  <ThemeProvider theme={theme}>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </ThemeProvider>,
   document.getElementById("root")
 );
 

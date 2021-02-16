@@ -1,9 +1,11 @@
 import React from 'react'
 import styled from "styled-components"
 import Aside from "../Aside/Aside"
+import {useThemeUI} from "theme-ui"
 const Body = ({children}) => {
+  const {colorMode} = useThemeUI()
   return (
-    <BodyWrapper>
+    <BodyWrapper theme={colorMode}>
       <aside className="aside">
         <Aside/>
       </aside>
@@ -29,7 +31,7 @@ const BodyWrapper = styled.div`
       position: fixed;
       width : 320px;
       height: calc(100vh - 60px);
-      padding : 1rem 1.5rem;
+      padding : 1rem 1.5rem;      
     }
     .main-content{
       margin-left : 320px;

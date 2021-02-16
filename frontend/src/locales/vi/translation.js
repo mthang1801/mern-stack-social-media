@@ -125,6 +125,10 @@ export const vi = {
     postCreated : "vừa đăng một trạng thái mới.",
     notification: {
       message : "Bạn vừa nhận được một thông báo mới"
+    },
+    greeting : {
+      welcome : "Chào mừng bạn đã đến với Pul.com",
+      introduce : "Pul là một nền tảng mạng xã hội được phát triển bởi cá nhân tôn trọng tiếng nói và suy nghĩ của người dùng.",      
     }
   }
 }

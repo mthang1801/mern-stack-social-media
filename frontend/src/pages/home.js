@@ -6,24 +6,19 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import { FETCH_POSTS, GET_CURRENT_USER, GET_POSTS} from "../apollo/operations/queries";
 import mutations from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
+import HomeSidebar from "../components/Sidebar/HomeSidebar"
 const Home = () => {
-  const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER, {
-    fetchPolicy: "cache-only",
+  const  { data: userData }= useQuery(GET_CURRENT_USER, {
+    fetchPolicy: "cache-first",
   });
   const [
     fetchPosts,
-    { data: fetchedPosts, loading, fetchMore },
+    { data: fetchedPosts, fetchMore },
   ] = useLazyQuery(FETCH_POSTS, { fetchPolicy: "cache-and-network" });  
   const {data : postsData} = useQuery(GET_POSTS)
   const [loadingMore, setLoadingMore] = useState(false);
   const { setPosts } = mutations;
-  useEffect(() => {
-    let _isMounted = true;
-    if (_isMounted) {
-      getCurrentUser();      
-    }
-    return () => (_isMounted = false);
-  }, [userData, getCurrentUser]);
+
   useEffect(() => {    
     if (fetchedPosts && fetchedPosts.fetchPosts) {
       setPosts([...fetchedPosts.fetchPosts]);
@@ -37,13 +32,12 @@ const Home = () => {
         setLoadingMore(true);
       }
     });
-  }, [setLoadingMore]);
+  }, []);
   useEffect(() => {
     if (postsData && !postsData.posts.length) {
       fetchPosts();
     }
-  }, [postsData, fetchPosts]);
-
+  }, [postsData, fetchPosts]);  
   useEffect(() => {
     if (loadingMore) {
       if (fetchMore) {
@@ -70,6 +64,7 @@ const Home = () => {
       }
     }
   }, [loadingMore, fetchMore]);
+  
   return (
     <Layout>
       <MainContent>
@@ -77,7 +72,9 @@ const Home = () => {
           {userData && userData.user && <BoxCreatePost user={userData.user} />}
           <Posts />
         </div>
-        <div className="sidebar"></div>
+        <div className="sidebar">
+          <HomeSidebar user={userData.user}/>
+        </div>
       </MainContent>
     </Layout>
   );

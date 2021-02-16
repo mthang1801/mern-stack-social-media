@@ -49,20 +49,16 @@ export default createGlobalStyle`
   --fontSize-6: 2.488rem;
   --fontSize-7: 2.986rem;
   --color-primary: #005b99;
-  --color-text: #2e353f;  
-  --color-text-light: #4f5969;
+  
   --color-heading: #1a202c;
   --color-heading-black: black;
   --color-accent: #d1dce5;
   --abyss : #07223d;
-  --color-background-default: #f0f0f0;
-  --color-text-default : #000;
-  --color-background-dark : #202020;
-  --color-text-dark : #fff;
-  --color-card-dark : #2d2f31;
+
   --gray-dark : #454545;
   --gray-light: #dedede;
   --gray-deep : #bfbfbf;
+
   --mainTransition: 0.15s all;
   --transition-delay : 0.5s;
   --blue: #0d6efd;
@@ -86,6 +82,23 @@ export default createGlobalStyle`
   --danger: #dc3545;
   --light: #f8f9fa;
   --dark: #212529;  
+  
+
+  --color-background-default: #f0f0f0;
+  --color-background-default-secondary : #b4b4b4;
+  --color-text-default : #000;  
+
+  --color-background-dark : #2c2c2c;
+  --color-background-dark-secondary : #0e0d0d; 
+  --color-text-dark : #fff;
+
+
+  --color-card-dark : #2d2f31;    
+  --color-card-default : #fff;
+  
+  --color-border-dark : #0e0f10; 
+  --color-border-default : #e8e8e8;
+
   --fontFamily-sans: Montserrat, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -96,7 +109,7 @@ export default createGlobalStyle`
   --lightShadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.05);
   --mediumShadow : 2px 3px 3px 1px rgba(0,0,0,0.2);
   --darkShadow: 4px 10px 5px 1px rgba(0, 0, 0, 0.3);    
-  font-size : ${({rootFont}) => rootFont ? `${rootFont}px` : "16px"}
+  font-size : ${({rootFont}) => rootFont ? `${rootFont}px` : "16px"}  
 }
   *,:after, :before {
     padding: 0;

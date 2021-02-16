@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, memo } from "react";
 import styled from "styled-components";
-import { FaFacebookMessenger } from "react-icons/fa";
+import { TiMessages } from "react-icons/ti";
 import { IoMdNotifications } from "react-icons/io";
 import Button from "../Controls/ButtonDefault";
 import NotificationsBoard from "./NotificationsBoard";
@@ -124,7 +124,7 @@ const Control = ({ user }) => {
   return (
     <Wrapper onScroll={handleScrollBoard}>
       <Button>
-        <FaFacebookMessenger />
+        <TiMessages />
       </Button>
       <div className="notification" ref={notificationRef}>
         <Button onClick={handleClickNotification}>

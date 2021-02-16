@@ -23,7 +23,7 @@ const MobileMenuList = ({aside, title, list}) => {
 }
 
 const Wrapper = styled.div`  
-  background-color : ${({theme}) => theme=== "dark" ? "var(--color-background-dark)" : "var(--color-background-default)"  };
+  
   color : ${({theme}) => theme=== "dark" ? "var(--color-text-dark)" : "var(--color-text-default)" };  
   .menu-title{
     padding : 0.5rem 1.6rem;
