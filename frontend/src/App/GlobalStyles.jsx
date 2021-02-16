@@ -97,7 +97,7 @@ export default createGlobalStyle`
   --color-card-default : #fff;
   
   --color-border-dark : #0e0f10; 
-  --color-border-light : #e8e8e8;
+  --color-border-default : #e8e8e8;
 
   --fontFamily-sans: Montserrat, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,

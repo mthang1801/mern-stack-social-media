@@ -14,6 +14,8 @@ import { GET_CURRENT_USER } from "../../apollo/operations/queries";
 import { useQuery } from "@apollo/client";
 import { useLocation, useHistory } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
+import ButtonLogin from "../Controls/ButtonLogin"
+import ButtonSignUp from "../Controls/ButtonSignUp"
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
   const { data, loading } = useQuery(GET_CURRENT_USER, {
@@ -64,12 +66,12 @@ const Header = () => {
   ) : (
     <div className="nav-controls">
       <div className="nav-auth">
-        <button className="btn btn-login" onClick={directToLogin}>
+        <ButtonLogin to="/auth">
           Login
-        </button>
-        <button className="btn btn-signup" onClick={directToSignUp}>
+        </ButtonLogin>        
+        <ButtonSignUp to="/auth/signup">
           Sign up
-        </button>
+        </ButtonSignUp>
         <div className="setting-account">
           <SettingAccount />
         </div>
@@ -121,38 +123,7 @@ const Wrapper = styled.header`
   display: flex;
   align-items: center;
   flex-wrap: no-wrap;
-  z-index: 100;
-  .btn {
-    border-radius: 1.5rem;
-    padding: 0.75rem 1.5rem;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    transition: var(--mainTransition);
-    text-transform: uppercase;
-    font-weight: bolder;
-    &:not(:last-child) {
-      margin-right: 1rem;
-    }
-    &-login {
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      &:hover {
-        color: var(--light);
-        background-color: var(--primary);
-        box-shadow: var(--lightShadow);
-      }
-    }
-    &-signup {
-      border: 1px solid var(--success);
-      color: var(--success);
-      &:hover {
-        color: var(--light);
-        background-color: var(--success);
-        box-shadow: var(--lightShadow);
-      }
-    }
-  }
+  z-index: 100;  
   .nav-header {
     display: flex;
     align-items: center;
@@ -200,6 +171,9 @@ const Wrapper = styled.header`
       width: 100%;
       display: flex;
       justify-content: flex-end;
+      & > *{
+        margin : 0 0.5rem;
+      }
     }
   }
 

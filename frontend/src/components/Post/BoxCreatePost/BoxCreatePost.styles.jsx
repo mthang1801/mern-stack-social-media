@@ -12,7 +12,7 @@ const Box = styled.div`
     &:not(:last-child){
       border-bottom: 1px solid
       ${({ theme }) =>
-        theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-light)"};
+        theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};
     }
   }
   .submit{

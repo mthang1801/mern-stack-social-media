@@ -26,7 +26,7 @@ function App() {
       setCurrentUser({...data.fetchCurrentUser})
     }
   },[data, setCurrentUser])    
-  
+  console.log("render")
   return (
     <Router>
       <GlobalStyles theme={colorMode}/>

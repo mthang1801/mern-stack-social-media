@@ -6,9 +6,10 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import { FETCH_POSTS, GET_CURRENT_USER, GET_POSTS} from "../apollo/operations/queries";
 import mutations from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
+import HomeSidebar from "../components/Sidebar/HomeSidebar"
 const Home = () => {
   const  { data: userData }= useQuery(GET_CURRENT_USER, {
-    fetchPolicy: "cache-only",
+    fetchPolicy: "cache-first",
   });
   const [
     fetchPosts,
@@ -71,7 +72,9 @@ const Home = () => {
           {userData && userData.user && <BoxCreatePost user={userData.user} />}
           <Posts />
         </div>
-        <div className="sidebar"></div>
+        <div className="sidebar">
+          <HomeSidebar user={userData.user}/>
+        </div>
       </MainContent>
     </Layout>
   );
