@@ -7,23 +7,17 @@ import { FETCH_POSTS, GET_CURRENT_USER, GET_POSTS} from "../apollo/operations/qu
 import mutations from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
 const Home = () => {
-  const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER, {
+  const  { data: userData }= useQuery(GET_CURRENT_USER, {
     fetchPolicy: "cache-only",
   });
   const [
     fetchPosts,
-    { data: fetchedPosts, loading, fetchMore },
+    { data: fetchedPosts, fetchMore },
   ] = useLazyQuery(FETCH_POSTS, { fetchPolicy: "cache-and-network" });  
   const {data : postsData} = useQuery(GET_POSTS)
   const [loadingMore, setLoadingMore] = useState(false);
   const { setPosts } = mutations;
-  useEffect(() => {
-    let _isMounted = true;
-    if (_isMounted) {
-      getCurrentUser();      
-    }
-    return () => (_isMounted = false);
-  }, [userData, getCurrentUser]);
+
   useEffect(() => {    
     if (fetchedPosts && fetchedPosts.fetchPosts) {
       setPosts([...fetchedPosts.fetchPosts]);
@@ -37,13 +31,12 @@ const Home = () => {
         setLoadingMore(true);
       }
     });
-  }, [setLoadingMore]);
+  }, []);
   useEffect(() => {
     if (postsData && !postsData.posts.length) {
       fetchPosts();
     }
-  }, [postsData, fetchPosts]);
-
+  }, [postsData, fetchPosts]);  
   useEffect(() => {
     if (loadingMore) {
       if (fetchMore) {
@@ -70,6 +63,7 @@ const Home = () => {
       }
     }
   }, [loadingMore, fetchMore]);
+  
   return (
     <Layout>
       <MainContent>

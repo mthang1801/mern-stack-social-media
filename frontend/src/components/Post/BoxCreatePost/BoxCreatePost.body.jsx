@@ -14,6 +14,15 @@ const BoxCreatePostBody = ({
   const imageRef = useRef(false);
   const handleChangeText = (text) => {
     setText(text);
+    function urlify(text) {
+      var urlRegex = /(https?:\/\/[^\s]+)/g;
+      return text.replace(urlRegex, function(url) {
+        return '<a href="' + url + '">' + url + '</a>';
+      })
+      // or alternatively
+      // return text.replace(urlRegex, '<a href="$1">$1</a>')
+    }
+    console.log(urlify(text))
   };
 
   const handleSelect = (option, prefix) => {
@@ -27,6 +36,7 @@ const BoxCreatePostBody = ({
   const handleClickImageGallery = (e) => {
     imageRef.current.fullScreen();
   };
+  
   return (
     <div className="box-body">
       <div className="box-body__textarea">
@@ -44,7 +54,7 @@ const BoxCreatePostBody = ({
         >
           <Option userId="602097c740303021c0dcebed" value="mthang1801.dev">
             mthang1801.dev@gmail.com
-          </Option>
+        </Option>
           <Option userId="602097ad40303021c0dcebec" value="mthang1801">
             mthang1801@gmail.com
           </Option>
@@ -59,7 +69,8 @@ const BoxCreatePostBody = ({
             maivthang2@gmail.com
           </Option>
         </Mentions>
-      </div>
+        
+      </div>      
       <div className="box-body__render_images">
         <ImageGallery
           items={imagesGalerry}

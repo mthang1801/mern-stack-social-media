@@ -139,7 +139,7 @@ const SettingWrapper = styled.div`
     overflow: hidden;
     padding: 0.4rem;
     background-color: ${({ theme }) =>
-      theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
+      theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
     color: ${({ theme }) =>
       theme === "dark"
         ? "var(--color-text-dark)"
@@ -156,11 +156,10 @@ const SettingWrapper = styled.div`
       &:hover {
         background-color: ${({ theme }) =>
           theme === "dark"
-            ? "var(--color-card-dark)"
+            ? "var(--color-background-dark)"
             : "var(--color-background-default)"};
         color: ${({ theme }) =>
-          theme === "dark" ? "var(--white)" : "var(--dark)"};
-        opacity: 0.5;
+        theme === "dark" ? "var(--color-text-dark)" : "var(--color-text-default)"};        
       }
     }
   }
@@ -174,7 +173,7 @@ const SettingWrapper = styled.div`
         font-size: 1.3em;
         margin-right: 0.25rem;
         color: ${({ theme }) =>
-          theme === "dark" ? "var(--white)" : "var(--dark)"};
+          theme === "dark" ? "var(--color-text-dark)" : "var(--color-text-default)"};
       }
     }
     &-right {

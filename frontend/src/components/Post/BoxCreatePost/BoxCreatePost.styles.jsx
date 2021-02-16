@@ -4,7 +4,7 @@ const Box = styled.div`
   width: 95%;
   margin: auto;  
   background-color: ${({ theme }) =>
-    theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
+    theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
   border-radius: 8px;
   box-shadow: var(--lightShadow);
   & > * {
@@ -12,7 +12,7 @@ const Box = styled.div`
     &:not(:last-child){
       border-bottom: 1px solid
       ${({ theme }) =>
-        theme === "dark" ? "var(--gray-dark)" : "var(--gray-light)"};
+        theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-light)"};
     }
   }
   .submit{
@@ -61,10 +61,11 @@ const Box = styled.div`
       width: 100%;
       position: relative;
       background-color: ${({ theme }) =>
-        theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
+        theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
       color: inherit;
       outline: none;
-      border: none;
+      border: ${({ theme }) =>
+      theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};
       padding: 0.5rem 0;
       resize: none;
       font-family: var(--fontFamily);
@@ -126,7 +127,7 @@ const Box = styled.div`
           z-index: 2;
           top : 100%;          
           background-color: ${({ theme }) =>
-          theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};  
+          theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};  
           border-radius : 0.5rem;
           border: 1px solid     ${({ theme }) =>
           theme === "dark" ? "var(--color-background-dark)" : "var(--color-background-default)"};       

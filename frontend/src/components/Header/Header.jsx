@@ -11,24 +11,18 @@ import ButtonMenu from "../Controls/ButtonMenu";
 import mutations from "../../apollo/operations/mutations";
 import classNames from "classnames";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries";
-import { useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useLocation, useHistory } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
-  const [getCurrentUser, { data, loading }] = useLazyQuery(GET_CURRENT_USER, {
+  const { data, loading } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: "cache-only",
   });
   const [currentUser, setCurrentUser] = useState(null);
   const { colorMode } = useThemeUI();
 
-  useEffect(() => {
-    let _isMounted = true;
-    if (_isMounted) {
-      getCurrentUser();
-    }
-    return () => (_isMounted = false);
-  }, [getCurrentUser]);
+
   useEffect(() => {
     if (data && data.user) {
       setCurrentUser({ ...data.user });
@@ -187,7 +181,7 @@ const Wrapper = styled.header`
     align-items: center;
     transition: var(--mainTransition);
     height: 100%;
-    padding : 0 1.5rem;
+    padding: 0 1.5rem;
     .nav-bar {
       display: none;
     }
