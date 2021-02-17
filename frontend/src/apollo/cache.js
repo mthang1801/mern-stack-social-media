@@ -6,7 +6,9 @@ import {
   Posts,
   Notifications,
   CountNumberNotificationsUnseen,
-  NewNotifications
+  NewNotifications,
+  LoadingNotificationMore,
+  OpenPopupNotification
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 const setPostStatusVar = makeVar(PostStatus);
@@ -15,6 +17,8 @@ const setPostsVar = makeVar(Posts);
 const setNotificationsVar = makeVar(Notifications);
 const setCountNumberNotificationsUnseenVar = makeVar(CountNumberNotificationsUnseen);
 const setNewNotificationsVar = makeVar(NewNotifications);
+const setLoadingNotificationsMoreVar = makeVar(LoadingNotificationMore);
+const setOpenPopupNotificationVar = makeVar(OpenPopupNotification);
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -37,6 +41,12 @@ const cache = new InMemoryCache({
         newNotifications : {
           read : () => setNewNotificationsVar()
         },
+        loadingNotificationsMore : {
+          read : () => setLoadingNotificationsMoreVar()
+        },
+        openPopupNotification : {
+          read : () => setOpenPopupNotificationVar()
+        },
         countNumberNotificationsUnseen : {
           read : () => setCountNumberNotificationsUnseenVar()
         }
@@ -53,5 +63,7 @@ export {
   setPostsVar,
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
-  setNewNotificationsVar
+  setNewNotificationsVar,
+  setLoadingNotificationsMoreVar,
+  setOpenPopupNotificationVar
 };
