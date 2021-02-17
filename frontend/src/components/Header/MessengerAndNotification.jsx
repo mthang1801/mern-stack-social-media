@@ -6,63 +6,120 @@ import Button from "../Controls/ButtonDefault";
 import NotificationsBoard from "./NotificationsBoard";
 import classNames from "classnames";
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { FETCH_NOTIFICATIONS, FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN } from "../../apollo/operations/queries";
-import mutations from "../../apollo/operations/mutations"
+import {
+  FETCH_NOTIFICATIONS,
+  FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
+  GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
+  GET_NOTIFICATIONS,  
+  GET_NEW_NOTIFICATIONS
+} from "../../apollo/operations/queries";
+import mutations from "../../apollo/operations/mutations";
 import subcriptions from "../../apollo/operations/subscriptions";
 import { Scrollbars } from "react-custom-scrollbars";
 import FlashPopUpNotification from "./FlashPopUpNotification";
-const Control = ({ user }) => {  
+
+const Control = ({ user }) => {
+  // useState
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
-  const [newNotificationsList, setNewNotificationList] = useState(new Set());
-  const { data, loading, subscribeToMore : subscribeToMoreNotifications, fetchMore } = useQuery(
-    FETCH_NOTIFICATIONS,
-    {
-      variables: { skip : 0, limit : +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE },
-    }    
-  );
-  const {setCountNumberNotificationsUnseen} = mutations
-  const [fetchCountNumberNotificationsUnseen, {data : countNotificationsUnseenData }] = useLazyQuery(FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {fetchPolicy : "network-only"})
-  const {data : {countNumberNotificationsUnseen}} = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {fetchPolicy : "cache-first"})
   const [loadingMore, setLoadingMore] = useState(false);
-  const [openPopupNotification, setOpenPopupNotification] = useState(false);
+  const [openPopupNotification, setOpenPopupNotification] = useState(false);  
+  //useLazyQuery
+  const [
+    fetchNotifications,
+    {
+      data: notificationsData,
+      loading: fetchLoadingNotifications,
+      subscribeToMore: subscribeToMoreNotifications,
+      fetchMore,      
+    },
+  ] = useLazyQuery(FETCH_NOTIFICATIONS);
+  const [
+    fetchCountNumberNotificationsUnseen,
+    { data: countNotificationsUnseenData },
+  ] = useLazyQuery(FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
+    fetchPolicy: "network-only",
+  });
+  //useQuery
+  const {
+    data: { countNumberNotificationsUnseen },
+  } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
+    fetchPolicy: "cache-first",
+  });
+  const {
+    data: { notifications },
+  } = useQuery(GET_NOTIFICATIONS, { fetchPolicy: "cache-first" });
+  const {data : {newNotifications}} = useQuery(GET_NEW_NOTIFICATIONS, {fetchPolicy : "cache-first"})
+  //mutations
+  const { setCountNumberNotificationsUnseen, setNotifications, setNewNotifications } = mutations;  
+  //useRef
   const notificationRef = useRef(false);
-  useEffect(()=> {
-    if(countNumberNotificationsUnseen === null){
-      fetchCountNumberNotificationsUnseen();      
-    }      
-  }, [countNumberNotificationsUnseen, fetchCountNumberNotificationsUnseen]);
-  useEffect(()=>{
-    if(countNotificationsUnseenData && countNotificationsUnseenData.countNotificationsUnseen){
-      setCountNumberNotificationsUnseen(countNotificationsUnseenData.countNotificationsUnseen)
-    }        
-  },[countNotificationsUnseenData, setCountNumberNotificationsUnseen])
 
   useEffect(() => {
-    const unsubscribePostCreated = subscribeToMoreNotifications({
-      document:
-        subcriptions.notificationSubscription.POST_CREATED_SUBSCRIPTIONS,
-      variables: { userId: user._id },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const newNotification =
-          subscriptionData.data.notifyCreatedPost.notification;
-        setOpenPopupNotification(true);        
-        setNewNotificationList((prevList) => prevList.add(newNotification._id));    
-        setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1)
-       
-        return {
-          fetchNotifications: [
-            { ...newNotification, new: true },
-            ...prev.fetchNotifications,
-          ],          
-        };
-      },
-    });
-    
-    return () => {
-      unsubscribePostCreated();      
+    if (countNumberNotificationsUnseen === null) {
+      fetchCountNumberNotificationsUnseen();
     }
-  }, [countNumberNotificationsUnseen]);
+  }, [countNumberNotificationsUnseen, fetchCountNumberNotificationsUnseen]);
+
+  useEffect(() => {
+    if (
+      countNotificationsUnseenData &&
+      countNotificationsUnseenData.countNotificationsUnseen
+    ) {
+      setCountNumberNotificationsUnseen(
+        countNotificationsUnseenData.countNotificationsUnseen
+      );
+    }
+  }, [countNotificationsUnseenData, setCountNumberNotificationsUnseen]);
+
+  useEffect(() => {
+    if (!notifications.length && !notificationsData) {
+      fetchNotifications({
+        variables: {
+          skip: 0,
+          limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
+        },
+      });
+    }
+    if (      
+      notificationsData &&
+      notificationsData.fetchNotifications
+    ) {
+      setNotifications([...notificationsData.fetchNotifications]);
+    }
+   
+  }, [fetchNotifications, notificationsData, notifications]);
+
+  useEffect(() => {
+    let unsubscribePostCreated;    
+    if (subscribeToMoreNotifications) {
+      unsubscribePostCreated = subscribeToMoreNotifications({
+        document:
+          subcriptions.notificationSubscription.POST_CREATED_SUBSCRIPTIONS,
+        variables: { userId: user._id },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData.data) return prev;
+          const newNotification =
+            subscriptionData.data.notifyCreatedPost.notification;
+          setOpenPopupNotification(true);
+          setNewNotifications(newNotification._id)
+          setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);
+
+          return {
+            fetchNotifications: [
+              { ...newNotification, new: true },
+              ...prev.fetchNotifications,
+            ],
+          };
+        },
+      });
+    }
+
+    return () => {
+      if (unsubscribePostCreated) {
+        unsubscribePostCreated();
+      }
+    };
+  }, [countNumberNotificationsUnseen,subscribeToMoreNotifications]);
 
   useEffect(() => {
     let timer;
@@ -106,25 +163,33 @@ const Control = ({ user }) => {
     }
   };
 
-  useEffect(() => {
+  useEffect(() => {       
     if (loadingMore) {
       if (fetchMore) {
         fetchMore({
           query: FETCH_NOTIFICATIONS,
           variables: {
-            skip:
-              data && data.fetchNotifications.length
-                ? data.fetchNotifications.length
-                : 0,
+            skip: notifications.length,
             limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
-            return {fetchNotifications : [...prev.fetchNotifications, ...fetchMoreResult.fetchNotifications]}
+           
+            return {
+              fetchNotifications: [
+                ...notifications,
+                ...fetchMoreResult.fetchNotifications,
+              ],
+            };
           },
         }).then(() => setLoadingMore(false));
+      } else{        
+        fetchNotifications({variables: {
+          skip: notifications.length,
+          limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
+        }})
       }
     }
-  }, [loadingMore]);
+  }, [loadingMore, fetchLoadingNotifications]);
  
   return (
     <Wrapper onScroll={handleScrollBoard}>
@@ -147,7 +212,7 @@ const Control = ({ user }) => {
         >
           <FlashPopUpNotification />
         </div>
-        {data ? (
+        {notifications.length ? (
           <div
             className={classNames("notification-board", {
               "open-board": openNotificationBoard,
@@ -162,8 +227,8 @@ const Control = ({ user }) => {
             >
               <NotificationsBoard
                 user={user}
-                notifications={data.fetchNotifications}
-                newNotificationsList={newNotificationsList}
+                notifications={notifications}
+                newNotificationsList={newNotifications}
               />
             </Scrollbars>
           </div>
