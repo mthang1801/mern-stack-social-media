@@ -2,11 +2,12 @@ import React,  { useEffect ,lazy, Suspense } from "react";
 import GlobalStyles from "./GlobalStyles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import {useThemeUI} from "theme-ui"
-import {FETCH_CURRENT_USER, GET_CURRENT_USER}  from "../apollo/operations/queries"
+import {FETCH_CURRENT_USER}  from "../apollo/operations/queries"
 import mutations from "../apollo/operations/mutations"
 import {useLazyQuery} from "@apollo/client"
 const HomePage = lazy(() => import("../pages/home"));
 const AuthPage = lazy(() => import("../pages/auth"));
+const NotificationsPage = lazy(() => import("../pages/notifications"))
 function App() {
   const {colorMode} = useThemeUI()  
   const [fetchCurrentUser, {data}] = useLazyQuery(FETCH_CURRENT_USER, {fetchPolicy: "cache-and-network"})  
@@ -26,7 +27,7 @@ function App() {
       setCurrentUser({...data.fetchCurrentUser})
     }
   },[data, setCurrentUser])    
-  console.log("render")
+  
   return (
     <Router>
       <GlobalStyles theme={colorMode}/>
@@ -34,6 +35,7 @@ function App() {
         <Suspense fallback={<div>Loading...</div>}>
           <Route exact path="/" component={HomePage} />
           <Route path="/auth" component={AuthPage}/>
+          <Route path="/notifications" component={NotificationsPage}/>
         </Suspense>
       </Switch>
     </Router>

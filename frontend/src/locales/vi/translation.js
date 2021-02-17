@@ -39,37 +39,37 @@ export const vi = {
     menuList: [
       {
         path: "/",
-        name: "Home",
+        name: "Trang chủ",
         icon: () => <FaHome />,
       },
       {
         path: "/notifications",
-        name: "Notification",
+        name: "Thông báo",
         icon: () => <IoIosNotifications />,
       },
       {
         path: "/friends",
-        name: "Friends",
+        name: "Bạn bè",
         icon: () => <FaUserFriends />,
       },
       {
         path: "/groups",
-        name: "Groups",
+        name: "Nhóm",
         icon: () => <HiOutlineUserGroup />,
       },
       {
         path: "/explores",
-        name: "Explores",
+        name: "Khám phá",
         icon: () => <AiOutlineGlobal />,
       },
       {
         path: "/news",
-        name: "News",
+        name: "Tin mới",
         icon: () => <ImNewspaper />,
       },
       {
         path: "/more",
-        name: "More",
+        name: "Thêm",
         icon: () => <CgMoreO />,
       },
     ],
@@ -121,10 +121,10 @@ export const vi = {
       signout : "Đăng xuất"
     },    
     mindText:  "Bạn đang nghĩ gì?",
-    menu : "Danh mục",
-    postCreated : "vừa đăng một trạng thái mới.",
-    notification: {
-      message : "Bạn vừa nhận được một thông báo mới"
+    menu : "Danh mục",   
+    notifications: {
+      message : "Bạn vừa nhận được một thông báo mới",
+      postCreated : "vừa đăng một trạng thái mới.",
     },
     greeting : {
       welcome : "Chào mừng bạn đã đến với Pul.com",

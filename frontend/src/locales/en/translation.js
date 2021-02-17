@@ -44,7 +44,7 @@ export const en = {
       },
       {
         path: "/notifications",
-        name: "Notification",
+        name: "Notifications",
         icon: () => <IoIosNotifications />,
       },
       {
@@ -123,10 +123,10 @@ export const en = {
       signout : "Sign Out"
     },
     mindText:  "What's on your mind?",
-    menu : "Menu",
-    postCreated : "has just posted a new status.",
-    notification: {
-      message : "You have just received a new message."
+    menu : "Menu",    
+    notifications: {
+      message : "You have just received a new message.",
+      postCreated : "has just posted a new status.",
     },
     greeting : {
       welcome : "Welcome to Pul.com",

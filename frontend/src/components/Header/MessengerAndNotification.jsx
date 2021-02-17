@@ -10,8 +10,8 @@ import {
   FETCH_NOTIFICATIONS,
   FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-  GET_NOTIFICATIONS,  
-  GET_NEW_NOTIFICATIONS
+  GET_NOTIFICATIONS,
+  GET_NEW_NOTIFICATIONS,
 } from "../../apollo/operations/queries";
 import mutations from "../../apollo/operations/mutations";
 import subcriptions from "../../apollo/operations/subscriptions";
@@ -22,7 +22,7 @@ const Control = ({ user }) => {
   // useState
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [openPopupNotification, setOpenPopupNotification] = useState(false);  
+  const [openPopupNotification, setOpenPopupNotification] = useState(false);
   //useLazyQuery
   const [
     fetchNotifications,
@@ -30,7 +30,7 @@ const Control = ({ user }) => {
       data: notificationsData,
       loading: fetchLoadingNotifications,
       subscribeToMore: subscribeToMoreNotifications,
-      fetchMore,      
+      fetchMore,
     },
   ] = useLazyQuery(FETCH_NOTIFICATIONS);
   const [
@@ -48,9 +48,15 @@ const Control = ({ user }) => {
   const {
     data: { notifications },
   } = useQuery(GET_NOTIFICATIONS, { fetchPolicy: "cache-first" });
-  const {data : {newNotifications}} = useQuery(GET_NEW_NOTIFICATIONS, {fetchPolicy : "cache-first"})
+  const {
+    data: { newNotifications },
+  } = useQuery(GET_NEW_NOTIFICATIONS, { fetchPolicy: "cache-first" });
   //mutations
-  const { setCountNumberNotificationsUnseen, setNotifications, setNewNotifications } = mutations;  
+  const {
+    setCountNumberNotificationsUnseen,
+    setNotifications,
+    setNewNotifications,
+  } = mutations;
   //useRef
   const notificationRef = useRef(false);
 
@@ -80,17 +86,13 @@ const Control = ({ user }) => {
         },
       });
     }
-    if (      
-      notificationsData &&
-      notificationsData.fetchNotifications
-    ) {
+    if (notificationsData && notificationsData.fetchNotifications) {
       setNotifications([...notificationsData.fetchNotifications]);
     }
-   
   }, [fetchNotifications, notificationsData, notifications]);
 
   useEffect(() => {
-    let unsubscribePostCreated;    
+    let unsubscribePostCreated;
     if (subscribeToMoreNotifications) {
       unsubscribePostCreated = subscribeToMoreNotifications({
         document:
@@ -101,7 +103,7 @@ const Control = ({ user }) => {
           const newNotification =
             subscriptionData.data.notifyCreatedPost.notification;
           setOpenPopupNotification(true);
-          setNewNotifications(newNotification._id)
+          setNewNotifications(newNotification._id);
           setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);
 
           return {
@@ -119,7 +121,7 @@ const Control = ({ user }) => {
         unsubscribePostCreated();
       }
     };
-  }, [countNumberNotificationsUnseen,subscribeToMoreNotifications]);
+  }, [countNumberNotificationsUnseen, subscribeToMoreNotifications]);
 
   useEffect(() => {
     let timer;
@@ -163,7 +165,7 @@ const Control = ({ user }) => {
     }
   };
 
-  useEffect(() => {       
+  useEffect(() => {
     if (loadingMore) {
       if (fetchMore) {
         fetchMore({
@@ -173,7 +175,6 @@ const Control = ({ user }) => {
             limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
-           
             return {
               fetchNotifications: [
                 ...notifications,
@@ -182,15 +183,18 @@ const Control = ({ user }) => {
             };
           },
         }).then(() => setLoadingMore(false));
-      } else{        
-        fetchNotifications({variables: {
-          skip: notifications.length,
-          limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
-        }})
+      } else {
+        fetchNotifications({
+          variables: {
+            skip: notifications.length,
+            limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
+          },
+        });
+        setLoadingMore(false);
       }
     }
   }, [loadingMore, fetchLoadingNotifications]);
- 
+
   return (
     <Wrapper onScroll={handleScrollBoard}>
       <Button>
@@ -212,7 +216,7 @@ const Control = ({ user }) => {
         >
           <FlashPopUpNotification />
         </div>
-        {notifications.length ? (
+        {user ? (
           <div
             className={classNames("notification-board", {
               "open-board": openNotificationBoard,
@@ -225,11 +229,7 @@ const Control = ({ user }) => {
               autoHeightMin={0}
               autoHeightMax={200}
             >
-              <NotificationsBoard
-                user={user}
-                notifications={notifications}
-                newNotificationsList={newNotifications}
-              />
+              <NotificationsBoard />
             </Scrollbars>
           </div>
         ) : null}

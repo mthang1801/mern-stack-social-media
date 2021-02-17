@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom"
-const ButtonSignUp = ({ children, ...props }) => {
-  return <Button {...props}>{children}</Button>;
+const ButtonSignUp = ({ children, to, from, ...props }) => {
+  return <Button to={{pathname : to, state : {from}}} {...props}>{children}</Button>;
 };
 
 const Button = styled(Link)`
