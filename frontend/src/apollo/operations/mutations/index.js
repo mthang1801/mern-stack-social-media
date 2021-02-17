@@ -4,6 +4,7 @@ import createSetCurrentUser from "./setCurrentUser";
 import createSetPosts from "./setPosts";
 import createSetNotifications from "./setNotifications";
 import createSetCountNumberNotificationsUnseen from "./setCountNumberNotificationsUnseen";
+import createSetNewNotifications from "./setNewNotifications"
 import {
   toggleButtonMenuVar,
   setPostStatusVar,
@@ -11,6 +12,7 @@ import {
   setPostsVar,
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
+  setNewNotificationsVar
 } from "../../cache";
 export { SIGNUP } from "./signup";
 export { CREATE_POST } from "./createPost";
@@ -24,6 +26,7 @@ const mutations = {
   setCountNumberNotificationsUnseen: createSetCountNumberNotificationsUnseen(
     setCountNumberNotificationsUnseenVar
   ),
+  setNewNotifications : createSetNewNotifications(setNewNotificationsVar)
 };
 
 export { mutations as default };
