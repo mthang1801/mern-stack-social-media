@@ -1,6 +1,6 @@
 import {gql} from "@apollo/client"
 
-export const COUNT_NOTIFICATIONS_UNSEEN = gql`
+export const FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN = gql`
   query {
     countNotificationsUnseen
   }

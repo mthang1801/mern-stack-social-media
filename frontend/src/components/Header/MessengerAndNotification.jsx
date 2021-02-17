@@ -5,8 +5,9 @@ import { IoMdNotifications } from "react-icons/io";
 import Button from "../Controls/ButtonDefault";
 import NotificationsBoard from "./NotificationsBoard";
 import classNames from "classnames";
-import { useQuery } from "@apollo/client";
-import { FETCH_NOTIFICATIONS, COUNT_NOTIFICATIONS_UNSEEN } from "../../apollo/operations/queries";
+import { useQuery, useLazyQuery } from "@apollo/client";
+import { FETCH_NOTIFICATIONS, FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN } from "../../apollo/operations/queries";
+import mutations from "../../apollo/operations/mutations"
 import subcriptions from "../../apollo/operations/subscriptions";
 import { Scrollbars } from "react-custom-scrollbars";
 import FlashPopUpNotification from "./FlashPopUpNotification";
@@ -19,11 +20,22 @@ const Control = ({ user }) => {
       variables: { skip : 0, limit : +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE },
     }    
   );
-  const {data : countNotificationsUnseenData, subscribeToMore : subscribeToMoreCountNotificationsUnseen } = useQuery(COUNT_NOTIFICATIONS_UNSEEN, {fetchPolicy : "network-only"})
-  
+  const {setCountNumberNotificationsUnseen} = mutations
+  const [fetchCountNumberNotificationsUnseen, {data : countNotificationsUnseenData }] = useLazyQuery(FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {fetchPolicy : "network-only"})
+  const {data : {countNumberNotificationsUnseen}} = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {fetchPolicy : "cache-first"})
   const [loadingMore, setLoadingMore] = useState(false);
   const [openPopupNotification, setOpenPopupNotification] = useState(false);
   const notificationRef = useRef(false);
+  useEffect(()=> {
+    if(countNumberNotificationsUnseen === null){
+      fetchCountNumberNotificationsUnseen();      
+    }      
+  }, [countNumberNotificationsUnseen, fetchCountNumberNotificationsUnseen]);
+  useEffect(()=>{
+    if(countNotificationsUnseenData && countNotificationsUnseenData.countNotificationsUnseen){
+      setCountNumberNotificationsUnseen(countNotificationsUnseenData.countNotificationsUnseen)
+    }        
+  },[countNotificationsUnseenData, setCountNumberNotificationsUnseen])
 
   useEffect(() => {
     const unsubscribePostCreated = subscribeToMoreNotifications({
@@ -34,31 +46,23 @@ const Control = ({ user }) => {
         if (!subscriptionData.data) return prev;
         const newNotification =
           subscriptionData.data.notifyCreatedPost.notification;
-        setOpenPopupNotification(true);
-
-        setNewNotificationList((prevList) => prevList.add(newNotification._id));
+        setOpenPopupNotification(true);        
+        setNewNotificationList((prevList) => prevList.add(newNotification._id));    
+        setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1)
+       
         return {
           fetchNotifications: [
             { ...newNotification, new: true },
             ...prev.fetchNotifications,
-          ],
+          ],          
         };
       },
     });
-    const unsubscribeCountNotificationsUnseen = subscribeToMoreCountNotificationsUnseen({
-      document : subcriptions.notificationSubscription.UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN_SUBSCRIPTION,
-      variables : {userId : user._id},
-      updateQuery : (prev, {subscriptionData}) => {
-        if(subscriptionData.data && subscriptionData.data.updateCountNotificationsWhenSeen.toString() === user._id.toString()){
-          return {countNotificationsUnseen : prev.countNotificationsUnseen- 1} ;
-        }
-      }
-    }) 
+    
     return () => {
-      unsubscribePostCreated();
-      unsubscribeCountNotificationsUnseen();
+      unsubscribePostCreated();      
     }
-  }, []);
+  }, [countNumberNotificationsUnseen]);
 
   useEffect(() => {
     let timer;
@@ -121,6 +125,7 @@ const Control = ({ user }) => {
       }
     }
   }, [loadingMore]);
+ 
   return (
     <Wrapper onScroll={handleScrollBoard}>
       <Button>
@@ -129,8 +134,8 @@ const Control = ({ user }) => {
       <div className="notification" ref={notificationRef}>
         <Button onClick={handleClickNotification}>
           <IoMdNotifications />
-          {countNotificationsUnseenData && countNotificationsUnseenData.countNotificationsUnseen ? (
-            <div className="unseen-noti">{countNotificationsUnseenData.countNotificationsUnseen}</div>
+          {countNumberNotificationsUnseen !== null ? (
+            <div className="unseen-noti">{countNumberNotificationsUnseen}</div>
           ) : null}
         </Button>
 
