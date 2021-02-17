@@ -1,7 +1,6 @@
 import React from 'react'
-import CardProfile from "./CardProfile";
-import CardUtility from "./CardUtility"
-import styled from "styled-components"
+import CardProfile from "../Card/CardProfile";
+import CardUtility from "../Card/CardUtility"
 const HomeSidebar = ({user}) => {
   const SidebarWithUserAuth = (
     <div>

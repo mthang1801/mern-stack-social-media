@@ -4,14 +4,15 @@ import { useThemeUI } from "theme-ui";
 import styled from "styled-components";
 import ButtonLogin from "../Controls/ButtonLogin"
 import ButtonSignUp from "../Controls/ButtonSignUp"
-
+import {useLocation} from "react-router-dom"
 const CardUtility = () => {
   const [welcome, setWelcome] = useState("");
   const [introduce, setIntroduce] = useState("");
   const [askLogin, setAskLogin] = useState("");
   const { colorMode } = useThemeUI();
   const { lang, i18n } = useLanguage();
-
+  const {pathname} = useLocation()
+ 
   useEffect(() => {
     setWelcome(i18n.store.data[lang].translation.greeting.welcome);
     setIntroduce(i18n.store.data[lang].translation.greeting.introduce);
@@ -22,8 +23,8 @@ const CardUtility = () => {
     <Welcome>{welcome}</Welcome>
     <div>{introduce}</div>   
     <div className="auth">
-      <ButtonLogin to="/auth">Login</ButtonLogin>
-      <ButtonSignUp to="/auth/signup">SignUp</ButtonSignUp>
+      <ButtonLogin to="/auth" from={pathname}>Login</ButtonLogin>
+      <ButtonSignUp to="/auth/signup" from={pathname}>SignUp</ButtonSignUp>
     </div>
   </CardWrapper>;
 };

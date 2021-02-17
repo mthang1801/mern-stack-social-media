@@ -18,6 +18,8 @@ const Body = ({children}) => {
 
 const BodyWrapper = styled.div`  
   margin-top: 60px;  
+  width : 100% ; 
+  padding : 0 1rem;
   .aside{
     display : none ;     
   }

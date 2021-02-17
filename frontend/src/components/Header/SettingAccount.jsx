@@ -11,12 +11,12 @@ import { FiLogOut } from "react-icons/fi";
 import { MdLanguage } from "react-icons/md";
 import ButoonColorMode from "../Controls/ButtonColorMode";
 import mutations from "../../apollo/operations/mutations"
-import {logout} from "../../utils/auth"
+import {logout} from "../Auth/Auth.utility"
 const SettingAccount = ({ className, currentUser }) => {
   const [togglePopup, setTogglePopup] = useState(false);
   const { colorMode } = useThemeUI();
   const settingRef = useRef(false);
-  const {setCurrentUser} = mutations
+  const {setCurrentUser, setNotifications} = mutations
   useEffect(() => {
     function handleClickOutsidePopup(e) {
       if (settingRef.current && !settingRef.current.contains(e.target)) {
@@ -32,9 +32,8 @@ const SettingAccount = ({ className, currentUser }) => {
       });
   }, []);
 
-  const onLogout = async () => {    
-    setCurrentUser(null);
-    await logout();
+  const onLogout = async () => {        
+    await logout();  
   }
 
   return (

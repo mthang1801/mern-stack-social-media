@@ -9,7 +9,7 @@ const FlashPopUpNotification = () => {
   const {i18n, lang} = useLanguage()
 
   useEffect(() => {
-    setNotification(i18n.store.data[lang].translation.notification.message);
+    setNotification(i18n.store.data[lang].translation.notifications.message);
   },[lang])
 
   return <PopupWrapper theme={colorMode}>

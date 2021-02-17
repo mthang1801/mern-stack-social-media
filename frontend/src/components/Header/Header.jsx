@@ -23,7 +23,7 @@ const Header = () => {
   });
   const [currentUser, setCurrentUser] = useState(null);
   const { colorMode } = useThemeUI();
-
+  const {pathname} = useLocation()
 
   useEffect(() => {
     if (data && data.user) {
@@ -66,10 +66,10 @@ const Header = () => {
   ) : (
     <div className="nav-controls">
       <div className="nav-auth">
-        <ButtonLogin to="/auth">
+        <ButtonLogin to="/auth" from={pathname}>
           Login
         </ButtonLogin>        
-        <ButtonSignUp to="/auth/signup">
+        <ButtonSignUp to="/auth/signup" from={pathname}>
           Sign up
         </ButtonSignUp>
         <div className="setting-account">

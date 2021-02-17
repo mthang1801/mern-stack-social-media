@@ -10,7 +10,7 @@ const Posts = () => {
   return (
     <div>
       {postsData.posts.map(post => (
-        <PostCard key={post._id} post={post}/>
+        <PostCard key={`post-${post._id}`} post={post}/>
       ))}
     </div>
   )
