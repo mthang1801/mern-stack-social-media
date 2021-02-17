@@ -35,8 +35,8 @@ const NotificationsBoard = ({user, notifications, newNotificationsList }) => {
       </div>
       <div className="board-body">
         {notifications.map((notification) => (
-          <Link
-            to={notification.href}
+          <div
+            // to={notification.href}
             key={notification._id}            
             className={classNames("notification-link", {"unseen" : !notification.hasSeen.includes(user._id) })}          
             onClick={() => handleUserClickHasSeen(notification,notification._id)}
@@ -63,7 +63,7 @@ const NotificationsBoard = ({user, notifications, newNotificationsList }) => {
                 <Moment fromNow className={newNotificationsList.has(notification._id) ? "new" : ""}>{new Date(+notification.createdAt)}</Moment>
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </Wrapper>
