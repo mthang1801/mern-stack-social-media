@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from "../components/Header/Header";
 import MenuList from "../components/Menu/MenuList"
-import Body from "../components/Body/Body"
+import Body from "../components/Body/MainBody"
 import styled from "styled-components"
 import classNames from "classnames"
 import {useQuery} from "@apollo/client"
@@ -20,7 +20,9 @@ const Layout = ({children, className}) => {
         <MenuList list={menu} title="Menu"/>  
         <MenuList list={explores} title="Explores"/>
       </div>      
-      <Body>{children}</Body>
+      <div className="body">
+        {children}
+      </div>
     </div>
   )
 }

@@ -9,6 +9,9 @@ export const userResolvers = {
     },
     fetchCurrentUser : (_, args, {req}, info) => {     
       return userController.fetchCurrentUser(req)
+    },
+    fetchPersonalUser : (_, args, {req}, info)  => {
+      return userController.fetchPersonalUser(req, args.slug)
     }
   },
   Mutation : {

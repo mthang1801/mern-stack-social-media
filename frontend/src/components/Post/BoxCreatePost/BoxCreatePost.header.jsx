@@ -1,10 +1,14 @@
 import React from "react";
 import { BsArrowsFullscreen } from "react-icons/bs";
-const BoxCreatePostHeader = ({user}) => {
+import {useQuery} from "@apollo/client"
+import {GET_CURRENT_USER} from "../../../apollo/operations/queries"
+const BoxCreatePostHeader = () => {
+  const {data : {user}} =  useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"});
+  if(!user) return null;
   return (
     <div className="box-header">
       <div className="box-header__avatar">
-        <img src={`/images/${user.avatar}`} alt="avatar" />
+        <img src={`${user.avatar}`} alt="avatar" />
       </div>
       <div className="box-header__center">
         <div className="box-header__center-username">{user.name}</div>

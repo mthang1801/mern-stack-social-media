@@ -73,6 +73,24 @@ export const vi = {
         icon: () => <CgMoreO />,
       },
     ],
+    profileMenus : [
+      {
+        path : (slug) => `/${slug}/posts`,
+        name : "Bài đăng"
+      },
+      {
+        path : slug => `/${slug}/about`,
+        name : "Giới thiệu"
+      }, 
+      {
+        path : slug => `/${slug}/friends` ,
+        name : "Bạn bè"
+      },
+      {
+        path : slug => `/${slug}/photos`,
+        name : "Hình ảnh"
+      }
+    ],
     explores : [
       {
         path : "/apps",

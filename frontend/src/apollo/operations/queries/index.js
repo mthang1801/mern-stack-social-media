@@ -12,3 +12,6 @@ export { GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN } from "./getCountNumberNotificat
 export { GET_NEW_NOTIFICATIONS } from "./getNewNotifications";
 export { GET_LOADING_NOTIFICATIONS_MORE } from "./getLoadingNotificationsMore";
 export { GET_OPEN_POPUP_NOTIFICATION } from "./getOpenPopupNotification";
+export { FETCH_PERSONAL_USER } from "./fetchPersonalUser"
+export { GET_PERSONAL_USERS } from "./getPersonalUsers"
+export { GET_CURRENT_PERSONAL_USER } from "./getCurrentPersonalUser"

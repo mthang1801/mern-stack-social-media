@@ -25,7 +25,7 @@ const Button = styled(Link)`
     box-shadow: var(--lightShadow);
   };
 
-  font-family : var(--fontFamily);
+  font-family : var(--fontFamily);  
 `;
 
 export default ButtonLogin;

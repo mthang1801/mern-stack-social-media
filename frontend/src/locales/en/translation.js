@@ -73,6 +73,24 @@ export const en = {
         icon: () => <CgMoreO />,
       },
     ],
+    profileMenus : [
+      {
+        path : (slug) => `/${slug}/posts`,
+        name : "Posts"
+      },
+      {
+        path : slug => `/${slug}/about`,
+        name : "About"
+      }, 
+      {
+        path : slug => `/${slug}/friends` ,
+        name : "Friends"
+      },
+      {
+        path : slug => `/${slug}/photos`,
+        name : "Photos"
+      }
+    ],
     explores : [
       {
         path : "/apps",

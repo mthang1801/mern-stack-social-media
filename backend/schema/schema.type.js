@@ -2,11 +2,13 @@ import {gql} from "apollo-server-express"
 
 export const schemaType = gql`
   type User{
-    _id : ID! 
+    _id : ID!     
     name : String! 
+    nickname : String
+    slug : String!
     email : String! 
     password : String
-    friends : [User!]!
+    friends : [String!]!
     posts : [Post!]!
     avatar: String
     comments : [Comment!]!    

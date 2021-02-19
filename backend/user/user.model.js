@@ -5,6 +5,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  nickname : {
+    type : String
+  },
+  slug : {
+    type : String,
+    unique : true ,
+    required : true
+  },
   email: {
     type: String,
     unique: true,
@@ -16,7 +24,7 @@ const UserSchema = new mongoose.Schema({
   },
   avatar : {
     type : String, 
-    default : "avatar-default.png"
+    default : "/images/avatar-default.png"
   },
   google : {
     uid : String     
