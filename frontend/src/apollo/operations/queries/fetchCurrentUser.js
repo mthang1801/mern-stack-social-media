@@ -5,6 +5,8 @@ export const FETCH_CURRENT_USER = gql`
     fetchCurrentUser {
       _id
       name
+      nickname
+      slug
       email       
       notifications{
         _id

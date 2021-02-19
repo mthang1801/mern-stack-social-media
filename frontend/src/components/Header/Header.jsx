@@ -172,8 +172,9 @@ const Wrapper = styled.header`
       display: flex;
       justify-content: flex-end;
       & > *{
-        margin : 0 0.5rem;
-      }
+        font-size : 0.8em;
+        margin-right: 0.25rem;
+      }      
     }
   }
 

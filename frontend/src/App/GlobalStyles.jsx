@@ -62,13 +62,14 @@ export default createGlobalStyle`
   --mainTransition: 0.15s all;
   --transition-delay : 0.5s;
   --blue: #0d6efd;
+  --dark-blue: #003e9a;
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #d63384;
   --red: #dc3545;
   --orange: #fd7e14;
   --yellow: #ffc107;
-  --green: #198754;
+  --green: #198754;  
   --teal: #20c997;
   --cyan: #0dcaf0;
   --white: #fff;
@@ -180,7 +181,7 @@ export default createGlobalStyle`
     line-height: var(--lineHeight-relaxed);
     --baseline-multiplier: 0.179;
     --x-height-multiplier: 0.35;
-    margin: var(--spacing-0) var(--spacing-0) var(--spacing-8) var(--spacing-0);
+    margin: var(--spacing-0) var(--spacing-0) var(--spacing-1) var(--spacing-0);
     padding: var(--spacing-0);
   }
 

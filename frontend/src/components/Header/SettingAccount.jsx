@@ -53,7 +53,7 @@ const SettingAccount = ({ className, currentUser }) => {
               className="direct-user-profile"
             >
               <span className="user-image-container">
-                <img src={`/images/${currentUser.avatar}`} alt="user profile" />
+                <img src={`${currentUser.avatar}`} alt="user profile" />
               </span>
               <span className="user-name" id="user-name">
                 <span>{currentUser.name}</span>

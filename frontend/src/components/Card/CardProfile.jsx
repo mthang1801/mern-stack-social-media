@@ -8,13 +8,10 @@ const CardProfile = ({ user }) => {
   return (
     <CardWrapper theme={colorMode}>
       <div className="user-avatar">
-        <Link to={`/${user._id}/profile`} className="user-avatar__container">
+        <Link to={`/${user.slug}`} className="user-avatar__container">
           <LazyLoadImage
-            src={
-              user.avatar === "avatar-default.png"
-                ? `/images/${user.avatar}`
-                : user.avatar
-            }
+            src={user.avatar}
+            
             alt={user.avatar}
             effect="blur"
             width="60px"
@@ -23,21 +20,21 @@ const CardProfile = ({ user }) => {
           />
         </Link>
       </div>
-      <Link to={`/${user._id}/profile`} className="user-name">
+      <Link to={`/profile`} className="user-name">
         <h4 className="user-name__primary">{user.name}</h4>
 
         <h6 className="user-name__secondary">(MVT)</h6>
       </Link>
       <div className="user-association">
-        <Link to={`/${user._id}/friends`} >
+        <Link to={`/${user.slug}/friends`} >
           <div><strong>100</strong></div>
           <div>Friends</div>
         </Link>
-        <Link to={`/${user._id}/groups`}>
+        <Link to={`/${user.slug}/groups`}>
           <div><strong>7</strong></div>
           <div>Groups</div>
         </Link>
-        <Link to={`/${user._id}/followers`}>
+        <Link to={`/${user.slug}/followers`}>
           <div><strong>15</strong></div>
           <div>Followers</div>
         </Link>
@@ -93,6 +90,10 @@ const CardWrapper = styled.aside`
     grid-template-columns : repeat(3,1fr);
     & a{
       padding: 0.5rem 0;
+      transition : var(--mainTransition);
+      &:hover{        
+        color : var(--success);
+      }
     }    
   }
   

@@ -24,7 +24,7 @@ const Button = styled(Link)`
     background-color: var(--success);
     box-shadow: var(--lightShadow);
   }
-  font-family : var(--fontFamily);
+  font-family : var(--fontFamily);  
 `;
 
 export default ButtonSignUp;

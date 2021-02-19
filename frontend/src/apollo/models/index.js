@@ -1,9 +1,11 @@
-export {ToggleButtonMenu} from "./ToggleButtonMenu"
-export {PostStatus} from "./PostStatus"
-export {User} from "./UserAuth";
-export {Posts} from "./Posts"
-export {Notifications} from "./Notifications"
-export {CountNumberNotificationsUnseen} from "./CountNumbeNotificationUnseen"
-export {NewNotifications} from "./NewNotifications"
-export {LoadingNotificationMore} from "./LoadingNotificationsMore"
-export {OpenPopupNotification} from "./OpenPopupNotification"
+export { ToggleButtonMenu } from "./ToggleButtonMenu";
+export { PostStatus } from "./PostStatus";
+export { User } from "./UserAuth";
+export { Posts } from "./Posts";
+export { Notifications } from "./Notifications";
+export { CountNumberNotificationsUnseen } from "./CountNumbeNotificationUnseen";
+export { NewNotifications } from "./NewNotifications";
+export { LoadingNotificationMore } from "./LoadingNotificationsMore";
+export { OpenPopupNotification } from "./OpenPopupNotification";
+export { PersonalUsers } from "./PersonalUsers";
+export { CurrentPersonalUser } from "./CurrentPersonalUser"

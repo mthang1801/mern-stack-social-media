@@ -21,9 +21,16 @@ export const userController = {
       if(checkUserExist){
         throw new UserInputError("Email has been existing");
       }
-      const hashPassword = await bcrypt.hash(password, 10);
+      const hashPassword = await bcrypt.hash(password, 10);   
+         
+      let slug = name.replace(/[^0-9A-Za-z]+/g, "_").toLowerCase();
+      const checkSlugExisting = await User.findOne({slug});
+      if(checkSlugExisting){
+        slug = `${slug}_${Date.now().toString(36)}`
+      }
       const newUser = new User({
         name , 
+        slug, 
         email, 
         password : hashPassword
       })
@@ -39,7 +46,7 @@ export const userController = {
     const user = await User.findOne({email});
     
     if(!user){
-      throw new UserInputError("email or password was not correct");;
+      throw new UserInputError("email or password was not correct");
     }
     const comparePassword = await bcrypt.compare(password, user.password);
     if(!comparePassword){
@@ -59,6 +66,16 @@ export const userController = {
       throw new AuthenticationError("User not found");
     }    
     return user;
+  },
+  fetchPersonalUser :async (req, slug) => {
+    const currentUserId = getAuthUser(req,true)
+    const user = await User.findOne({slug}).populate({path : "posts", match : {$or : [
+      {friends : currentUserId, status : "friends"}, 
+      {status : "public"}
+    ]},
+    options : {limit : +process.env.POSTS_PER_PAGE}
+  })    
+    return user
   },
   hidePassword : () => "***"
  

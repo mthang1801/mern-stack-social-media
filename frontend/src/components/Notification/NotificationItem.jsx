@@ -59,7 +59,7 @@ const NotificationItem = ({ notification, notifications }) => {
       >
         <div className="avatar-container">
           <LazyLoadImage
-            src={`/images/${notification.creator.avatar}`}
+            src={`${notification.creator.avatar}`}
             alt={notification.href}
             effect="blur"
             width="40px"

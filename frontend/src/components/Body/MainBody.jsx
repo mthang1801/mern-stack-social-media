@@ -2,7 +2,8 @@ import React from 'react'
 import styled from "styled-components"
 import Aside from "../Aside/Aside"
 import {useThemeUI} from "theme-ui"
-const Body = ({children}) => {
+// This body used for home, notifications and global page
+const MainBody = ({children}) => {
   const {colorMode} = useThemeUI()
   return (
     <BodyWrapper theme={colorMode}>
@@ -19,7 +20,8 @@ const Body = ({children}) => {
 const BodyWrapper = styled.div`  
   margin-top: 60px;  
   width : 100% ; 
-  padding : 0 1rem;
+  padding : 0 0.4rem;
+
   .aside{
     display : none ;     
   }
@@ -28,6 +30,7 @@ const BodyWrapper = styled.div`
   }
 
   @media screen and (min-width : 992px){
+    padding :0 1rem;
     .aside{
       display : -webkit-box;
       position: fixed;
@@ -43,4 +46,4 @@ const BodyWrapper = styled.div`
   }
 `
 
-export default Body
+export default MainBody

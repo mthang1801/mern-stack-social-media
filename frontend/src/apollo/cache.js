@@ -8,17 +8,23 @@ import {
   CountNumberNotificationsUnseen,
   NewNotifications,
   LoadingNotificationMore,
-  OpenPopupNotification
+  OpenPopupNotification,
+  PersonalUsers,
+  CurrentPersonalUser,
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 const setPostStatusVar = makeVar(PostStatus);
 const setUserVar = makeVar(User);
 const setPostsVar = makeVar(Posts);
 const setNotificationsVar = makeVar(Notifications);
-const setCountNumberNotificationsUnseenVar = makeVar(CountNumberNotificationsUnseen);
+const setCountNumberNotificationsUnseenVar = makeVar(
+  CountNumberNotificationsUnseen
+);
 const setNewNotificationsVar = makeVar(NewNotifications);
 const setLoadingNotificationsMoreVar = makeVar(LoadingNotificationMore);
 const setOpenPopupNotificationVar = makeVar(OpenPopupNotification);
+const setPersonalUsersVar = makeVar(PersonalUsers);
+const setCurrentPersonalUserVar = makeVar(CurrentPersonalUser);
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -32,24 +38,30 @@ const cache = new InMemoryCache({
         user: {
           read: () => setUserVar(),
         },
+        personalUsers: {
+          read: () => setPersonalUsersVar(),
+        },
+        currentPersonalUser: {
+          read: () => setCurrentPersonalUserVar(),
+        },
         posts: {
           read: () => setPostsVar(),
         },
         notifications: {
           read: () => setNotificationsVar(),
         },
-        newNotifications : {
-          read : () => setNewNotificationsVar()
+        newNotifications: {
+          read: () => setNewNotificationsVar(),
         },
-        loadingNotificationsMore : {
-          read : () => setLoadingNotificationsMoreVar()
+        loadingNotificationsMore: {
+          read: () => setLoadingNotificationsMoreVar(),
         },
-        openPopupNotification : {
-          read : () => setOpenPopupNotificationVar()
+        openPopupNotification: {
+          read: () => setOpenPopupNotificationVar(),
         },
-        countNumberNotificationsUnseen : {
-          read : () => setCountNumberNotificationsUnseenVar()
-        }
+        countNumberNotificationsUnseen: {
+          read: () => setCountNumberNotificationsUnseenVar(),
+        },
       },
     },
   },
@@ -65,5 +77,7 @@ export {
   setCountNumberNotificationsUnseenVar,
   setNewNotificationsVar,
   setLoadingNotificationsMoreVar,
-  setOpenPopupNotificationVar
+  setOpenPopupNotificationVar,
+  setPersonalUsersVar,
+  setCurrentPersonalUserVar,
 };

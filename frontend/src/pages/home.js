@@ -3,23 +3,28 @@ import Layout from "../containers/Layout";
 import styled from "styled-components";
 import Posts from "../components/Post/Posts";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { FETCH_POSTS, GET_CURRENT_USER, GET_POSTS} from "../apollo/operations/queries";
+import {
+  FETCH_POSTS,
+  GET_CURRENT_USER,
+  GET_POSTS,
+} from "../apollo/operations/queries";
 import mutations from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
-import HomeSidebar from "../components/Sidebar/HomeSidebar"
+import HomeSidebar from "../components/Sidebar/HomeSidebar";
+import MainBody from "../components/Body/MainBody";
 const Home = () => {
-  const  { data: userData }= useQuery(GET_CURRENT_USER, {
+  const { data: {user} } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: "cache-first",
   });
   const [
     fetchPosts,
     { data: fetchedPosts, fetchMore },
-  ] = useLazyQuery(FETCH_POSTS, { fetchPolicy: "cache-and-network" });  
-  const {data : postsData} = useQuery(GET_POSTS)
+  ] = useLazyQuery(FETCH_POSTS, { fetchPolicy: "cache-and-network" });
+  const { data: postsData } = useQuery(GET_POSTS);
   const [loadingMore, setLoadingMore] = useState(false);
   const { setPosts } = mutations;
 
-  useEffect(() => {    
+  useEffect(() => {
     if (fetchedPosts && fetchedPosts.fetchPosts) {
       setPosts([...fetchedPosts.fetchPosts]);
     }
@@ -37,7 +42,7 @@ const Home = () => {
     if (postsData && !postsData.posts.length) {
       fetchPosts();
     }
-  }, [postsData, fetchPosts]);  
+  }, [postsData, fetchPosts]);
   useEffect(() => {
     if (loadingMore) {
       if (fetchMore) {
@@ -64,18 +69,22 @@ const Home = () => {
       }
     }
   }, [loadingMore, fetchMore]);
-  
+
   return (
     <Layout>
-      <MainContent>
-        <div className="posts">
-          {userData && userData.user && <BoxCreatePost user={userData.user} />}
-          <Posts />
-        </div>
-        <div className="sidebar">
-          <HomeSidebar user={userData.user}/>
-        </div>
-      </MainContent>
+      <MainBody>
+        <MainContent>
+          <div className="posts">
+            {user && (
+              <BoxCreatePost user={user} />
+            )}
+            <Posts />
+          </div>
+          <div className="sidebar">
+            <HomeSidebar user={user} />
+          </div>
+        </MainContent>
+      </MainBody>
     </Layout>
   );
 };

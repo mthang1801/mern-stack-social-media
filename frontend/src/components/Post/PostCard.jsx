@@ -33,7 +33,7 @@ const PostCard = ({ post }) => {
     <PostCardWrapper theme={colorMode}>
       <div className="card-header">
         <Link to={`/user/${post.author._id}`} className="card-header__avatar">
-          <img src={`/images/${post.author.avatar}`} alt="avatar"/>
+          <img src={`${post.author.avatar}`} alt="avatar"/>
         </Link>
         <div className="card-header__center">
           <Link to={`/user/${post.author._id}`} className="card-header__center-author">{post.author.name}</Link>
