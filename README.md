@@ -6,5 +6,5 @@
 
 #### Contact me via :
 
-- email : mvthang1801@gmail.com
+- email : mthang1801@gmail.com
 - facebook : [@fb_mvt](https://www.facebook.com/mvt.dev)
