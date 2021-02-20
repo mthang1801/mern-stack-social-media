@@ -4,6 +4,7 @@ export const BoxWrapper = styled.div`
     theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
   padding: 1rem;
   border-radius: 0.5rem;
+  box-shadow : var(--lightShadow);
   & a {
     color: var(--dark-blue);
     &:hover {

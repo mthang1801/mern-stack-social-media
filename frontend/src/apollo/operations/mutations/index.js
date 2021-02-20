@@ -9,6 +9,7 @@ import createSetLoadingNotificationsMore from "./setLoadingNotificationMore"
 import createSetOpenPopupNotification from "./setOpenPopupNotification"
 import createSetPersonalUsers from "./setPersonalUsers";
 import createSetCurrentPersonalUser from "./setCurrentPersonalUser";
+import createSetPersonalPosts from "./setPersonalPosts"
 import {
   toggleButtonMenuVar,
   setPostStatusVar,
@@ -20,7 +21,8 @@ import {
   setLoadingNotificationsMoreVar,
   setOpenPopupNotificationVar,
   setPersonalUsersVar,
-  setCurrentPersonalUserVar
+  setCurrentPersonalUserVar,
+  setPersonalPostsVar,
 } from "../../cache";
 export { SIGNUP } from "./signup";
 export { CREATE_POST } from "./createPost";
@@ -38,7 +40,8 @@ const mutations = {
   setLoadingNotificationsMore : createSetLoadingNotificationsMore(setLoadingNotificationsMoreVar),
   setOpenPopupNotification : createSetOpenPopupNotification(setOpenPopupNotificationVar),
   setPersonalUsers : createSetPersonalUsers(setPersonalUsersVar),
-  setCurrentPersonalUser : createSetCurrentPersonalUser(setCurrentPersonalUserVar)
+  setCurrentPersonalUser : createSetCurrentPersonalUser(setCurrentPersonalUserVar),
+  setPersonalPosts : createSetPersonalPosts(setPersonalPostsVar),
 };
 
 export { mutations as default };

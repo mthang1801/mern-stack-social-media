@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_CURRENT_USER } from "../../apollo/operations/queries";
+import { GET_CURRENT_PERSONAL_USER } from "../../apollo/operations/queries";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   Container,
@@ -15,8 +15,8 @@ import useLanguage from "../Global/useLanguage";
 import { useThemeUI } from "theme-ui";
 const PersonalHeading = () => {
   const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER);
+    data: { currentPersonalUser : user },
+  } = useQuery(GET_CURRENT_PERSONAL_USER);
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const [menus, setMenus] = useState([]);

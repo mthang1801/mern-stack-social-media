@@ -5,7 +5,7 @@ export const schemaQuery = gql`
     users : [User!]!    
     fetchCurrentUser : User!
     fetchPersonalUser(slug : String!) : User
-    fetchPosts(skip: Int, limit: Int) : [Post!]!       
+    fetchPosts(skip: Int, limit: Int, userId: ID) : [Post!]!       
     loginUser (data : LoginUserInput!) : UserAuthPayload!
     fetchNotifications(skip: Int, limit: Int) : [Notification!]
     countNotificationsUnseen : Int!

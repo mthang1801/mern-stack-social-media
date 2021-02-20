@@ -4,11 +4,12 @@ import { withFilter } from "apollo-server-express";
 import { subscriptionActions } from "../schema";
 export const postResolvers = {
   Query: {
-    fetchPosts: (_, args, { req }, info) =>  {      
-      return    postControllers.fetchPosts(
+    fetchPosts: (_, args, { req }, info) =>  {              
+      return  postControllers.fetchPosts(
         req,
         args.limit || +process.env.POSTS_PER_PAGE ,
-        args.skip || 0
+        args.skip || 0,
+        args.userId || null
       )
     }  
    

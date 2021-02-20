@@ -101,7 +101,7 @@ const PostCardWrapper = styled.article`
   padding-bottom: 1rem;
   overflow: hidden;
   box-shadow: var(--lightShadow);
-  margin: 1rem auto;
+  margin: 0 auto 1rem auto;
   .card-header {
     display: flex;
     align-items: center;

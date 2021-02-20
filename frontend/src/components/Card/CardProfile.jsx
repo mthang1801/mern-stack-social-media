@@ -10,8 +10,7 @@ const CardProfile = ({ user }) => {
       <div className="user-avatar">
         <Link to={`/${user.slug}`} className="user-avatar__container">
           <LazyLoadImage
-            src={user.avatar}
-            
+            src={user.avatar}            
             alt={user.avatar}
             effect="blur"
             width="60px"
@@ -20,11 +19,11 @@ const CardProfile = ({ user }) => {
           />
         </Link>
       </div>
-      <Link to={`/profile`} className="user-name">
+      <a href={`/profile`} className="user-name">
         <h4 className="user-name__primary">{user.name}</h4>
 
         <h6 className="user-name__secondary">(MVT)</h6>
-      </Link>
+      </a>
       <div className="user-association">
         <Link to={`/${user.slug}/friends`} >
           <div><strong>100</strong></div>
@@ -99,4 +98,4 @@ const CardWrapper = styled.aside`
   
 `;
 
-export default CardProfile;
+export default React.memo(CardProfile);
