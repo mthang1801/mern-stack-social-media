@@ -7,7 +7,6 @@ import {
   FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_NOTIFICATIONS,
-  GET_NEW_NOTIFICATIONS,
   GET_LOADING_NOTIFICATIONS_MORE,
   GET_CURRENT_USER,
   GET_OPEN_POPUP_NOTIFICATION,
@@ -15,34 +14,29 @@ import {
 import mutations from "../../apollo/operations/mutations";
 import subcriptions from "../../apollo/operations/subscriptions";
 const Notifications = () => {
-  //useLazyQuery
-  const [
-    fetchNotifications,
-    {
-      data: notificationsData,
-      loading: fetchLoadingNotifications,
-      subscribeToMore: subscribeToMoreNotifications,
-      fetchMore,
-    },
-  ] = useLazyQuery(FETCH_NOTIFICATIONS);
-  const [
-    fetchCountNumberNotificationsUnseen,
-    { data: countNotificationsUnseenData },
-  ] = useLazyQuery(FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
-    fetchPolicy: "network-only",
-  });
   //useQuery
+  const { refetch: fetchCountNumberNotificationsUnseen } = useQuery(
+    FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
+    {
+      fetchPolicy: "network-only",
+      skip: true,
+    }
+  );
   const {
     data: { countNumberNotificationsUnseen },
   } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
     fetchPolicy: "cache-first",
   });
   const {
+    refetch: fetchNotifications,
+    subscribeToMore: subscribeToMoreNotifications,
+  } = useQuery(FETCH_NOTIFICATIONS, {
+    skip: true,
+    fetchPolicy: "cache-and-network",
+  });
+  const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { newNotifications },
-  } = useQuery(GET_NEW_NOTIFICATIONS, { fetchPolicy: "cache-first" });
   const {
     data: { notifications },
   } = useQuery(GET_NOTIFICATIONS, { fetchPolicy: "cache-only" });
@@ -60,38 +54,49 @@ const Notifications = () => {
     setOpenPopupNotification,
     setLoadingNotificationsMore,
   } = mutations;
-  //useRef
-  const notificationsRef = useRef(false);
+
   useEffect(() => {
     if (countNumberNotificationsUnseen === null) {
-      fetchCountNumberNotificationsUnseen();
-    }
-  }, [countNumberNotificationsUnseen, fetchCountNumberNotificationsUnseen]);
-
-  useEffect(() => {
-    if (
-      countNotificationsUnseenData &&
-      countNotificationsUnseenData.countNotificationsUnseen
-    ) {
-      setCountNumberNotificationsUnseen(
-        countNotificationsUnseenData.countNotificationsUnseen
+      fetchCountNumberNotificationsUnseen().then(
+        ({ data: { countNotificationsUnseen } }) =>
+          setCountNumberNotificationsUnseen(countNotificationsUnseen)
       );
     }
-  }, [countNotificationsUnseenData, setCountNumberNotificationsUnseen]);
+  }, [
+    countNumberNotificationsUnseen,
+    fetchCountNumberNotificationsUnseen,
+    setCountNumberNotificationsUnseen,
+  ]);
 
   useEffect(() => {
-    if (!notifications.length && !notificationsData) {
+    if (!notifications.length) {
       fetchNotifications({
         variables: {
           skip: 0,
           limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
         },
+      }).then(({ data: { fetchNotifications } }) => {
+        setNotifications([...fetchNotifications]);
       });
     }
-    if (notificationsData && notificationsData.fetchNotifications) {
-      setNotifications([...notificationsData.fetchNotifications]);
+    if (loadingNotificationsMore) {
+      const skip = notifications.length;
+      const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
+
+      fetchNotifications({ skip, limit }).then(
+        ({ data: { fetchNotifications } }) => {
+          setNotifications([...notifications, ...fetchNotifications]);
+          setLoadingNotificationsMore(false);
+        }
+      );
     }
-  }, [fetchNotifications, notificationsData, notifications]);
+  }, [
+    fetchNotifications,
+    notifications,
+    setNotifications,
+    loadingNotificationsMore,
+    setLoadingNotificationsMore,
+  ]);
 
   useEffect(() => {
     let unsubscribePostCreated;
@@ -107,13 +112,11 @@ const Notifications = () => {
           setOpenPopupNotification(true);
           setNewNotifications(newNotification._id);
           setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);
-
-          return {
-            fetchNotifications: [
-              { ...newNotification, new: true },
-              ...prev.fetchNotifications,
-            ],
-          };
+          console.log(notifications);
+          setNotifications([
+            { ...newNotification, new: true },
+            ...notifications,
+          ]);
         },
       });
     }
@@ -123,7 +126,15 @@ const Notifications = () => {
         unsubscribePostCreated();
       }
     };
-  }, [countNumberNotificationsUnseen, subscribeToMoreNotifications]);
+  }, [
+    countNumberNotificationsUnseen,
+    subscribeToMoreNotifications,
+    notifications,
+    setNotifications,
+    setCountNumberNotificationsUnseen,
+    setNewNotifications,
+    setOpenPopupNotification,
+  ]);
 
   useEffect(() => {
     let timer;
@@ -132,36 +143,6 @@ const Notifications = () => {
     }, 10000);
     return () => clearTimeout(timer);
   }, [openPopupNotification]);
-
-  useEffect(() => {
-    if (loadingNotificationsMore) {
-      if (fetchMore) {
-        fetchMore({
-          query: FETCH_NOTIFICATIONS,
-          variables: {
-            skip: notifications.length,
-            limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
-          },
-          updateQuery: (prev, { fetchMoreResult }) => {
-            return {
-              fetchNotifications: [
-                ...notifications,
-                ...fetchMoreResult.fetchNotifications,
-              ],
-            };
-          },
-        }).then(() => setLoadingNotificationsMore(false));
-      } else {
-        fetchNotifications({
-          variables: {
-            skip: notifications.length,
-            limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
-          },
-        });
-        setLoadingNotificationsMore(false);
-      }
-    }
-  }, [loadingNotificationsMore, fetchLoadingNotifications]);
 
   if (!notifications.length)
     return <NoNotifications>No notifications</NoNotifications>;

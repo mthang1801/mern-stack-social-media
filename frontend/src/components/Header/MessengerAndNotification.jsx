@@ -54,7 +54,7 @@ const Control = ({ user }) => {
 
   const handleScrollBoard = (e) => {
     const { target } = e;
-    if (target.clientHeight + target.scrollTop > target.scrollHeight * 0.75) {
+    if (target.clientHeight + target.scrollTop > target.scrollHeight * 0.75) {      
       setLoadingNotificationsMore(true);
     }
   };
@@ -67,7 +67,7 @@ const Control = ({ user }) => {
       <div className="notification" ref={notificationRef}>
         <Button onClick={handleClickNotification}>
           <IoMdNotifications />
-          {countNumberNotificationsUnseen !== null ? (
+          {countNumberNotificationsUnseen ? (
             <div className="unseen-noti">{countNumberNotificationsUnseen}</div>
           ) : null}
         </Button>
