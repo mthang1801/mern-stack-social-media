@@ -11,6 +11,7 @@ import {
   OpenPopupNotification,
   PersonalUsers,
   CurrentPersonalUser,
+  PersonalPosts, 
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 const setPostStatusVar = makeVar(PostStatus);
@@ -25,6 +26,8 @@ const setLoadingNotificationsMoreVar = makeVar(LoadingNotificationMore);
 const setOpenPopupNotificationVar = makeVar(OpenPopupNotification);
 const setPersonalUsersVar = makeVar(PersonalUsers);
 const setCurrentPersonalUserVar = makeVar(CurrentPersonalUser);
+const setPersonalPostsVar = makeVar(PersonalPosts);
+
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -47,6 +50,9 @@ const cache = new InMemoryCache({
         posts: {
           read: () => setPostsVar(),
         },
+        personalPosts : {
+          read : () => setPersonalPostsVar()
+        },
         notifications: {
           read: () => setNotificationsVar(),
         },
@@ -61,7 +67,7 @@ const cache = new InMemoryCache({
         },
         countNumberNotificationsUnseen: {
           read: () => setCountNumberNotificationsUnseenVar(),
-        },
+        },        
       },
     },
   },
@@ -80,4 +86,5 @@ export {
   setOpenPopupNotificationVar,
   setPersonalUsersVar,
   setCurrentPersonalUserVar,
+  setPersonalPostsVar
 };

@@ -16,6 +16,7 @@ const Home = () => {
   const { data: {user} } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: "cache-first",
   });
+  const  {data : {posts}} = useQuery(GET_POSTS, {fetchPolicy : "cache-and-network"});
   const [
     fetchPosts,
     { data: fetchedPosts, fetchMore },
@@ -23,7 +24,7 @@ const Home = () => {
   const { data: postsData } = useQuery(GET_POSTS);
   const [loadingMore, setLoadingMore] = useState(false);
   const { setPosts } = mutations;
-
+  
   useEffect(() => {
     if (fetchedPosts && fetchedPosts.fetchPosts) {
       setPosts([...fetchedPosts.fetchPosts]);
@@ -78,7 +79,7 @@ const Home = () => {
             {user && (
               <BoxCreatePost user={user} />
             )}
-            <Posts />
+            {posts.length ? <Posts posts={posts}/> : null }
           </div>
           <div className="sidebar">
             <HomeSidebar user={user} />

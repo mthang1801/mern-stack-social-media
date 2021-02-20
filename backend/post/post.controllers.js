@@ -1,65 +1,82 @@
 import getAuthUser from "../utils/getAuthUser";
 import { User } from "../user/user.model";
 import { Post } from "../post/post.model";
-import {Notification} from "../notification/notification.model"
+import { Notification } from "../notification/notification.model";
 import mongoose from "mongoose";
 import { statusEnum } from "./post.model";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
 
 export const postControllers = {
-  fetchPosts: async (req, limit, skip) => {          
-    const userId = getAuthUser(req, false);    
-    const user = await User.findById(userId);    
+  fetchPosts: async (req, limit, skip, userId) => {
+    const myUserId = getAuthUser(req, false);
+    const user = await User.findById(myUserId);
+    if (userId) {
+      const Posts = await Post.find({
+        $and: [
+          { author: userId },
+          {
+            $or: [{ status: "friends", friends: myUserId }, { status: "public" }],
+          },
+        ],
+      })
+        .populate("mentions")
+        .populate("author")
+        .sort({ createdAt: -1 })
+        .skip(+skip)
+        .limit(+limit);       
+      return Posts;
+    }
     if (user) {
-      const friendsID = user.friends;    
-      const Posts = await Post.find(
-        { author: { $in: friendsID }, status: {$in : ["public", "friends"]} },        
-      )
+      const friendsID = user.friends;
+      const Posts = await Post.find({
+        author: { $in: friendsID },
+        status: { $in: ["public", "friends"] },
+      })
         .populate("author")
         .populate("mentions")
-        .sort({createdAt : -1})
+        .sort({ createdAt: -1 })
         .skip(+skip)
-        .limit(+limit);           
+        .limit(+limit);
       return Posts;
-    }    
+    }
     return [];
   },
   createPost: async (req, data, pubsub, notifyCreatedPost) => {
     const {
       text,
-      mentions,     
+      mentions,
       fileNames,
       fileMimetype,
       fileEncoding,
       status,
-    } = data;        
+    } = data;
     const userId = getAuthUser(req);
-    const user = await User.findById(userId);    
+    const user = await User.findById(userId);
     if (!user) {
       throw new AuthenticationError("User not found");
     }
     const postData = {
       text,
     };
-    
+
     if (mentions && mentions.length) {
       // Check mention item has match with user's friends
       const friends = user.friends.map((friend) => friend.toString());
-      
-      const setFriends = new Set(friends);      
-      let checkMentionsIsMatchUserFriend = true;      
+
+      const setFriends = new Set(friends);
+      let checkMentionsIsMatchUserFriend = true;
       mentions.forEach((userId) => {
         checkMentionsIsMatchUserFriend =
           setFriends.has(userId.toString()) && checkMentionsIsMatchUserFriend;
       });
-      
+
       if (!checkMentionsIsMatchUserFriend) {
         throw new UserInputError(
           "Mentions has item not match with User's friends"
         );
-      }      
+      }
       postData.mentions = mentions;
-    }        
+    }
     if (status && status in statusEnum) {
       postData.status = status;
     }
@@ -82,7 +99,7 @@ export const postControllers = {
         });
       }
       postData.files = files;
-    }    
+    }
     const session = await mongoose.startSession();
     session.startTransaction();
 
@@ -92,16 +109,16 @@ export const postControllers = {
     });
 
     const newNotification = new Notification({
-      field : "post", 
-      action : "CREATED", 
-      creator: userId, 
-      receivers : user.friends,
-      href : `/${userId}/posts/${newPost._id}`,      
-    })
+      field: "post",
+      action: "CREATED",
+      creator: userId,
+      receivers: user.friends,
+      href: `/${userId}/posts/${newPost._id}`,
+    });
     user.posts.push(newPost._id);
-    for(let friendId of user.friends){
-      const friend = await User.findById(friendId); 
-      if(friend){
+    for (let friendId of user.friends) {
+      const friend = await User.findById(friendId);
+      if (friend) {
         friend.notifications.push(newNotification._id);
         await friend.save();
       }
@@ -113,15 +130,15 @@ export const postControllers = {
       .execPopulate();
     await (await newNotification.save()).populate("creator").execPopulate();
     pubsub.publish(notifyCreatedPost, {
-      notifyCreatedPost : {        
-        type : "Post",
-        action : "CREATED",  
-        users : user.friends,                     
-        notification : newNotification
-      }
-    })
+      notifyCreatedPost: {
+        type: "Post",
+        action: "CREATED",
+        users: user.friends,
+        notification: newNotification,
+      },
+    });
     await session.commitTransaction();
-    session.endSession();   
+    session.endSession();
     return newPost;
   },
   updatePost: async (req, postId, data, pubsub, postActions) => {

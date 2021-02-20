@@ -1,15 +1,9 @@
 import React from 'react'
-import {useQuery} from "@apollo/client"
-import {GET_POSTS} from "../../apollo/operations/queries/getPosts"
-
 import PostCard from "./PostCard";
-const Posts = () => {  
-  const  {data : postsData} = useQuery(GET_POSTS, {fetchPolicy : "cache-and-network"});
-  
-  if(!postsData || !postsData.posts.length) return null;
+const Posts = ({posts}) => {    
   return (
     <div>
-      {postsData.posts.map(post => (
+      {posts.map(post => (
         <PostCard key={`post-${post._id}`} post={post}/>
       ))}
     </div>

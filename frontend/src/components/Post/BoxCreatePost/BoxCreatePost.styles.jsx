@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Box = styled.div`
   width: 95%;
-  margin: auto;  
+  margin: 0 auto 2rem auto;  
   background-color: ${({ theme }) =>
     theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
   border-radius: 8px;

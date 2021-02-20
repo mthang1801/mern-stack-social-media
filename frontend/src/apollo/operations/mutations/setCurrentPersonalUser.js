@@ -1,9 +1,4 @@
-const setCurrentPersonalUser = setCurrentPersonalUserVar => user => {
-  if(typeof user === "object"){
-    setCurrentPersonalUserVar({...user})
-  }
-  return null;
-}
+const setCurrentPersonalUser = setCurrentPersonalUserVar => user =>  setCurrentPersonalUserVar({...user})
 
 export default setCurrentPersonalUser
 
