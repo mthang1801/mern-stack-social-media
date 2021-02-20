@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../containers/Layout";
 import styled from "styled-components";
 import Posts from "../components/Post/Posts";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
   FETCH_POSTS,
   GET_CURRENT_USER,
@@ -12,24 +12,38 @@ import mutations from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
 import HomeSidebar from "../components/Sidebar/HomeSidebar";
 import MainBody from "../components/Body/MainBody";
+
 const Home = () => {
-  const { data: {user} } = useQuery(GET_CURRENT_USER, {
+  const {
+    data: { user },
+  } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: "cache-first",
   });
-  const  {data : {posts}} = useQuery(GET_POSTS, {fetchPolicy : "cache-and-network"});
-  const [
-    fetchPosts,
-    { data: fetchedPosts, fetchMore },
-  ] = useLazyQuery(FETCH_POSTS, { fetchPolicy: "cache-and-network" });
-  const { data: postsData } = useQuery(GET_POSTS);
+  const {
+    data: { posts },
+  } = useQuery(GET_POSTS, { fetchPolicy: "cache-and-network" });
+  const {refetch : fetchPosts } = useQuery(FETCH_POSTS, {
+    skip: true,
+    fetchPolicy: "cache-and-network",
+  })
   const [loadingMore, setLoadingMore] = useState(false);
   const { setPosts } = mutations;
-  
+
   useEffect(() => {
-    if (fetchedPosts && fetchedPosts.fetchPosts) {
-      setPosts([...fetchedPosts.fetchPosts]);
+    if (posts && !posts.length) {
+      fetchPosts().then(({data : {fetchPosts}}) => {
+        setPosts([...fetchPosts])
+      });
     }
-  }, [setPosts, fetchedPosts]);
+    if (loadingMore && posts) {
+      const skip = posts.length;
+      const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
+      fetchPosts({skip, limit}).then(({data : {fetchPosts}}) => {
+        setPosts([...posts, ...fetchPosts]);
+        setLoadingMore(false);
+      })
+    }
+  }, [posts, fetchPosts, setPosts, loadingMore]);
 
   useEffect(() => {
     window.addEventListener("scroll", async (e) => {
@@ -39,47 +53,15 @@ const Home = () => {
       }
     });
   }, []);
-  useEffect(() => {
-    if (postsData && !postsData.posts.length) {
-      fetchPosts();
-    }
-  }, [postsData, fetchPosts]);
-  useEffect(() => {
-    if (loadingMore) {
-      if (fetchMore) {
-        fetchMore({
-          query: FETCH_POSTS,
-          variables: {
-            skip: postsData.posts.length,
-            limit: +process.env.REACT_APP_POSTS_PER_PAGE,
-          },
-          updateQuery: (prev, { fetchMoreResult }) => {
-            setPosts([...prev.fetchPosts, ...fetchMoreResult.fetchPosts]);
-            return {
-              fetchPosts: [...prev.fetchPosts, ...fetchMoreResult.fetchPosts],
-            };
-          },
-        }).then(() => setLoadingMore(false));
-      } else {
-        fetchPosts({
-          variables: {
-            skip: postsData.posts.length,
-            limit: +process.env.REACT_APP_POSTS_PER_PAGE,
-          },
-        });
-      }
-    }
-  }, [loadingMore, fetchMore]);
+  
 
   return (
     <Layout>
       <MainBody>
         <MainContent>
           <div className="posts">
-            {user && (
-              <BoxCreatePost user={user} />
-            )}
-            {posts.length ? <Posts posts={posts}/> : null }
+            {user && <BoxCreatePost user={user} />}
+            {posts.length ? <Posts posts={posts} /> : null}
           </div>
           <div className="sidebar">
             <HomeSidebar user={user} />
