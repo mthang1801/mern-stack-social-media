@@ -13,6 +13,10 @@ export const schemaType = gql`
     avatar: String
     comments : [Comment!]!    
     notifications : [Notification!]!
+    following : [ID!]!
+    followed : [ID!]!
+    sendRequestToAddFriend : [ID!]!
+    receiveRequestToAddFriend : [ID!]
     createdAt : String
     updatedAt : String
   }
@@ -55,6 +59,7 @@ export const schemaType = gql`
     creator : User!
     href : String!
     hasSeen : [ID!]! 
+    receivers : [ID!]!
     acceptInvite : Boolean!
     createdAt : String!     
   }
@@ -79,6 +84,13 @@ export const schemaType = gql`
     users : [ID!]
     notification : Notification!
   }  
+
+  type AddFriendSubscriptionPayload{
+    field : String!
+    action : ContactEnum!    
+    receiver : ID!
+    notification : Notification!
+  }
   type CommentSubscriptionPayload{
     action : ActionEnum!
     node : Comment

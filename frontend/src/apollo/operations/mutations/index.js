@@ -4,12 +4,12 @@ import createSetCurrentUser from "./setCurrentUser";
 import createSetPosts from "./setPosts";
 import createSetNotifications from "./setNotifications";
 import createSetCountNumberNotificationsUnseen from "./setCountNumberNotificationsUnseen";
-import createSetNewNotifications from "./setNewNotifications"
-import createSetLoadingNotificationsMore from "./setLoadingNotificationMore"
-import createSetOpenPopupNotification from "./setOpenPopupNotification"
+import createSetNewNotifications from "./setNewNotifications";
+import createSetLoadingNotificationsMore from "./setLoadingNotificationMore";
+import createSetOpenPopupNotification from "./setOpenPopupNotification";
 import createSetPersonalUsers from "./setPersonalUsers";
 import createSetCurrentPersonalUser from "./setCurrentPersonalUser";
-import createSetPersonalPosts from "./setPersonalPosts"
+import createSetPersonalPosts from "./setPersonalPosts";
 import {
   toggleButtonMenuVar,
   setPostStatusVar,
@@ -27,6 +27,8 @@ import {
 export { SIGNUP } from "./signup";
 export { CREATE_POST } from "./createPost";
 export { UPDATE_USER_HAS_SEEN_NOTIFICATION } from "./updateUserHasSeenNotification";
+export { SEND_REQUEST_TO_ADD_FRIEND } from "./user/sendRequestToAddFriend";
+export { REJECT_REQUEST_TO_ADD_FRIEND } from "./user/rejectRequestToAddFriend";
 const mutations = {
   toggleButtonMenu: createToggleButtonMenu(toggleButtonMenuVar),
   setPostStatus: createSetPostStatus(setPostStatusVar),
@@ -36,12 +38,18 @@ const mutations = {
   setCountNumberNotificationsUnseen: createSetCountNumberNotificationsUnseen(
     setCountNumberNotificationsUnseenVar
   ),
-  setNewNotifications : createSetNewNotifications(setNewNotificationsVar),
-  setLoadingNotificationsMore : createSetLoadingNotificationsMore(setLoadingNotificationsMoreVar),
-  setOpenPopupNotification : createSetOpenPopupNotification(setOpenPopupNotificationVar),
-  setPersonalUsers : createSetPersonalUsers(setPersonalUsersVar),
-  setCurrentPersonalUser : createSetCurrentPersonalUser(setCurrentPersonalUserVar),
-  setPersonalPosts : createSetPersonalPosts(setPersonalPostsVar),
+  setNewNotifications: createSetNewNotifications(setNewNotificationsVar),
+  setLoadingNotificationsMore: createSetLoadingNotificationsMore(
+    setLoadingNotificationsMoreVar
+  ),
+  setOpenPopupNotification: createSetOpenPopupNotification(
+    setOpenPopupNotificationVar
+  ),
+  setPersonalUsers: createSetPersonalUsers(setPersonalUsersVar),
+  setCurrentPersonalUser: createSetCurrentPersonalUser(
+    setCurrentPersonalUserVar
+  ),
+  setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
 };
 
 export { mutations as default };

@@ -5,7 +5,7 @@ import { Notification } from "../notification/notification.model";
 import mongoose from "mongoose";
 import { statusEnum } from "./post.model";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
-
+import {actions, fields} from "../fields-actions"
 export const postControllers = {
   fetchPosts: async (req, limit, skip, userId) => {
     const myUserId = getAuthUser(req, false);
@@ -109,8 +109,8 @@ export const postControllers = {
     });
 
     const newNotification = new Notification({
-      field: "post",
-      action: "CREATED",
+      field: fields.post,
+      action: actions.CREATED,
       creator: userId,
       receivers: user.friends,
       href: `/${userId}/posts/${newPost._id}`,
@@ -131,8 +131,8 @@ export const postControllers = {
     await (await newNotification.save()).populate("creator").execPopulate();
     pubsub.publish(notifyCreatedPost, {
       notifyCreatedPost: {
-        type: "Post",
-        action: "CREATED",
+        type: fields.post,
+        action: actions.CREATED,
         users: user.friends,
         notification: newNotification,
       },

@@ -73,7 +73,7 @@ export const vi = {
         icon: () => <CgMoreO />,
       },
     ],
-    profileMenus : [
+    personalMenus : [
       {
         path : (slug) => `/${slug}/posts`,
         name : "Bài đăng"
@@ -143,6 +143,7 @@ export const vi = {
     notifications: {
       message : "Bạn vừa nhận được một thông báo mới",
       postCreated : "vừa đăng một trạng thái mới.",
+      sendRequestToAddFriend : "gửi cho bạn một lời mời kết bạn."
     },
     greeting : {
       welcome : "Chào mừng bạn đã đến với Pul.com",

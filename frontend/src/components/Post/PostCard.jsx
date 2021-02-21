@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Moment from "react-moment";
-import Button from "../Controls/ButtonDefault";
+import Button from "../Controls/ButtonDefaultCircle";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { Mentions } from "antd";
 import { useThemeUI } from "theme-ui";

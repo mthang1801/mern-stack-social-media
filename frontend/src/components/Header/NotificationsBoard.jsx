@@ -1,6 +1,6 @@
 import React, {memo} from "react";
 import styled from "styled-components";
-import Button from "../Controls/ButtonDefault";
+import Button from "../Controls/ButtonDefaultCircle";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { useThemeUI } from "theme-ui";
 import Notifications from "../Notification/Notifications"

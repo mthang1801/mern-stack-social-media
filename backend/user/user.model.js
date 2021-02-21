@@ -39,6 +39,34 @@ const UserSchema = new mongoose.Schema({
       required : true 
     }
   ],
+  followed : [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "users",
+      required : true 
+    }
+  ],
+  following : [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "users",
+      required : true 
+    }
+  ],
+  sendRequestToAddFriend : [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "users",
+      required : true 
+    }
+  ],
+  receiveRequestToAddFriend : [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "users",
+      required : true 
+    }
+  ],
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,

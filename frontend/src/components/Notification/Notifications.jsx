@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import NotificationItem from "./NotificationItem";
 import styled from "styled-components";
-import { useQuery, useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
   FETCH_NOTIFICATIONS,
   FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
@@ -10,6 +10,8 @@ import {
   GET_LOADING_NOTIFICATIONS_MORE,
   GET_CURRENT_USER,
   GET_OPEN_POPUP_NOTIFICATION,
+  GET_PERSONAL_USERS,
+  GET_CURRENT_PERSONAL_USER,
 } from "../../apollo/operations/queries";
 import mutations from "../../apollo/operations/mutations";
 import subcriptions from "../../apollo/operations/subscriptions";
@@ -46,6 +48,12 @@ const Notifications = () => {
   const {
     data: { openPopupNotification },
   } = useQuery(GET_OPEN_POPUP_NOTIFICATION, { fetchPolicy: "cache-first" });
+  const {
+    data: { personalUsers },
+  } = useQuery(GET_PERSONAL_USERS, { fetchPolicy: "cache-first" });
+  const {
+    data: { currentPersonalUser },
+  } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
   //mutations
   const {
     setCountNumberNotificationsUnseen,
@@ -53,6 +61,9 @@ const Notifications = () => {
     setNewNotifications,
     setOpenPopupNotification,
     setLoadingNotificationsMore,
+    setPersonalUsers,
+    setCurrentUser,
+    setCurrentPersonalUser,
   } = mutations;
 
   useEffect(() => {
@@ -99,7 +110,7 @@ const Notifications = () => {
   ]);
 
   useEffect(() => {
-    let unsubscribePostCreated;
+    let unsubscribePostCreated, unsubscribeRequestAddFriend;
     if (subscribeToMoreNotifications) {
       unsubscribePostCreated = subscribeToMoreNotifications({
         document:
@@ -112,7 +123,59 @@ const Notifications = () => {
           setOpenPopupNotification(true);
           setNewNotifications(newNotification._id);
           setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);
-          console.log(notifications);
+          setNotifications([
+            { ...newNotification, new: true },
+            ...notifications,
+          ]);
+        },
+      });
+      unsubscribeRequestAddFriend = subscribeToMoreNotifications({
+        document:
+          subcriptions.notificationSubscription.SEND_REQUEST_TO_ADD_FRIEND,
+        variables: { userId: user._id },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) return prev;         
+          const {
+            notification: newNotification,
+            receiver,
+          } = subscriptionData.data.notifyReceiveAddFriend;
+          setOpenPopupNotification(true);
+          setNewNotifications(newNotification._id);
+          setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);
+          const newCurrentUser = {
+            ...user,
+            followed: [...user.followed, newNotification.creator._id],
+            receiveRequestToAddFriend: [
+              ...user.receiveRequestToAddFriend,
+              newNotification.creator._id,
+            ],
+          };
+          setCurrentUser(newCurrentUser);
+
+          if (personalUsers[newNotification.creator.slug]) {
+            const sender = personalUsers[newNotification.creator.slug];
+            const updatedSenderRequest = {
+              ...sender,
+              following: [...sender.following, receiver],
+              sendRequestToAddFriend: [
+                ...sender.sendRequestToAddFriend,
+                receiver,
+              ],
+            };
+            console.log(updatedSenderRequest)
+            setPersonalUsers(updatedSenderRequest);
+          }
+          if (currentPersonalUser && currentPersonalUser._id === newNotification.creator._id) {
+            setCurrentPersonalUser({
+              ...currentPersonalUser,
+              following: [...currentPersonalUser.following, receiver],
+              sendRequestToAddFriend: [
+                ...currentPersonalUser.sendRequestToAddFriend,
+                receiver,
+              ],
+            });
+          }
+
           setNotifications([
             { ...newNotification, new: true },
             ...notifications,
@@ -125,16 +188,23 @@ const Notifications = () => {
       if (unsubscribePostCreated) {
         unsubscribePostCreated();
       }
+      if (unsubscribeRequestAddFriend) {
+        unsubscribeRequestAddFriend();
+      }
     };
   }, [
     countNumberNotificationsUnseen,
     subscribeToMoreNotifications,
     notifications,
+    personalUsers,
+    setPersonalUsers,
     setNotifications,
     setCountNumberNotificationsUnseen,
     setNewNotifications,
     setOpenPopupNotification,
   ]);
+
+  console.log(personalUsers);
 
   useEffect(() => {
     let timer;

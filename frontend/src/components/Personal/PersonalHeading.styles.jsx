@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import {NavLink} from "react-router-dom"
+import {Link} from "react-router-dom"
 export const Container = styled.div`
   width : 100% ; 
   background-color : ${({theme}) => theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
@@ -13,7 +13,7 @@ export const Container = styled.div`
 
 export const PersonalHeadingBackground = styled.div`
   width : 100%; 
-  height : 65%;
+  height : 55%;
   margin: 0 auto;
   background : ${({background}) => background ? `url(${background}) no-repeat center ` : "unset"};
   background-size : 100% 100%;
@@ -52,24 +52,41 @@ export const BackgroundImageContainer = styled.div`
 `
 
 export const UserName = styled.div`
-  text-align: left;
+  text-align: center;
   h4{
     text-transform : capitalize ;
   }
   @media screen and (min-width: 992px){
     align-self : flex-end;
     margin-bottom:1rem;
+    text-align: left;
   }
 `
 
-export const ProfileMenus = styled.div`
+export const Footer = styled.div`
   margin: 1rem auto;
+  display : flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height : 45% ; 
   @media screen and (min-width : 992px){
     width : 90%;    
+    flex-direction : row;
+    justify-content :space-between;
+    align-items: flex-end;
+    height : 25%;
   }  
 `
 
-export const ProfileMenuItemLink = styled(NavLink)`
+export const PersonalMenus = styled.div`
+  margin : 3rem auto;
+  @media screen and (min-width : 992px){
+    margin : 0 ;
+  }
+`
+
+export const ProfileMenuItemLink = styled(Link)`
   padding : 1rem 1.5rem;  
   transition : var(--mainTransition);
   &:hover{
@@ -78,3 +95,4 @@ export const ProfileMenuItemLink = styled(NavLink)`
   }
   border-bottom : ${({active}) => active === "true" ? "2px solid var(--primary)" : "2px solid transparent"};
 `
+

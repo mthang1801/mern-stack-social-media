@@ -6,7 +6,7 @@ export const BoxWrapper = styled.div`
   border-radius: 0.5rem;
   box-shadow : var(--lightShadow);
   & a {
-    color: var(--dark-blue);
+    color: var(--primary);
     &:hover {
       color: var(--blue);
     }

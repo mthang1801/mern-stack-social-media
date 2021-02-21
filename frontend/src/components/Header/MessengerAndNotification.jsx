@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, memo } from "react";
 import styled from "styled-components";
 import { TiMessages } from "react-icons/ti";
 import { IoMdNotifications } from "react-icons/io";
-import Button from "../Controls/ButtonDefault";
+import Button from "../Controls/ButtonDefaultCircle";
 import NotificationsBoard from "./NotificationsBoard";
 import classNames from "classnames";
 import { useQuery, useLazyQuery } from "@apollo/client";

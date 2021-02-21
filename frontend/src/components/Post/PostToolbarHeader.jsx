@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import Button from "../Controls/ButtonDefault";
+import Button from "../Controls/ButtonDefaultCircle";
 import Avatar from "../../assets/images/mvt-icon.png";
 import { BsArrowsFullscreen } from "react-icons/bs";
 import { GET_POST_STATUS } from "../../apollo/operations/queries";

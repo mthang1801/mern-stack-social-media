@@ -73,7 +73,7 @@ export const en = {
         icon: () => <CgMoreO />,
       },
     ],
-    profileMenus : [
+    personalMenus : [
       {
         path : (slug) => `/${slug}/posts`,
         name : "Posts"
@@ -145,6 +145,7 @@ export const en = {
     notifications: {
       message : "You have just received a new message.",
       postCreated : "has just posted a new status.",
+      sendRequestToAddFriend : "send you a request to add friend"
     },
     greeting : {
       welcome : "Welcome to Pul.com",
