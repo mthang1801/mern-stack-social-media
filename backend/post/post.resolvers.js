@@ -29,7 +29,7 @@ export const postResolvers = {
         () => pubsub.asyncIterator(subscriptionActions.NOTIFY_POST_CREATED),
         (payload, { userId }) => {
           return userId
-            ? payload.notifyCreatedPost.users.includes(userId.toString())
+            ? payload.notifyCreatedPost.receivers.includes(userId.toString())
             : false;
         }
       ),

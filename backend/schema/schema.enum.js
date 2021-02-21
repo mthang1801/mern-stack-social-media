@@ -9,6 +9,9 @@ export const schemaEnum = gql`
     CREATED
     UPDATED
     DELETED
+    ADDED
+    ACCEPTED
+    REMOVED
   }  
   enum ContactEnum{
     ADDED

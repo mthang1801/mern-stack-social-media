@@ -4,8 +4,8 @@ export const POST_CREATED_SUBSCRIPTIONS = gql`
 subscription NotifyCreatedPost($userId : ID!){
   notifyCreatedPost(userId : $userId){
     action
-    type    
-    users 
+    field    
+    receivers 
     notification{
       _id 
       field

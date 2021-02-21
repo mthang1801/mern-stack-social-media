@@ -19,10 +19,10 @@ const CardProfile = ({ user }) => {
           />
         </Link>
       </div>
-      <a href={`/profile`} className="user-name">
+      <a href={`/${user.slug}`} className="user-name">
         <h4 className="user-name__primary">{user.name}</h4>
 
-        <h6 className="user-name__secondary">(MVT)</h6>
+        <h6 className="user-name__secondary">@{user.slug}</h6>
       </a>
       <div className="user-association">
         <Link to={`/${user.slug}/friends`} >

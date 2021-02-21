@@ -11,11 +11,12 @@ import {
   SEND_REQUEST_TO_ADD_FRIEND,
   REJECT_REQUEST_TO_ADD_FRIEND,
 } from "../../apollo/operations/mutations";
-import { useMutation } from "@apollo/client";
+import subscriptions from "../../apollo/operations/subscriptions";
 import mutations from "../../apollo/operations/mutations";
 import Button from "../Controls/ButtonDefaultCircle";
-import { useQuery } from "@apollo/client";
+import { useQuery, useSubscription, useMutation } from "@apollo/client";
 import {
+  FETCH_CURRENT_USER,
   GET_CURRENT_PERSONAL_USER,
   GET_CURRENT_USER,
   GET_PERSONAL_USERS,
@@ -32,7 +33,12 @@ const PersonalContact = () => {
   //Mutations
   const [sendRequestToAddFriend] = useMutation(SEND_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
-  const { setCurrentUser, setPersonalUsers, setCurrentPersonalUser } = mutations;
+  const {
+    setCurrentUser,
+    setPersonalUsers,
+    setCurrentPersonalUser,
+  } = mutations;
+  //user Query
   const {
     data: { currentPersonalUser },
   } = useQuery(GET_CURRENT_PERSONAL_USER);
@@ -42,9 +48,54 @@ const PersonalContact = () => {
   const {
     data: { personalUsers },
   } = useQuery(GET_PERSONAL_USERS);
+  const {
+    data: subscribeRejectRequestToAddFriend,
+  } = useSubscription(
+    subscriptions.userSubscription.REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+    { variables: { userId: user._id } }
+  );
+  //color theme
   const { colorMode } = useThemeUI();
-  const responseRef = useRef(false);
+  //useRef
+  const responseRef = useRef(false);  
+
   useEffect(() => {
+    if (subscribeRejectRequestToAddFriend && user) {
+      const {
+        receiver,
+        sender,
+      } = subscribeRejectRequestToAddFriend.rejectRequestToAddFriendSubscription;
+      setCurrentUser({
+        ...user,
+        sendRequestToAddFriend: user.sendRequestToAddFriend.filter(
+          (_id) => _id.toString() !== receiver._id.toString()
+        ),
+      });
+      if (personalUsers[receiver.slug]) {
+        const updatedReceiver = {
+          ...personalUsers[receiver.slug],
+          receiveRequestToAddFriend: personalUsers[
+            receiver.slug
+          ].receiveRequestToAddFriend.filter(
+            (_id) => _id.toString() !== sender._id.toString()
+          ),
+        };
+        setPersonalUsers(updatedReceiver);
+      }
+      if (currentPersonalUser._id.toString() === receiver._id.toString()) {
+        setCurrentPersonalUser({
+          ...currentPersonalUser,
+          receiveRequestToAddFriend: currentPersonalUser.receiveRequestToAddFriend.filter(
+            (_id) => _id.toString() !== sender._id.toString()
+          ),
+        });
+      }
+    }
+  }, [subscribeRejectRequestToAddFriend, user, setCurrentUser]);
+  useEffect(() => {
+    if(!responseRef.current){
+      setOpenResponse(false);
+    }
     window.addEventListener("click", (e) => {
       if (responseRef.current && !responseRef.current.contains(e.target)) {
         setOpenResponse(false);
@@ -82,39 +133,63 @@ const PersonalContact = () => {
             currentPersonalUser._id,
           ],
         };
-        setCurrentUser(newCurrentUser);                 
-        if(personalUsers[currentPersonalUser.slug]){    
-          const receiver = personalUsers[currentPersonalUser.slug] ; 
+        setCurrentUser(newCurrentUser);
+        if (personalUsers[currentPersonalUser.slug]) {
+          const receiver = personalUsers[currentPersonalUser.slug];
           const updatedReceiver = {
-            ...receiver, 
-            followed : [...receiver.followed, user._id],
-            receiveRequestToAddFriend : [
+            ...receiver,
+            followed: [...receiver.followed, user._id],
+            receiveRequestToAddFriend: [
               ...receiver.receiveRequestToAddFriend,
-              user._id
-            ]
-          }                 
-          setPersonalUsers(updatedReceiver)
+              user._id,
+            ],
+          };
+          setPersonalUsers(updatedReceiver);
         }
         setCurrentPersonalUser({
           ...currentPersonalUser,
-          followed : [...currentPersonalUser.followed, user._id], 
-          receiveRequestToAddFriend : [
+          followed: [...currentPersonalUser.followed, user._id],
+          receiveRequestToAddFriend: [
             ...currentPersonalUser.receiveRequestToAddFriend,
-            user._id
-          ]
-        })
-
+            user._id,
+          ],
+        });
       })
       .catch((err) => console.log(err));
   };
 
-  console.log(user)
-  console.log(personalUsers)
+  console.log(user);
+  console.log(personalUsers);
   console.log(currentPersonalUser);
 
   const onRejectRequestToAddFriend = () => {
     rejectRequestToAddFriend({ variables: { userId: currentPersonalUser._id } })
-      .then(() =>{} )
+      .then(() => {
+        const newCurrentUser = {
+          ...user,
+          receiveRequestToAddFriend: user.receiveRequestToAddFriend.filter(
+            (_id) => _id.toString() !== currentPersonalUser._id.toString()
+          ),
+        };
+        setCurrentUser(newCurrentUser);
+        if (personalUsers[currentPersonalUser.slug]) {
+          const sender = personalUsers[currentPersonalUser.slug];
+          const updatedSender = {
+            ...sender,
+            sendRequestToAddFriend: sender.sendRequestToAddFriend.filter(
+              (_id) => _id.toString() !== user._id.toString()
+            ),
+          };
+          setPersonalUsers(updatedSender);
+        }
+        setCurrentPersonalUser({
+          ...currentPersonalUser,
+          sendRequestToAddFriend: currentPersonalUser.sendRequestToAddFriend.filter(
+            (_id) => _id.toString() !== user._id.toString()
+          ),
+        });
+        setOpenResponse(false);
+      })
       .catch((err) => console.log(err));
   };
 

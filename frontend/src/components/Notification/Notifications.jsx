@@ -118,6 +118,7 @@ const Notifications = () => {
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
+          console.log(subscriptionData)
           const newNotification =
             subscriptionData.data.notifyCreatedPost.notification;
           setOpenPopupNotification(true);
@@ -137,8 +138,8 @@ const Notifications = () => {
           if (!subscriptionData) return prev;         
           const {
             notification: newNotification,
-            receiver,
-          } = subscriptionData.data.notifyReceiveAddFriend;
+            receivers,
+          } = subscriptionData.data.notifyReceiveAddFriend;        
           setOpenPopupNotification(true);
           setNewNotifications(newNotification._id);
           setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);
@@ -156,22 +157,21 @@ const Notifications = () => {
             const sender = personalUsers[newNotification.creator.slug];
             const updatedSenderRequest = {
               ...sender,
-              following: [...sender.following, receiver],
+              following: [...sender.following, receivers[0]],
               sendRequestToAddFriend: [
                 ...sender.sendRequestToAddFriend,
-                receiver,
+                receivers[0],
               ],
-            };
-            console.log(updatedSenderRequest)
+            };            
             setPersonalUsers(updatedSenderRequest);
           }
           if (currentPersonalUser && currentPersonalUser._id === newNotification.creator._id) {
             setCurrentPersonalUser({
               ...currentPersonalUser,
-              following: [...currentPersonalUser.following, receiver],
+              following: [...currentPersonalUser.following, receivers[0]],
               sendRequestToAddFriend: [
                 ...currentPersonalUser.sendRequestToAddFriend,
-                receiver,
+                receivers[0],
               ],
             });
           }
@@ -203,8 +203,6 @@ const Notifications = () => {
     setNewNotifications,
     setOpenPopupNotification,
   ]);
-
-  console.log(personalUsers);
 
   useEffect(() => {
     let timer;

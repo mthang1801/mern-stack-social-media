@@ -129,14 +129,14 @@ export const userController = {
         href: `/${currentUser.slug}`,
       });
       await (await notification.save()).populate("creator").execPopulate();
-      if (!userRequestedFriend.followed.includes(currentUserId)) {
+      if (!userRequestedFriend.followed.includes(mongoose.Types.ObjectId(currentUserId))) {
         userRequestedFriend.followed.push(currentUserId);
       }
       userRequestedFriend.receiveRequestToAddFriend.push(currentUserId);
       userRequestedFriend.notifications.push(notification._id);
       await userRequestedFriend.save();
 
-      if (!currentUser.following.includes(userId)) {
+      if (!currentUser.following.includes(mongoose.Types.ObjectId(userId))) {
         currentUser.following.push(userId);
       }
       currentUser.sendRequestToAddFriend.push(userId);
@@ -145,7 +145,7 @@ export const userController = {
         notifyReceiveAddFriend: {
           field: fields.user,
           action: actions.ADDED,
-          receiver: userId,
+          receivers: [userId],
           notification,
         },
       });
@@ -156,13 +156,13 @@ export const userController = {
       throw new ApolloError("Add friend failed.");
     }
   },
-  rejectRequestToAddFriend: async (req, userId) => {
+  rejectRequestToAddFriend: async (req, userId, pubsub, rejectRequestToAddFriendSubscription) => {
     try {
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
         receiveRequestToAddFriend: userId,
-      });
+      });    
       if (!currentUser) {
         throw new UserInputError("Reject failed");
       }
@@ -178,11 +178,18 @@ export const userController = {
       currentUser.receiveRequestToAddFriend.pull(userId);
       await currentUser.save();
       user.sendRequestToAddFriend.pull(currentUserId);
-      await user.save();
+      await user.save();          
       await session.commitTransaction();
       session.endSession();
+      pubsub.publish(rejectRequestToAddFriendSubscription, {
+        rejectRequestToAddFriendSubscription: {
+          sender : user,
+          receiver : currentUser
+        },
+      });
       return true;
     } catch (error) {
+      console.log(error)
       throw new ApolloError("Something went wrong.");
     }
   },
