@@ -33,35 +33,7 @@ const PersonalPosts = () => {
       }
     })
   },[])
-
-  // useEffect(() => {   
-  //   if (loadingMore && currentPersonalUser && personalPosts[currentPersonalUser._id]) {
-  //     if (fetchMore) {       
-  //       fetchMore({
-  //         query: FETCH_POSTS,
-  //         variables: {
-  //           skip: personalPosts[currentPersonalUser._id].length,
-  //           limit: +process.env.REACT_APP_POSTS_PER_PAGE,
-  //           userId : currentPersonalUser._id
-  //         },
-  //         updateQuery: (prev, { fetchMoreResult }) => {
-  //           console.log(fetchMoreResult)
-  //         },
-  //       }).then(() => setLoadingMore(false));
-  //     } else {                
-  //       fetchPosts({
-  //         variables: {
-  //           skip:  personalPosts[currentPersonalUser._id].length,
-  //           limit: +process.env.REACT_APP_POSTS_PER_PAGE,
-  //           userId : currentPersonalUser._id
-  //         },
-  //       });
-  //       setLoadingMore(false);
-  //       useImperativeQuery()
-  //     }
-  //   }
-  // },[loadingMore,fetchMore,currentPersonalUser, setLoadingMore, personalPosts])
-  console.log(fetchPostsData)
+  
   useEffect(() => {   
     if(loadingMore && currentPersonalUser && personalPosts[currentPersonalUser._id] && fetchMorePosts){
       const skip =  personalPosts[currentPersonalUser._id].length ; 
@@ -72,8 +44,7 @@ const PersonalPosts = () => {
         setLoadingMore(false);
       })
     }
-  }, [loadingMore, currentPersonalUser, personalPosts, fetchMorePosts])
-  console.log(personalPosts)
+  }, [loadingMore, currentPersonalUser, personalPosts, fetchMorePosts])  
   return (
     <Wrapper>
       <LeftSide>

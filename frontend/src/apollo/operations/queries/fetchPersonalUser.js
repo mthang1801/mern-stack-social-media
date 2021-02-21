@@ -10,6 +10,10 @@ query FetchPersonalUser($slug : String!){
     email    
     friends
     avatar  
+    following
+    followed
+    sendRequestToAddFriend 
+    receiveRequestToAddFriend 
     posts{
       _id
       text

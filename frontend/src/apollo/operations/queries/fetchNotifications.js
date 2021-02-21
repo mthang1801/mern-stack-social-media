@@ -7,6 +7,7 @@ export const FETCH_NOTIFICATIONS = gql`
       field
       action
       hasSeen
+      receivers
       creator {
         _id
         name

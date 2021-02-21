@@ -22,7 +22,11 @@ export const FETCH_CURRENT_USER = gql`
         acceptInvite        
         createdAt
       }    
-      avatar      
+      avatar  
+      following
+      followed 
+      sendRequestToAddFriend
+      receiveRequestToAddFriend
     }
   }
 `;

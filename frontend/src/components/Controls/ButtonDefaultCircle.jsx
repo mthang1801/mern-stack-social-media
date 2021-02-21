@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useThemeUI } from "theme-ui";
 import { darken, invert } from "polished";
-const ButtonDefault = ({ children, ...props }) => {
+const ButtonDefaultCircle = ({ children, ...props }) => {
   const { colorMode } = useThemeUI();
   return (
     <Button theme={colorMode} {...props}>
@@ -23,12 +23,10 @@ const Button = styled.button`
       : theme === "dark"
       ? "var(--gray-dark)"
       : "var(--light)"};
-  height: ${({height}) => height ? `${height}px` : "auto"};
-  width: ${({width}) => width ? `${width}px` : "auto"};
-  font-size: 1rem;
-  border-radius: 0.4rem;
-  padding: 0.4rem 0.6rem;  
-  text-transform : uppercase ;
+  height: 40px;
+  width: 40px;
+  font-size: 1em;
+  border-radius: 50%;
   outline: none;
   border: none;
   transition: var(--mainTransition);
@@ -47,4 +45,4 @@ const Button = styled.button`
   }
 `;
 
-export default ButtonDefault;
+export default ButtonDefaultCircle;

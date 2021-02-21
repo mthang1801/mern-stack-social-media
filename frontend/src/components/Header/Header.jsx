@@ -5,7 +5,7 @@ import Search from "./Search";
 import Navigation from "./Navigation";
 import MessengerAndNotification from "./MessengerAndNotification";
 import SettingAccount from "./SettingAccount";
-import Button from "../Controls/ButtonDefault";
+import Button from "../Controls/ButtonDefaultCircle";
 import { FaArrowLeft } from "react-icons/fa";
 import ButtonMenu from "../Controls/ButtonMenu";
 import mutations from "../../apollo/operations/mutations";
