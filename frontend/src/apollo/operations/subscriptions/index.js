@@ -1,7 +1,8 @@
 import notificationSubscription from "./notifications"
-
+import userSubscription from "./user"
 const subscriptions = {
-  notificationSubscription
+  notificationSubscription,
+  userSubscription
 }
 
 export default subscriptions

@@ -78,17 +78,11 @@ export const schemaType = gql`
     token : String!
     tokenExpire : String! 
   }
-  type PostSubscriptionPayload{    
-    type : String! 
-    action : ActionEnum!   
-    users : [ID!]
-    notification : Notification!
-  }  
 
-  type AddFriendSubscriptionPayload{
+  type SubscriptionNotificationPayload{
     field : String!
-    action : ContactEnum!    
-    receiver : ID!
+    action : ActionEnum!    
+    receivers : [ID!]
     notification : Notification!
   }
   type CommentSubscriptionPayload{
@@ -103,6 +97,11 @@ export const schemaType = gql`
   type PrivateChatSubsciptionPayload{
     action : PrivateChatEnum! 
     node : PrivateChat!
+  }
+
+  type UsersContact{
+    sender: User!
+    receiver : User!
   }
   
 `

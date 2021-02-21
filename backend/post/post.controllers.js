@@ -131,9 +131,9 @@ export const postControllers = {
     await (await newNotification.save()).populate("creator").execPopulate();
     pubsub.publish(notifyCreatedPost, {
       notifyCreatedPost: {
-        type: fields.post,
+        field: fields.post,
         action: actions.CREATED,
-        users: user.friends,
+        receivers: user.friends,
         notification: newNotification,
       },
     });

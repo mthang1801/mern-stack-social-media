@@ -5,7 +5,7 @@ subscription ($userId : ID!){
   notifyReceiveAddFriend(userId : $userId){
     field
     action
-    receiver
+    receivers
     notification{
       _id
       field
