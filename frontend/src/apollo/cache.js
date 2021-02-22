@@ -11,7 +11,8 @@ import {
   OpenPopupNotification,
   PersonalUsers,
   CurrentPersonalUser,
-  PersonalPosts, 
+  PersonalPosts,
+  ShouldSubscribe
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 const setPostStatusVar = makeVar(PostStatus);
@@ -50,8 +51,8 @@ const cache = new InMemoryCache({
         posts: {
           read: () => setPostsVar(),
         },
-        personalPosts : {
-          read : () => setPersonalPostsVar()
+        personalPosts: {
+          read: () => setPersonalPostsVar(),
         },
         notifications: {
           read: () => setNotificationsVar(),
@@ -67,7 +68,7 @@ const cache = new InMemoryCache({
         },
         countNumberNotificationsUnseen: {
           read: () => setCountNumberNotificationsUnseenVar(),
-        },        
+        },       
       },
     },
   },
@@ -86,5 +87,5 @@ export {
   setOpenPopupNotificationVar,
   setPersonalUsersVar,
   setCurrentPersonalUserVar,
-  setPersonalPostsVar
+  setPersonalPostsVar,  
 };

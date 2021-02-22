@@ -30,6 +30,7 @@ import {
 const PersonalContact = () => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
+  const [subscribe, setSubscribe] = useState(true);
   //Mutations
   const [sendRequestToAddFriend] = useMutation(SEND_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
@@ -47,53 +48,60 @@ const PersonalContact = () => {
   } = useQuery(GET_CURRENT_USER);
   const {
     data: { personalUsers },
-  } = useQuery(GET_PERSONAL_USERS);
-  const {
-    data: subscribeRejectRequestToAddFriend,
-  } = useSubscription(
-    subscriptions.userSubscription.REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-    { variables: { userId: user._id } }
-  );
+  } = useQuery(GET_PERSONAL_USERS);  
+  const {refetch : fetchCurrentUser, subscribeToMore: subscribeUser} = useQuery(FETCH_CURRENT_USER, {skip : true})
+  
   //color theme
   const { colorMode } = useThemeUI();
   //useRef
-  const responseRef = useRef(false);  
+  const responseRef = useRef(false);
 
+  // Because I can't useSubscription to catch reject request event
+  // I temporarily use fetch any thing which is available in fetch apollo has been defined before
   useEffect(() => {
-    if (subscribeRejectRequestToAddFriend && user) {
-      const {
-        receiver,
-        sender,
-      } = subscribeRejectRequestToAddFriend.rejectRequestToAddFriendSubscription;
-      setCurrentUser({
-        ...user,
-        sendRequestToAddFriend: user.sendRequestToAddFriend.filter(
-          (_id) => _id.toString() !== receiver._id.toString()
-        ),
-      });
-      if (personalUsers[receiver.slug]) {
-        const updatedReceiver = {
-          ...personalUsers[receiver.slug],
-          receiveRequestToAddFriend: personalUsers[
-            receiver.slug
-          ].receiveRequestToAddFriend.filter(
-            (_id) => _id.toString() !== sender._id.toString()
-          ),
-        };
-        setPersonalUsers(updatedReceiver);
-      }
-      if (currentPersonalUser._id.toString() === receiver._id.toString()) {
-        setCurrentPersonalUser({
-          ...currentPersonalUser,
-          receiveRequestToAddFriend: currentPersonalUser.receiveRequestToAddFriend.filter(
-            (_id) => _id.toString() !== sender._id.toString()
-          ),
-        });
+    // so  I define fetchCurrentUser or any other, it is no mean exclude as following apollo, it is required to call it
+    fetchCurrentUser();
+  }, [])
+
+  useEffect(()=> {
+    let unsubscribeUser ;
+    if(subscribeUser){
+      unsubscribeUser = subscribeUser({
+        document : subscriptions.userSubscription.REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        variables : {userId : user?._id || ""},
+        updateQuery : (prev, {subscriptionData}) => {
+          const {sender, receiver} = subscriptionData.data.rejectRequestToAddFriendSubscription; 
+          if(sender && receiver && user){
+            setCurrentUser({
+              ...user,
+              sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
+            })
+            if (personalUsers[receiver.slug]) {
+              const updatedReceiver = {
+                ...personalUsers[receiver.slug],
+                receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+              };
+              setPersonalUsers(updatedReceiver);
+            }
+            if (currentPersonalUser._id.toString() === receiver._id.toString()) {
+              setCurrentPersonalUser({
+                ...currentPersonalUser,
+                receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+              });
+            }
+          }
+        }
+      })
+    }
+    return () => {
+      if(unsubscribeUser){
+        unsubscribeUser();
       }
     }
-  }, [subscribeRejectRequestToAddFriend, user, setCurrentUser]);
+  },[subscribeUser, user])
+  
   useEffect(() => {
-    if(!responseRef.current){
+    if (!responseRef.current) {
       setOpenResponse(false);
     }
     window.addEventListener("click", (e) => {
@@ -122,12 +130,14 @@ const PersonalContact = () => {
   }, [user, currentPersonalUser]);
 
   const onSendRequestToAddFriend = (e) => {
-    e.preventDefault();
     sendRequestToAddFriend({ variables: { userId: currentPersonalUser._id } })
-      .then(() => {
+      .then(() => {        
+        setSubscribe()
         const newCurrentUser = {
           ...user,
-          following: [...user.following, currentPersonalUser._id],
+          following: user.following.includes(currentPersonalUser._id)
+            ? [...user.following]
+            : [...user.following, currentPersonalUser._id],
           sendRequestToAddFriend: [
             ...user.sendRequestToAddFriend,
             currentPersonalUser._id,
@@ -138,7 +148,9 @@ const PersonalContact = () => {
           const receiver = personalUsers[currentPersonalUser.slug];
           const updatedReceiver = {
             ...receiver,
-            followed: [...receiver.followed, user._id],
+            followed: receiver.followed.includes(user._id)
+              ? [...receiver.followed]
+              : [...receiver.followed, user._id],
             receiveRequestToAddFriend: [
               ...receiver.receiveRequestToAddFriend,
               user._id,
@@ -148,7 +160,9 @@ const PersonalContact = () => {
         }
         setCurrentPersonalUser({
           ...currentPersonalUser,
-          followed: [...currentPersonalUser.followed, user._id],
+          followed: currentPersonalUser.followed.includes(user._id)
+            ? [...currentPersonalUser.followed]
+            : [...currentPersonalUser.followed, user._id],
           receiveRequestToAddFriend: [
             ...currentPersonalUser.receiveRequestToAddFriend,
             user._id,
@@ -157,10 +171,6 @@ const PersonalContact = () => {
       })
       .catch((err) => console.log(err));
   };
-
-  console.log(user);
-  console.log(personalUsers);
-  console.log(currentPersonalUser);
 
   const onRejectRequestToAddFriend = () => {
     rejectRequestToAddFriend({ variables: { userId: currentPersonalUser._id } })

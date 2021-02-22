@@ -22,7 +22,7 @@ import {
   setOpenPopupNotificationVar,
   setPersonalUsersVar,
   setCurrentPersonalUserVar,
-  setPersonalPostsVar,
+  setPersonalPostsVar,  
 } from "../../cache";
 export { SIGNUP } from "./signup";
 export { CREATE_POST } from "./createPost";
