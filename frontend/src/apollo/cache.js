@@ -11,8 +11,7 @@ import {
   OpenPopupNotification,
   PersonalUsers,
   CurrentPersonalUser,
-  PersonalPosts,
-  ShouldSubscribe
+  PersonalPosts
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 const setPostStatusVar = makeVar(PostStatus);

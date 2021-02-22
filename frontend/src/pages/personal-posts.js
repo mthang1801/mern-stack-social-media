@@ -23,7 +23,7 @@ const PersonalPosts = () => {
     data: { personalPosts },
   } = useQuery(GET_PERSONAL_POSTS, { fetchPolicy: "cache-first" });
   
-  const {data : fetchPostsData, refetch : fetchMorePosts} = useQuery(FETCH_POSTS, {skip : true, fetchPolicy : "cache-and-network"} )
+  const { refetch : fetchMorePosts} = useQuery(FETCH_POSTS, {skip : true, fetchPolicy : "cache-and-network"} )
   const {setPersonalPosts} = mutations
   useEffect(() => {
     window.addEventListener("scroll" , () => {

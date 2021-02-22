@@ -6,6 +6,7 @@ import {
   GET_PERSONAL_USERS,
   FETCH_PERSONAL_USER,
   GET_PERSONAL_POSTS,
+  GET_CURRENT_PERSONAL_USER,
 } from "../apollo/operations/queries";
 import Layout from "../containers/Layout";
 import mutations from "../apollo/operations/mutations";
@@ -20,6 +21,9 @@ const PersonalPage = (props) => {
     data: { personalUsers },
   } = useQuery(GET_PERSONAL_USERS, { fetchPolicy: "cache-first" });
   const {
+    data: { currentPersonalUser },
+  } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
+  const {
     data: { personalPosts },
   } = useQuery(GET_PERSONAL_POSTS, { fetchPolicy: "cache-first" });
   const {
@@ -32,15 +36,18 @@ const PersonalPage = (props) => {
     let _mounted = true ; 
       if(_mounted){
         //require fetch personal user because we need to set who is current personal user
-        fetchPersonalUser({ variables: { slug } });
+        if(!currentPersonalUser || currentPersonalUser.slug !== slug) {
+          fetchPersonalUser({ variables: { slug } });
+        }        
       }
       return () => _mounted = false ;
-  }, [personalUsers, fetchPersonalUser]);  
+  }, [personalUsers, fetchPersonalUser, slug, currentPersonalUser]);  
   useEffect(() => {
     if (personalUserData && personalUserData.fetchPersonalUser) {
       if (!personalUsers[slug]) {
         setPersonalUsers(personalUserData.fetchPersonalUser);
       }
+      console.log(personalUserData)
       setCurrentPersonalUser(personalUserData.fetchPersonalUser);
       let {
         _id,

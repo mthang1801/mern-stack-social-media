@@ -37,6 +37,14 @@ export const userResolvers = {
         subscriptionActions.REJECT_REQUEST_TO_ADD_FRIEND
       );
     },
+    cancelRequestToAddFriend: (_, args, { req }, info) => {
+      return userController.cancelRequestToAddFriend(
+        req,
+        args.receiverId,
+        pubsub,
+        subscriptionActions.CANCEL_REQUEST_TO_ADD_FRIEND
+      );
+    },
   },
   User: {
     password: (_, args, ctx, info) => userController.hidePassword(),
@@ -60,8 +68,25 @@ export const userResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.REJECT_REQUEST_TO_ADD_FRIEND
           ),
-        (payload, { userId }) => {         
-          return payload.rejectRequestToAddFriendSubscription.sender._id.toString() === userId.toString()
+        (payload, { userId }) => {
+          return (
+            payload.rejectRequestToAddFriendSubscription.sender._id.toString() ===
+            userId.toString()
+          );
+        }
+      ),
+    },
+    cancelRequestToAddFriendSubscription: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.CANCEL_REQUEST_TO_ADD_FRIEND
+          ),
+        (payload, { userId }) => {
+          return (
+            payload.cancelRequestToAddFriendSubscription.receiver._id.toString() ===
+            userId.toString()
+          );
         }
       ),
     },

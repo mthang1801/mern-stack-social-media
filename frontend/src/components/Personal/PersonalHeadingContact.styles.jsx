@@ -7,8 +7,8 @@ export const PersonalContactContainer = styled.div`
   & button {
     width: 45px;
     height: 45px;
-    margin: 0 0.4rem;
-    transform : scale(1.05);
+    margin: 0 0.5rem;
+    transform : scale(1.25);
   }
 `;
 

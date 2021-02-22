@@ -10,6 +10,7 @@ import { CgRemoveR } from "react-icons/cg";
 import {
   SEND_REQUEST_TO_ADD_FRIEND,
   REJECT_REQUEST_TO_ADD_FRIEND,
+  CANCEL_REQUEST_TO_ADD_FRIEND,
 } from "../../apollo/operations/mutations";
 import subscriptions from "../../apollo/operations/subscriptions";
 import mutations from "../../apollo/operations/mutations";
@@ -29,11 +30,11 @@ import {
 } from "./PersonalHeadingContact.styles";
 const PersonalContact = () => {
   const [relationship, setRelationship] = useState("stranger");
-  const [openResponse, setOpenResponse] = useState(false);
-  const [subscribe, setSubscribe] = useState(true);
+  const [openResponse, setOpenResponse] = useState(false);  
   //Mutations
   const [sendRequestToAddFriend] = useMutation(SEND_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
+  const [cancelRequestToAddFriend] = useMutation(CANCEL_REQUEST_TO_ADD_FRIEND);
   const {
     setCurrentUser,
     setPersonalUsers,
@@ -48,9 +49,12 @@ const PersonalContact = () => {
   } = useQuery(GET_CURRENT_USER);
   const {
     data: { personalUsers },
-  } = useQuery(GET_PERSONAL_USERS);  
-  const {refetch : fetchCurrentUser, subscribeToMore: subscribeUser} = useQuery(FETCH_CURRENT_USER, {skip : true})
-  
+  } = useQuery(GET_PERSONAL_USERS);
+  const {
+    refetch: fetchCurrentUser,
+    subscribeToMore: subscribeUser,
+  } = useQuery(FETCH_CURRENT_USER, { skip: true });
+
   //color theme
   const { colorMode } = useThemeUI();
   //useRef
@@ -61,32 +65,80 @@ const PersonalContact = () => {
   useEffect(() => {
     // so  I define fetchCurrentUser or any other, it is no mean exclude as following apollo, it is required to call it
     fetchCurrentUser();
-  }, [])
+  }, []);
 
-  useEffect(()=> {
-    let unsubscribeUser ;
-    if(subscribeUser){
+  useEffect(() => {
+    let unsubscribeUser;
+    if (subscribeUser && user) {      
       unsubscribeUser = subscribeUser({
-        document : subscriptions.userSubscription.REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-        variables : {userId : user?._id || ""},
-        updateQuery : (prev, {subscriptionData}) => {
-          const {sender, receiver} = subscriptionData.data.rejectRequestToAddFriendSubscription; 
-          if(sender && receiver && user){
+        document:
+          subscriptions.userSubscription
+            .REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        variables: { userId: user._id  },
+        updateQuery: (prev, { subscriptionData }) => {         
+          const {
+            sender,
+            receiver,
+          } = subscriptionData.data.rejectRequestToAddFriendSubscription;
+          if (sender && receiver ) {
             setCurrentUser({
               ...user,
               sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
-            })
+            });
             if (personalUsers[receiver.slug]) {
               const updatedReceiver = {
                 ...personalUsers[receiver.slug],
-                receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+                receiveRequestToAddFriend: [
+                  ...receiver.receiveRequestToAddFriend,
+                ],
               };
               setPersonalUsers(updatedReceiver);
             }
-            if (currentPersonalUser._id.toString() === receiver._id.toString()) {
+            if (
+              currentPersonalUser._id.toString() === receiver._id.toString()
+            ) {
               setCurrentPersonalUser({
                 ...currentPersonalUser,
-                receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+                receiveRequestToAddFriend: [
+                  ...receiver.receiveRequestToAddFriend,
+                ],
+              });
+            }
+          }
+        },
+      });
+
+      unsubscribeUser = subscribeUser({
+        document : subscriptions.userSubscription.CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        variables : {userId: user._id } ,
+        updateQuery : (prev, {subscriptionData}) => {
+          const {sender, receiver} = subscriptionData.data.cancelRequestToAddFriendSubscription; 
+          if (sender && receiver ) {
+            setCurrentUser({
+              ...user,
+              receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+              followed : [...receiver.followed]
+            });
+            if (personalUsers[sender.slug]) {             
+              setPersonalUsers({
+                ...personalUsers[sender.slug],
+                sendRequestToAddFriend: [
+                  ...sender.sendRequestToAddFriend,
+                ],
+                following : [
+                  ...sender.following
+                ]
+              });
+            }
+            if (
+              currentPersonalUser._id.toString() === sender._id.toString()
+            ) {
+              setCurrentPersonalUser({
+                ...currentPersonalUser,
+                sendRequestToAddFriend: [
+                  ...sender.sendRequestToAddFriend,
+                ],
+                following : [...sender.following]
               });
             }
           }
@@ -94,12 +146,12 @@ const PersonalContact = () => {
       })
     }
     return () => {
-      if(unsubscribeUser){
+      if (unsubscribeUser) {
         unsubscribeUser();
       }
-    }
-  },[subscribeUser, user])
-  
+    };
+  }, [subscribeUser, user]);
+
   useEffect(() => {
     if (!responseRef.current) {
       setOpenResponse(false);
@@ -132,7 +184,6 @@ const PersonalContact = () => {
   const onSendRequestToAddFriend = (e) => {
     sendRequestToAddFriend({ variables: { userId: currentPersonalUser._id } })
       .then(() => {        
-        setSubscribe()
         const newCurrentUser = {
           ...user,
           following: user.following.includes(currentPersonalUser._id)
@@ -203,6 +254,49 @@ const PersonalContact = () => {
       .catch((err) => console.log(err));
   };
 
+  const onCancelRequestToAddFriend = () => {
+    cancelRequestToAddFriend({
+      variables: { receiverId: currentPersonalUser._id },
+    }).then(() => {
+      const newCurrentUser = {
+        ...user,
+        following: user.following.filter(
+          (_id) => _id.toString() !== currentPersonalUser._id.toString()
+        ),
+        sendRequestToAddFriend: user.sendRequestToAddFriend.filter(
+          (_id) => _id.toString() !== currentPersonalUser._id.toString()
+        ),
+      };
+      setCurrentUser(newCurrentUser);
+      if (personalUsers[currentPersonalUser.slug]) {
+        const receiver = personalUsers[currentPersonalUser.slug];
+        setPersonalUsers({
+          ...receiver,
+          followed: receiver.followed.filter(
+            (_id) => _id.toString() !== user._id.toString()
+          ),
+          receiveRequestToAddFriend: receiver.receiveRequestToAddFriend.filter(
+            (_id) => _id.toString() !== user._id.toString()
+          ),
+        });
+      }       
+      const newCurrentPersonalUser = {
+        ...currentPersonalUser,
+        followed: currentPersonalUser.followed.filter(
+          (_id) => _id !== user._id
+        ),
+        receiveRequestToAddFriend: currentPersonalUser.receiveRequestToAddFriend.filter(
+          (_id) => _id.toString() !== user._id.toString()
+        ),
+      };
+      setCurrentPersonalUser(newCurrentPersonalUser);
+    });
+  };
+
+
+  console.log(user);
+  console.log(personalUsers);
+  console.log(currentPersonalUser);
   const MyActionsContact = (
     <>
       <Button theme={colorMode} title="update personal">
@@ -237,7 +331,11 @@ const PersonalContact = () => {
       user.sendRequestToAddFriend.includes(
         currentPersonalUser._id.toString()
       ) ? (
-        <Button theme={colorMode} title="Remove send request">
+        <Button
+          theme={colorMode}
+          title="Cancel request"
+          onClick={onCancelRequestToAddFriend}
+        >
           <CgRemoveR />
         </Button>
       ) : user &&
