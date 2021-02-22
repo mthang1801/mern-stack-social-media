@@ -23,9 +23,8 @@ export const DropdownResponseRequest = styled.div`
     theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
   border-radius: 0.5rem;
   box-shadow: var(--lightShadow);
-  transition : var(--mainTransition);
-  opacity: ${({open}) => open ? 1 : 0};
-  visibility : ${({open}) => open ? "visible" : "hidden"};
+  display: ${({open}) => open ? "block" : "none"};
+  
   border: 1px solid
     ${({ theme }) =>
       theme === "dark"

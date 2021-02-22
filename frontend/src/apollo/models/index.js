@@ -10,3 +10,4 @@ export { OpenPopupNotification } from "./OpenPopupNotification";
 export { PersonalUsers } from "./PersonalUsers";
 export { CurrentPersonalUser } from "./CurrentPersonalUser";
 export { PersonalPosts } from "./PersonalPosts";
+export { ShouldSubscribe } from "./ShouldSubscribe";
