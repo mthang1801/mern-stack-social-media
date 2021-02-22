@@ -29,6 +29,7 @@ export { CREATE_POST } from "./createPost";
 export { UPDATE_USER_HAS_SEEN_NOTIFICATION } from "./updateUserHasSeenNotification";
 export { SEND_REQUEST_TO_ADD_FRIEND } from "./user/sendRequestToAddFriend";
 export { REJECT_REQUEST_TO_ADD_FRIEND } from "./user/rejectRequestToAddFriend";
+export { CANCEL_REQUEST_TO_ADD_FRIEND } from "./user/cancelRequestToAddFriend";
 const mutations = {
   toggleButtonMenu: createToggleButtonMenu(toggleButtonMenuVar),
   setPostStatus: createSetPostStatus(setPostStatusVar),

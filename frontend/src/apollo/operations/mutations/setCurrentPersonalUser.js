@@ -1,4 +1,4 @@
-const setCurrentPersonalUser = setCurrentPersonalUserVar => user =>  setCurrentPersonalUserVar({...user})
+const setCurrentPersonalUser = (setCurrentPersonalUserVar) => (user) =>
+  setCurrentPersonalUserVar(user);
 
-export default setCurrentPersonalUser
-
+export default setCurrentPersonalUser;

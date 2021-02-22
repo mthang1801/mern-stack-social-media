@@ -193,5 +193,45 @@ export const userController = {
       throw new ApolloError("Something went wrong.");
     }
   },
+  cancelRequestToAddFriend : async (req, receiverId, pubsub, cancelRequestToAddFriendSubscription) => {
+    try {
+      const currentUserId = getAuthUser(req);
+      const currentUser = await User.findOne({
+        _id : currentUserId,
+        sendRequestToAddFriend : receiverId
+      })
+      if(!currentUser){
+        throw new UserInputError("Cancel Request failed.");
+      }
+      const receiver = await User.findOne({
+        _id : receiverId,
+        receiveRequestToAddFriend : currentUserId
+      });
+      if(!receiver){
+        throw new UserInputError("Cancel Request failed.");
+      }
+      const session = await mongoose.startSession();
+      session.startTransaction();
+      currentUser.sendRequestToAddFriend.pull(receiverId);
+      currentUser.following.pull(receiverId); 
+      await currentUser.save();
+      receiver.receiveRequestToAddFriend.pull(currentUserId);
+      receiver.followed.pull(currentUserId);
+      await receiver.save();
+      
+      pubsub.publish(cancelRequestToAddFriendSubscription, {
+        cancelRequestToAddFriendSubscription : {
+          sender : currentUser,
+          receiver
+        }
+      })
+      await session.commitTransaction();
+      session.endSession();
+      return true ; 
+    } catch (error) {
+      console.log(error);
+      throw new ApolloError("Cacel Request Failed")
+    }
+  },
   hidePassword: () => "***",
 };

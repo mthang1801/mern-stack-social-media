@@ -16,5 +16,6 @@ export const schemaMutation = gql`
     sendRequestToAddFriend(userId : ID!) : Boolean!
     acceptRequestToAddFriend(userId: ID!) : Boolean!
     rejectRequestToAddFriend(userId: ID!) : Boolean!
+    cancelRequestToAddFriend(receiverId: ID!) : Boolean!
   }
 `
