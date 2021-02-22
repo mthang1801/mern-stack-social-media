@@ -99,7 +99,7 @@ export const userController = {
     notifyReceiveAddFriend
   ) => {
     try {
-      const currentUserId = getAuthUser(req);      
+      const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
         friends: { $ne: userId },
@@ -129,7 +129,11 @@ export const userController = {
         href: `/${currentUser.slug}`,
       });
       await (await notification.save()).populate("creator").execPopulate();
-      if (!userRequestedFriend.followed.includes(mongoose.Types.ObjectId(currentUserId))) {
+      if (
+        !userRequestedFriend.followed.includes(
+          mongoose.Types.ObjectId(currentUserId)
+        )
+      ) {
         userRequestedFriend.followed.push(currentUserId);
       }
       userRequestedFriend.receiveRequestToAddFriend.push(currentUserId);
@@ -156,82 +160,113 @@ export const userController = {
       throw new ApolloError("Add friend failed.");
     }
   },
-  rejectRequestToAddFriend: async (req, userId, pubsub, rejectRequestToAddFriendSubscription) => {
+  rejectRequestToAddFriend: async (
+    req,
+    senderId,
+    pubsub,
+    rejectRequestToAddFriendSubscription
+  ) => {
     try {
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
-        receiveRequestToAddFriend: userId,
-      });    
+        receiveRequestToAddFriend: senderId,
+      });
       if (!currentUser) {
         throw new UserInputError("Reject failed");
       }
-      const user = await User.findOne({
-        _id: userId,
+      const sender = await User.findOne({
+        _id: senderId,
         sendRequestToAddFriend: currentUserId,
       });
-      if (!user) {
+      if (!sender) {
         throw new UserInputError("Reject failed");
       }
       const session = await mongoose.startSession();
       session.startTransaction();
-      currentUser.receiveRequestToAddFriend.pull(userId);
+      currentUser.receiveRequestToAddFriend.pull(senderId);
       await currentUser.save();
-      user.sendRequestToAddFriend.pull(currentUserId);
-      await user.save();          
+      sender.sendRequestToAddFriend.pull(currentUserId);
+      await sender.save();
       await session.commitTransaction();
       session.endSession();
       pubsub.publish(rejectRequestToAddFriendSubscription, {
         rejectRequestToAddFriendSubscription: {
-          sender : user,
-          receiver : currentUser
+          sender,
+          receiver: currentUser,
         },
       });
       return true;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new ApolloError("Something went wrong.");
     }
   },
-  cancelRequestToAddFriend : async (req, receiverId, pubsub, cancelRequestToAddFriendSubscription) => {
+  cancelRequestToAddFriend: async (
+    req,
+    receiverId,
+    pubsub,
+    cancelRequestToAddFriendSubscription
+  ) => {
     try {
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
-        _id : currentUserId,
-        sendRequestToAddFriend : receiverId
-      })
-      if(!currentUser){
+        _id: currentUserId,
+        sendRequestToAddFriend: receiverId,
+      });
+      if (!currentUser) {
         throw new UserInputError("Cancel Request failed.");
       }
       const receiver = await User.findOne({
-        _id : receiverId,
-        receiveRequestToAddFriend : currentUserId
+        _id: receiverId,
+        receiveRequestToAddFriend: currentUserId,
       });
-      if(!receiver){
+      if (!receiver) {
         throw new UserInputError("Cancel Request failed.");
       }
       const session = await mongoose.startSession();
       session.startTransaction();
       currentUser.sendRequestToAddFriend.pull(receiverId);
-      currentUser.following.pull(receiverId); 
+      currentUser.following.pull(receiverId);
       await currentUser.save();
       receiver.receiveRequestToAddFriend.pull(currentUserId);
       receiver.followed.pull(currentUserId);
       await receiver.save();
-      
+
       pubsub.publish(cancelRequestToAddFriendSubscription, {
-        cancelRequestToAddFriendSubscription : {
-          sender : currentUser,
-          receiver
-        }
-      })
+        cancelRequestToAddFriendSubscription: {
+          sender: currentUser,
+          receiver,
+        },
+      });
       await session.commitTransaction();
       session.endSession();
-      return true ; 
+      return true;
     } catch (error) {
       console.log(error);
-      throw new ApolloError("Cacel Request Failed")
+      throw new ApolloError("Cacel Request Failed");
     }
+  },
+  followUser: async (req, userId) => {
+    try {
+      const currentUserId = getAuthUser(req);      
+      await User.findByIdAndUpdate(currentUserId, {
+        $addToSet: { following: userId },
+      });
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { followed: currentUserId },
+      });      
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new ApolloError("Something went wrong.");
+    }
+  },
+  unFollowUser : async (req, userId) => {
+    const currentUserId = getAuthUser(req);
+    await User.findByIdAndUpdate(currentUserId, {$pull : {following: userId}})
+    await User.findByIdAndUpdate(userId, {$pull : {followed : currentUserId}});
+    return true ;
   },
   hidePassword: () => "***",
 };

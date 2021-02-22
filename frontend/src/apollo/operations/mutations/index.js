@@ -22,7 +22,7 @@ import {
   setOpenPopupNotificationVar,
   setPersonalUsersVar,
   setCurrentPersonalUserVar,
-  setPersonalPostsVar,  
+  setPersonalPostsVar,
 } from "../../cache";
 export { SIGNUP } from "./signup";
 export { CREATE_POST } from "./createPost";
@@ -30,6 +30,8 @@ export { UPDATE_USER_HAS_SEEN_NOTIFICATION } from "./updateUserHasSeenNotificati
 export { SEND_REQUEST_TO_ADD_FRIEND } from "./user/sendRequestToAddFriend";
 export { REJECT_REQUEST_TO_ADD_FRIEND } from "./user/rejectRequestToAddFriend";
 export { CANCEL_REQUEST_TO_ADD_FRIEND } from "./user/cancelRequestToAddFriend";
+export { FOLLOW_USER } from "./user/followUser";
+export { UNFOLLOW_USER } from "./user/unFollowUser";
 const mutations = {
   toggleButtonMenu: createToggleButtonMenu(toggleButtonMenuVar),
   setPostStatus: createSetPostStatus(setPostStatusVar),

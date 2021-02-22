@@ -32,7 +32,7 @@ export const userResolvers = {
     rejectRequestToAddFriend: (_, args, { req }, info) => {
       return userController.rejectRequestToAddFriend(
         req,
-        args.userId,
+        args.senderId,
         pubsub,
         subscriptionActions.REJECT_REQUEST_TO_ADD_FRIEND
       );
@@ -45,6 +45,12 @@ export const userResolvers = {
         subscriptionActions.CANCEL_REQUEST_TO_ADD_FRIEND
       );
     },
+    followUser: (_, args, { req }, info) => {
+      return userController.followUser(req, args.userId);
+    },
+    unFollowUser : (_, args, {req}, info) => {
+      return userController.unFollowUser(req, args. userId);
+    }
   },
   User: {
     password: (_, args, ctx, info) => userController.hidePassword(),
