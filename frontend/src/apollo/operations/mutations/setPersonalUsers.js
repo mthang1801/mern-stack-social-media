@@ -1,4 +1,4 @@
-const setPersonalUsers = (setPersonalUsersVar) => (user) => setPersonalUsersVar({...setPersonalUsersVar(), [user.slug] : { ...user } });
+const setPersonalUsers = (setPersonalUsersVar) => (personalUsers) => setPersonalUsersVar(personalUsers);
 
 
 export default setPersonalUsers;

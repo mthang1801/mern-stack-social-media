@@ -8,7 +8,7 @@ import { UserInputError, AuthenticationError } from "apollo-server-express";
 import {actions, fields} from "../fields-actions"
 export const postControllers = {
   fetchPosts: async (req, limit, skip, userId) => {
-    const myUserId = getAuthUser(req, false);
+    const myUserId = getAuthUser(req, false);    
     const user = await User.findById(myUserId);
     if (userId) {
       const Posts = await Post.find({

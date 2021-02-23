@@ -22,27 +22,33 @@ const Home = () => {
   const {
     data: { posts },
   } = useQuery(GET_POSTS, { fetchPolicy: "cache-and-network" });
-  const {refetch : fetchPosts } = useQuery(FETCH_POSTS, {
+  const { refetch: fetchPosts } = useQuery(FETCH_POSTS, {
     skip: true,
     fetchPolicy: "cache-and-network",
-  })
+  });
   const [loadingMore, setLoadingMore] = useState(false);
   const { setPosts } = mutations;
 
   useEffect(() => {
-    if (posts && !posts.length) {
-      fetchPosts().then(({data : {fetchPosts}}) => {
-        setPosts([...fetchPosts])
+    let _mounted = true;
+    if (!posts.length) {
+      fetchPosts().then(({ data: { fetchPosts } }) => {
+        if (_mounted) {
+          setPosts([...fetchPosts]);
+        }
       });
     }
-    if (loadingMore && posts) {
+    if (loadingMore) {
       const skip = posts.length;
       const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
-      fetchPosts({skip, limit}).then(({data : {fetchPosts}}) => {
-        setPosts([...posts, ...fetchPosts]);
-        setLoadingMore(false);
-      })
+      fetchPosts({ skip, limit }).then(({ data: { fetchPosts } }) => {
+        if (_mounted) {
+          setPosts([...posts, ...fetchPosts]);
+          setLoadingMore(false);
+        }
+      });
     }
+    return () => (_mounted = false);
   }, [posts, fetchPosts, setPosts, loadingMore]);
 
   useEffect(() => {
@@ -52,8 +58,14 @@ const Home = () => {
         setLoadingMore(true);
       }
     });
+    return () =>
+      window.removeEventListener("scroll", async (e) => {
+        const docEl = document.documentElement;
+        if (docEl.clientHeight + docEl.scrollTop > docEl.scrollHeight * 0.8) {
+          setLoadingMore(true);
+        }
+      });
   }, []);
-  
 
   return (
     <Layout>
