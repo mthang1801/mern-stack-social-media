@@ -11,12 +11,14 @@ import { FiLogOut } from "react-icons/fi";
 import { MdLanguage } from "react-icons/md";
 import ButoonColorMode from "../Controls/ButtonColorMode";
 import mutations from "../../apollo/operations/mutations"
+import {GET_CURRENT_USER} from "../../apollo/operations/queries";
+import {useQuery} from "@apollo/client"
 import {logout} from "../Auth/Auth.utility"
-const SettingAccount = ({ className, currentUser }) => {
+const SettingAccount = ({ className }) => {
   const [togglePopup, setTogglePopup] = useState(false);
   const { colorMode } = useThemeUI();
   const settingRef = useRef(false);
-  const {setCurrentUser, setNotifications} = mutations
+  const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"})
   useEffect(() => {
     function handleClickOutsidePopup(e) {
       if (settingRef.current && !settingRef.current.contains(e.target)) {
@@ -33,8 +35,8 @@ const SettingAccount = ({ className, currentUser }) => {
   }, []);
 
   const onLogout = async () => {        
-    await logout();  
-  }
+    logout();  
+  }  
 
   return (
     <SettingWrapper className={className} ref={settingRef} theme={colorMode}>
@@ -46,22 +48,22 @@ const SettingAccount = ({ className, currentUser }) => {
           "popup-setting-hide": !togglePopup,
         })}
       >
-        {currentUser && (
+        {user ? (
           <li className="user-profile">
             <Link
-              to={`/user/${currentUser._id}`}
+              to={`/${user.slug}`}
               className="direct-user-profile"
             >
               <span className="user-image-container">
-                <img src={`${currentUser.avatar}`} alt="user profile" />
+                <img src={`${user.avatar}`} alt="user profile" />
               </span>
               <span className="user-name" id="user-name">
-                <span>{currentUser.name}</span>
+                <span>{user.name}</span>
                 <small>Go to your profile</small>
               </span>
             </Link>
           </li>
-        )}
+        ) : null}
 
         {/* Setting Color mode */}
         <li>
@@ -104,7 +106,7 @@ const SettingAccount = ({ className, currentUser }) => {
           </div>
         </li>
         {/* Logout User Account*/}
-        {currentUser && (
+        {user ? (
           <li onClick={onLogout}>
             <div className="popup-item-left">
               <span className="popup-item-left__icon">
@@ -118,7 +120,7 @@ const SettingAccount = ({ className, currentUser }) => {
               </Button>
             </div>
           </li>
-        )}
+        ) : null}
       </ul>
     </SettingWrapper>
   );

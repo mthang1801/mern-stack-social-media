@@ -1,4 +1,4 @@
-const setPersonalPosts = (setPersonalPostsVar) => (userId, posts) =>
-  setPersonalPostsVar({ ...setPersonalPostsVar(), [userId]: [...posts] });
+const setPersonalPosts = (setPersonalPostsVar) => (posts) =>
+  setPersonalPostsVar(posts);
 
 export default setPersonalPosts;

@@ -12,40 +12,24 @@ import mutations from "../../apollo/operations/mutations";
 import classNames from "classnames";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries";
 import { useQuery } from "@apollo/client";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
-import ButtonLogin from "../Controls/ButtonLogin"
-import ButtonSignUp from "../Controls/ButtonSignUp"
+import ButtonLogin from "../Controls/ButtonLogin";
+import ButtonSignUp from "../Controls/ButtonSignUp";
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
-  const { data, loading } = useQuery(GET_CURRENT_USER, {
+  const {
+    data: { user },
+    loading,
+  } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: "cache-only",
-  });
-  const [currentUser, setCurrentUser] = useState(null);
+  });  
   const { colorMode } = useThemeUI();
-  const {pathname} = useLocation()
+  const { pathname } = useLocation();
 
-  useEffect(() => {
-    if (data && data.user) {
-      setCurrentUser({ ...data.user });
-    } else {
-      setCurrentUser(null);
-    }
-  }, [data]);
-
-  const location = useLocation();
-  const history = useHistory();
   const { toggleButtonMenu } = mutations;
-  const directToLogin = () => {
-    history.push({ pathname: "/auth", state: { from: location.pathname } });
-  };
-  const directToSignUp = () => {
-    history.push({
-      pathname: "/auth/signup",
-      state: { from: location.pathname },
-    });
-  };
-  const NavControls = currentUser ? (
+  
+  const NavControls = user ? (
     <div className="nav-controls">
       <div className="center">
         <div className="nav-toggle">
@@ -56,11 +40,11 @@ const Header = () => {
         </div>
 
         <div className="control">
-          <MessengerAndNotification user={currentUser} />
+          <MessengerAndNotification />
         </div>
       </div>
       <div className="setting-account">
-        <SettingAccount currentUser={currentUser} />
+        <SettingAccount />
       </div>
     </div>
   ) : (
@@ -68,7 +52,7 @@ const Header = () => {
       <div className="nav-auth">
         <ButtonLogin to="/auth" from={pathname}>
           Login
-        </ButtonLogin>        
+        </ButtonLogin>
         <ButtonSignUp to="/auth/signup" from={pathname}>
           Sign up
         </ButtonSignUp>
@@ -123,7 +107,7 @@ const Wrapper = styled.header`
   display: flex;
   align-items: center;
   flex-wrap: no-wrap;
-  z-index: 100;  
+  z-index: 100;
   .nav-header {
     display: flex;
     align-items: center;
@@ -171,10 +155,10 @@ const Wrapper = styled.header`
       width: 100%;
       display: flex;
       justify-content: flex-end;
-      & > *{
-        font-size : 0.8em;
+      & > * {
+        font-size: 0.8em;
         margin-right: 0.25rem;
-      }      
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-import React, {useEffect, lazy } from "react";
+import React, { useEffect, lazy } from "react";
 import PersonalHeading from "../components/Personal/PersonalHeading";
 import { Route, Switch } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/client";
@@ -32,62 +32,52 @@ const PersonalPage = (props) => {
     setPersonalPosts,
   } = mutations;
   const { slug } = props.match.params;
-  useEffect(() => {  
-    let _mounted = true ; 
-      if(_mounted){
-        //require fetch personal user because we need to set who is current personal user
-        if(!currentPersonalUser || currentPersonalUser.slug !== slug) {
-          fetchPersonalUser({ variables: { slug } });
-        }        
-      }
-      return () => _mounted = false ;
-  }, [personalUsers, fetchPersonalUser, slug, currentPersonalUser]);  
+  useEffect(() => {
+    let _mounted = true;
+    if (_mounted) {
+      //require fetch personal user because we need to set who is current personal user
+      fetchPersonalUser({ variables: { slug } });
+    }
+    return () => (_mounted = false);
+  }, [personalUsers, fetchPersonalUser, slug, currentPersonalUser]);
   useEffect(() => {
     if (personalUserData && personalUserData.fetchPersonalUser) {
-      if (!personalUsers[slug]) {
-        setPersonalUsers(personalUserData.fetchPersonalUser);
-      }
-      console.log(personalUserData)
-      setCurrentPersonalUser(personalUserData.fetchPersonalUser);
       let {
         _id,
         name,
         email,
         avatar,
         posts,
+        slug,
       } = personalUserData.fetchPersonalUser;
-      if (!personalPosts[_id]) {
-        posts = posts.map((post) => {
-          const author = {
-            _id,
-            name,
-            avatar,
-            email,
-          };
-          return { ...post, author: { ...author } };
-        });
+      setPersonalUsers({
+        ...personalUsers,
+        [slug]: { ...personalUserData.fetchPersonalUser },
+      });
 
-        setPersonalPosts(_id, posts);
-      }
+      setCurrentPersonalUser({ ...personalUserData.fetchPersonalUser });
+      posts = posts.map((post) => {
+        const author = {
+          _id,
+          name,
+          avatar,
+          email,
+          slug,
+        };
+        return { ...post, author: { ...author } };
+      });
+      setPersonalPosts({ ...personalPosts, [slug]: [...posts] });
     }
   }, [personalUserData]);
- 
-  return (    
-      <Layout>
-        <PersonalHeading />
-        <Switch>
-          <Route
-            exact
-            path={props.match.url}
-            component={PersonalPosts}
-          />
-          <Route
-            path={`${props.match.url}/posts`}
-            component={PersonalPosts}
-          />
-        </Switch>
-      </Layout>
-    
+
+  return (
+    <Layout>
+      <PersonalHeading />
+      <Switch>
+        <Route exact path={props.match.url} component={PersonalPosts} />
+        <Route path={`${props.match.url}/posts`} component={PersonalPosts} />
+      </Switch>
+    </Layout>
   );
 };
 

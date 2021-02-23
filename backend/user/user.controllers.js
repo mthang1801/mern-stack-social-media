@@ -65,9 +65,8 @@ export const userController = {
       tokenExpire: process.env.JWT_TOKEN_EXPIRE,
     };
   },
-  fetchCurrentUser: async (req) => {
-    const userId = getAuthUser(req);
-
+  fetchCurrentUser: async (req) => {        
+    const userId = getAuthUser(req,false);    
     const user = await User.findById(userId).populate({
       path: "notifications",
       populate: { path: "creator" },

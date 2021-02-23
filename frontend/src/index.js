@@ -8,10 +8,10 @@ import { client } from "./apollo/client";
 import { ApolloProvider } from "@apollo/client";
 import "react-image-gallery/styles/css/image-gallery.css";
 import "./i18n";
-ReactDOM.render(
+ReactDOM.render(  
   <ThemeProvider theme={theme}>
-    <ApolloProvider client={client}>
-      <App />
+    <ApolloProvider client={client}>    
+      <App />    
     </ApolloProvider>
   </ThemeProvider>,
   document.getElementById("root")

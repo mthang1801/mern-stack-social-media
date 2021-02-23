@@ -108,8 +108,7 @@ const NotificationItem = ({ notification, notifications }) => {
       const { sender, receiver } = data.acceptRequestToAddFriend;
       updateMutationOnChange(sender, receiver);      
     });
-  }
-  console.log(notification)
+  }  
   const { colorMode } = useThemeUI();  
   if (!user) return null;
   return (

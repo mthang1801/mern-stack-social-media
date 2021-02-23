@@ -65,10 +65,106 @@ const PersonalContact = () => {
     subscribeToMore: subscribeUser,
   } = useQuery(FETCH_CURRENT_USER, { skip: true });
 
-  //color theme
-  const { colorMode } = useThemeUI();
-  //useRef
-  const responseRef = useRef(false);
+   //color theme
+   const { colorMode } = useThemeUI();
+   //useRef
+   const responseRef = useRef(false);
+
+  //function to handle when subscription called
+  const updateSubscriptionOnChange = (sender, receiver) => {    
+    setCurrentUser({
+      ...user,
+      friends: [...receiver.friends],
+      following: [...receiver.following],
+      followed: [...receiver.followed],
+      sendRequestToAddFriend: [...receiver.sendRequestToAddFriend],
+      receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+    });
+    if (personalUsers[sender.slug]) {
+      const updatedReceiver = {
+        ...personalUsers[sender.slug],
+        friends: [...sender.friends],
+        following: [...sender.following],
+        followed: [...sender.followed],
+        sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
+        receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
+      };
+      setPersonalUsers({...personalUsers, [updatedReceiver.slug] : {...updatedReceiver}});
+    }
+    if (currentPersonalUser && currentPersonalUser._id.toString() === receiver._id.toString()) {
+      setCurrentPersonalUser({
+        ...currentPersonalUser,
+        friends: [...sender.friends],
+        following: [...sender.following],
+        followed: [...sender.followed],
+        sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
+        receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
+      });
+    }
+  };  
+  useEffect(() => {
+    fetchCurrentUser()
+    return () => fetchCurrentUser();
+  },[fetchCurrentUser])
+  useEffect(() => {
+    let unsubscribeRejectRquestToAddFriend,
+      unsubscribeCancelRequestToAddFriend,
+      unsubscribeRemoveFriend;
+    if (subscribeUser && user) {
+      unsubscribeRejectRquestToAddFriend = subscribeUser({
+        document:
+          subscriptions.userSubscription
+            .REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        variables: { userId: user._id },
+        updateQuery: (_, { subscriptionData }) => {
+          const {
+            sender,
+            receiver,
+          } = subscriptionData.data.rejectRequestToAddFriendSubscription;
+          updateSubscriptionOnChange(sender, receiver);
+        },
+      });
+
+      unsubscribeCancelRequestToAddFriend = subscribeUser({
+        document:
+          subscriptions.userSubscription
+            .CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        variables: { userId: user._id },
+        updateQuery: (_, { subscriptionData }) => {
+          const {
+            sender,
+            receiver,
+          } = subscriptionData.data.cancelRequestToAddFriendSubscription;
+          updateSubscriptionOnChange(sender, receiver);
+        },
+      });
+
+      unsubscribeRemoveFriend = subscribeUser({
+        document: subscriptions.userSubscription.REMOVE_FRIEND,
+        variables: { userId: user._id },
+        updateQuery: (_, { subscriptionData }) => {
+          const {
+            sender,
+            receiver,
+          } = subscriptionData.data.removeFriendSubscription;
+          updateSubscriptionOnChange(sender, receiver);
+        },
+      });
+    }
+    
+    return () => {
+      if (unsubscribeCancelRequestToAddFriend) {
+        unsubscribeCancelRequestToAddFriend();
+      }
+      if (unsubscribeRejectRquestToAddFriend) {
+        unsubscribeRejectRquestToAddFriend();
+      }
+      if (unsubscribeRemoveFriend) {
+        unsubscribeRemoveFriend();
+      }
+    };
+  }, [subscribeUser, user]);
+ 
 
   //function to handle when user click button request
   const updateMutationOnChange = (sender, receiver) => {
@@ -82,12 +178,15 @@ const PersonalContact = () => {
     });
     if (personalUsers[currentPersonalUser.slug]) {
       setPersonalUsers({
+        ...personalUsers,
+        [currentPersonalUser.slug] : {
         ...personalUsers[currentPersonalUser.slug],
         friends: [...receiver.friends],
         following: [...receiver.following],
         followed: [...receiver.followed],
         sendRequestToAddFriend: [...receiver.sendRequestToAddFriend],
         receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+        }
       });
     }
     setCurrentPersonalUser({
@@ -199,10 +298,6 @@ const PersonalContact = () => {
       }
     );
   };
-
-  console.log(user);
-  console.log(personalUsers);
-  console.log(currentPersonalUser);
 
   const MyActionsContact = (
     <>
