@@ -8,6 +8,7 @@ export const FETCH_CURRENT_USER = gql`
       nickname
       slug
       email       
+      friends
       notifications{
         _id
         field

@@ -1,11 +1,21 @@
-import {gql} from "@apollo/client";
+import {gql} from "@apollo/client"
 
-export const POST_CREATED_SUBSCRIPTIONS = gql`
-subscription NotifyCreatedPost($userId : ID!){
-  notifyCreatedPost(userId : $userId){
+export const NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND = gql`
+subscription ($userId : ID!){
+  notifyReceiveRequestToAddFriend(userId : $userId){
     field
     action
     sender{
+      _id
+      avatar
+      slug
+      friends
+      following
+      followed
+      sendRequestToAddFriend
+      receiveRequestToAddFriend
+    }
+    receiver{
       _id
       avatar
       slug
@@ -20,9 +30,9 @@ subscription NotifyCreatedPost($userId : ID!){
       _id
       field
       action
-      hasSeen     
-      href 
+      hasSeen      
       acceptInvite
+      href
       creator{
         _id
         name

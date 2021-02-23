@@ -32,6 +32,8 @@ export { REJECT_REQUEST_TO_ADD_FRIEND } from "./user/rejectRequestToAddFriend";
 export { CANCEL_REQUEST_TO_ADD_FRIEND } from "./user/cancelRequestToAddFriend";
 export { FOLLOW_USER } from "./user/followUser";
 export { UNFOLLOW_USER } from "./user/unFollowUser";
+export { ACCEPT_REQUEST_TO_ADD_FRIEND } from "./user/acceptRequestToAddFriend";
+export { REMOVE_FRIEND } from "./user/removeFriend";
 const mutations = {
   toggleButtonMenu: createToggleButtonMenu(toggleButtonMenuVar),
   setPostStatus: createSetPostStatus(setPostStatusVar),

@@ -5,6 +5,10 @@ import schema from "./schema";
 import resolvers from "./resolvers";
 import { createServer } from "http";
 import path from "path"
+import events from "events"
+
+events.EventEmitter.defaultMaxListeners = 30;
+
 const schemas = mergeSchemas({
   resolvers,
   schemas: [schema],

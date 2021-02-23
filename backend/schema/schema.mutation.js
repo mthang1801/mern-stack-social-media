@@ -14,11 +14,13 @@ export const schemaMutation = gql`
     acceptContact(senderId: ID!): Boolean!
     addPrivateChat(receiverId: ID!, text: String!): PrivateChat!
 
-    sendRequestToAddFriend(userId: ID!): Boolean!
-    acceptRequestToAddFriend(userId: ID!): Boolean!
-    rejectRequestToAddFriend(senderId: ID!): Boolean!
-    cancelRequestToAddFriend(receiverId: ID!): Boolean!
-    followUser(userId : ID!): Boolean!
-    unFollowUser(userId: ID!) : Boolean!
+    sendRequestToAddFriend(userId: ID!): UsersContact!
+    acceptRequestToAddFriend(senderId: ID!): UsersContact!
+    removeFriend(friendId: ID!): UsersContact!
+    rejectRequestToAddFriend(senderId: ID!): UsersContact!
+    cancelRequestToAddFriend(receiverId: ID!): UsersContact!
+    followUser(userId : ID!): UsersContact!
+    unFollowUser(userId: ID!) : UsersContact!
+
   }
 `;
