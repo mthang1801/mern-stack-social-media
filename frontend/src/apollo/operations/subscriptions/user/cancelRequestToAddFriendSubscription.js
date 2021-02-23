@@ -6,6 +6,7 @@ export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
       sender {
         _id
         slug
+        friends
         following
         followed
         sendRequestToAddFriend
@@ -14,6 +15,7 @@ export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
       receiver {
         _id
         slug
+        friends
         following
         followed
         sendRequestToAddFriend

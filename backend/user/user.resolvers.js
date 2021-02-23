@@ -26,7 +26,7 @@ export const userResolvers = {
         req,
         args.userId,
         pubsub,
-        subscriptionActions.NOTIFY_RECEIVE_ADD_FRIEND
+        subscriptionActions.NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND
       );
     },
     rejectRequestToAddFriend: (_, args, { req }, info) => {
@@ -48,21 +48,32 @@ export const userResolvers = {
     followUser: (_, args, { req }, info) => {
       return userController.followUser(req, args.userId);
     },
-    unFollowUser : (_, args, {req}, info) => {
-      return userController.unFollowUser(req, args. userId);
-    }
-  },
+    unFollowUser: (_, args, { req }, info) => {
+      return userController.unFollowUser(req, args.userId);
+    },
+    acceptRequestToAddFriend: (_, args, { req }, info) => {
+      return userController.acceptRequestToAddFriend(
+        req,
+        args.senderId,
+        pubsub,
+        subscriptionActions.NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND
+      );
+    },
+    removeFriend : (_, args, {req}, info) => {
+      return userController.removeFriend(req, args.friendId, pubsub, subscriptionActions.REMOVE_FRIEND)
+    },
+  },  
   User: {
     password: (_, args, ctx, info) => userController.hidePassword(),
   },
   Subscription: {
-    notifyReceiveAddFriend: {
+    notifyReceiveRequestToAddFriend: {
       subscribe: withFilter(
         () =>
-          pubsub.asyncIterator(subscriptionActions.NOTIFY_RECEIVE_ADD_FRIEND),
+          pubsub.asyncIterator(subscriptionActions.NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND),
         (payload, { userId }) => {
           return (
-            payload.notifyReceiveAddFriend.receivers[0].toString() ===
+            payload.notifyReceiveRequestToAddFriend.receivers[0].toString() ===
             userId.toString()
           );
         }
@@ -76,7 +87,7 @@ export const userResolvers = {
           ),
         (payload, { userId }) => {
           return (
-            payload.rejectRequestToAddFriendSubscription.sender._id.toString() ===
+            payload.rejectRequestToAddFriendSubscription.receiver._id.toString() ===
             userId.toString()
           );
         }
@@ -96,5 +107,25 @@ export const userResolvers = {
         }
       ),
     },
+    notifyAcceptRequestToAddFriend: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND
+          ),
+        (payload, { userId }) => {          
+          return payload.notifyAcceptRequestToAddFriend.receivers[0].toString() ===
+            userId.toString();
+        }
+      ),
+    },
+    removeFriendSubscription : {
+      subscribe : withFilter(
+        () => pubsub.asyncIterator(subscriptionActions.REMOVE_FRIEND),
+        (payload , {userId}) => {
+          return payload.removeFriendSubscription.receiver._id.toString() === userId.toString()
+        }
+      )
+    }
   },
 };

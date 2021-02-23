@@ -6,6 +6,7 @@ export const REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
       sender {
         _id
         slug       
+        friends
         following
         followed
         sendRequestToAddFriend
@@ -13,7 +14,8 @@ export const REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
       }
       receiver {
         _id
-        slug       
+        slug    
+        friends   
         following
         followed
         sendRequestToAddFriend

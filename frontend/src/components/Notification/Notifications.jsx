@@ -15,6 +15,7 @@ import {
 } from "../../apollo/operations/queries";
 import mutations from "../../apollo/operations/mutations";
 import subcriptions from "../../apollo/operations/subscriptions";
+import subscriptions from "../../apollo/operations/subscriptions";
 const Notifications = () => {
   //useQuery
   const { refetch: fetchCountNumberNotificationsUnseen } = useQuery(
@@ -87,7 +88,9 @@ const Notifications = () => {
           limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
         },
       }).then(({ data: { fetchNotifications } }) => {
-        setNotifications([...fetchNotifications]);
+        if(fetchNotifications && fetchNotifications.length){
+          setNotifications([...fetchNotifications]);
+        }        
       });
     }
     if (loadingNotificationsMore) {
@@ -110,15 +113,16 @@ const Notifications = () => {
   ]);
 
   useEffect(() => {
-    let unsubscribePostCreated, unsubscribeRequestAddFriend;
+    let unsubscribePostCreated,
+      unsubscribeRequestAddFriend,
+      unsubscribeAcceptRequestAddFriend;
     if (subscribeToMoreNotifications) {
       unsubscribePostCreated = subscribeToMoreNotifications({
         document:
           subcriptions.notificationSubscription.POST_CREATED_SUBSCRIPTIONS,
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-          console.log(subscriptionData)
+          if (!subscriptionData.data) return prev;          
           const newNotification =
             subscriptionData.data.notifyCreatedPost.notification;
           setOpenPopupNotification(true);
@@ -132,47 +136,106 @@ const Notifications = () => {
       });
       unsubscribeRequestAddFriend = subscribeToMoreNotifications({
         document:
-          subcriptions.notificationSubscription.SEND_REQUEST_TO_ADD_FRIEND,
+          subcriptions.notificationSubscription.NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND,
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData) return prev;         
+          if (!subscriptionData) return prev;
           const {
             notification: newNotification,
             receivers,
-          } = subscriptionData.data.notifyReceiveAddFriend;        
+            receiver,
+            sender
+          } = subscriptionData.data.notifyReceiveRequestToAddFriend;
+          console.log(newNotification)
           setOpenPopupNotification(true);
           setNewNotifications(newNotification._id);
           setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);
-          const newCurrentUser = {
+          setCurrentUser({
             ...user,
-            followed: [...user.followed, newNotification.creator._id],
-            receiveRequestToAddFriend: [
-              ...user.receiveRequestToAddFriend,
-              newNotification.creator._id,
-            ],
-          };
-          setCurrentUser(newCurrentUser);
-
-          if (personalUsers[newNotification.creator.slug]) {
-            const sender = personalUsers[newNotification.creator.slug];
-            const updatedSenderRequest = {
-              ...sender,
-              following: [...sender.following, receivers[0]],
-              sendRequestToAddFriend: [
-                ...sender.sendRequestToAddFriend,
-                receivers[0],
-              ],
-            };            
-            setPersonalUsers(updatedSenderRequest);
+            friends: [...receiver.friends],
+            following: [...receiver.following],
+            followed: [...receiver.followed],
+            sendRequestToAddFriend: [...receiver.sendRequestToAddFriend],
+            receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+          });
+          
+          if (sender && personalUsers[sender.slug]) {            
+            setPersonalUsers({
+              ...personalUsers[sender.slug],
+              friends: [...sender.friends],
+              following: [...sender.following],
+              followed: [...sender.followed],
+              sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
+              receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
+            });            
           }
-          if (currentPersonalUser && currentPersonalUser._id === newNotification.creator._id) {
+          if (
+            currentPersonalUser &&
+            currentPersonalUser._id === sender._id
+          ) {
             setCurrentPersonalUser({
               ...currentPersonalUser,
-              following: [...currentPersonalUser.following, receivers[0]],
-              sendRequestToAddFriend: [
-                ...currentPersonalUser.sendRequestToAddFriend,
-                receivers[0],
-              ],
+              friends: [...sender.friends],
+              following: [...sender.following],
+              followed: [...sender.followed],
+              sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
+              receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
+            });
+          }
+
+          setNotifications([
+            { ...newNotification, new: true },
+            ...notifications,
+          ]);
+        },
+      });
+      unsubscribeAcceptRequestAddFriend = subscribeToMoreNotifications({
+        document:
+          subscriptions.notificationSubscription
+            .NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND,
+        variables: { userId: user._id },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) return prev;
+          const {
+            notification: newNotification,
+            sender,
+            receiver
+          } = subscriptionData.data.notifyAcceptRequestToAddFriend;
+          
+          setOpenPopupNotification(true);
+          setNewNotifications(newNotification._id);
+          setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);          
+          setCurrentUser({
+            ...user,
+            friends: [...receiver.friends],
+              following: [...receiver.following],
+              followed: [...receiver.followed],
+              sendRequestToAddFriend: [...receiver.sendRequestToAddFriend],
+              receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+          });          
+
+          if (sender && personalUsers[sender.slug]) {           
+            const updatedSenderRequest = {
+              ...personalUsers[sender.slug],
+              friends: [...sender.friends],
+              following: [...sender.following],
+              followed: [...sender.followed],
+              sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
+              receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
+            };
+            setPersonalUsers(updatedSenderRequest);
+          }
+          if (
+            currentPersonalUser &&
+            currentPersonalUser._id === sender._id
+          ) {
+            setCurrentPersonalUser({
+              ...currentPersonalUser,
+              friends: [...sender.friends],
+              following: [...sender.following],
+              followed: [...sender.followed],
+              sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
+              receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
             });
           }
 
@@ -191,6 +254,9 @@ const Notifications = () => {
       if (unsubscribeRequestAddFriend) {
         unsubscribeRequestAddFriend();
       }
+      if (unsubscribeAcceptRequestAddFriend) {
+        unsubscribeAcceptRequestAddFriend();
+      }
     };
   }, [
     countNumberNotificationsUnseen,
@@ -202,6 +268,7 @@ const Notifications = () => {
     setCountNumberNotificationsUnseen,
     setNewNotifications,
     setOpenPopupNotification,
+    user,
   ]);
 
   useEffect(() => {
@@ -229,4 +296,4 @@ const NoNotifications = styled.div`
   font-size: 1.1em;
 `;
 
-export default Notifications;
+export default React.memo(Notifications);

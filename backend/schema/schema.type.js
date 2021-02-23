@@ -81,8 +81,10 @@ export const schemaType = gql`
 
   type SubscriptionNotificationPayload{
     field : String!
-    action : ActionEnum!    
-    receivers : [ID!]
+    action : ActionEnum!   
+    sender : User! 
+    receiver : User
+    receivers : [ID!]!
     notification : Notification!
   }
   type CommentSubscriptionPayload{

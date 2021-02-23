@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import {
-  GET_CURRENT_PERSONAL_USER
+  GET_CURRENT_PERSONAL_USER,
+  GET_CURRENT_USER
 } from "../../apollo/operations/queries";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
@@ -21,8 +22,8 @@ import PersonalHeadingContact from "./PersonalHeadingContact"
 const PersonalHeading = () => {
   const {
     data: { currentPersonalUser },
-  } = useQuery(GET_CURRENT_PERSONAL_USER);
-
+  } = useQuery(GET_CURRENT_PERSONAL_USER,{fetchPolicy : "cache-first"});
+  const {data : {user}} =useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"})
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const [menus, setMenus] = useState([]);
@@ -73,7 +74,7 @@ const PersonalHeading = () => {
               ))
             : null}
         </PersonalMenus>
-        <PersonalHeadingContact/>
+        {user && <PersonalHeadingContact/>}
       </Footer>
     </Container>
   );

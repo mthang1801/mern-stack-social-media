@@ -1,4 +1,5 @@
 export const actions = {
   CREATED : "CREATED",
-  ADDED : "ADDED"
+  ADDED : "ADDED",
+  ACCEPTED : "ACCEPTED"
 }

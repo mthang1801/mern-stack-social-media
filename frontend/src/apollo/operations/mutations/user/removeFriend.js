@@ -1,8 +1,8 @@
-import {gql} from "@apollo/client"
+import {gql} from "@apollo/client";
 
-export const REJECT_REQUEST_TO_ADD_FRIEND = gql`
-  mutation ($senderId : ID!){
-    rejectRequestToAddFriend(senderId : $senderId){
+export const REMOVE_FRIEND = gql`
+  mutation ($friendId : ID!){
+    removeFriend(friendId : $friendId){
       sender {
         _id
         slug

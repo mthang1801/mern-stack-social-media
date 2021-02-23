@@ -145,7 +145,8 @@ export const en = {
     notifications: {
       message : "You have just received a new message.",
       postCreated : "has just posted a new status.",
-      sendRequestToAddFriend : "send you a request to add friend"
+      sendRequestToAddFriend : "send you a request to add friend",
+      acceptRequestToAddFriend : "has accepted your request to add friend."
     },
     greeting : {
       welcome : "Welcome to Pul.com",

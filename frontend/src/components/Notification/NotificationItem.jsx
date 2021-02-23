@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import {
   UPDATE_USER_HAS_SEEN_NOTIFICATION,
-  default as mutations,
+  ACCEPT_REQUEST_TO_ADD_FRIEND,
+  default as mutations
 } from "../../apollo/operations/mutations";
 import {
   GET_CURRENT_USER,
   GET_NEW_NOTIFICATIONS,
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
+  GET_CURRENT_PERSONAL_USER,
+  GET_PERSONAL_USERS
 } from "../../apollo/operations/queries";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -22,6 +25,7 @@ import {
 
 import { useThemeUI } from "theme-ui";
 const NotificationItem = ({ notification, notifications }) => {
+  //Query
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
@@ -29,12 +33,20 @@ const NotificationItem = ({ notification, notifications }) => {
     data: { newNotifications },
   } = useQuery(GET_NEW_NOTIFICATIONS, { fetchPolicy: "cache-first" });
   const {
+    data: { personalUsers },
+  } = useQuery(GET_PERSONAL_USERS, { fetchPolicy: "cache-first" });
+  const {
+    data: { currentPersonalUser },
+  } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
+  const {
     data: { countNumberNotificationsUnseen },
   } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
     fetchPolicy: "cache-first",
   });
-  const { setNotifications, setCountNumberNotificationsUnseen } = mutations;
+  //Mutations
+  const { setNotifications, setCountNumberNotificationsUnseen, setCurrentUser, setPersonalUsers, setCurrentPersonalUser } = mutations;
   const [updateToHasSeen] = useMutation(UPDATE_USER_HAS_SEEN_NOTIFICATION);
+  const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND)
   const { lang } = useLanguage();
   const handleUserClickHasSeen = (notification) => {
     if (!notification.hasSeen.includes(user._id)) {
@@ -57,6 +69,47 @@ const NotificationItem = ({ notification, notifications }) => {
       );
     }
   };
+
+  const updateMutationOnChange = (sender, receiver) => {
+    setCurrentUser({
+      ...user,
+      friends: [...sender.friends],
+      following: [...sender.following],
+      followed: [...sender.followed],
+      sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
+      receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
+    });
+    if (personalUsers && personalUsers[notification.creator.slug]) {
+      setPersonalUsers({
+        ...personalUsers[notification.creator.slug],
+        friends: [...receiver.friends],
+        following: [...receiver.following],
+        followed: [...receiver.followed],
+        sendRequestToAddFriend: [...receiver.sendRequestToAddFriend],
+        receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+      });
+    }
+    if(currentPersonalUser && currentPersonalUser._id === notification.creator._id){
+      setCurrentPersonalUser({
+        ...currentPersonalUser,
+        friends: [...receiver.friends],
+        following: [...receiver.following],
+        followed: [...receiver.followed],
+        sendRequestToAddFriend: [...receiver.sendRequestToAddFriend],
+        receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+      });
+    }    
+  };
+
+  const onAcceptRequestToAddFriend = () => {
+    acceptRequestToAddFriend({
+      variables: { senderId: notification.creator._id },
+    }).then(({ data }) => {
+      const { sender, receiver } = data.acceptRequestToAddFriend;
+      updateMutationOnChange(sender, receiver);      
+    });
+  }
+  console.log(notification)
   const { colorMode } = useThemeUI();  
   if (!user) return null;
   return (
@@ -107,7 +160,7 @@ const NotificationItem = ({ notification, notifications }) => {
          user
         ) && (
           <ButtonsGroup>
-            <ButtonAccept>Accept</ButtonAccept>
+            <ButtonAccept onClick={onAcceptRequestToAddFriend}>Accept</ButtonAccept>
             <ButtonDecline>Decline</ButtonDecline>
           </ButtonsGroup>
         )}

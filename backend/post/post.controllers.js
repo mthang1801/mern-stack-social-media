@@ -133,6 +133,7 @@ export const postControllers = {
       notifyCreatedPost: {
         field: fields.post,
         action: actions.CREATED,
+        sender : user,
         receivers: user.friends,
         notification: newNotification,
       },

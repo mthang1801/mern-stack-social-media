@@ -10,6 +10,9 @@ const notificationContent = (field, action, lang) => {
   if(field === "user" && action === "ADDED"){
     return translation.notifications.sendRequestToAddFriend
   }
+  if(field === "user" && action === "ACCEPTED"){
+    return translation.notifications.acceptRequestToAddFriend
+  }
 }
 
 const showResponseButtons = (notification, user) => {
