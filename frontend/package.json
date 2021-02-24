@@ -29,6 +29,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "react-slick": "^0.28.0",
+    "react-sticky": "^6.0.3",
     "react-switch": "^6.0.0",
     "react-tiny-link": "^3.6.1",
     "react-transition-group": "^4.4.1",

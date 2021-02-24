@@ -149,6 +149,12 @@ export const vi = {
     greeting : {
       welcome : "Chào mừng bạn đã đến với Pul.com",
       introduce : "Pul là một nền tảng mạng xã hội được phát triển bởi cá nhân tôn trọng tiếng nói và suy nghĩ của người dùng.",      
+    },
+    controls : {
+      search : "Tìm kiếm"
+    },
+    contacts : {
+      contactsList : "Bạn bè"
     }
   }
 }

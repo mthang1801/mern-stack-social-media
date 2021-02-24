@@ -16,6 +16,9 @@ export const userResolvers = {
     fetchPersonalUser: (_, args, { req }, info) => {
       return userController.fetchPersonalUser(req, args.slug);
     },
+    fetchFriends : (_, args, {req}, info) => {
+      return userController.fetchFriends(req, args.skip, args.limit, args.userId=null)
+    }
   },
   Mutation: {
     createUser: (_, args, ctx, info) => {

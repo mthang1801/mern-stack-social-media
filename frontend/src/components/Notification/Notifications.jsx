@@ -188,20 +188,16 @@ const Notifications = () => {
     countNumberNotificationsUnseen,
     subscribeToMoreNotifications,
     notifications,
-    personalUsers,
-    setPersonalUsers,
-    setNotifications,
-    setCountNumberNotificationsUnseen,
-    setNewNotifications,
-    setOpenPopupNotification,
+    personalUsers,   
     user,
   ]);
+  console.log("render")
 
   useEffect(() => {
     let timer;
     timer = setTimeout(() => {
       setOpenPopupNotification(false);
-    }, 10000);
+    }, 7000);
     return () => clearTimeout(timer);
   }, [openPopupNotification]);
   if (!notifications.length)

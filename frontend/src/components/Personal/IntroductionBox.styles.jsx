@@ -1,6 +1,7 @@
 import styled from "styled-components";
 export const BoxWrapper = styled.div`
   width : 90%;
+  max-width : 320px;
   margin: 1.5rem auto;
   background-color: ${({ theme }) =>
     theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
@@ -13,11 +14,12 @@ export const BoxWrapper = styled.div`
       color: var(--blue);
     }
   }
-  @media screen and (min-width: 992px){
-    width : 400px;
+  @media screen and (min-width: 768px){
+    max-width: 400px;
   }
   @media screen and (min-width: 992px){
     width : auto;
+    max-width: 100%;
     margin: 0 auto;
   }
 `;

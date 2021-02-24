@@ -11,6 +11,7 @@ import {
 import { FETCH_POSTS } from "../apollo/operations/queries/post";
 import IntroductionBox from "../components/Personal/IntroductionBox";
 import { cacheMutations } from "../apollo/operations/mutations";
+
 const PersonalPosts = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const {
