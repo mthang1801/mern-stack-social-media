@@ -2,17 +2,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import {
-  UPDATE_USER_HAS_SEEN_NOTIFICATION,
-  ACCEPT_REQUEST_TO_ADD_FRIEND,
-  default as mutations
+  notificationMutations,
+  userMutations,
+  cacheMutations,
 } from "../../apollo/operations/mutations";
 import {
   GET_CURRENT_USER,
   GET_NEW_NOTIFICATIONS,
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_CURRENT_PERSONAL_USER,
-  GET_PERSONAL_USERS
-} from "../../apollo/operations/queries";
+  GET_PERSONAL_USERS,
+} from "../../apollo/operations/queries/cache";
 import classNames from "classnames";
 import styled from "styled-components";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -44,9 +44,22 @@ const NotificationItem = ({ notification, notifications }) => {
     fetchPolicy: "cache-first",
   });
   //Mutations
-  const { setNotifications, setCountNumberNotificationsUnseen, setCurrentUser, setPersonalUsers, setCurrentPersonalUser } = mutations;
-  const [updateToHasSeen] = useMutation(UPDATE_USER_HAS_SEEN_NOTIFICATION);
-  const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND)
+  const {
+    setNotifications,
+    setCountNumberNotificationsUnseen,
+    setCurrentUser,
+    setPersonalUsers,
+    setCurrentPersonalUser,
+  } = cacheMutations;
+  const [updateToHasSeen] = useMutation(
+    notificationMutations.UPDATE_USER_HAS_SEEN_NOTIFICATION
+  );
+  const [acceptRequestToAddFriend] = useMutation(
+    userMutations.ACCEPT_REQUEST_TO_ADD_FRIEND
+  );
+  const [rejectRequestToAddFriend] = useMutation(
+    userMutations.REJECT_REQUEST_TO_ADD_FRIEND
+  )
   const { lang } = useLanguage();
   const handleUserClickHasSeen = (notification) => {
     if (!notification.hasSeen.includes(user._id)) {
@@ -76,8 +89,8 @@ const NotificationItem = ({ notification, notifications }) => {
       friends: [...sender.friends],
       following: [...sender.following],
       followed: [...sender.followed],
-      sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
-      receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
+      sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
+      receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
     });
     if (personalUsers && personalUsers[notification.creator.slug]) {
       setPersonalUsers({
@@ -85,20 +98,23 @@ const NotificationItem = ({ notification, notifications }) => {
         friends: [...receiver.friends],
         following: [...receiver.following],
         followed: [...receiver.followed],
-        sendRequestToAddFriend: [...receiver.sendRequestToAddFriend],
-        receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
+        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
       });
     }
-    if(currentPersonalUser && currentPersonalUser._id === notification.creator._id){
+    if (
+      currentPersonalUser &&
+      currentPersonalUser._id === notification.creator._id
+    ) {
       setCurrentPersonalUser({
         ...currentPersonalUser,
         friends: [...receiver.friends],
         following: [...receiver.following],
         followed: [...receiver.followed],
-        sendRequestToAddFriend: [...receiver.sendRequestToAddFriend],
-        receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
+        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
       });
-    }    
+    }
   };
 
   const onAcceptRequestToAddFriend = () => {
@@ -106,15 +122,24 @@ const NotificationItem = ({ notification, notifications }) => {
       variables: { senderId: notification.creator._id },
     }).then(({ data }) => {
       const { sender, receiver } = data.acceptRequestToAddFriend;
-      updateMutationOnChange(sender, receiver);      
+      updateMutationOnChange(sender, receiver);
     });
-  }  
-  const { colorMode } = useThemeUI();  
+  };
+
+  const onRejectRequestToAddFriend = () => {
+    rejectRequestToAddFriend({
+      variables : {senderId : notification.creator._id }
+    }).then(({data}) => {
+      const { sender, receiver } = data.rejectRequestToAddFriend;
+        updateMutationOnChange(sender, receiver);        
+    })
+  }
+  const { colorMode } = useThemeUI();
   if (!user) return null;
   return (
     <Wrapper theme={colorMode}>
       <div
-        className={classNames("notification-item-container",{
+        className={classNames("notification-item-container", {
           unseen: !notification.hasSeen.includes(user._id),
         })}
       >
@@ -154,13 +179,12 @@ const NotificationItem = ({ notification, notifications }) => {
             </div>
           </div>
         </Link>
-        {showResponseButtons(
-         notification, 
-         user
-        ) && (
+        {showResponseButtons(notification, user) && (
           <ButtonsGroup>
-            <ButtonAccept onClick={onAcceptRequestToAddFriend}>Accept</ButtonAccept>
-            <ButtonDecline>Decline</ButtonDecline>
+            <ButtonAccept onClick={onAcceptRequestToAddFriend}>
+              Accept
+            </ButtonAccept>
+            <ButtonDecline onClick={onRejectRequestToAddFriend}>Decline</ButtonDecline>
           </ButtonsGroup>
         )}
       </div>
@@ -201,7 +225,7 @@ const ButtonDecline = styled.button`
   }
 `;
 
-const Wrapper = styled.div`  
+const Wrapper = styled.div`
   .notification-item-container:hover {
     background-color: ${({ theme }) =>
       theme === "dark"
@@ -220,11 +244,11 @@ const Wrapper = styled.div`
     &:last-child {
       overflow: hidden;
     }
-    &:hover{
-      background-color : inherit;
-    }    
+    &:hover {
+      background-color: inherit;
+    }
   }
-  
+
   .avatar-container {
     width: 40px;
     height: 40px;

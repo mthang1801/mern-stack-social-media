@@ -2,18 +2,19 @@ import React, { useRef, useEffect } from "react";
 import NotificationItem from "./NotificationItem";
 import styled from "styled-components";
 import { useQuery } from "@apollo/client";
-import {
-  FETCH_NOTIFICATIONS,
-  FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
+import { 
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_NOTIFICATIONS,
-  GET_LOADING_NOTIFICATIONS_MORE,
   GET_CURRENT_USER,
   GET_OPEN_POPUP_NOTIFICATION,
   GET_PERSONAL_USERS,
   GET_CURRENT_PERSONAL_USER,
-} from "../../apollo/operations/queries";
-import mutations from "../../apollo/operations/mutations";
+} from "../../apollo/operations/queries/cache";
+import {
+  FETCH_NOTIFICATIONS,
+  FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, 
+} from "../../apollo/operations/queries/notification";
+import {cacheMutations} from "../../apollo/operations/mutations";
 import subcriptions from "../../apollo/operations/subscriptions";
 import subscriptions from "../../apollo/operations/subscriptions";
 const Notifications = () => {
@@ -38,9 +39,6 @@ const Notifications = () => {
     fetchPolicy: "cache-and-network",
   });
   const {
-    data: { loadingNotificationsMore },
-  } = useQuery(GET_LOADING_NOTIFICATIONS_MORE, { fetchPolicy: "cache-only" });
-  const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
   const {
@@ -60,12 +58,11 @@ const Notifications = () => {
     setCountNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,
-    setOpenPopupNotification,
-    setLoadingNotificationsMore,
+    setOpenPopupNotification,    
     setPersonalUsers,
     setCurrentUser,
     setCurrentPersonalUser,
-  } = mutations;
+  } = cacheMutations;
 
   useEffect(() => {
     if (countNumberNotificationsUnseen === null) {
@@ -94,8 +91,8 @@ const Notifications = () => {
         friends: [...receiver.friends],
         following: [...receiver.following],
         followed: [...receiver.followed],
-        sendRequestToAddFriend: [...receiver.sendRequestToAddFriend],
-        receiveRequestToAddFriend: [...receiver.receiveRequestToAddFriend],
+        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
+        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
       });
 
       if (sender && personalUsers[sender.slug]) {
@@ -104,8 +101,8 @@ const Notifications = () => {
           friends: [...sender.friends],
           following: [...sender.following],
           followed: [...sender.followed],
-          sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
-          receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
+          sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
+          receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
         };
         setPersonalUsers({
           ...personalUsers,
@@ -118,8 +115,8 @@ const Notifications = () => {
           friends: [...sender.friends],
           following: [...sender.following],
           followed: [...sender.followed],
-          sendRequestToAddFriend: [...sender.sendRequestToAddFriend],
-          receiveRequestToAddFriend: [...sender.receiveRequestToAddFriend],
+          sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
+          receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
         });
       }
     }
@@ -147,7 +144,7 @@ const Notifications = () => {
       unsubscribeRequestAddFriend = subscribeToMoreNotifications({
         document:
           subcriptions.notificationSubscription
-            .NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND,
+            .NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND,
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData) return prev;
@@ -155,7 +152,7 @@ const Notifications = () => {
             notification: newNotification,
             receiver,
             sender,
-          } = subscriptionData.data.notifyReceiveRequestToAddFriend;
+          } = subscriptionData.data.notifyReceivedRequestToAddFriend;
           updatedNotifications(newNotification, sender, receiver);
         },
       });

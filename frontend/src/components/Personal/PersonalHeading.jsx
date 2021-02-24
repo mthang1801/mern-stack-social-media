@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import {
   GET_CURRENT_PERSONAL_USER,
   GET_CURRENT_USER
-} from "../../apollo/operations/queries";
+} from "../../apollo/operations/queries/cache";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   Container,

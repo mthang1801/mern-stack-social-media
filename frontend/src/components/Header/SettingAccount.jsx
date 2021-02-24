@@ -10,8 +10,7 @@ import { AiOutlineSetting } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { MdLanguage } from "react-icons/md";
 import ButoonColorMode from "../Controls/ButtonColorMode";
-import mutations from "../../apollo/operations/mutations"
-import {GET_CURRENT_USER} from "../../apollo/operations/queries";
+import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache";
 import {useQuery} from "@apollo/client"
 import {logout} from "../Auth/Auth.utility"
 const SettingAccount = ({ className }) => {

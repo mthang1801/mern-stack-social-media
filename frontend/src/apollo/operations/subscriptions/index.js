@@ -1,4 +1,4 @@
-import notificationSubscription from "./notifications"
+import notificationSubscription from "./notification"
 import userSubscription from "./user"
 const subscriptions = {
   notificationSubscription,

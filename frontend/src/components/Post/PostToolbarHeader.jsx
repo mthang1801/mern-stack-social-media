@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Button from "../Controls/ButtonDefaultCircle";
 import Avatar from "../../assets/images/mvt-icon.png";
 import { BsArrowsFullscreen } from "react-icons/bs";
-import { GET_POST_STATUS } from "../../apollo/operations/queries";
+import { GET_POST_STATUS } from "../../apollo/operations/queries/cache";
 import { useQuery } from "@apollo/client";
 import useLanguage from "../Global/useLanguage";
 import styled from "styled-components";
@@ -11,7 +11,7 @@ import { useThemeUI } from "theme-ui";
 import { darken } from "polished";
 
 const PostToolbarHeader = () => {
-  const getPostStatus = useQuery(GET_POST_STATUS);
+  const getPostStatus = useQuery(GET_POST_STATUS,{fetchPolicy : "cache-and-network"});
   const { i18n, lang } = useLanguage();
   const { postStatus } = getPostStatus.data;
   const [currentStatus, setCurrentStatus] = useState({});

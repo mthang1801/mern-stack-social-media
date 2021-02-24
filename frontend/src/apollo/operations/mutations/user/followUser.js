@@ -8,8 +8,8 @@ export const FOLLOW_USER =  gql`
         slug
         following
         followed
-        sendRequestToAddFriend
-        receiveRequestToAddFriend
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
         friends
       }
       receiver {
@@ -17,8 +17,8 @@ export const FOLLOW_USER =  gql`
         slug
         following
         followed
-        sendRequestToAddFriend
-        receiveRequestToAddFriend
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
         friends
       }
     }

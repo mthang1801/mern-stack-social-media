@@ -3,15 +3,56 @@ import Layout from "../containers/Layout";
 import styled from "styled-components";
 import Notifications from "../components/Notification/Notifications";
 import { useQuery } from "@apollo/client";
-import { GET_CURRENT_USER } from "../apollo/operations/queries";
+import {
+  GET_CURRENT_USER,
+  GET_NOTIFICATIONS,
+} from "../apollo/operations/queries/cache";
 import CardRequestAuth from "../components/Card/CardRequestAuth";
-import mutations from "../apollo/operations/mutations";
+import { cacheMutations } from "../apollo/operations/mutations";
 import MainBody from "../components/Body/MainBody";
+import { FETCH_NOTIFICATIONS } from "../apollo/operations/queries/notification";
+
 const NotificationsPage = () => {
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
-  const { setLoadingNotificationsMore } = mutations;
+  const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
+    fetchPolicy: "cache-and-network",
+    skip: true,
+  });
+  const {
+    data: { notifications },
+  } = useQuery(GET_NOTIFICATIONS, { fetchPolicy: "cache-first" });
+  const { setNotifications } = cacheMutations;
+  const [fetchNotificationsMore, setFetchNotificationsMore] = useState(false);
+  useEffect(() => {
+    if (!notifications.length && fetchNotifications) {
+      fetchNotifications({
+        variables: {
+          skip: 0,
+          limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
+        },
+      }).then(({ data }) => {
+        if (data && data.fetchNotifications) {
+          setNotifications([...data.fetchNotifications]);
+        }
+      });
+    }
+  }, [notifications, fetchNotifications]);
+
+  useEffect(() => {
+    if (fetchNotificationsMore && fetchNotifications) {
+      const skip = notifications.length;
+      const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
+      fetchNotifications({ skip, limit }).then(
+        ({ data: { fetchNotifications } }) => {
+          setNotifications([...notifications, ...fetchNotifications]);
+          setFetchNotificationsMore(false);
+        }
+      );
+    }
+  }, [fetchNotificationsMore, setFetchNotificationsMore, fetchNotifications]);
+
   useEffect(() => {
     window.addEventListener("scroll", (e) => {
       const {
@@ -20,7 +61,7 @@ const NotificationsPage = () => {
         clientHeight,
       } = document.documentElement;
       if (clientHeight + scrollTop > scrollHeight * 0.75) {
-        setLoadingNotificationsMore(true);
+        setFetchNotificationsMore(true);
       }
     });
     return () => {
@@ -31,11 +72,12 @@ const NotificationsPage = () => {
           clientHeight,
         } = document.documentElement;
         if (clientHeight + scrollTop > scrollHeight * 0.75) {
-          setLoadingNotificationsMore(true);
+          setFetchNotificationsMore(true);
         }
       });
     };
   }, []);
+
   return (
     <Layout>
       <MainBody>

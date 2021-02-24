@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import useLanguage from "../Global/useLanguage"
 import {useLocation} from "react-router-dom"
 import {useQuery} from "@apollo/client"
-import {GET_CURRENT_USER} from "../../apollo/operations/queries"
+import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
 const useMenuList = () => {
   const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"});
 

@@ -26,7 +26,7 @@ export const userResolvers = {
         req,
         args.userId,
         pubsub,
-        subscriptionActions.NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND
+        subscriptionActions.NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND
       );
     },
     rejectRequestToAddFriend: (_, args, { req }, info) => {
@@ -67,13 +67,13 @@ export const userResolvers = {
     password: (_, args, ctx, info) => userController.hidePassword(),
   },
   Subscription: {
-    notifyReceiveRequestToAddFriend: {
+    notifyReceivedRequestToAddFriend: {
       subscribe: withFilter(
         () =>
-          pubsub.asyncIterator(subscriptionActions.NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND),
+          pubsub.asyncIterator(subscriptionActions.NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND),
         (payload, { userId }) => {
           return (
-            payload.notifyReceiveRequestToAddFriend.receivers[0].toString() ===
+            payload.notifyReceivedRequestToAddFriend.receivers[0].toString() ===
             userId.toString()
           );
         }

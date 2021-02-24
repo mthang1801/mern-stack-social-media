@@ -17,14 +17,14 @@ import { withRouter } from "react-router-dom";
 import GoogleRecaptcha from "./GoogleRecapcha";
 import FacebookAuth from "./GoogleAuth";
 import GoogleAuth from "./FacebookAuth";
-import { LOGIN } from "../../apollo/operations/queries";
+import { LOGIN } from "../../apollo/operations/queries/user";
 import { useLazyQuery } from "@apollo/client";
-import mutations from "../../apollo/operations/mutations";
+import {cacheMutations} from "../../apollo/operations/mutations";
 import {login} from "../../utils/auth"
 function withLoginQuery(WrappedComponent) {
   return function QueryWrapper(props) {
     const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN, {fetchPolicy : "cache-and-network"});
-    const { setCurrentUser } = mutations;        
+    const { setCurrentUser } = cacheMutations;        
     return (
       <WrappedComponent
         data={data}

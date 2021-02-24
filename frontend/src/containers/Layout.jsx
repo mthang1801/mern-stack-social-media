@@ -1,11 +1,10 @@
 import React from 'react'
 import Header from "../components/Header/Header";
 import MenuList from "../components/Menu/MenuList"
-import Body from "../components/Body/MainBody"
 import styled from "styled-components"
 import classNames from "classnames"
 import {useQuery} from "@apollo/client"
-import {GET_TOGGLE_BUTTON_MENU} from "../apollo/operations/queries"
+import {GET_TOGGLE_BUTTON_MENU} from "../apollo/operations/queries/cache"
 import useMenuList from "../components/Menu/useMenuList"
 import {useThemeUI} from "theme-ui"
 const Layout = ({children, className}) => {

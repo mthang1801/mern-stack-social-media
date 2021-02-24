@@ -9,8 +9,8 @@ export const REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
         friends
         following
         followed
-        sendRequestToAddFriend
-        receiveRequestToAddFriend
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
       }
       receiver {
         _id
@@ -18,8 +18,8 @@ export const REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
         friends   
         following
         followed
-        sendRequestToAddFriend
-        receiveRequestToAddFriend
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
       }
     }
   }

@@ -12,8 +12,8 @@ export const notificationControllers = {
     const notifications = await Notification.find({ receivers: userId })
       .populate("creator")
       .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+      .skip(+skip)
+      .limit(+limit);
     return notifications;
   },
   updateUserHasSeenNotification : async (req, notificationId, pubsub, updateCountNotificationsWhenSeen) => {

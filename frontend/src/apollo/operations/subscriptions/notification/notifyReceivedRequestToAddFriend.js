@@ -1,8 +1,8 @@
 import {gql} from "@apollo/client"
 
-export const NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND = gql`
+export const NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND = gql`
 subscription ($userId : ID!){
-  notifyReceiveRequestToAddFriend(userId : $userId){
+  notifyReceivedRequestToAddFriend(userId : $userId){
     field
     action
     sender{
@@ -12,8 +12,8 @@ subscription ($userId : ID!){
       friends
       following
       followed
-      sendRequestToAddFriend
-      receiveRequestToAddFriend
+      sentRequestToAddFriend
+      receivedRequestToAddFriend
     }
     receiver{
       _id
@@ -22,8 +22,8 @@ subscription ($userId : ID!){
       friends
       following
       followed
-      sendRequestToAddFriend
-      receiveRequestToAddFriend
+      sentRequestToAddFriend
+      receivedRequestToAddFriend
     }
     receivers
     notification{

@@ -15,8 +15,8 @@ export const schemaType = gql`
     notifications : [Notification!]!
     following : [ID!]!
     followed : [ID!]!
-    sendRequestToAddFriend : [ID!]!
-    receiveRequestToAddFriend : [ID!]
+    sentRequestToAddFriend : [ID!]!
+    receivedRequestToAddFriend : [ID!]
     createdAt : String
     updatedAt : String
   }

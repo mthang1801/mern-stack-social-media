@@ -4,11 +4,11 @@ import styled from "styled-components";
 import Posts from "../components/Post/Posts";
 import { useQuery } from "@apollo/client";
 import {
-  FETCH_POSTS,
   GET_CURRENT_USER,
   GET_POSTS,
-} from "../apollo/operations/queries";
-import mutations from "../apollo/operations/mutations";
+} from "../apollo/operations/queries/cache";
+import { FETCH_POSTS } from "../apollo/operations/queries/post";
+import { cacheMutations } from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
 import HomeSidebar from "../components/Sidebar/HomeSidebar";
 import MainBody from "../components/Body/MainBody";
@@ -27,7 +27,7 @@ const Home = () => {
     fetchPolicy: "cache-and-network",
   });
   const [loadingMore, setLoadingMore] = useState(false);
-  const { setPosts } = mutations;
+  const { setPosts } = cacheMutations;
 
   useEffect(() => {
     let _mounted = true;

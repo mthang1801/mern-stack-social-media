@@ -12,8 +12,8 @@ query FetchPersonalUser($slug : String!){
     avatar  
     following
     followed
-    sendRequestToAddFriend 
-    receiveRequestToAddFriend 
+    sentRequestToAddFriend 
+    receivedRequestToAddFriend 
     posts{
       _id
       text

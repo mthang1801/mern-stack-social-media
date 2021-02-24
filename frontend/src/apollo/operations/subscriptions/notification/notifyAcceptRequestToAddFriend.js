@@ -12,8 +12,8 @@ export const NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
         friends
         following
         followed
-        sendRequestToAddFriend
-        receiveRequestToAddFriend
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
       }
       receiver{
         _id
@@ -22,8 +22,8 @@ export const NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
         friends
         following
         followed
-        sendRequestToAddFriend
-        receiveRequestToAddFriend
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
       }
       receivers 
       notification{

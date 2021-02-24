@@ -1,6 +1,6 @@
 import React, { lazy, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
-import { GET_CURRENT_USER } from "../apollo/operations/queries";
+import { GET_CURRENT_USER } from "../apollo/operations/queries/cache";
 import { useLazyQuery } from "@apollo/client";
 const SignIn = lazy(() => import("../components/Auth/SignIn"));
 const SignUp = lazy(() => import("../components/Auth/SignUp"));

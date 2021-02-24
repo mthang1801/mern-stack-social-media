@@ -3,7 +3,7 @@ import { gql } from "apollo-server-express";
 export const schemaSubscription = gql`
   type Subscription {
     notifyCreatedPost(userId: ID!): SubscriptionNotificationPayload!
-    notifyReceiveRequestToAddFriend(userId: ID!): SubscriptionNotificationPayload!
+    notifyReceivedRequestToAddFriend(userId: ID!): SubscriptionNotificationPayload!
     notifyAcceptRequestToAddFriend(userId: ID!) : SubscriptionNotificationPayload!
 
     updateCountNotificationsWhenSeen(userId: ID!): ID!
@@ -19,7 +19,7 @@ export const schemaSubscription = gql`
 
 export const subscriptionActions = {
   NOTIFY_POST_CREATED: "NOTIFY_POST_CREATED",
-  NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND: "NOTIFY_RECEIVE_REQUEST_TO_ADD_FRIEND",
+  NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND: "NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND",
   NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND : "NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND",
   UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN: "UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN",
   REJECT_REQUEST_TO_ADD_FRIEND: "REJECT_REQUEST_TO_ADD_FRIEND",

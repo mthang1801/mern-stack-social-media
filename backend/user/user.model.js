@@ -53,14 +53,14 @@ const UserSchema = new mongoose.Schema({
       required : true 
     }
   ],
-  sendRequestToAddFriend : [
+  sentRequestToAddFriend : [
     {
       type : mongoose.Schema.Types.ObjectId,
       ref : "users",
       required : true 
     }
   ],
-  receiveRequestToAddFriend : [
+  receivedRequestToAddFriend : [
     {
       type : mongoose.Schema.Types.ObjectId,
       ref : "users",

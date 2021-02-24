@@ -26,8 +26,8 @@ export const FETCH_CURRENT_USER = gql`
       avatar  
       following
       followed 
-      sendRequestToAddFriend
-      receiveRequestToAddFriend
+      sentRequestToAddFriend
+      receivedRequestToAddFriend
     }
   }
 `;

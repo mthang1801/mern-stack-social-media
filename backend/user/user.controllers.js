@@ -95,15 +95,15 @@ export const userController = {
     req,
     userId,
     pubsub,
-    notifyReceiveRequestToAddFriend
+    notifyReceivedRequestToAddFriend
   ) => {
     try {
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
         friends: { $ne: userId },
-        sendRequestToAddFriend: { $ne: userId },
-        receiveRequestToAddFriend: { $ne: userId },
+        sentRequestToAddFriend: { $ne: userId },
+        receivedRequestToAddFriend: { $ne: userId },
       });
 
       if (!currentUser) {
@@ -112,8 +112,8 @@ export const userController = {
       const userRequestedFriend = await User.findOne({
         _id: userId,
         friends: { $ne: currentUserId },
-        sendRequestToAddFriend: { $ne: userId },
-        receiveRequestToAddFriend: { $ne: userId },
+        sentRequestToAddFriend: { $ne: userId },
+        receivedRequestToAddFriend: { $ne: userId },
       });
       if (!userRequestedFriend) {
         throw new UserInputError("Add friend failed");
@@ -135,17 +135,17 @@ export const userController = {
       ) {
         userRequestedFriend.followed.push(currentUserId);
       }
-      userRequestedFriend.receiveRequestToAddFriend.push(currentUserId);
+      userRequestedFriend.receivedRequestToAddFriend.push(currentUserId);
       userRequestedFriend.notifications.push(notification._id);
       await userRequestedFriend.save();
 
       if (!currentUser.following.includes(mongoose.Types.ObjectId(userId))) {
         currentUser.following.push(userId);
       }
-      currentUser.sendRequestToAddFriend.push(userId);
+      currentUser.sentRequestToAddFriend.push(userId);
       await currentUser.save();
-      pubsub.publish(notifyReceiveRequestToAddFriend, {
-        notifyReceiveRequestToAddFriend: {
+      pubsub.publish(notifyReceivedRequestToAddFriend, {
+        notifyReceivedRequestToAddFriend: {
           field: fields.user,
           action: actions.ADDED,
           sender: currentUser,
@@ -174,14 +174,14 @@ export const userController = {
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
-        receiveRequestToAddFriend: senderId,
+        receivedRequestToAddFriend: senderId,
       });
       if (!currentUser) {
         throw new UserInputError("Accept request failed");
       }
       const sender = await User.findOne({
         _id: senderId,
-        sendRequestToAddFriend: currentUserId,
+        sentRequestToAddFriend: currentUserId,
       });
       if (!sender) {
         throw new UserInputError("Accept request failed");
@@ -192,7 +192,7 @@ export const userController = {
       const updatedCurrentUser = await User.findByIdAndUpdate(
         currentUserId,
         {
-          $pull: { receiveRequestToAddFriend: senderId },
+          $pull: { receivedRequestToAddFriend: senderId },
           $addToSet: {
             friends: senderId,
             following: senderId,
@@ -212,7 +212,7 @@ export const userController = {
       const updatedSenderRequest = await User.findByIdAndUpdate(
         senderId,
         {
-          $pull: { sendRequestToAddFriend: currentUserId },
+          $pull: { sentRequestToAddFriend: currentUserId },
           $addToSet: {
             friends: currentUserId,
             following: currentUserId,
@@ -252,23 +252,23 @@ export const userController = {
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
-        receiveRequestToAddFriend: senderId,
+        receivedRequestToAddFriend: senderId,
       });
       if (!currentUser) {
         throw new UserInputError("Reject failed");
       }
       const sender = await User.findOne({
         _id: senderId,
-        sendRequestToAddFriend: currentUserId,
+        sentRequestToAddFriend: currentUserId,
       });
       if (!sender) {
         throw new UserInputError("Reject failed");
       }
       const session = await mongoose.startSession();
       session.startTransaction();
-      currentUser.receiveRequestToAddFriend.pull(senderId);
+      currentUser.receivedRequestToAddFriend.pull(senderId);
       await currentUser.save();
-      sender.sendRequestToAddFriend.pull(currentUserId);
+      sender.sentRequestToAddFriend.pull(currentUserId);
       await sender.save();
       await session.commitTransaction();
       session.endSession();
@@ -297,24 +297,24 @@ export const userController = {
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
-        sendRequestToAddFriend: receiverId,
+        sentRequestToAddFriend: receiverId,
       });
       if (!currentUser) {
         throw new UserInputError("Cancel Request failed.");
       }
       const receiver = await User.findOne({
         _id: receiverId,
-        receiveRequestToAddFriend: currentUserId,
+        receivedRequestToAddFriend: currentUserId,
       });
       if (!receiver) {
         throw new UserInputError("Cancel Request failed.");
       }
       const session = await mongoose.startSession();
       session.startTransaction();
-      currentUser.sendRequestToAddFriend.pull(receiverId);
+      currentUser.sentRequestToAddFriend.pull(receiverId);
       currentUser.following.pull(receiverId);
       await currentUser.save();
-      receiver.receiveRequestToAddFriend.pull(currentUserId);
+      receiver.receivedRequestToAddFriend.pull(currentUserId);
       receiver.followed.pull(currentUserId);
       await receiver.save();
 
