@@ -1,7 +1,7 @@
 import React from "react";
 import { BsArrowsFullscreen } from "react-icons/bs";
 import {useQuery} from "@apollo/client"
-import {GET_CURRENT_USER} from "../../../apollo/operations/queries"
+import {GET_CURRENT_USER} from "../../../apollo/operations/queries/cache"
 const BoxCreatePostHeader = () => {
   const {data : {user}} =  useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"});
   if(!user) return null;

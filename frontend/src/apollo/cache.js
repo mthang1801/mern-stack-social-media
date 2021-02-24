@@ -7,7 +7,6 @@ import {
   Notifications,
   CountNumberNotificationsUnseen,
   NewNotifications,
-  LoadingNotificationMore,
   OpenPopupNotification,
   PersonalUsers,
   CurrentPersonalUser,
@@ -22,7 +21,6 @@ const setCountNumberNotificationsUnseenVar = makeVar(
   CountNumberNotificationsUnseen
 );
 const setNewNotificationsVar = makeVar(NewNotifications);
-const setLoadingNotificationsMoreVar = makeVar(LoadingNotificationMore);
 const setOpenPopupNotificationVar = makeVar(OpenPopupNotification);
 const setPersonalUsersVar = makeVar(PersonalUsers);
 const setCurrentPersonalUserVar = makeVar(CurrentPersonalUser);
@@ -58,10 +56,7 @@ const cache = new InMemoryCache({
         },
         newNotifications: {
           read: () => setNewNotificationsVar(),
-        },
-        loadingNotificationsMore: {
-          read: () => setLoadingNotificationsMoreVar(),
-        },
+        },      
         openPopupNotification: {
           read: () => setOpenPopupNotificationVar(),
         },
@@ -81,8 +76,7 @@ export {
   setPostsVar,
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
-  setNewNotificationsVar,
-  setLoadingNotificationsMoreVar,
+  setNewNotificationsVar,  
   setOpenPopupNotificationVar,
   setPersonalUsersVar,
   setCurrentPersonalUserVar,

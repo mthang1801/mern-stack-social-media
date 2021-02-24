@@ -2,8 +2,8 @@ import React, { useEffect, lazy, Suspense } from "react";
 import GlobalStyles from "./GlobalStyles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
-import mutations from "../apollo/operations/mutations";
-import {FETCH_CURRENT_USER} from "../apollo/operations/queries"
+import {cacheMutations} from "../apollo/operations/mutations";
+import {FETCH_CURRENT_USER} from "../apollo/operations/queries/user"
 import { useLazyQuery, useQuery } from "@apollo/client";
 const HomePage = lazy(() => import("../pages/home"));
 const AuthPage = lazy(() => import("../pages/auth"));
@@ -16,7 +16,7 @@ function App() {
     fetchPolicy: "cache-and-network",    
   });  
 
-  const { setCurrentUser, setPersonalUsers } = mutations;
+  const { setCurrentUser, setPersonalUsers } = cacheMutations;
   
   useEffect(() => {
     let _isMounted = true;

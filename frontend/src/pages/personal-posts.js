@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Wrapper, LeftSide, RightSide } from "./personal-posts.styles";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
 import Posts from "../components/Post/Posts";
-import { useQuery, useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
   GET_CURRENT_USER,
   GET_CURRENT_PERSONAL_USER,
   GET_PERSONAL_POSTS,
-  FETCH_POSTS,
-} from "../apollo/operations/queries";
+} from "../apollo/operations/queries/cache";
+import { FETCH_POSTS } from "../apollo/operations/queries/post";
 import IntroductionBox from "../components/Personal/IntroductionBox";
-import mutations from "../apollo/operations/mutations";
+import { cacheMutations } from "../apollo/operations/mutations";
 const PersonalPosts = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const {
@@ -27,7 +27,7 @@ const PersonalPosts = () => {
     skip: true,
     fetchPolicy: "cache-and-network",
   });
-  const { setPersonalPosts } = mutations;
+  const { setPersonalPosts } = cacheMutations;
   useEffect(() => {
     window.addEventListener("scroll", () => {
       const docEl = document.documentElement;

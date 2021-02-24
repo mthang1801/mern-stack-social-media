@@ -143,7 +143,7 @@ export const vi = {
     notifications: {
       message : "Bạn vừa nhận được một thông báo mới",
       postCreated : "vừa đăng một trạng thái mới.",
-      sendRequestToAddFriend : "gửi cho bạn một lời mời kết bạn.",
+      sentRequestToAddFriend : "gửi cho bạn một lời mời kết bạn.",
       acceptRequestToAddFriend : "đã chấp nhận lời mời kết bạn của bạn."
     },
     greeting : {

@@ -12,8 +12,8 @@ subscription NotifyCreatedPost($userId : ID!){
       friends
       following
       followed
-      sendRequestToAddFriend
-      receiveRequestToAddFriend
+      sentRequestToAddFriend
+      receivedRequestToAddFriend
     }
     receivers
     notification{

@@ -18,8 +18,8 @@ import GoogleRecaptcha from "./GoogleRecapcha";
 import FacebookLogin from "./GoogleAuth";
 import GoogleLogin from "./FacebookAuth";
 import { useMutation } from "@apollo/client";
-import { SIGNUP } from "../../apollo/operations/mutations";
-import mutations from "../../apollo/operations/mutations";
+import { SIGNUP } from "../../apollo/operations/mutations/user";
+import {cacheMutations} from "../../apollo/operations/mutations";
 import {login} from "../../utils/auth"
 const INITIAL_STATE = {
   controls: {
@@ -87,7 +87,7 @@ const INITIAL_STATE = {
 function withSignUpMutation(WrappedComponent) {
   return function MutationWrapper(props) {
     const [createUser, { data, loading, error }] = useMutation(SIGNUP, {errorPolicy : "all"});
-    const {setCurrentUser} = mutations    
+    const {setCurrentUser} = cacheMutations    
     return (
       <WrappedComponent
         createUser={createUser}        

@@ -8,7 +8,7 @@ import useLanguage from "../../Global/useLanguage";
 import "emoji-mart/css/emoji-mart.css";
 import { useThemeUI } from "theme-ui";
 import Button from "@material-ui/core/Button";
-import { CREATE_POST } from "../../../apollo/operations/mutations";
+import { postMutations } from "../../../apollo/operations/mutations";
 import { useMutation } from "@apollo/client";
 import compareAndUpdateMentions from "../../../utils/listMentionsFromText";
 
@@ -16,7 +16,7 @@ import { convertPlainTextToHTML } from "../../../utils/convertPlainTextToHTML";
 
 const BoxCreatePost = ({ user }) => {
   const { i18n, lang } = useLanguage();
-  const [createPost, { data }] = useMutation(CREATE_POST, {
+  const [createPost, { data }] = useMutation(postMutations.CREATE_POST, {
     errorPolicy: "all",
   });
   const [mindText, setMindText] = useState("");

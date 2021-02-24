@@ -4,12 +4,12 @@ import { Route, Switch } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import {
   GET_PERSONAL_USERS,
-  FETCH_PERSONAL_USER,
   GET_PERSONAL_POSTS,
   GET_CURRENT_PERSONAL_USER,
-} from "../apollo/operations/queries";
+} from "../apollo/operations/queries/cache";
+import { FETCH_PERSONAL_USER } from "../apollo/operations/queries/user";
 import Layout from "../containers/Layout";
-import mutations from "../apollo/operations/mutations";
+import { cacheMutations } from "../apollo/operations/mutations";
 
 const PersonalPosts = lazy(() => import("./personal-posts"));
 const PersonalPage = (props) => {
@@ -30,7 +30,7 @@ const PersonalPage = (props) => {
     setPersonalUsers,
     setCurrentPersonalUser,
     setPersonalPosts,
-  } = mutations;
+  } = cacheMutations;
   const { slug } = props.match.params;
   useEffect(() => {
     let _mounted = true;

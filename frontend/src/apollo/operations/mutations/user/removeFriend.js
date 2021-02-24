@@ -8,8 +8,8 @@ export const REMOVE_FRIEND = gql`
         slug
         following
         followed
-        sendRequestToAddFriend
-        receiveRequestToAddFriend
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
         friends
       }
       receiver {
@@ -17,8 +17,8 @@ export const REMOVE_FRIEND = gql`
         slug
         following
         followed
-        sendRequestToAddFriend
-        receiveRequestToAddFriend
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
         friends
       }
     }

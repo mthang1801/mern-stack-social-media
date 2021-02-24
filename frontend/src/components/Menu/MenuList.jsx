@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {Link} from "react-router-dom";
 import {useThemeUI} from "theme-ui"
 import {useQuery} from "@apollo/client"
-import {GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN} from "../../apollo/operations/queries"
+import {GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN} from "../../apollo/operations/queries/cache"
 const MobileMenuList = ({aside, title, list}) => {  
   const {colorMode} = useThemeUI()
   const {data: {countNumberNotificationsUnseen}} = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {fetchPolicy : "cache-first"})

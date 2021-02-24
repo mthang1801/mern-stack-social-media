@@ -6,47 +6,36 @@ import Button from "../Controls/ButtonDefaultCircle";
 import NotificationsBoard from "./NotificationsBoard";
 import classNames from "classnames";
 import { useQuery } from "@apollo/client";
-import {
-  FETCH_NOTIFICATIONS,
-  FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
+import {  
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_OPEN_POPUP_NOTIFICATION,
   GET_NOTIFICATIONS,
-  GET_LOADING_NOTIFICATIONS_MORE,
   GET_CURRENT_USER,
-} from "../../apollo/operations/queries";
-
-import mutations from "../../apollo/operations/mutations";
+} from "../../apollo/operations/queries/cache";
+import { FETCH_NOTIFICATIONS } from "../../apollo/operations/queries/notification";
+import { cacheMutations } from "../../apollo/operations/mutations";
 import { Scrollbars } from "react-custom-scrollbars";
 import FlashPopUpNotification from "./FlashPopUpNotification";
 
 const Control = () => {
-  const [openNotificationBoard, setOpenNotificationBoard] = useState(false);   
-  const [fetched, setFetched] = useState(0);
+  const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
+  const [loadingNotificationsMore, setLoadingNotificationsMore] = useState(
+    false
+  );
   const notificationRef = useRef(false);
-  const {
-    setOpenPopupNotification,
-    setLoadingNotificationsMore,
-    setNotifications,
-  } = mutations;
+  const { setOpenPopupNotification, setNotifications } = cacheMutations;
   const {
     data: { countNumberNotificationsUnseen },
   } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
     fetchPolicy: "cache-first",
   });
-  const {
-    data: { loadingNotificationsMore },
-  } = useQuery(GET_LOADING_NOTIFICATIONS_MORE, {
-    fetchPolicy: "cache-first",
-  });
+
   const {
     data: { notifications },
   } = useQuery(GET_NOTIFICATIONS, {
     fetchPolicy: "cache-first",
   });
-  const {
-    refetch: fetchNotifications    
-  } = useQuery(FETCH_NOTIFICATIONS, {
+  const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
     skip: true,
   });
@@ -75,45 +64,42 @@ const Control = () => {
   }, []);
 
   const handleClickNotification = async () => {
-    if (!notifications.length) {
-      const { data } = await fetchNotifications({
-        variables: {
-          skip: 0,
-          limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
-        },
-      });
-      if (data && data.fetchNotifications) {
-        setNotifications([...data.fetchNotifications]);
-      }
+    if (notifications.length <  +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE) {        
+      const skip = notifications.length;
+      const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
+      fetchNotifications({ skip, limit }).then(
+        ({ data: { fetchNotifications } }) => {
+          setNotifications([...notifications, ...fetchNotifications]);
+          setLoadingNotificationsMore(false);
+        }
+      );
     }
     setOpenNotificationBoard((prevStatus) => !prevStatus);
   };
-
-  const handleClickFlashPopupNotification = () => {
-    setOpenNotificationBoard(true);
+  console.log(notifications)
+  const handleClickFlashPopupNotification =  () => {       
+    handleClickNotification();
     setOpenPopupNotification(false);
   };
 
   const getMoreNotifications = (e) => {
-    const { target } = e;   
-    if (target.clientHeight + target.scrollTop > target.scrollHeight * 0.75 ) {      
-       setLoadingNotificationsMore(true);
+    const { target } = e;
+    if (target.clientHeight + target.scrollTop > target.scrollHeight * 0.75) {
+      setLoadingNotificationsMore(true);
     }
   };
-  useEffect(() => {    
-    if (loadingNotificationsMore && fetchNotifications) {           
+  useEffect(() => {
+    if (loadingNotificationsMore && fetchNotifications) {
       const skip = notifications.length;
-      const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;      
+      const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
       fetchNotifications({ skip, limit }).then(
         ({ data: { fetchNotifications } }) => {
           setNotifications([...notifications, ...fetchNotifications]);
-          setLoadingNotificationsMore(false);              
+          setLoadingNotificationsMore(false);
         }
       );
     }
-  }, [
-    loadingNotificationsMore
-  ]);  
+  }, [loadingNotificationsMore]);
   return (
     <Wrapper>
       <Button>
@@ -148,7 +134,7 @@ const Control = () => {
               autoHideDuration={200}
               autoHeightMin={0}
               autoHeightMax={200}
-              onScroll={getMoreNotifications}                  
+              onScroll={getMoreNotifications}
             >
               <NotificationsBoard />
             </Scrollbars>

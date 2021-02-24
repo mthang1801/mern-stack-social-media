@@ -8,7 +8,7 @@ const notificationContent = (field, action, lang) => {
     return translation.notifications.postCreated;
   }
   if(field === "user" && action === "ADDED"){
-    return translation.notifications.sendRequestToAddFriend
+    return translation.notifications.sentRequestToAddFriend
   }
   if(field === "user" && action === "ACCEPTED"){
     return translation.notifications.acceptRequestToAddFriend
@@ -18,7 +18,7 @@ const notificationContent = (field, action, lang) => {
 const showResponseButtons = (notification, user) => {
   const field = notification.field.toLowerCase();
   const action = notification.action.toUpperCase();
-  if(field === "user" && action === "ADDED" && user.receiveRequestToAddFriend.includes(notification.creator._id)){
+  if(field === "user" && action === "ADDED" && user.receivedRequestToAddFriend.includes(notification.creator._id)){
     return true ; 
   }
   return false ;

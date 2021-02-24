@@ -8,9 +8,9 @@ import SettingAccount from "./SettingAccount";
 import Button from "../Controls/ButtonDefaultCircle";
 import { FaArrowLeft } from "react-icons/fa";
 import ButtonMenu from "../Controls/ButtonMenu";
-import mutations from "../../apollo/operations/mutations";
+import {cacheMutations} from "../../apollo/operations/mutations";
 import classNames from "classnames";
-import { GET_CURRENT_USER } from "../../apollo/operations/queries";
+import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
 import { useQuery } from "@apollo/client";
 import { useLocation } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
@@ -27,7 +27,7 @@ const Header = () => {
   const { colorMode } = useThemeUI();
   const { pathname } = useLocation();
 
-  const { toggleButtonMenu } = mutations;
+  const { toggleButtonMenu } = cacheMutations;
   
   const NavControls = user ? (
     <div className="nav-controls">
