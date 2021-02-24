@@ -12,7 +12,7 @@ import { cacheMutations } from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
 import HomeSidebar from "../components/Sidebar/HomeSidebar";
 import MainBody from "../components/Body/MainBody";
-
+import FriendsComponent from "../components/Sidebar/FriendsComponent"
 const Home = () => {
   const {
     data: { user },
@@ -77,8 +77,9 @@ const Home = () => {
           </div>
           <div className="sidebar">
             <HomeSidebar user={user} />
-          </div>
+          </div>          
         </MainContent>
+        <FriendsComponent/>
       </MainBody>
     </Layout>
   );

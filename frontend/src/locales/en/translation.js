@@ -151,6 +151,12 @@ export const en = {
     greeting : {
       welcome : "Welcome to Pul.com",
       introduce : "Pul is a social network platform developed by private base on respecting your speak and your think.",      
+    },
+     controls : {
+      search : "Search..."
+    },
+    contacts : {
+      contactsList : "Contacts"
     }
   },
 };

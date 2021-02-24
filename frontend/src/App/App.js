@@ -40,8 +40,8 @@ function App() {
       <GlobalStyles theme={colorMode} />
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route exact path="/auth" component={AuthPage} />
+          <Route exact path="/" component={HomePage} />          
+          <Route path="/auth" component={AuthPage} />
           <Route exact path="/notifications" component={NotificationsPage} />
           <Route path="/:slug" component={PersonalPage} />
         </Switch>

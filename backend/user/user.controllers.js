@@ -65,8 +65,8 @@ export const userController = {
       tokenExpire: process.env.JWT_TOKEN_EXPIRE,
     };
   },
-  fetchCurrentUser: async (req) => {        
-    const userId = getAuthUser(req,false);    
+  fetchCurrentUser: async (req) => {
+    const userId = getAuthUser(req, false);
     const user = await User.findById(userId).populate({
       path: "notifications",
       populate: { path: "creator" },
@@ -90,6 +90,18 @@ export const userController = {
       options: { limit: +process.env.POSTS_PER_PAGE },
     });
     return user;
+  },
+  fetchFriends: async (req, skip, limit, userId) => {
+    const currentUserId = getAuthUser(req, false);
+    if (userId) {
+      //do something
+      return [];
+    }
+    const user = await User.findById(currentUserId).populate({
+      path: "friends",
+      options: { limit: +limit, skip: +skip },
+    });
+    return user.friends;
   },
   sendRequestToAddFriend: async (
     req,
@@ -149,7 +161,7 @@ export const userController = {
           field: fields.user,
           action: actions.ADDED,
           sender: currentUser,
-          receiver : userRequestedFriend,
+          receiver: userRequestedFriend,
           receivers: [userId],
           notification,
         },
@@ -226,8 +238,8 @@ export const userController = {
         notifyAcceptRequestToAddFriend: {
           field: fields.user,
           action: actions.ACCEPTED,
-          sender : updatedCurrentUser,
-          receiver : updatedSenderRequest, 
+          sender: updatedCurrentUser,
+          receiver: updatedSenderRequest,
           receivers: [senderId],
           notification,
         },
@@ -274,13 +286,13 @@ export const userController = {
       session.endSession();
       pubsub.publish(rejectRequestToAddFriendSubscription, {
         rejectRequestToAddFriendSubscription: {
-          sender : currentUser,
+          sender: currentUser,
           receiver: sender,
         },
       });
       return {
         sender: currentUser,
-        receiver : sender
+        receiver: sender,
       };
     } catch (error) {
       console.log(error);
@@ -327,8 +339,8 @@ export const userController = {
       await session.commitTransaction();
       session.endSession();
       return {
-        sender : currentUser,
-        receiver 
+        sender: currentUser,
+        receiver,
       };
     } catch (error) {
       console.log(error);
@@ -338,15 +350,23 @@ export const userController = {
   followUser: async (req, userId) => {
     try {
       const currentUserId = getAuthUser(req);
-      const updatedCurrentUser = await User.findByIdAndUpdate(currentUserId, {
-        $addToSet: { following: userId },
-      }, {new : true});
-      const updatedFollower = await User.findByIdAndUpdate(userId, {
-        $addToSet: { followed: currentUserId },
-      },{new : true});
+      const updatedCurrentUser = await User.findByIdAndUpdate(
+        currentUserId,
+        {
+          $addToSet: { following: userId },
+        },
+        { new: true }
+      );
+      const updatedFollower = await User.findByIdAndUpdate(
+        userId,
+        {
+          $addToSet: { followed: currentUserId },
+        },
+        { new: true }
+      );
       return {
-        sender : updatedCurrentUser,
-        receiver : updatedFollower
+        sender: updatedCurrentUser,
+        receiver: updatedFollower,
       };
     } catch (error) {
       console.log(error);
@@ -355,15 +375,23 @@ export const userController = {
   },
   unFollowUser: async (req, userId) => {
     const currentUserId = getAuthUser(req);
-    const updatedCurrentUser = await User.findByIdAndUpdate(currentUserId, {
-      $pull: { following: userId },
-    },{new : true});
-    const updatedFollower = await User.findByIdAndUpdate(userId, {
-      $pull: { followed: currentUserId },
-    },{new : true});
+    const updatedCurrentUser = await User.findByIdAndUpdate(
+      currentUserId,
+      {
+        $pull: { following: userId },
+      },
+      { new: true }
+    );
+    const updatedFollower = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { followed: currentUserId },
+      },
+      { new: true }
+    );
     return {
-      sender : updatedCurrentUser,
-      receiver : updatedFollower
+      sender: updatedCurrentUser,
+      receiver: updatedFollower,
     };
   },
   removeFriend: async (req, friendId, pubsub, removeFriendSubscription) => {
@@ -403,7 +431,7 @@ export const userController = {
       session.endSession();
       return {
         sender: currentUser,
-        receiver : friend
+        receiver: friend,
       };
     } catch (error) {
       throw new ApolloError(error.message);

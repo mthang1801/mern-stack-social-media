@@ -21,7 +21,7 @@ const BodyWrapper = styled.div`
   margin-top: 60px;  
   width : 100% ; 
   padding : 0 0.4rem;
-
+  position : relative;
   .aside{
     display : none ;     
   }

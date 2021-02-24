@@ -9,7 +9,8 @@ import createSetOpenPopupNotification from "./setOpenPopupNotification";
 import createSetPersonalUsers from "./setPersonalUsers";
 import createSetCurrentPersonalUser from "./setCurrentPersonalUser";
 import createSetPersonalPosts from "./setPersonalPosts";
-
+import createSetOpenFriendsList from "./setOpenFriendsList";
+import createSetFriends from "./setFriends";
 import {
   toggleButtonMenuVar,
   setPostStatusVar,
@@ -17,11 +18,13 @@ import {
   setPostsVar,
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
-  setNewNotificationsVar,  
+  setNewNotificationsVar,
   setOpenPopupNotificationVar,
   setPersonalUsersVar,
   setCurrentPersonalUserVar,
   setPersonalPostsVar,
+  setOpenFriendsListVar,
+  setFriendsVar,
 } from "../../../cache";
 
 const mutations = {
@@ -42,6 +45,8 @@ const mutations = {
     setCurrentPersonalUserVar
   ),
   setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
+  setOpenFriendsList: createSetOpenFriendsList(setOpenFriendsListVar),
+  setFriends: createSetFriends(setFriendsVar),
 };
 
-export {mutations as cacheMutations}
+export { mutations as cacheMutations };

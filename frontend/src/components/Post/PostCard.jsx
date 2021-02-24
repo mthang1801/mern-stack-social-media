@@ -28,7 +28,7 @@ const PostCard = ({ post }) => {
   };
   const createMarkup = (textHTML) => {
     return {__html: textHTML}
-  }
+  }  
   return (
     <PostCardWrapper theme={colorMode}>
       <div className="card-header">
@@ -39,7 +39,7 @@ const PostCard = ({ post }) => {
           <Link to={`/user/${post.author._id}`} className="card-header__center-author">{post.author.name}</Link>
           <div className="card-header__center-date">
             {Date.now() - +post.createdAt > 3600000 ? (
-              <Moment format="DD/MM/YYYY HH:MM">{+post.createdAt}</Moment>
+              <Moment date={new Date(+post.createdAt)} format="DD/MM/YYYY hh:mm" />
             ) : (
               <Moment fromNow>{+post.createdAt}</Moment>
             )}

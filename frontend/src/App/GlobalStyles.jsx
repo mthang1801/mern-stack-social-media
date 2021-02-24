@@ -60,6 +60,7 @@ export default createGlobalStyle`
   --gray-deep : #bfbfbf;
 
   --mainTransition: 0.15s all;
+  --secondTransition : 0.6s all;
   --transition-delay : 0.5s;
   --blue: #0d6efd;
   --dark-blue: #003e9a;
