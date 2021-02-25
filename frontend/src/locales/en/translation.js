@@ -26,8 +26,8 @@ export const en = {
         icon: () => <ImNewspaper />,
       },
       {
-        path: "/friends",
-        name: "Friends",
+        path: "/contacts",
+        name: "Contacts",
         icon: () => <FaUserFriends />,
       },
       {
@@ -48,8 +48,8 @@ export const en = {
         icon: () => <IoIosNotifications />,
       },
       {
-        path: "/friends",
-        name: "Friends",
+        path: "/contacts",
+        name: "Contacts",
         icon: () => <FaUserFriends />,
       },
       {
@@ -153,10 +153,20 @@ export const en = {
       introduce : "Pul is a social network platform developed by private base on respecting your speak and your think.",      
     },
      controls : {
-      search : "Search..."
+      search : "Search...",
+      openFriendsList : "Open Friends List",
+      closeFriendsList : "Close Friends List"
     },
     contacts : {
-      contactsList : "Contacts"
+      contactsList : "Contacts",
+      title: "Contacts Management",
+      userSentRequest : "Users have sent request",
+      userReceivedRequest : "Users have received request",      
+      friendsList : "Friends",
+      cancelRequest : "Cancel",
+      acceptRequest : "Accept",
+      rejectRequest : "Reject",
+      getMore : "Get More"
     }
   },
 };

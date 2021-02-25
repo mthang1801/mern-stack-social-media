@@ -20,7 +20,7 @@ const MobileMenuList = ({aside, title, list}) => {
                 <span className="link-name">{item.name}</span>
               </div>
               <div className="link-item__right">
-                {countNumberNotificationsUnseen && item.name === "Notifications" && <span>{countNumberNotificationsUnseen}</span>}
+                {countNumberNotificationsUnseen > 0 && item.name === "Notifications" && <span>{countNumberNotificationsUnseen}</span>}
               </div>
             </Link>
           </li>

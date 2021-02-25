@@ -91,6 +91,30 @@ export const userController = {
     });
     return user;
   },
+  fetchListContact: async (req) => {
+    const currentUserId = getAuthUser(req);
+    const currentUser = await User.findById(currentUserId)
+      .populate({
+        path: "sentRequestToAddFriend",
+        options: { limit: +process.env.CONTACT_USERS_PER_PAGE },
+      })
+      .populate({
+        path: "receivedRequestToAddFriend",
+        options: { limit: +process.env.CONTACT_USERS_PER_PAGE },
+      })
+      .populate({
+        path: "friends",
+        options: { limit: +process.env.CONTACT_FRIENDS_PER_PAGE },
+      });
+    if (!currentUser) {
+      throw new AuthenticationError("User not found");
+    }
+    return {
+      sentRequests: currentUser.sentRequestToAddFriend,
+      receivedRequests: currentUser.receivedRequestToAddFriend,
+      friends: currentUser.friends,
+    };
+  },
   fetchFriends: async (req, skip, limit, userId) => {
     const currentUserId = getAuthUser(req, false);
     if (userId) {
@@ -175,6 +199,23 @@ export const userController = {
     } catch (error) {
       throw new ApolloError("Add friend failed.");
     }
+  },
+  fetchUsersSentRequestToAddFriend: async (req, skip, limit) => {
+    console.log("render")
+    const currentUserId = await getAuthUser(req);
+    const currentUser = await User.findById(currentUserId).populate({
+      path: "sentRequestToAddFriend",
+      options: { skip: +skip, limit: +limit },
+    });
+    return currentUser.sentRequestToAddFriend;
+  },
+  fetchUsersReceivedRequestToAddFriend: async (req, skip, limit) => {
+    const currentUserId = await getAuthUser(req);
+    const currentUser = await User.findById(currentUserId).populate({
+      path: "receivedRequestToAddFriend",
+      options: { skip: +skip, limit: +limit },
+    });
+    return currentUser.receivedRequestToAddFriend;
   },
   acceptRequestToAddFriend: async (
     req,

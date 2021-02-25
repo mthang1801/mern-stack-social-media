@@ -13,3 +13,5 @@ export { PersonalPosts } from "./PersonalPosts";
 export { ShouldSubscribe } from "./ShouldSubscribe";
 export { OpenFriendsList } from "./OpenFriendsList";
 export { Friends } from "./Friends";
+export { SentRequestsToAddFriends } from "./User/SentRequestsToAddFriend"
+export { ReceivedRequestsToAddFriend } from "./User/ReceivedRequestsToAddFriend"

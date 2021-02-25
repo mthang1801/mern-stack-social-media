@@ -18,6 +18,7 @@ const Navigation = () => {
       {menu.map((item) => (
         <li key={item.name} className="nav-item">
           <NavLink
+            exact
             to={item.path}
             className="nav-link"
             activeClassName="nav-link-active"
