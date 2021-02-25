@@ -190,8 +190,7 @@ const Notifications = () => {
     notifications,
     personalUsers,   
     user,
-  ]);
-  console.log("render")
+  ]);  
 
   useEffect(() => {
     let timer;

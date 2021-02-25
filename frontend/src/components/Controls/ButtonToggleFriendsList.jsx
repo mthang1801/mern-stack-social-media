@@ -2,11 +2,12 @@ import React from 'react'
 import styled from "styled-components"
 import {useThemeUI} from "theme-ui";
 import {IoMdContacts, IoMdCloseCircleOutline} from "react-icons/io"
+import useLanguage from "../Global/useLanguage"
 const ButtonOpenFriendsList = ({...props}) => {
   const {colorMode} = useThemeUI();  
-  
+  const {i18n, lang} = useLanguage(); 
   return (
-    <Button {...props} theme={colorMode} >
+    <Button {...props} theme={colorMode} title={props.hide ? i18n.store.data[lang].translation.controls.closeFriendsList :i18n.store.data[lang].translation.controls.openFriendsList }>
       {props.hide ? <IoMdCloseCircleOutline/> : <IoMdContacts/>}
     </Button>
   )
@@ -16,7 +17,7 @@ const Button = styled.button`
   width : 60px;
   height: 60px;
   font-size : 2rem;
-  position : absolute;
+  position : fixed;
   bottom : 2rem;
   right: 2rem;
   border-radius : 50%;
@@ -35,9 +36,8 @@ const Button = styled.button`
   }
   &:active{
     transform : translateY(-3px);
-  }
-  // opacity : ${({hide}) => hide ? 0 : 1};
-  // visibility : ${({hide}) => hide ? "hidden" : "visible"};
+  }  
+  z-index:10;
 `
 
 export default ButtonOpenFriendsList

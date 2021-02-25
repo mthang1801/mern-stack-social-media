@@ -105,5 +105,11 @@ export const schemaType = gql`
     sender: User!
     receiver : User!
   }
+
+  type ListContact{
+    sentRequests : [User!]!   
+    receivedRequests : [User!]!    
+    friends : [User!]!    
+  }
   
 `

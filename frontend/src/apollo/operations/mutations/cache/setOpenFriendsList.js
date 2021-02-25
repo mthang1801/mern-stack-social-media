@@ -1,7 +1,4 @@
-const setOpenFriendsList = setOpenFriendsListVar => (value) => {
-  if(typeof value === "boolean"){
-    setOpenFriendsListVar(value);
-  }  
-}
+const setOpenFriendsList = (setOpenFriendsListVar) => () =>
+  setOpenFriendsListVar(!setOpenFriendsListVar());
 
-export default setOpenFriendsList
+export default setOpenFriendsList;

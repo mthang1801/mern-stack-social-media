@@ -26,8 +26,8 @@ export const vi = {
         icon : () => <ImNewspaper/>
       },
       {
-        path : "/friends",
-        name : "Bạn bè",
+        path : "/contacts",
+        name : "Danh bạ",
         icon : () => <FaUserFriends/>
       },
       {
@@ -48,8 +48,8 @@ export const vi = {
         icon: () => <IoIosNotifications />,
       },
       {
-        path: "/friends",
-        name: "Bạn bè",
+        path: "/contacts",
+        name: "Danh bạ",
         icon: () => <FaUserFriends />,
       },
       {
@@ -151,10 +151,20 @@ export const vi = {
       introduce : "Pul là một nền tảng mạng xã hội được phát triển bởi cá nhân tôn trọng tiếng nói và suy nghĩ của người dùng.",      
     },
     controls : {
-      search : "Tìm kiếm"
+      search : "Tìm kiếm",
+      openFriendsList : "Hiển thị Danh bạ",
+      closeFriendsList : "Đóng Danh bạ"
     },
     contacts : {
-      contactsList : "Bạn bè"
+      contactsList : "Bạn bè",
+      title : "Quản lý liên lạc",
+      userSentRequest : "Yêu cầu kết bạn đến",
+      userReceivedRequest : "Lời mời kết bạn từ",
+      friendsList : "Bạn bè",
+      cancelRequest : "Hủy Yêu cầu",      
+      acceptRequest : "Chấp nhận",
+      rejectRequest : "Từ chối",
+      getMore : "Lấy thêm"
     }
   }
 }

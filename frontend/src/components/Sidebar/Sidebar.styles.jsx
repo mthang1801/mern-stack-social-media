@@ -6,13 +6,13 @@ export const FriendsComponentWrapper = styled.div`
   top : 60px;
   right: 0 ;
   height: calc(100% - 60px);  
-  width : 300px; 
+  width : 300px;
   overflow: auto;
-  z-index:2;  
+  z-index : ${({show}) => show ? 2 : -1};
 `
 
 export const FriendsListWrapper = styled.div`
-  width : 100%;  
+  width :100%;  
   border-radius : 6px;
   box-shadow : var(--mediumShadow);
   transition : var(--mainTransition);

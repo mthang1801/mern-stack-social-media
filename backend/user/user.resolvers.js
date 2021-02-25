@@ -16,9 +16,32 @@ export const userResolvers = {
     fetchPersonalUser: (_, args, { req }, info) => {
       return userController.fetchPersonalUser(req, args.slug);
     },
-    fetchFriends : (_, args, {req}, info) => {
-      return userController.fetchFriends(req, args.skip, args.limit, args.userId=null)
-    }
+    fetchFriends: (_, args, { req }, info) => {
+      return userController.fetchFriends(
+        req,
+        args.skip,
+        args.limit,
+        (args.userId = null)
+      );
+    },
+    //fetched received request, sent request and friends list
+    fetchListContact: (_, args, { req }, info) => {
+      return userController.fetchListContact(req);
+    },
+    fetchUsersSentRequestToAddFriend: (_, args, { req }, info) => {
+      return userController.fetchUsersSentRequestToAddFriend(
+        req,
+        args.skip,
+        args.limit
+      );
+    },
+    fetchUsersReceivedRequestToAddFriend: (_, args, { req }, info) => {
+      return userController.fetchUsersReceivedRequestToAddFriend(
+        req,
+        args.skip || 0,
+        args.limit || +process.env.CONTACT_USERS_PER_PAGE
+      );
+    },
   },
   Mutation: {
     createUser: (_, args, ctx, info) => {
@@ -62,10 +85,15 @@ export const userResolvers = {
         subscriptionActions.NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND
       );
     },
-    removeFriend : (_, args, {req}, info) => {
-      return userController.removeFriend(req, args.friendId, pubsub, subscriptionActions.REMOVE_FRIEND)
+    removeFriend: (_, args, { req }, info) => {
+      return userController.removeFriend(
+        req,
+        args.friendId,
+        pubsub,
+        subscriptionActions.REMOVE_FRIEND
+      );
     },
-  },  
+  },
   User: {
     password: (_, args, ctx, info) => userController.hidePassword(),
   },
@@ -73,7 +101,9 @@ export const userResolvers = {
     notifyReceivedRequestToAddFriend: {
       subscribe: withFilter(
         () =>
-          pubsub.asyncIterator(subscriptionActions.NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND),
+          pubsub.asyncIterator(
+            subscriptionActions.NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND
+          ),
         (payload, { userId }) => {
           return (
             payload.notifyReceivedRequestToAddFriend.receivers[0].toString() ===
@@ -116,19 +146,24 @@ export const userResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND
           ),
-        (payload, { userId }) => {          
-          return payload.notifyAcceptRequestToAddFriend.receivers[0].toString() ===
-            userId.toString();
+        (payload, { userId }) => {
+          return (
+            payload.notifyAcceptRequestToAddFriend.receivers[0].toString() ===
+            userId.toString()
+          );
         }
       ),
     },
-    removeFriendSubscription : {
-      subscribe : withFilter(
+    removeFriendSubscription: {
+      subscribe: withFilter(
         () => pubsub.asyncIterator(subscriptionActions.REMOVE_FRIEND),
-        (payload , {userId}) => {
-          return payload.removeFriendSubscription.receiver._id.toString() === userId.toString()
+        (payload, { userId }) => {
+          return (
+            payload.removeFriendSubscription.receiver._id.toString() ===
+            userId.toString()
+          );
         }
-      )
-    }
+      ),
+    },
   },
 };

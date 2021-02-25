@@ -6,13 +6,24 @@ import { useQuery } from "@apollo/client";
 import {
   GET_CURRENT_USER,
   GET_POSTS,
+  GET_OPEN_FRIENDS_LIST,
+  GET_FRIENDS
 } from "../apollo/operations/queries/cache";
+import {
+ FETCH_FRIENDS
+} from "../apollo/operations/queries/user";
 import { FETCH_POSTS } from "../apollo/operations/queries/post";
 import { cacheMutations } from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
 import HomeSidebar from "../components/Sidebar/HomeSidebar";
 import MainBody from "../components/Body/MainBody";
-import FriendsComponent from "../components/Sidebar/FriendsComponent"
+import FriendsComponent from "../components/Sidebar/FriendsComponent";
+import ButtonToggleFriendsList from "../components/Controls/ButtonToggleFriendsList";
+import {
+  MainContent,
+  MainContentLeftSide,
+  MainContentRightSide,
+} from "./pages.styles.jsx";
 const Home = () => {
   const {
     data: { user },
@@ -26,8 +37,14 @@ const Home = () => {
     skip: true,
     fetchPolicy: "cache-and-network",
   });
+  const {data : {friends}} = useQuery(GET_FRIENDS, {fetchPolicy : "cache-first"})
+  const {refetch: fetchFriends} = useQuery(FETCH_FRIENDS, {fetchPolicy : "network-only", skip : true})
   const [loadingMore, setLoadingMore] = useState(false);
-  const { setPosts } = cacheMutations;
+  const { setPosts, setOpenFriendsList, setFriends } = cacheMutations;
+  const {
+    data: { openFriendsList },
+  } = useQuery(GET_OPEN_FRIENDS_LIST, { fetchPolicy: "cache-first" });
+
 
   useEffect(() => {
     let _mounted = true;
@@ -67,61 +84,41 @@ const Home = () => {
       });
   }, []);
 
+  const handleOpenFriendsList = async () => {   
+    if(friends.length < +process.env.REACT_APP_FRIENDS_PER_LOAD){
+      const skip=  friends.length;
+      const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD; 
+      fetchFriends({skip, limit}).then(({data}) => {
+        if(data?.fetchFriends){
+          setFriends([...friends, ...data.fetchFriends])
+          setOpenFriendsList()
+        }
+      });      
+    }else{
+      setOpenFriendsList()
+    }
+    
+  }
   return (
     <Layout>
       <MainBody>
         <MainContent>
-          <div className="posts">
+          <MainContentLeftSide>
             {user && <BoxCreatePost user={user} />}
             {posts.length ? <Posts posts={posts} /> : null}
-          </div>
-          <div className="sidebar">
+          </MainContentLeftSide>
+          <MainContentRightSide>
             <HomeSidebar user={user} />
-          </div>          
+          </MainContentRightSide>
         </MainContent>
-        <FriendsComponent/>
+        <FriendsComponent />
+        <ButtonToggleFriendsList   
+          hide={openFriendsList}      
+          onClick={handleOpenFriendsList}         
+        />
       </MainBody>
     </Layout>
   );
 };
 
-const MainContent = styled.div`
-  display: flex;
-  margin: auto;
-  padding: 1.5rem 0;
-  .posts {
-    width: 100%;
-  }
-  .sidebar {
-    display: none;
-  }
-  @media screen and (min-width: 768px) {
-    .posts {
-      width: calc(100% - 320px);
-      padding: 0 1rem;
-    }
-    .sidebar {
-      display: block;
-      width: 320px;
-      padding: 0 1rem;
-    }
-  }
-  @media screen and (min-width: 992px) {
-    padding: 0;
-    .posts {
-      width: 60%;
-    }
-    .sidebar {
-      width: 40%;
-    }
-  }
-  @media screen and (min-width: 1920px) {
-    .posts {
-      width: 65%;
-    }
-    .sidebar {
-      width: 35%;
-    }
-  }
-`;
 export default Home;
