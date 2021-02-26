@@ -1,16 +1,16 @@
-import React from "react";
+import React,{useEffect} from "react";
 import {
   GET_CURRENT_USER,
   GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
 } from "../../apollo/operations/queries/cache";
-import { FETCH_USERS_RECEIVED_REQUESTS_TO_ADD_FRIEND } from "../../apollo/operations/queries/user";
+import { FETCH_USERS_RECEIVED_REQUESTS_TO_ADD_FRIEND, FETCH_CURRENT_USER } from "../../apollo/operations/queries/user";
 import { useQuery } from "@apollo/client";
 import { useThemeUI } from "theme-ui";
 import { ContactWrapper, Title, LinkReadMore } from "./Contact.styles";
 import {cacheMutations} from "../../apollo/operations/mutations/cache"
 import useLanguage from "../Global/useLanguage";
 import ContactItem from "./ContactItem";
-
+import subscriptions from "../../apollo/operations/subscriptions"
 const SentRequestsToAddFriend = () => {
   const {
     data: { user },
@@ -26,6 +26,38 @@ const SentRequestsToAddFriend = () => {
     fetchPolicy: "cache-and-network",
     skip: true,
   });
+  const {refetch : fetchCurrentUser, subscribeToMore : subscribeUser} = useQuery(FETCH_CURRENT_USER,{skip: true})
+
+  useEffect(() => {
+    fetchCurrentUser();
+    return () => fetchCurrentUser();
+  }, [fetchCurrentUser]);
+
+   //subscribe user
+   useEffect(() => {
+    let unsubscribeUser ;
+    if(subscribeUser && user){
+      console.log("ok")
+      unsubscribeUser = subscribeUser({
+        document : subscriptions.userSubscription.CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        variables : {userId : user._id},
+        updateQuery : (_ , {subscriptionData}) => {
+          const {sender, receiver} = subscriptionData.data.cancelRequestToAddFriendSubscription; 
+          console.log(sender)
+          const filterSenders = receivedRequestsToAddFriend.filter(senderRequest => senderRequest._id !== sender._id);          
+          setReceivedRequestsToAddFriend(filterSenders)
+        }
+      })
+      return () => {
+        if(unsubscribeUser){
+          unsubscribeUser();
+        }
+      }
+    }
+  },[subscribeUser, user])
+
+
+
   const {setReceivedRequestsToAddFriend} = cacheMutations
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
@@ -44,14 +76,15 @@ const SentRequestsToAddFriend = () => {
       });
     }
   }
-  if (!user || !receivedRequestsToAddFriend.length) return null;
+
+  if (!user || !user?.receivedRequestToAddFriend.length || !receivedRequestsToAddFriend.length) return null;
   return (
     <ContactWrapper theme={colorMode}>
       <Title theme={colorMode}>
-        {i18n.store.data[lang].translation.contacts.userSentRequest}
+        {i18n.store.data[lang].translation.contacts.userReceivedRequest}
       </Title>
       {receivedRequestsToAddFriend.map((item) => (
-        <ContactItem key={item._id} data={item} type="received" />
+        <ContactItem key={item._id} userContact={item} type="received" />
       ))}
        {receivedRequestsToAddFriend.length < user.receivedRequestToAddFriend.length ? (
         <LinkReadMore>
@@ -69,4 +102,4 @@ const SentRequestsToAddFriend = () => {
   );
 };
 
-export default SentRequestsToAddFriend;
+export default React.memo(SentRequestsToAddFriend);

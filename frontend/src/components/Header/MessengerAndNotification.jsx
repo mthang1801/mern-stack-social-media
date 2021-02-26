@@ -76,7 +76,7 @@ const Control = () => {
     }
     setOpenNotificationBoard((prevStatus) => !prevStatus);
   };
-  console.log(notifications)
+  
   const handleClickFlashPopupNotification =  () => {       
     handleClickNotification();
     setOpenPopupNotification(false);

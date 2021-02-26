@@ -7,6 +7,7 @@ subscription ($userId : ID!){
     action
     sender{
       _id
+      name
       avatar
       slug
       friends
@@ -17,6 +18,7 @@ subscription ($userId : ID!){
     }
     receiver{
       _id
+      name
       avatar
       slug
       friends

@@ -16,10 +16,7 @@ const PersonalPage = (props) => {
   const [
     fetchPersonalUser,
     { data: personalUserData },
-  ] = useLazyQuery(FETCH_PERSONAL_USER, { fetchPolicy: "cache-and-network" });
-  const {
-    data: { personalUsers },
-  } = useQuery(GET_PERSONAL_USERS, { fetchPolicy: "cache-first" });
+  ] = useLazyQuery(FETCH_PERSONAL_USER, { fetchPolicy: "cache-and-network" });  
   const {
     data: { currentPersonalUser },
   } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
@@ -39,7 +36,7 @@ const PersonalPage = (props) => {
       fetchPersonalUser({ variables: { slug } });
     }
     return () => (_mounted = false);
-  }, [personalUsers, fetchPersonalUser, slug, currentPersonalUser]);
+  }, [fetchPersonalUser, slug, currentPersonalUser]);
   useEffect(() => {
     if (personalUserData && personalUserData.fetchPersonalUser) {
       let {
@@ -49,11 +46,7 @@ const PersonalPage = (props) => {
         avatar,
         posts,
         slug,
-      } = personalUserData.fetchPersonalUser;
-      setPersonalUsers({
-        ...personalUsers,
-        [slug]: { ...personalUserData.fetchPersonalUser },
-      });
+      } = personalUserData.fetchPersonalUser;    
 
       setCurrentPersonalUser({ ...personalUserData.fetchPersonalUser });
       posts = posts.map((post) => {

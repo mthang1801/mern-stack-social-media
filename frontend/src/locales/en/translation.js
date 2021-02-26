@@ -160,8 +160,8 @@ export const en = {
     contacts : {
       contactsList : "Contacts",
       title: "Contacts Management",
-      userSentRequest : "Users have sent request",
-      userReceivedRequest : "Users have received request",      
+      userSentRequest : "Users have received request",
+      userReceivedRequest : "Users have sent request",      
       friendsList : "Friends",
       cancelRequest : "Cancel",
       acceptRequest : "Accept",

@@ -15,10 +15,10 @@ const SentRequestsToAddFriend = () => {
     <ContactWrapper theme={colorMode}>      
       <Title theme={colorMode}>{i18n.store.data[lang].translation.contacts.friendsList}</Title>      
         {friends.map(item => (
-          <ContactItem key={item._id} data={item} type="friends"/>
+          <ContactItem key={item._id} userContact={item} type="friends"/>
         ))}
     </ContactWrapper>
   )
 }
 
-export default SentRequestsToAddFriend
+export default React.memo(SentRequestsToAddFriend)

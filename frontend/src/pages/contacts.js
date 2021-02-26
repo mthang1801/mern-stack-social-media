@@ -5,7 +5,10 @@ import {
   GET_CURRENT_USER,
   GET_FRIENDS,
 } from "../apollo/operations/queries/cache";
-import { FETCH_LIST_CONTACT, FETCH_FRIENDS } from "../apollo/operations/queries/user";
+import {
+  FETCH_LIST_CONTACT,
+  FETCH_FRIENDS,  
+} from "../apollo/operations/queries/user";
 import { cacheMutations } from "../apollo/operations/mutations";
 import MainBody from "../components/Body/MainBody";
 import { MainContent, MainContentFullSize, ContactTitle } from "./pages.styles";
@@ -13,8 +16,11 @@ import SentRequestsToAddFriend from "../components/Contact/SentRequestsToAddFrie
 import ReceivedRequestsToAddFriend from "../components/Contact/ReceivedRequestsToAddFriend";
 import FriendsList from "../components/Contact/FriendsList";
 import useLanguage from "../components/Global/useLanguage";
+
+
 const FriendsPage = () => {
   const [loadingMore, setLoadingMore] = useState(false);
+  const [fetched, setFetched] = useState(false);
   const { i18n, lang } = useLanguage();
   const {
     data: { user },
@@ -26,7 +32,12 @@ const FriendsPage = () => {
   } = useQuery(GET_FRIENDS, {
     fetchPolicy: "cache-first",
   });
-  const {refetch : fetchFriends} = useQuery(FETCH_FRIENDS, {fetchPolicy : "cache-and-network", skip : true})
+ 
+  const { refetch: fetchFriends } = useQuery(FETCH_FRIENDS, {
+    fetchPolicy: "cache-and-network",
+    skip: true,
+  });
+  
   const {
     setFriends,
     setSentRequestsToAddFriend,
@@ -38,29 +49,33 @@ const FriendsPage = () => {
   });
 
   useEffect(() => {
-    if (
-      user?.friends?.length ||
-      (user?.sentRequestsToAddFriend?.length &&
-        user?.receivedRequestsToAddFriend?.length)
-    ) {
-      fetchListContact().then(({ data }) => {
-        const {
-          sentRequests,
-          receivedRequests,
-          friends: friendsList,
-        } = data.fetchListContact;
-        if (sentRequests.length) {
-          setSentRequestsToAddFriend([...sentRequests]);
-        }
-        if (receivedRequests.length) {
-          setReceivedRequestsToAddFriend([...receivedRequests]);
-        }
-        if (!friends.length) {
-          setFriends([...friendsList]);
-        }
-      });
+    if (!fetched) {
+      if (
+        user?.sentRequestToAddFriend.length ||
+        user?.receivedRequestToAddFriend.length ||
+        user?.friends.length
+      ) {
+        fetchListContact().then(({ data }) => {
+          setFetched(true); 
+          console.log("fetched")         
+          const {
+            sentRequests,
+            receivedRequests,
+            friends: friendsList,
+          } = data.fetchListContact;
+          if (sentRequests.length) {
+            setSentRequestsToAddFriend([...sentRequests]);
+          }
+          if (receivedRequests.length) {
+            setReceivedRequestsToAddFriend([...receivedRequests]);
+          }
+          if (!friends.length) {
+            setFriends([...friendsList]);
+          }
+        });
+      }
     }
-  }, [user]);
+  }, [user, fetched, setFetched]);
 
   useEffect(() => {
     window.addEventListener("scroll", async (e) => {
@@ -76,21 +91,21 @@ const FriendsPage = () => {
           setLoadingMore(true);
         }
       });
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if(loadingMore){
+    if (loadingMore) {
       const skip = friends.length;
-      const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD; 
-      fetchFriends({skip, limit}).then(({data}) => {       
-        if(data?.fetchFriends?.length){          
+      const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD;
+      fetchFriends({ skip, limit }).then(({ data }) => {
+        if (data?.fetchFriends?.length) {
           setFriends([...friends, ...data.fetchFriends]);
           setLoadingMore(false);
         }
-      })
+      });
     }
-  }, [loadingMore])
-  
+  }, [loadingMore]);
+
   return (
     <Layout>
       <MainBody>

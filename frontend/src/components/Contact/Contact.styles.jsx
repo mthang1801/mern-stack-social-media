@@ -14,7 +14,6 @@ export const Title = styled.h4`
   position : absolute;
   top : -1rem;
   left: 2.5%;
-  opacity : 0.75;  
   background : ${({theme}) => theme === "dark" ? "linear-gradient(to bottom, var(--color-background-dark) 55%, inherit 50%)" : 
   "linear-gradient(to bottom, var(--color-background-default) 55%, inherit 50%)"};
   padding: 0 1rem;

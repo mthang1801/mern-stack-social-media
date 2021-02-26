@@ -16,7 +16,7 @@ const SentRequestsToAddFriend = () => {
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
   const {
     data: { sentRequestsToAddFriend },
-  } = useQuery(GET_SENT_REQUESTS_TO_ADD_FRIEND, { fetchPolicy: "cache-first", pollInterval : 500 });
+  } = useQuery(GET_SENT_REQUESTS_TO_ADD_FRIEND, { fetchPolicy: "cache-first" });
   const {
     refetch: fetchUsersSentRequestsToAddFriend,
   } = useQuery(FETCH_USERS_SENT_REQUEST_TO_ADD_FRIEND, {
@@ -31,8 +31,7 @@ const SentRequestsToAddFriend = () => {
     const limit = +process.env.REACT_APP_CONTACT_USER_PER_PAGE;
     if (fetchUsersSentRequestsToAddFriend) {
       fetchUsersSentRequestsToAddFriend({ skip, limit }).then(({ data }) => {
-        if (data?.fetchUsersSentRequestToAddFriend?.length) {
-          console.log(data);
+        if (data?.fetchUsersSentRequestToAddFriend?.length) {         
           setSentRequestsToAddFriend([
             ...sentRequestsToAddFriend,
             ...data.fetchUsersSentRequestToAddFriend,
@@ -41,15 +40,15 @@ const SentRequestsToAddFriend = () => {
       });
     }
   };
-    
-  if (!user || !sentRequestsToAddFriend.length) return null;
+ 
+  if (!user || !user?.sentRequestToAddFriend.length || !sentRequestsToAddFriend.length) return null;
   return (
     <ContactWrapper theme={colorMode}>
       <Title theme={colorMode}>
         {i18n.store.data[lang].translation.contacts.userSentRequest}
       </Title>
       {sentRequestsToAddFriend.map((item) => (
-        <ContactItem key={item._id} data={item} type="sent" />
+        <ContactItem key={item._id} userContact={item} type="sent" />
       ))}
       {sentRequestsToAddFriend.length < user.sentRequestToAddFriend.length ? (
         <LinkReadMore>
@@ -67,4 +66,4 @@ const SentRequestsToAddFriend = () => {
   );
 };
 
-export default SentRequestsToAddFriend;
+export default React.memo(SentRequestsToAddFriend);
