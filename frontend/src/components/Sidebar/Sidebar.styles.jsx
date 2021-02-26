@@ -5,13 +5,16 @@ export const FriendsComponentWrapper = styled.div`
   position : fixed; 
   top : 60px;
   right: 0 ;
-  height: calc(100% - 60px);  
-  width : 300px;
+  height: calc(100% - 60px);    
+  width : 300px;  
   overflow: auto;
+  transition : var(--mainTransition);
   z-index : ${({show}) => show ? 2 : -1};
 `
 
 export const FriendsListWrapper = styled.div`
+  height: auto;
+  min-height: 95vh;
   width :100%;  
   border-radius : 6px;
   box-shadow : var(--mediumShadow);

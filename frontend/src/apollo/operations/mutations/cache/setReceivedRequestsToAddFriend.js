@@ -1,5 +1,5 @@
 const setReceivedRequestsToAddFriend = (setReceivedRequestsToAddFriendVar) => (
-  receivedUsers
-) => setReceivedRequestsToAddFriendVar(receivedUsers);
+  senderRequest
+) => setReceivedRequestsToAddFriendVar([...senderRequest]);
 
 export default setReceivedRequestsToAddFriend;

@@ -171,14 +171,14 @@ export const userController = {
       ) {
         userRequestedFriend.followed.push(currentUserId);
       }
-      userRequestedFriend.receivedRequestToAddFriend.push(currentUserId);
+      userRequestedFriend.receivedRequestToAddFriend.unshift(currentUserId);
       userRequestedFriend.notifications.push(notification._id);
       await userRequestedFriend.save();
 
       if (!currentUser.following.includes(mongoose.Types.ObjectId(userId))) {
         currentUser.following.push(userId);
       }
-      currentUser.sentRequestToAddFriend.push(userId);
+      currentUser.sentRequestToAddFriend.unshift(userId);
       await currentUser.save();
       pubsub.publish(notifyReceivedRequestToAddFriend, {
         notifyReceivedRequestToAddFriend: {
@@ -201,7 +201,7 @@ export const userController = {
     }
   },
   fetchUsersSentRequestToAddFriend: async (req, skip, limit) => {
-    console.log("render")
+    console.log("render");
     const currentUserId = await getAuthUser(req);
     const currentUser = await User.findById(currentUserId).populate({
       path: "sentRequestToAddFriend",
@@ -353,14 +353,14 @@ export const userController = {
         sentRequestToAddFriend: receiverId,
       });
       if (!currentUser) {
-        throw new UserInputError("Cancel Request failed.");
+        throw new UserInputError("Current User not found");
       }
       const receiver = await User.findOne({
         _id: receiverId,
         receivedRequestToAddFriend: currentUserId,
       });
       if (!receiver) {
-        throw new UserInputError("Cancel Request failed.");
+        throw new UserInputError("receiver not found");
       }
       const session = await mongoose.startSession();
       session.startTransaction();
@@ -385,7 +385,7 @@ export const userController = {
       };
     } catch (error) {
       console.log(error);
-      throw new ApolloError("Cacel Request Failed");
+      throw new ApolloError("Cancel Request Failed");
     }
   },
   followUser: async (req, userId) => {

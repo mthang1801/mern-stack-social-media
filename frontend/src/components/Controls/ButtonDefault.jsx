@@ -43,8 +43,8 @@ const Button = styled.button`
         : `${darken(0.005, "#dedede")}`};
   }
 
-  ${({ accept }) =>
-    accept &&
+  ${({ acceptBtn }) =>
+  acceptBtn &&
     `
     background-color : #43a047 ;
     color: white;

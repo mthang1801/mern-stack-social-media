@@ -18,6 +18,7 @@ import {
   GET_CURRENT_PERSONAL_USER,
   GET_CURRENT_USER,
   GET_PERSONAL_USERS,
+  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
 } from "../../apollo/operations/queries/cache";
 import { FETCH_CURRENT_USER } from "../../apollo/operations/queries/user";
 import { useThemeUI } from "theme-ui";
@@ -49,6 +50,7 @@ const PersonalContact = () => {
     setCurrentUser,
     setPersonalUsers,
     setCurrentPersonalUser,
+    setReceivedRequestsToAddFriend,
   } = cacheMutations;
   //user Query
   const {
@@ -60,6 +62,11 @@ const PersonalContact = () => {
   const {
     data: { personalUsers },
   } = useQuery(GET_PERSONAL_USERS);
+  const {
+    data: { receivedRequestsToAddFriend },
+  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
+    fetchPolicy: "cache-first",
+  });
   const {
     refetch: fetchCurrentUser,
     subscribeToMore: subscribeUser,
@@ -141,6 +148,13 @@ const PersonalContact = () => {
             sender,
             receiver,
           } = subscriptionData.data.cancelRequestToAddFriendSubscription;
+          
+          // remove sender from received requests
+          setReceivedRequestsToAddFriend(
+            receivedRequestsToAddFriend.filter(
+              (senderRequest) => senderRequest._id !== sender._id
+            )
+          );
           updateSubscriptionOnChange(sender, receiver);
         },
       });

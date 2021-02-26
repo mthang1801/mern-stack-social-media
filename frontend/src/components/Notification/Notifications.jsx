@@ -9,6 +9,7 @@ import {
   GET_OPEN_POPUP_NOTIFICATION,
   GET_PERSONAL_USERS,
   GET_CURRENT_PERSONAL_USER,
+  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND
 } from "../../apollo/operations/queries/cache";
 import {
   FETCH_NOTIFICATIONS,
@@ -53,6 +54,9 @@ const Notifications = () => {
   const {
     data: { currentPersonalUser },
   } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
+  const {
+    data: { receivedRequestsToAddFriend },
+  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, { fetchPolicy: "cache-first" });
   //mutations
   const {
     setCountNumberNotificationsUnseen,
@@ -62,6 +66,7 @@ const Notifications = () => {
     setPersonalUsers,
     setCurrentUser,
     setCurrentPersonalUser,
+    setReceivedRequestsToAddFriend
   } = cacheMutations;
 
   useEffect(() => {
@@ -153,6 +158,9 @@ const Notifications = () => {
             receiver,
             sender,
           } = subscriptionData.data.notifyReceivedRequestToAddFriend;
+          // push new sender to received requests to add friend cache
+          const filterSendersRequest = receivedRequestsToAddFriend.filter(senderRequest => senderRequest._id !== sender._id)
+          setReceivedRequestsToAddFriend([{...sender}, ...filterSendersRequest])
           updatedNotifications(newNotification, sender, receiver);
         },
       });
