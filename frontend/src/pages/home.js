@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../containers/Layout";
-import styled from "styled-components";
 import Posts from "../components/Post/Posts";
 import { useQuery } from "@apollo/client";
 import {
   GET_CURRENT_USER,
   GET_POSTS,
   GET_OPEN_FRIENDS_LIST,
-  GET_FRIENDS
+  GET_FRIENDS,
 } from "../apollo/operations/queries/cache";
-import {
- FETCH_FRIENDS
-} from "../apollo/operations/queries/user";
+import { FETCH_FRIENDS } from "../apollo/operations/queries/user";
 import { FETCH_POSTS } from "../apollo/operations/queries/post";
 import { cacheMutations } from "../apollo/operations/mutations";
 import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
@@ -23,7 +20,7 @@ import {
   MainContent,
   MainContentLeftSide,
   MainContentRightSide,
-} from "./pages.styles.jsx";
+} from "./pages.styles.js";
 const Home = () => {
   const {
     data: { user },
@@ -37,14 +34,18 @@ const Home = () => {
     skip: true,
     fetchPolicy: "cache-and-network",
   });
-  const {data : {friends}} = useQuery(GET_FRIENDS, {fetchPolicy : "cache-first"})
-  const {refetch: fetchFriends} = useQuery(FETCH_FRIENDS, {fetchPolicy : "network-only", skip : true})
+  const {
+    data: { friends },
+  } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-first" });
+  const { refetch: fetchFriends } = useQuery(FETCH_FRIENDS, {
+    fetchPolicy: "network-only",
+    skip: true,
+  });
   const [loadingMore, setLoadingMore] = useState(false);
   const { setPosts, setOpenFriendsList, setFriends } = cacheMutations;
   const {
     data: { openFriendsList },
   } = useQuery(GET_OPEN_FRIENDS_LIST, { fetchPolicy: "cache-first" });
-
 
   useEffect(() => {
     let _mounted = true;
@@ -69,14 +70,14 @@ const Home = () => {
   }, [posts, fetchPosts, setPosts, loadingMore]);
 
   useEffect(() => {
-    window.addEventListener("scroll", async (e) => {
+    window.addEventListener("scroll", (e) => {
       const docEl = document.documentElement;
       if (docEl.clientHeight + docEl.scrollTop > docEl.scrollHeight * 0.8) {
         setLoadingMore(true);
       }
     });
     return () =>
-      window.removeEventListener("scroll", async (e) => {
+      window.removeEventListener("scroll", (e) => {
         const docEl = document.documentElement;
         if (docEl.clientHeight + docEl.scrollTop > docEl.scrollHeight * 0.8) {
           setLoadingMore(true);
@@ -84,21 +85,20 @@ const Home = () => {
       });
   }, []);
 
-  const handleOpenFriendsList = async () => {   
-    if(friends.length < +process.env.REACT_APP_FRIENDS_PER_LOAD){
-      const skip=  friends.length;
-      const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD; 
-      fetchFriends({skip, limit}).then(({data}) => {
-        if(data?.fetchFriends){
-          setFriends([...friends, ...data.fetchFriends])
-          setOpenFriendsList()
+  const handleOpenFriendsList = async () => {
+    if (friends.length < +process.env.REACT_APP_FRIENDS_PER_LOAD) {
+      const skip = friends.length;
+      const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD;
+      fetchFriends({ skip, limit }).then(({ data }) => {
+        if (data?.fetchFriends) {
+          setFriends([...friends, ...data.fetchFriends]);
+          setOpenFriendsList();
         }
-      });      
-    }else{
-      setOpenFriendsList()
+      });
+    } else {
+      setOpenFriendsList();
     }
-    
-  }
+  };
   return (
     <Layout>
       <MainBody>
@@ -112,9 +112,9 @@ const Home = () => {
           </MainContentRightSide>
         </MainContent>
         <FriendsComponent />
-        <ButtonToggleFriendsList   
-          hide={openFriendsList}      
-          onClick={handleOpenFriendsList}         
+        <ButtonToggleFriendsList
+          hide={openFriendsList}
+          onClick={handleOpenFriendsList}
         />
       </MainBody>
     </Layout>

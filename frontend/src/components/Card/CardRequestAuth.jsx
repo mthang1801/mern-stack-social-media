@@ -21,9 +21,12 @@ const CardRequestAuth = () => {
 const CardWrapper =  styled.div`
   text-align: center;
   padding : 2rem;
-  background-color : ${({theme}) => theme==="dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
+  width : 90%;
+  margin: auto;
+  max-width : 400px;
+  background : ${({theme}) => theme==="dark" ? "linear-gradient(to right bottom, #575757, #383535)" : "linear-gradient(to right bottom, #e4eced, #dae9eb, #d5eaed)"};
   border-radius : 0.75rem;
-  box-shadow : var(--lightShadow);
+  box-shadow : var(--mediumShadow);
   h4{
     font-size : 1.1em;
     font-weight : 500;    

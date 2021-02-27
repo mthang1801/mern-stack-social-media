@@ -186,16 +186,14 @@ const Wrapper = styled.div`
     position: fixed;
     bottom: 5%;
     right: 5%;
-    z-index: 1;
-    -webkit-transition: var(--mainTransition);
-    transition: var(--mainTransition);
-    cursor: pointer;
+    z-index: 1;    
+    cursor: pointer;  
     transform: translateX(200%);
     transition: 0.5s all;
   }
   .open-flash-popup {
     transform: translateX(0);
-    transition: 0.5s all;
+    transition: 0.5s all;   
   }
 `;
 

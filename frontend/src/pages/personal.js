@@ -1,6 +1,5 @@
 import React, { useEffect, lazy } from "react";
 import PersonalHeading from "../components/Personal/PersonalHeading";
-import { Route, Switch } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import {
   GET_PERSONAL_USERS,
@@ -10,8 +9,8 @@ import {
 import { FETCH_PERSONAL_USER } from "../apollo/operations/queries/user";
 import Layout from "../containers/Layout";
 import { cacheMutations } from "../apollo/operations/mutations";
+import PersonalPosts from "../components/Personal/PersonalPosts"
 
-const PersonalPosts = lazy(() => import("./personal-posts"));
 const PersonalPage = (props) => {
   const [
     fetchPersonalUser,
@@ -23,8 +22,7 @@ const PersonalPage = (props) => {
   const {
     data: { personalPosts },
   } = useQuery(GET_PERSONAL_POSTS, { fetchPolicy: "cache-first" });
-  const {
-    setPersonalUsers,
+  const {    
     setCurrentPersonalUser,
     setPersonalPosts,
   } = cacheMutations;
@@ -66,10 +64,7 @@ const PersonalPage = (props) => {
   return (
     <Layout>
       <PersonalHeading />
-      <Switch>
-        <Route exact path={props.match.url} component={PersonalPosts} />
-        <Route path={`${props.match.url}/posts`} component={PersonalPosts} />
-      </Switch>
+      <PersonalPosts/>      
     </Layout>
   );
 };

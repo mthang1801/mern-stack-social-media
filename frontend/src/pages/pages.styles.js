@@ -56,5 +56,6 @@ export const MainContentFullSize = styled.div`
 `;
 
 export const ContactTitle = styled.h2`
-
+  margin: 0 auto 3rem auto;
+  font-size : 1.8rem;
 `

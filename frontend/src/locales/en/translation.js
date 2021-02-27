@@ -1,11 +1,24 @@
 import React from "react";
-import {FaHome, FaUserFriends, FaShopify, FaGlobeAmericas} from "react-icons/fa"
-import {AiOutlineGlobal} from "react-icons/ai"
-import {ImNewspaper} from "react-icons/im"
-import {HiOutlineUserGroup} from "react-icons/hi"
-import {IoIosNotifications, IoMdApps, IoMdTrendingUp, IoMdPhotos} from "react-icons/io"
-import {CgMoreO} from "react-icons/cg"
-import {MdCardMembership, MdInsertEmoticon} from "react-icons/md"
+import {
+  FaHome,
+  FaUserFriends,
+  FaShopify,
+  FaGlobeAmericas,
+} from "react-icons/fa";
+import { AiOutlineGlobal } from "react-icons/ai";
+import { ImNewspaper } from "react-icons/im";
+import { HiOutlineUserGroup } from "react-icons/hi";
+import {
+  IoIosNotifications,
+  IoMdApps,
+  IoMdTrendingUp,
+  IoMdPhotos,
+  IoIosChatbubbles,
+} from "react-icons/io";
+import { CgMoreO } from "react-icons/cg";
+import { MdCardMembership, MdInsertEmoticon } from "react-icons/md";
+import { BsChatDots } from "react-icons/bs";
+import { RiContactsBook2Line } from "react-icons/ri";
 
 export const en = {
   translation: {
@@ -53,6 +66,11 @@ export const en = {
         icon: () => <FaUserFriends />,
       },
       {
+        path: "/chats",
+        name: "Chats",
+        icon: () => <IoIosChatbubbles />,
+      },
+      {
         path: "/groups",
         name: "Groups",
         icon: () => <HiOutlineUserGroup />,
@@ -73,100 +91,113 @@ export const en = {
         icon: () => <CgMoreO />,
       },
     ],
-    personalMenus : [
+    personalMenus: [
       {
-        path : (slug) => `/${slug}/posts`,
-        name : "Posts"
+        path: (slug) => `/${slug}/posts`,
+        name: "Posts",
       },
       {
-        path : slug => `/${slug}/about`,
-        name : "About"
-      }, 
-      {
-        path : slug => `/${slug}/friends` ,
-        name : "Friends"
+        path: (slug) => `/${slug}/about`,
+        name: "About",
       },
       {
-        path : slug => `/${slug}/photos`,
-        name : "Photos"
-      }
+        path: (slug) => `/${slug}/friends`,
+        name: "Friends",
+      },
+      {
+        path: (slug) => `/${slug}/photos`,
+        name: "Photos",
+      },
     ],
-    explores : [
+    explores: [
       {
-        path : "/apps",
-        name : "Apps",
-        icon : () => <IoMdApps/>
+        path: "/apps",
+        name: "Apps",
+        icon: () => <IoMdApps />,
       },
       {
-        path : "/upgrade-member",
-        name : "Upgrade member",
-        icon : () => <MdCardMembership/>
+        path: "/upgrade-member",
+        name: "Upgrade member",
+        icon: () => <MdCardMembership />,
       },
       {
-        path : "/shop",
-        name : "Shop", 
-        icon : () => <FaShopify/>
+        path: "/shop",
+        name: "Shop",
+        icon: () => <FaShopify />,
       },
       {
-        path : "/trends",
-        name : "Trends", 
-        icon : () => <IoMdTrendingUp/>
-      }
+        path: "/trends",
+        name: "Trends",
+        icon: () => <IoMdTrendingUp />,
+      },
     ],
-    status : [
+    chatMenus: [
       {
-        name : "public", 
-        icon : () => <FaGlobeAmericas/>
+        path: "/chats",
+        name: "Messages",
+        icon: () => <BsChatDots />,
       },
       {
-        name : "private", 
-        icon : () => <FaUserFriends/>
-      }
+        path: "/chats/contacts",
+        name: "Contacts",
+        icon: () => <RiContactsBook2Line />,
+      },
+    ],
+    status: [
+      {
+        name: "public",
+        icon: () => <FaGlobeAmericas />,
+      },
+      {
+        name: "private",
+        icon: () => <FaUserFriends />,
+      },
     ],
     statusFooter: [
       {
-        name : "Photos/Videos", 
-        icon : () => <IoMdPhotos/>,
-        color : "var(--success)"
+        name: "Photos/Videos",
+        icon: () => <IoMdPhotos />,
+        color: "var(--success)",
       },
       {
-        name : "Emoji",
-        icon : () => <MdInsertEmoticon/>,
-        color : "var(--orange)"
-      }      
+        name: "Emoji",
+        icon: () => <MdInsertEmoticon />,
+        color: "var(--orange)",
+      },
     ],
-    auth : {
-      login : "Login", 
-      signup : "Sign up",
-      signout : "Sign Out"
+    auth: {
+      login: "Login",
+      signup: "Sign up",
+      signout: "Sign Out",
     },
-    mindText:  "What's on your mind?",
-    menu : "Menu",    
+    mindText: "What's on your mind?",
+    menu: "Menu",
     notifications: {
-      message : "You have just received a new message.",
-      postCreated : "has just posted a new status.",
-      sentRequestToAddFriend : "send you a request to add friend",
-      acceptRequestToAddFriend : "has accepted your request to add friend."
+      message: "You have just received a new message.",
+      postCreated: "has just posted a new status.",
+      sentRequestToAddFriend: "send you a request to add friend",
+      acceptRequestToAddFriend: "has accepted your request to add friend.",
     },
-    greeting : {
-      welcome : "Welcome to Pul.com",
-      introduce : "Pul is a social network platform developed by private base on respecting your speak and your think.",      
+    greeting: {
+      welcome: "Welcome to Pul.com",
+      introduce:
+        "Pul is a social network platform developed by private base on respecting your speak and your think.",
     },
-     controls : {
-      search : "Search...",
-      openFriendsList : "Open Friends List",
-      closeFriendsList : "Close Friends List"
+    controls: {
+      search: "Search...",
+      openFriendsList: "Open Friends List",
+      closeFriendsList: "Close Friends List",
     },
-    contacts : {
-      contactsList : "Contacts",
+    contacts: {
+      contactsList: "Contacts",
       title: "Contacts Management",
-      userSentRequest : "Users have received request",
-      userReceivedRequest : "Users have sent request",      
-      friendsList : "Friends",
-      cancelRequest : "Cancel",
-      acceptRequest : "Accept",
-      rejectRequest : "Reject",
-      getMore : "Get More"
-    }
+      userSentRequest: "Users have received request",
+      userReceivedRequest: "Users have sent request",
+      friendsList: "Friends",
+      cancelRequest: "Cancel",
+      acceptRequest: "Accept",
+      rejectRequest: "Reject",
+      getMore: "Get More",
+    },
   },
 };
