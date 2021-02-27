@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Wrapper, LeftSide, RightSide } from "./personal-posts.styles";
-import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
-import Posts from "../components/Post/Posts";
+import { Wrapper, LeftSide, RightSide } from "./PersonalPosts.styles";
+import BoxCreatePost from "../Post/BoxCreatePost/BoxCreatePost";
+import Posts from "../Post/Posts";
 import { useQuery } from "@apollo/client";
 import {
   GET_CURRENT_USER,
   GET_CURRENT_PERSONAL_USER,
   GET_PERSONAL_POSTS,
-} from "../apollo/operations/queries/cache";
-import { FETCH_POSTS } from "../apollo/operations/queries/post";
-import IntroductionBox from "../components/Personal/IntroductionBox";
-import { cacheMutations } from "../apollo/operations/mutations";
+} from "../../apollo/operations/queries/cache";
+import { FETCH_POSTS } from "../../apollo/operations/queries/post";
+import IntroductionBox from "./IntroductionBox";
+import { cacheMutations } from "../../apollo/operations/mutations";
 
 const PersonalPosts = () => {
   const [loadingMore, setLoadingMore] = useState(false);

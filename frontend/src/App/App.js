@@ -9,7 +9,8 @@ const HomePage = lazy(() => import("../pages/home"));
 const AuthPage = lazy(() => import("../pages/auth"));
 const NotificationsPage = lazy(() => import("../pages/notifications"));
 const PersonalPage = lazy(() => import("../pages/personal"));
-const Contactspage = lazy(() => import("../pages/contacts"))
+const ContactsPage = lazy(() => import("../pages/contacts"));
+const ChatsPage = lazy(() => import("../pages/chats"));
 function App() {
   const { colorMode } = useThemeUI();
   const [fetchCurrentUser, {data}] = useLazyQuery(FETCH_CURRENT_USER, {
@@ -24,8 +25,7 @@ function App() {
       fetchCurrentUser();     
     }
     return () => (_isMounted = false);
-  }, [fetchCurrentUser]);
-  console.log(data)
+  }, [fetchCurrentUser]);  
   useEffect(() => {
     if (data && data.fetchCurrentUser) {
       setCurrentUser({ ...data.fetchCurrentUser });
@@ -42,7 +42,8 @@ function App() {
         <Switch>
           <Route exact path="/" component={HomePage} />          
           <Route path="/auth" component={AuthPage} />
-          <Route path="/contacts" component={Contactspage}/>
+          <Route path="/contacts" component={ContactsPage}/>
+          <Route path="/chats" component={ChatsPage}/>
           <Route path="/notifications" component={NotificationsPage} />
           <Route path="/:slug" component={PersonalPage} />
         </Switch>

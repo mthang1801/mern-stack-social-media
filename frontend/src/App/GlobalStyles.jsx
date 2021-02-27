@@ -93,10 +93,11 @@ export default createGlobalStyle`
   --color-background-dark : #2c2c2c;
   --color-background-dark-secondary : #0e0d0d; 
   --color-text-dark : #fff;
-
+  --color-hover-dark : var(--gray-dark);
 
   --color-card-dark : #2d2f31;    
   --color-card-default : #fff;
+  --color-hover-default : var(--light);
   
   --color-border-dark : #0e0f10; 
   --color-border-default : #e8e8e8;
@@ -108,7 +109,7 @@ export default createGlobalStyle`
     Times, serif;
   --fontFamily: system-ui,-apple-system,BlinkMacSystemFont,Roboto,Ubuntu,"Helvetica Neue",sans-serif;
   --gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));  
-  --lightShadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.05);
+  --lightShadow: 0px 2px 2px 2px rgba(0, 0, 0, 0.1);
   --mediumShadow : 2px 3px 3px 1px rgba(0,0,0,0.2);
   --darkShadow: 4px 10px 5px 1px rgba(0, 0, 0, 0.3);    
   font-size : ${({rootFont}) => rootFont ? `${rootFont}px` : "16px"}  
@@ -285,5 +286,9 @@ export default createGlobalStyle`
   .image-gallery-image{
     cursor: pointer;
     width : 80%;
+  }
+
+  hr{
+    opacity: 0.3;
   }
 `

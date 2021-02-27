@@ -26,6 +26,7 @@ const NotificationsPage = () => {
   const { setNotifications } = cacheMutations;
   const [fetchNotificationsMore, setFetchNotificationsMore] = useState(false);
   useEffect(() => {
+    let _mounted = true;
     if (!notifications.length && fetchNotifications) {
       fetchNotifications({
         variables: {
@@ -33,28 +34,33 @@ const NotificationsPage = () => {
           limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
         },
       }).then(({ data }) => {
-        if (data && data.fetchNotifications) {
+        if (data && data.fetchNotifications && _mounted) {
           setNotifications([...data.fetchNotifications]);
         }
       });
     }
+    return () => (_mounted = false);
   }, [notifications, fetchNotifications]);
 
   useEffect(() => {
+    let _mounted = true;
     if (fetchNotificationsMore && fetchNotifications) {
       const skip = notifications.length;
       const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
       fetchNotifications({ skip, limit }).then(
         ({ data: { fetchNotifications } }) => {
-          setNotifications([...notifications, ...fetchNotifications]);
-          setFetchNotificationsMore(false);
+          if (_mounted) {
+            setNotifications([...notifications, ...fetchNotifications]);
+            setFetchNotificationsMore(false);
+          }
         }
       );
     }
+    return () => (_mounted = false);
   }, [fetchNotificationsMore, setFetchNotificationsMore, fetchNotifications]);
 
   useEffect(() => {
-    window.addEventListener("scroll", (e) => {
+    function setLoadmoreOnScroll() {
       const {
         scrollHeight,
         scrollTop,
@@ -63,19 +69,14 @@ const NotificationsPage = () => {
       if (clientHeight + scrollTop > scrollHeight * 0.75) {
         setFetchNotificationsMore(true);
       }
+    }
+    window.addEventListener("scroll", (e) => {
+      setLoadmoreOnScroll();
     });
-    return () => {
+    return () =>
       window.removeEventListener("scroll", () => {
-        const {
-          scrollHeight,
-          scrollTop,
-          clientHeight,
-        } = document.documentElement;
-        if (clientHeight + scrollTop > scrollHeight * 0.75) {
-          setFetchNotificationsMore(true);
-        }
+        setLoadmoreOnScroll();
       });
-    };
   }, []);
 
   return (
