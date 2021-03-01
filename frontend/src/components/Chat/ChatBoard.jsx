@@ -8,16 +8,17 @@ import { useQuery } from "@apollo/client";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
 import ChatBoardHeading from "./ChatBoardHeading"
 import ChatBoardBody from "./ChatBoardBody"
+import ChatBoardFooter from "./ChatBoardFooter"
 const ChatCenter = () => {
   const {
     data: { user },
-  } = useQuery(GET_CURRENT_USER);
+  } = useQuery(GET_CURRENT_USER);  
   if (!user) return null;
   return (
     <Wrapper>
       <ChatBoardHeading/>
       <ChatBoardBody/>
-      <FooterBoard></FooterBoard>
+      <ChatBoardFooter/>
     </Wrapper>
   );
 };

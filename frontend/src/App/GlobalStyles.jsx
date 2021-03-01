@@ -291,4 +291,10 @@ export default createGlobalStyle`
   hr{
     opacity: 0.3;
   }
+  .linkified{
+    color : blue !important;
+  }
+  .input-chat  a{
+    color : blue !important ;
+  }
 `
