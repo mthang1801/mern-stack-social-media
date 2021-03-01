@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import GlobalStyles from "./GlobalStyles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
@@ -11,7 +11,7 @@ const NotificationsPage = lazy(() => import("../pages/notifications"));
 const PersonalPage = lazy(() => import("../pages/personal"));
 const ContactsPage = lazy(() => import("../pages/contacts"));
 const ChatsPage = lazy(() => import("../pages/chats"));
-function App() {
+function App() { 
   const { colorMode } = useThemeUI();
   const [fetchCurrentUser, {data}] = useLazyQuery(FETCH_CURRENT_USER, {
     fetchPolicy: "cache-and-network",    

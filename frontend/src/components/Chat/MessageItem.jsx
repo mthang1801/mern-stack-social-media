@@ -7,8 +7,7 @@ import {useThemeUI} from "theme-ui"
 const MessageItem = ({message}) => {
   const [showSetting, setShowSettings] = useState(false);
 
-  const {colorMode} = useThemeUI()
-  console.log(showSetting)
+  const {colorMode} = useThemeUI()  
   return (
     <MessageItemWrapper theme={colorMode}>
       <Avatar>
