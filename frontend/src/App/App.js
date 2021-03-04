@@ -11,6 +11,7 @@ const NotificationsPage = lazy(() => import("../pages/notifications"));
 const PersonalPage = lazy(() => import("../pages/personal"));
 const ContactsPage = lazy(() => import("../pages/contacts"));
 const ChatsPage = lazy(() => import("../pages/chats"));
+const Explores = lazy(() => import("../pages/explores"))
 function App() { 
   const { colorMode } = useThemeUI();
   const [fetchCurrentUser, {data}] = useLazyQuery(FETCH_CURRENT_USER, {
@@ -44,6 +45,7 @@ function App() {
           <Route path="/auth" component={AuthPage} />
           <Route path="/contacts" component={ContactsPage}/>
           <Route path="/chats" component={ChatsPage}/>
+          <Route path="/explores" component={Explores}/>
           <Route path="/notifications" component={NotificationsPage} />
           <Route path="/:slug" component={PersonalPage} />
         </Switch>

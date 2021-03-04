@@ -27,37 +27,35 @@ const NotificationsPage = () => {
   const [fetchNotificationsMore, setFetchNotificationsMore] = useState(false);
   useEffect(() => {
     let _mounted = true;
-    if (!notifications.length && fetchNotifications) {
-      fetchNotifications({
-        variables: {
-          skip: 0,
-          limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
-        },
-      }).then(({ data }) => {
-        if (data && data.fetchNotifications && _mounted) {
-          setNotifications([...data.fetchNotifications]);
-        }
-      });
-    }
-    return () => (_mounted = false);
-  }, [notifications, fetchNotifications]);
-
-  useEffect(() => {
-    let _mounted = true;
-    if (fetchNotificationsMore && fetchNotifications) {
-      const skip = notifications.length;
-      const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
-      fetchNotifications({ skip, limit }).then(
-        ({ data: { fetchNotifications } }) => {
-          if (_mounted) {
-            setNotifications([...notifications, ...fetchNotifications]);
-            setFetchNotificationsMore(false);
+    if(user && fetchNotifications){
+      if (!notifications.length) {
+        fetchNotifications({
+          variables: {
+            skip: 0,
+            limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
+          },
+        }).then(({ data }) => {
+          if (data && data.fetchNotifications && _mounted) {
+            setNotifications([...data.fetchNotifications]);
           }
-        }
-      );
+        });
+      }
+      else if(fetchNotificationsMore){
+        const skip = notifications.length;
+        const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
+        fetchNotifications({ skip, limit }).then(
+          ({ data: { fetchNotifications } }) => {
+            if (_mounted) {
+              setNotifications([...notifications, ...fetchNotifications]);
+              setFetchNotificationsMore(false);
+            }
+          }
+        );
+      }
     }
+   
     return () => (_mounted = false);
-  }, [fetchNotificationsMore, setFetchNotificationsMore, fetchNotifications]);
+  }, [user, notifications, fetchNotifications, setFetchNotificationsMore, fetchNotificationsMore]);
 
   useEffect(() => {
     function setLoadmoreOnScroll() {

@@ -297,4 +297,9 @@ export default createGlobalStyle`
   .input-chat  a{
     color : blue !important ;
   }
+  div.DraftEditor-root {
+    width : 100%;
+    height: 100%;
+  }
+  
 `
