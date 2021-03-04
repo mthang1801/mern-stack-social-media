@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Wrapper, LeftSide, RightSide } from "./PersonalPosts.styles";
-import BoxCreatePost from "../Post/BoxCreatePost/BoxCreatePost";
 import Posts from "../Post/Posts";
 import { useQuery } from "@apollo/client";
 import {
@@ -79,12 +78,7 @@ const PersonalPosts = () => {
       <LeftSide>
         <IntroductionBox />
       </LeftSide>
-      <RightSide>
-        {user &&
-        currentPersonalUser &&
-        currentPersonalUser.slug === user.slug ? (
-          <BoxCreatePost />
-        ) : null}
+      <RightSide>        
         {currentPersonalUser &&
         personalPosts[currentPersonalUser.slug] &&
         personalPosts[currentPersonalUser.slug].length ? (

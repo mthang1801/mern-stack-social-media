@@ -11,7 +11,6 @@ import {
 import { FETCH_FRIENDS } from "../apollo/operations/queries/user";
 import { FETCH_POSTS } from "../apollo/operations/queries/post";
 import { cacheMutations } from "../apollo/operations/mutations";
-import BoxCreatePost from "../components/Post/BoxCreatePost/BoxCreatePost";
 import HomeSidebar from "../components/Sidebar/HomeSidebar";
 import MainBody from "../components/Body/MainBody";
 import FriendsComponent from "../components/Sidebar/FriendsComponent";
@@ -103,8 +102,7 @@ const Home = () => {
     <Layout>
       <MainBody>
         <MainContent>
-          <MainContentLeftSide>
-            {user && <BoxCreatePost user={user} />}
+          <MainContentLeftSide>          
             {posts.length ? <Posts posts={posts} /> : null}
           </MainContentLeftSide>
           <MainContentRightSide>
