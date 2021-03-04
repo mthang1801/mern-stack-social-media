@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Moment from "react-moment";
 import Button from "../Controls/ButtonDefaultCircle";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { Mentions } from "antd";
 import { useThemeUI } from "theme-ui";
 import { BiLike, BiCommentDetail, BiShare } from "react-icons/bi";
 import ImageGallery from "react-image-gallery";
@@ -82,10 +81,10 @@ const PostCard = ({ post }) => {
             <img src={"/images/avatar-default.png"} alt="avatar"/>
           </div>
           <div className="card-footer__input-type-text">
-            <Mentions
+            {/* <Mentions
               autoSize={{ minRows: 1, maxRows: 5 }}
               placeholder="What's on your mind?"
-            />
+            /> */}
           </div>
         </div>
       </div>
