@@ -2,33 +2,27 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   width: 100%;
-  height: auto;
-  min-height: 100px;
-  max-height: 220px;
+  height: auto; 
   display: flex;
   flex-direction: column;
   border-radius: 0.4rem 0.4rem 0 0 ;
-  position : relative;
+  position : relative;  
+  background-color : var(--gray-light);
 `;
 
 export const ChatInput = styled.div`
-  flex: 1;
-  height: 75%;  
-  position : relative;
-  overflow : auto;
-
-  & > div{
-    height: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-  }
-  
+  flex: 1;  
+  position : relative;  
+  display : flex;
+  flex-direction : column;  
 `;
 
 export const ChatActions = styled.div`
-  padding: 0.2rem 0.5rem;
+  background-color: ;
   display : flex;
   align-items:center;
+  padding: 0.5rem ;
+  border-bottom : 1px solid var(--gray-deep);
 `;
 
 export const Label = styled.label`
@@ -56,3 +50,29 @@ export const EmojiComponent = styled.div`
     border:none;
   }
 `;
+
+export const SendMessage = styled.button`
+  display : inline-block;
+  position : absolute;
+  border:  none ; 
+  outline: none  ;
+  font-size : 1.5rem;
+  background-color: transparent ; 
+  cursor : pointer;
+  color:  #3949ab;
+  right:  1rem;
+  bottom: 0.2rem;
+  &:hover{
+    color: #1a237e;
+  }
+
+`
+
+export const PlaceHolder = styled.div`
+  position : absolute;
+  left: 1rem;
+  top : 25%;
+  color : var(--gray-deep);
+  cursor: alias;
+  display : ${({show}) => show ? "block" : "none"};
+`

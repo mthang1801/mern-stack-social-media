@@ -1,8 +1,8 @@
 import React, {
   useState,
-  useEffect,
   useRef,
   useCallback,
+  useEffect,
   useMemo,
 } from "react";
 import {
@@ -10,14 +10,14 @@ import {
   ChatInput,
   ChatActions,
   Label,
-  EmojiComponent,
+  SendMessage,
+  PlaceHolder,
 } from "./styles/ChatBoardFooter.styles";
 import "emoji-mart/css/emoji-mart.css";
-import { FaSmile } from "react-icons/fa";
+import { FiSend } from "react-icons/fi";
 import { EditorState } from "draft-js";
 import { IoMdAttach } from "react-icons/io";
 import { HiOutlinePhotograph } from "react-icons/hi";
-import { useThemeUI } from "theme-ui";
 import Editor from "@draft-js-plugins/editor";
 import createMentionPlugin, {
   defaultSuggestionsFilter,
@@ -25,77 +25,90 @@ import createMentionPlugin, {
 import createEmojiPlugin from "@draft-js-plugins/emoji";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import "./styles/editor.css";
-import "@draft-js-plugins/mention/lib/plugin.css"
+import "@draft-js-plugins/mention/lib/plugin.css";
+import { useThemeUI } from "theme-ui";
 
 const ChatBoardFooter = () => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
+  const [showPlaceholder, setShowPlaceholder] = useState(true);
   const { colorMode } = useThemeUI();
-  const emojiRef = useRef(null);
-  const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState(mentions);
+  const [open, setOpen] = useState(true);
+  const editorRef = useRef(null);
+
   const {
     plugins,
-    MentionSuggestions,
     EmojiSelect,
     EmojiSuggestions,
+    MentionSuggestions,
   } = useMemo(() => {
-    const mentionPlugin = createMentionPlugin({     
+    const emojiPlugin = createEmojiPlugin({
+      selectButtonContent: "😀",
+    });
+    const { EmojiSelect, EmojiSuggestions } = emojiPlugin;
+    const linkifyPlugin = createLinkifyPlugin({
+      component(props) {
+        return <a {...props} onClick={() => alert("Clicked on Link!")} />;
+      },
+    });
+    const mentionPlugin = createMentionPlugin({
       positionSuggestions: (settings) => {
         return {
-          left: `${settings.decoratorRect.left + - 360+ 30}px`,
-          bottom: `${settings.decoratorRect.height * Math.min(suggestions.length, 5)}px`,
+          left: `${settings.decoratorRect.left - 360 + 30}px`,
+          top: `${-settings.decoratorRect.height * 5 - 100}px`,
           display: "block",
           transform: "scale(1)", // transition popover on the value of its height
           transformOrigin: "1em 0% 0px",
           transition: "all 0.25s cubic-bezier(0.3, 1.2, 0.2, 1)",
         };
       },
-      mentionComponent(mentionProps){
-        return <span className={mentionProps.className} onClick={() => alert("CLick mentions")}>
-          {mentionProps.children}
-        </span>
-      }
+      mentionComponent(mentionProps) {
+        return (
+          <span
+            className={mentionProps.className}
+            onClick={() => alert("CLick mentions")}
+          >
+            {mentionProps.children}
+          </span>
+        );
+      },
     });
-    const emojiPlugin = createEmojiPlugin();
-    const { EmojiSelect, EmojiSuggestions } = emojiPlugin;
-    const linkifyPlugin = createLinkifyPlugin();
     const { MentionSuggestions } = mentionPlugin;
-    const plugins = [linkifyPlugin, emojiPlugin, mentionPlugin];
-    return { plugins, MentionSuggestions, EmojiSelect, EmojiSuggestions };
+    const plugins = [linkifyPlugin, mentionPlugin, emojiPlugin];
+    return { plugins, EmojiSelect, EmojiSuggestions, MentionSuggestions };
   }, []);
 
-  const onOpenChange = useCallback((_open) => {
-    setOpen(_open);
-  }, []);
+  const onOpenChange = useCallback((_open) => setOpen(_open), []);
   const onSearchChange = useCallback(({ value }) => {
     setSuggestions(defaultSuggestionsFilter(value, mentions));
   }, []);
 
-  const onChangeEditor = (value) => {
-    setEditorState(value);
-  };
+  useEffect(()=>{
+    setShowPlaceholder(!editorState.getCurrentContent().hasText())
+  },[editorState])
 
+ 
+  useEffect(() => {
+    function focusEditorWhenTypingTabButton(e) {
+      if (e.which === 9) {
+        if (editorRef.current) {
+          editorRef.current.focus();
+        }
+      }
+    }
+    window.addEventListener("keyup", (e) => {
+      focusEditorWhenTypingTabButton(e);
+    });
+    return () =>
+      window.removeEventListener("keyup", (e) => {
+        focusEditorWhenTypingTabButton(e);
+      });
+  }, [editorRef]);
   return (
     <Wrapper>
-      <MentionSuggestions
-        open={open}
-        onOpenChange={onOpenChange}
-        onSearchChange={onSearchChange}
-        suggestions={suggestions}
-      />
-      <ChatInput>
-        <Editor
-          editorKey="editor"
-          editorState={editorState}
-          onChange={onChangeEditor}
-          plugins={plugins}
-        />
-      </ChatInput>
-      <ChatActions>
-        <Label>
-          <EmojiSuggestions />
-          <EmojiSelect />
-        </Label>
+      <ChatActions theme={colorMode}>
         <Label htmlFor="chat-photo" style={{ color: "#fb8c00" }}>
           <HiOutlinePhotograph />
           <input type="file" id="chat-photo" name="chat-photo" />
@@ -105,6 +118,27 @@ const ChatBoardFooter = () => {
           <input type="file" id="chat-attachment" name="chat-attachment" />
         </Label>
       </ChatActions>
+      <ChatInput onClick={() => editorRef.current?.focus()}>
+        <EmojiSuggestions />
+        <EmojiSelect />
+        <Editor
+          editorState={editorState}
+          onChange={setEditorState}
+          plugins={plugins}          
+          ref={editorRef}
+          tabIndex="0"
+        />
+        <MentionSuggestions
+          open={open}
+          onOpenChange={onOpenChange}
+          onSearchChange={onSearchChange}
+          suggestions={suggestions}
+        />
+        <PlaceHolder show={showPlaceholder}>Enter something</PlaceHolder>
+        <SendMessage>
+          <FiSend />
+        </SendMessage>
+      </ChatInput>
     </Wrapper>
   );
 };
