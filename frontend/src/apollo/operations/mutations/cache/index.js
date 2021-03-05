@@ -11,8 +11,9 @@ import createSetCurrentPersonalUser from "./setCurrentPersonalUser";
 import createSetPersonalPosts from "./setPersonalPosts";
 import createSetOpenFriendsList from "./setOpenFriendsList";
 import createSetFriends from "./setFriends";
-import createSetReceivedRequestsToAddFriend from "./setReceivedRequestsToAddFriend"
-import createSetSentRequestsToAddFriend from "./setSentRequestsToAddFriend"
+import createSetReceivedRequestsToAddFriend from "./setReceivedRequestsToAddFriend";
+import createSetSentRequestsToAddFriend from "./setSentRequestsToAddFriend";
+import createSetFriendsByAlphabeta from "./setFriendsByAlphabeta";
 import {
   toggleButtonMenuVar,
   setPostStatusVar,
@@ -28,7 +29,8 @@ import {
   setOpenFriendsListVar,
   setFriendsVar,
   setSentRequestsToAddFriendVar,
-  setReceivedRequestsToAddFriendVar
+  setReceivedRequestsToAddFriendVar,
+  setFriendsByAlphabetaVar,
 } from "../../../cache";
 
 const mutations = {
@@ -51,8 +53,13 @@ const mutations = {
   setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
   setOpenFriendsList: createSetOpenFriendsList(setOpenFriendsListVar),
   setFriends: createSetFriends(setFriendsVar),
-  setSentRequestsToAddFriend : createSetSentRequestsToAddFriend(setSentRequestsToAddFriendVar),
-  setReceivedRequestsToAddFriend : createSetReceivedRequestsToAddFriend(setReceivedRequestsToAddFriendVar)
+  setSentRequestsToAddFriend: createSetSentRequestsToAddFriend(
+    setSentRequestsToAddFriendVar
+  ),
+  setReceivedRequestsToAddFriend: createSetReceivedRequestsToAddFriend(
+    setReceivedRequestsToAddFriendVar
+  ),
+  setFriendsByAlphabeta: createSetFriendsByAlphabeta(setFriendsByAlphabetaVar),
 };
 
 export { mutations as cacheMutations };

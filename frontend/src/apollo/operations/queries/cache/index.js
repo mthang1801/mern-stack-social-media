@@ -11,9 +11,9 @@ import { GET_CURRENT_PERSONAL_USER } from "./getCurrentPersonalUser";
 import { GET_PERSONAL_POSTS } from "./getPersonalPosts";
 import { GET_OPEN_FRIENDS_LIST } from "./getOpenFriendsList";
 import { GET_FRIENDS } from "./getFriends";
-import { GET_SENT_REQUESTS_TO_ADD_FRIEND } from "./getSentRequestsToAddFriend"
-import { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND } from "./getReceivedRequestsToAddFriend"
-
+import { GET_SENT_REQUESTS_TO_ADD_FRIEND } from "./getSentRequestsToAddFriend";
+import { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND } from "./getReceivedRequestsToAddFriend";
+import { GET_FRIENDS_BY_ALPHABETA } from "./getFriendsByAlphabeta";
 
 export { GET_TOGGLE_BUTTON_MENU };
 export { GET_POST_STATUS };
@@ -28,8 +28,9 @@ export { GET_CURRENT_PERSONAL_USER };
 export { GET_PERSONAL_POSTS };
 export { GET_OPEN_FRIENDS_LIST };
 export { GET_FRIENDS };
-export { GET_SENT_REQUESTS_TO_ADD_FRIEND } ;
-export { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND }
+export { GET_SENT_REQUESTS_TO_ADD_FRIEND };
+export { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND };
+export { GET_FRIENDS_BY_ALPHABETA };
 
 export const cacheQueries = {
   GET_TOGGLE_BUTTON_MENU,
@@ -46,5 +47,6 @@ export const cacheQueries = {
   GET_OPEN_FRIENDS_LIST,
   GET_FRIENDS,
   GET_SENT_REQUESTS_TO_ADD_FRIEND,
-  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND
+  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
+  GET_FRIENDS_BY_ALPHABETA,
 };

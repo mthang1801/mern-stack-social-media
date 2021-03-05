@@ -3,9 +3,12 @@ import styled from "styled-components"
 export const SearchForm = styled.form`
   position : relative;
   width : 90% ; 
+  height : 2rem;    
   margin: 1.1rem auto;  
   display : flex;
   flex-direction : row-reverse;
+  justify-content : center;
+  align-items: center;
   background:  ${({theme}) => theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
   color : inherit;
   border-radius: 1rem;  

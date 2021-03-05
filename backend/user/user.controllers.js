@@ -217,6 +217,14 @@ export const userController = {
     });
     return currentUser.receivedRequestToAddFriend;
   },
+  fetchUserFriends :async (req) => {
+    const userId = getAuthUser(req); 
+    const user = await User.findById(userId).populate("friends");
+    if(!user){
+      throw new AuthenticationError("User not found");
+    }
+    return user.friends;
+  },
   acceptRequestToAddFriend: async (
     req,
     senderId,

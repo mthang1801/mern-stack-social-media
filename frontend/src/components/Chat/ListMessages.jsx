@@ -16,9 +16,9 @@ const ListMessages = () => {
 
   return (
     <ListMessagesWrapper>    
-      {friends.length && friends.map(friend => (
-        <MessageItem key={friend._id} message={friend}/>
-      ))}
+      {friends.length ? friends.map(friend => (
+        <MessageItem key={friend._id} friend={friend}/>
+      )): null}
     </ListMessagesWrapper>
   )
 }
