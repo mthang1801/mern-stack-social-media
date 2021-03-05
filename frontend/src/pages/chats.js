@@ -6,8 +6,8 @@ import CardRequestAuth from "../components/Card/CardRequestAuth";
 import { RequestAuthScreen, ChatsWrapper, SidebarNav, MainTab } from "./chats.styles";
 import MenuChat from "../components/Chat/MenuChat";
 import {Route, Switch} from "react-router-dom";
-const ChatMessages = lazy(() => import("../components/Chat/Messages"))
-const ChatContacts = lazy(() => import("../components/Chat/Contacts"))
+const ChatMessages = lazy(() => import("../components/Chat/Messages/Messages"))
+const ChatContacts = lazy(() => import("../components/Chat/Contact/Contact"))
 
 const ChatsPage = ({match}) => {
   

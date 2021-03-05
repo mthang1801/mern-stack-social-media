@@ -1,7 +1,7 @@
 import React from 'react'
 import {Wrapper, User, Avatar,UserInfo, Controls, LinkItem } from "./styles/ChatBoardHeading.styles"
 import { useQuery } from "@apollo/client";
-import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
+import { GET_CURRENT_USER } from "../../../apollo/operations/queries/cache";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {MdLocalPhone} from "react-icons/md";
 import {BsCameraVideo} from "react-icons/bs";

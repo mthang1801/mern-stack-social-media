@@ -1,6 +1,6 @@
 import React from 'react'
 import {Wrapper, LeftSide, RightSide} from "./styles/Chat.styles"
-import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
+import {GET_CURRENT_USER} from "../../../apollo/operations/queries/cache"
 import {useQuery} from "@apollo/client"
 import Search from "./Search"
 import ListMessages from "./ListMessages";

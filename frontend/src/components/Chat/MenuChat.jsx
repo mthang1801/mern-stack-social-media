@@ -1,6 +1,6 @@
 import React from 'react'
 import useLanguage from "../Global/useLanguage"
-import {LinkItem} from "./styles/Chat.styles"
+import {LinkItem} from "./styles/MenuChat.styles"
 const MenuChat = () => {
   const {i18n,lang} = useLanguage();
 

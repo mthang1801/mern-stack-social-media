@@ -4,7 +4,7 @@
   "description": "Social Media using MERN stack",
   "main": "index.js",
   "scripts": {
-    "installation": "npm install --prefix frontend && npm install",
+    "install-all": "npm install --prefix frontend && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
     "start": "node -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
@@ -22,14 +22,10 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
-    "emoji-mart": "^3.0.0",
     "express": "^4.17.1",
     "graphql": "^15.5.0",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.1",
-    "mongoose": "^5.11.13",
-    "react-image-gallery": "^1.0.8",
-    "react-moment": "^1.1.1"
+    "mongoose": "^5.11.13"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
