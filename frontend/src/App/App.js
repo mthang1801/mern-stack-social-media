@@ -16,9 +16,18 @@ const ChatsPage = lazy(() => import("../pages/chats"));
 
 function App() {
   const { colorMode } = useThemeUI();
+  const [fetched, setFetched] = useState(false)
   const [fetchCurrentUser, { data }] = useLazyQuery(FETCH_CURRENT_USER, {
     fetchPolicy: "cache-and-network",
+    onCompleted : data => {      
+      setCurrentUser({...data.fetchCurrentUser})      
+      setFetched(true);
+    },
+    onError : error => {
+      setFetched(true);
+    }
   });
+ 
 
   const { setCurrentUser, setPersonalUsers } = cacheMutations;
 
@@ -29,13 +38,14 @@ function App() {
     }
     return () => (_isMounted = false);
   }, [fetchCurrentUser]);
-  useEffect(() => {
-    if (data && data.fetchCurrentUser) {
-      setCurrentUser({ ...data.fetchCurrentUser });
-      setPersonalUsers(data.fetchCurrentUser);
-    }
-  }, [data, setCurrentUser, setPersonalUsers]);
-
+  // useEffect(() => {
+  //   console.log(data)
+  //   if (data && data.fetchCurrentUser) {
+  //     setCurrentUser({ ...data.fetchCurrentUser });
+  //     setPersonalUsers(data.fetchCurrentUser);
+  //   }
+  // }, [data, setCurrentUser, setPersonalUsers]);
+  if(!fetched) return null
   return (
     <Router>
       <GlobalStyles theme={colorMode} />
