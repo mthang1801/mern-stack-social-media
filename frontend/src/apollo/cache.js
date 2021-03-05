@@ -14,7 +14,8 @@ import {
   OpenFriendsList,
   Friends,
   SentRequestsToAddFriends,
-  ReceivedRequestsToAddFriend
+  ReceivedRequestsToAddFriend,
+  FriendsByAlphabeta
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 const setPostStatusVar = makeVar(PostStatus);
@@ -33,6 +34,7 @@ const setOpenFriendsListVar = makeVar(OpenFriendsList);
 const setFriendsVar = makeVar(Friends);
 const setSentRequestsToAddFriendVar = makeVar(SentRequestsToAddFriends);
 const setReceivedRequestsToAddFriendVar = makeVar(ReceivedRequestsToAddFriend);
+const setFriendsByAlphabetaVar = makeVar(FriendsByAlphabeta);
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -49,6 +51,9 @@ const cache = new InMemoryCache({
         },
         friends: {
           read: () => setFriendsVar(),
+        },
+        friendsByAlphabeta : {
+          read : () => setFriendsByAlphabetaVar()
         },
         sentRequestsToAddFriend : {
           read : () => setSentRequestsToAddFriendVar()
@@ -104,5 +109,6 @@ export {
   setOpenFriendsListVar,
   setFriendsVar,
   setSentRequestsToAddFriendVar,
-  setReceivedRequestsToAddFriendVar
+  setReceivedRequestsToAddFriendVar,
+  setFriendsByAlphabetaVar
 };
