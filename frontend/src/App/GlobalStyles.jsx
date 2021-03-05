@@ -84,7 +84,9 @@ export default createGlobalStyle`
   --danger: #dc3545;
   --light: #f8f9fa;
   --dark: #212529;  
-  
+  --blue-1 :#1e88e5 ;
+  --blue-2 : #1976d2 ;
+  --blue-3 : #0d47a1;
 
   --color-background-default: #f0f0f0;
   --color-background-default-secondary : #b4b4b4;
@@ -810,7 +812,14 @@ export default createGlobalStyle`
     margin-bottom: 20px;
   }
   
-
+  .DraftEditor-root {
+    padding : 1rem;
+    flex:1;  
+    max-height: 5rem;
+    overflow : auto;
+    width : unset !important; 
+    margin-right : 5rem;        
+  }
   .DraftEditor-root a {
     color: blue;
   }
@@ -834,11 +843,6 @@ export default createGlobalStyle`
     transform-origin: 50% 0%;
     transform: scaleY(0);
     margin: -16px;
-  }
-
-  .mnw6qvm{
-    position : absolute;
-    
   }
   
   .wrapper {
