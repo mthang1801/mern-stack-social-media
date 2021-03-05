@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import {ListMessagesWrapper} from "./styles/ListMessages.styles"
 import {useQuery} from "@apollo/client"
-import {GET_CURRENT_USER} from "../../../apollo/operations/queries/cache"
-import {FETCH_FRIENDS} from "../../../apollo/operations/queries/user"
+import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
+import {FETCH_FRIENDS} from "../../apollo/operations/queries/user"
 import MessageItem from "./MessageItem"
 const ListMessages = () => {
   const {data : {user}} = useQuery(GET_CURRENT_USER);

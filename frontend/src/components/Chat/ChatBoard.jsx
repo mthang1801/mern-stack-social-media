@@ -5,7 +5,7 @@ import {
   FooterBoard, 
 } from "./styles/ChatBoard.styles";
 import { useQuery } from "@apollo/client";
-import { GET_CURRENT_USER } from "../../../apollo/operations/queries/cache";
+import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
 import ChatBoardHeading from "./ChatBoardHeading"
 import ChatBoardBody from "./ChatBoardBody"
 import ChatBoardFooter from "./ChatBoardFooter"
