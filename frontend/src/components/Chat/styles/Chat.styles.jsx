@@ -10,14 +10,14 @@ export const Wrapper = styled.main`
 
 export const LeftSide = styled.div`
   width: 100vw;  
-  overflow : auto;
+  overflow-y : hidden;
   height : 90%  ;
   @media screen and (min-width: 768px) {
     border-right : 1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};
     box-shadow : var(--lightShadow);
     height: 100%;
     width: 300px;
-    overflow : auto;
+    overflow-y : hidden;
   }
   @media screen and (min-width: 992px) {
     width: 30%;    
@@ -39,4 +39,26 @@ export const RightSide = styled.div`
   @media screen and (min-width: 1280px){
     width : 75%;
   }
+`;
+
+export const PopupSettings = styled.div`
+  position: fixed;
+  display : ${({show}) => show ? "flex" : "none"};
+  left : ${({left}) => left > 340 ? "370px" : left> 300 ? "350px" : `${left}px`};
+  top : ${({top}) => top -20 + "px"};
+  width : 12rem;  
+  background-color : white;
+  border: 1px solid var(--gray-deep);
+  border-radius: 0.4rem;  
+  flex-direction : column;
+  & span{
+    padding: 0.5rem 1rem;    
+    cursor : pointer;
+    overflow : hidden;
+    text-overflow : ellipsis; 
+    white-space:nowrap;
+    &:hover{
+      background-color: lightblue;
+    }
+  }  
 `;

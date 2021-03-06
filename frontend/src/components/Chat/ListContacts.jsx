@@ -1,11 +1,15 @@
 import React from 'react'
-import {HeadingCharacter} from "./styles/ListContacts.styles"
+import {HeadingCharacter, Wrapper} from "./styles/ListContacts.styles"
 import ContactItem from "./ContactItem"
+import {usePopupActions} from "./hook/usePopupActions"
 const ListContacts = ({data}) => {
- 
+  const {setShowPopup} = usePopupActions()
+  const onClickSetting = e => {
+    console.log(e.pageY)
+  }
   if(!Object.entries(data).length) return null;
   return (
-   <div>
+   <Wrapper onScroll={() => setShowPopup(false)}>
      {Object.keys(data).map(headingCharacter => (
        <div key={headingCharacter}>
          <HeadingCharacter>{headingCharacter}</HeadingCharacter>
@@ -14,7 +18,7 @@ const ListContacts = ({data}) => {
          ))}
        </div>
      ))}
-   </div>
+   </Wrapper>
   )
 }
 
