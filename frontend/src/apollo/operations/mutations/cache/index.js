@@ -6,7 +6,6 @@ import createSetNotifications from "./setNotifications";
 import createSetCountNumberNotificationsUnseen from "./setCountNumberNotificationsUnseen";
 import createSetNewNotifications from "./setNewNotifications";
 import createSetOpenPopupNotification from "./setOpenPopupNotification";
-import createSetPersonalUsers from "./setPersonalUsers";
 import createSetCurrentPersonalUser from "./setCurrentPersonalUser";
 import createSetPersonalPosts from "./setPersonalPosts";
 import createSetOpenFriendsList from "./setOpenFriendsList";
@@ -22,8 +21,7 @@ import {
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
   setNewNotificationsVar,
-  setOpenPopupNotificationVar,
-  setPersonalUsersVar,
+  setOpenPopupNotificationVar,  
   setCurrentPersonalUserVar,
   setPersonalPostsVar,
   setOpenFriendsListVar,
@@ -46,7 +44,6 @@ const mutations = {
   setOpenPopupNotification: createSetOpenPopupNotification(
     setOpenPopupNotificationVar
   ),
-  setPersonalUsers: createSetPersonalUsers(setPersonalUsersVar),
   setCurrentPersonalUser: createSetCurrentPersonalUser(
     setCurrentPersonalUserVar
   ),

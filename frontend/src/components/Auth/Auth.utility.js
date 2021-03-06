@@ -5,8 +5,7 @@ import {
   Posts,
   Notifications,
   NewNotifications,
-  CountNumberNotificationsUnseen,
-  PersonalUsers,
+  CountNumberNotificationsUnseen,  
 } from "../../apollo/models";
 const clearCache = () => {
   const {
@@ -14,15 +13,13 @@ const clearCache = () => {
     setCountNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,
-    setPosts,    
-    setPersonalUsers,
+    setPosts,       
   } = cacheMutations;
   setCurrentUser(User);
   setCountNumberNotificationsUnseen(CountNumberNotificationsUnseen);
   setPosts(Posts);
   setNotifications(Notifications);
-  setNewNotifications(NewNotifications);
-  setPersonalUsers(PersonalUsers);
+  setNewNotifications(NewNotifications);  
 }
 
 const logout = async () => {

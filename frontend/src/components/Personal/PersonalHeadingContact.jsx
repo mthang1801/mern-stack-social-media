@@ -16,8 +16,7 @@ import Button from "../Controls/ButtonDefaultCircle";
 import { useQuery, useMutation } from "@apollo/client";
 import {
   GET_CURRENT_PERSONAL_USER,
-  GET_CURRENT_USER,
-  GET_PERSONAL_USERS,
+  GET_CURRENT_USER,  
   GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
 } from "../../apollo/operations/queries/cache";
 import { FETCH_CURRENT_USER } from "../../apollo/operations/queries/user";
@@ -47,8 +46,7 @@ const PersonalContact = () => {
   );
   const [removeFriend] = useMutation(userMutations.REMOVE_FRIEND);
   const {
-    setCurrentUser,
-    setPersonalUsers,
+    setCurrentUser,    
     setCurrentPersonalUser,
     setReceivedRequestsToAddFriend,
   } = cacheMutations;
@@ -59,9 +57,7 @@ const PersonalContact = () => {
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER);
-  const {
-    data: { personalUsers },
-  } = useQuery(GET_PERSONAL_USERS);
+
   const {
     data: { receivedRequestsToAddFriend },
   } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
@@ -86,21 +82,7 @@ const PersonalContact = () => {
       followed: [...receiver.followed],
       sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
       receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-    });
-    if (personalUsers[sender.slug]) {
-      const updatedReceiver = {
-        ...personalUsers[sender.slug],
-        friends: [...sender.friends],
-        following: [...sender.following],
-        followed: [...sender.followed],
-        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-        receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
-      };
-      setPersonalUsers({
-        ...personalUsers,
-        [updatedReceiver.slug]: { ...updatedReceiver },
-      });
-    }
+    });    
     if (
       currentPersonalUser &&
       currentPersonalUser._id.toString() === receiver._id.toString()
@@ -195,19 +177,7 @@ const PersonalContact = () => {
       sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
       receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
     });
-    if (personalUsers[currentPersonalUser.slug]) {
-      setPersonalUsers({
-        ...personalUsers,
-        [currentPersonalUser.slug]: {
-          ...personalUsers[currentPersonalUser.slug],
-          friends: [...receiver.friends],
-          following: [...receiver.following],
-          followed: [...receiver.followed],
-          sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-          receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-        },
-      });
-    }
+    
     setCurrentPersonalUser({
       ...currentPersonalUser,
       friends: [...receiver.friends],

@@ -10,8 +10,7 @@ import {
   GET_CURRENT_USER,
   GET_NEW_NOTIFICATIONS,
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-  GET_CURRENT_PERSONAL_USER,
-  GET_PERSONAL_USERS,
+  GET_CURRENT_PERSONAL_USER,  
 } from "../../apollo/operations/queries/cache";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -31,10 +30,7 @@ const NotificationItem = ({ notification, notifications }) => {
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
   const {
     data: { newNotifications },
-  } = useQuery(GET_NEW_NOTIFICATIONS, { fetchPolicy: "cache-first" });
-  const {
-    data: { personalUsers },
-  } = useQuery(GET_PERSONAL_USERS, { fetchPolicy: "cache-first" });
+  } = useQuery(GET_NEW_NOTIFICATIONS, { fetchPolicy: "cache-first" });  
   const {
     data: { currentPersonalUser },
   } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
@@ -47,8 +43,7 @@ const NotificationItem = ({ notification, notifications }) => {
   const {
     setNotifications,
     setCountNumberNotificationsUnseen,
-    setCurrentUser,
-    setPersonalUsers,
+    setCurrentUser,    
     setCurrentPersonalUser,
   } = cacheMutations;
   const [updateToHasSeen] = useMutation(
@@ -91,17 +86,7 @@ const NotificationItem = ({ notification, notifications }) => {
       followed: [...sender.followed],
       sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
       receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
-    });
-    if (personalUsers && personalUsers[notification.creator.slug]) {
-      setPersonalUsers({
-        ...personalUsers[notification.creator.slug],
-        friends: [...receiver.friends],
-        following: [...receiver.following],
-        followed: [...receiver.followed],
-        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-      });
-    }
+    });    
     if (
       currentPersonalUser &&
       currentPersonalUser._id === notification.creator._id
