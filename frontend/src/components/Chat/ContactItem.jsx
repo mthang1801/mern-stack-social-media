@@ -6,13 +6,13 @@ import {
   ContactControls,
 } from "./styles/ContactItem.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { BsThreeDots } from "react-icons/bs";
+
 import { useThemeUI } from "theme-ui";
-import { usePopupActions } from "./hook/usePopupActions";
+import { usePopupContactActions } from "./hook/usePopupActions";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
 const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
-  const { setPopupPosition, setShowPopup } = usePopupActions();
+  const { setPopupPosition, setShowPopup } = usePopupContactActions();
   const { colorMode } = useThemeUI();
 
   const onClickThreeDots = (e) => {
@@ -35,7 +35,7 @@ const ContactItem = ({ friend }) => {
         <LazyLoadImage src={friend.avatar} />
       </Avatar>
       <UserContactOverview>{friend.name}</UserContactOverview>
-      <ContactControls show={showSetting} onClick={(e) => onClickThreeDots(e)}  aria-label="settings">
+      <ContactControls show={showSetting} onClick={(e) => onClickThreeDots(e)}  aria-label="chat-contact-settings">
         <ThreeDotsSetting />
       </ContactControls>
     </ContactItemWrapper>

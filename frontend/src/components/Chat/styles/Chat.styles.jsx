@@ -61,4 +61,5 @@ export const PopupSettings = styled.div`
       background-color: lightblue;
     }
   }  
+  z-index:2;
 `;
