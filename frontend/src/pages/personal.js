@@ -1,8 +1,7 @@
 import React, { useEffect, lazy } from "react";
 import PersonalHeading from "../components/Personal/PersonalHeading";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import {
-  GET_PERSONAL_USERS,
+import {  
   GET_PERSONAL_POSTS,
   GET_CURRENT_PERSONAL_USER,
 } from "../apollo/operations/queries/cache";

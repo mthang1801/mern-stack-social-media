@@ -6,8 +6,7 @@ import {
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_NOTIFICATIONS,
   GET_CURRENT_USER,
-  GET_OPEN_POPUP_NOTIFICATION,
-  GET_PERSONAL_USERS,
+  GET_OPEN_POPUP_NOTIFICATION,  
   GET_CURRENT_PERSONAL_USER,
   GET_RECEIVED_REQUESTS_TO_ADD_FRIEND
 } from "../../apollo/operations/queries/cache";
@@ -46,10 +45,7 @@ const Notifications = () => {
   } = useQuery(GET_NOTIFICATIONS, { fetchPolicy: "cache-only" });
   const {
     data: { openPopupNotification },
-  } = useQuery(GET_OPEN_POPUP_NOTIFICATION, { fetchPolicy: "cache-first" });
-  const {
-    data: { personalUsers },
-  } = useQuery(GET_PERSONAL_USERS, { fetchPolicy: "cache-first" });
+  } = useQuery(GET_OPEN_POPUP_NOTIFICATION, { fetchPolicy: "cache-first" }); 
   const {
     data: { currentPersonalUser },
   } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
@@ -61,8 +57,7 @@ const Notifications = () => {
     setCountNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,
-    setOpenPopupNotification,    
-    setPersonalUsers,
+    setOpenPopupNotification,      
     setCurrentUser,
     setCurrentPersonalUser,
     setReceivedRequestsToAddFriend
@@ -97,22 +92,7 @@ const Notifications = () => {
         followed: [...receiver.followed],
         sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
         receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-      });
-
-      if (sender && personalUsers[sender.slug]) {
-        const updatedPersonalUser = {
-          ...personalUsers[sender.slug],
-          friends: [...sender.friends],
-          following: [...sender.following],
-          followed: [...sender.followed],
-          sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-          receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
-        };
-        setPersonalUsers({
-          ...personalUsers,
-          [updatedPersonalUser.slug]: { ...updatedPersonalUser },
-        });
-      }
+      });      
       if (currentPersonalUser && currentPersonalUser._id === sender._id) {
         setCurrentPersonalUser({
           ...currentPersonalUser,
@@ -194,8 +174,7 @@ const Notifications = () => {
   }, [
     countNumberNotificationsUnseen,
     subscribeToMoreNotifications,
-    notifications,
-    personalUsers,   
+    notifications,    
     user,
   ]);  
 
