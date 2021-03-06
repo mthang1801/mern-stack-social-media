@@ -32,8 +32,7 @@ const Notifications = () => {
   } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
     fetchPolicy: "cache-first",
   });
-  const {
-    refetch: fetchNotifications,
+  const {   
     subscribeToMore: subscribeToMoreNotifications,
   } = useQuery(FETCH_NOTIFICATIONS, {
     skip: true,
@@ -207,6 +206,7 @@ const Notifications = () => {
     }, 7000);
     return () => clearTimeout(timer);
   }, [openPopupNotification]);
+
   if (!notifications.length)
     return <NoNotifications>No notifications</NoNotifications>;
   return notifications.map((notification) => (
