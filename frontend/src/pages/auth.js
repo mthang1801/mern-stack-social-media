@@ -12,7 +12,7 @@ const AuthPage = (props) => {
   } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: "cache-only",
   });
-
+  console.log(user)
   useEffect(() => {
     if (user && location.state && location.state.from) {
       history.replace(location.state.from);

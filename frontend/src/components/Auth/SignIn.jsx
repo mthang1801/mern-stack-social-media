@@ -20,7 +20,7 @@ import GoogleAuth from "./FacebookAuth";
 import { LOGIN } from "../../apollo/operations/queries/user";
 import { useLazyQuery } from "@apollo/client";
 import {cacheMutations} from "../../apollo/operations/mutations";
-import {login} from "../../utils/auth"
+import {login} from "./Auth.utility"
 function withLoginQuery(WrappedComponent) {
   return function QueryWrapper(props) {
     const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN, {fetchPolicy : "cache-and-network"});
