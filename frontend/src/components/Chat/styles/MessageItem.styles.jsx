@@ -32,6 +32,7 @@ export const MessageControls = styled.div`
   display : flex; 
   flex-direction : column; 
   justify-content : space-between;
+  align-items : flex-end;
   time{
     font-size : 0.85rem;
     opacity: 0.3;

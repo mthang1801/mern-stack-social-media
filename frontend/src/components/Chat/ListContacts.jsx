@@ -1,12 +1,10 @@
 import React from 'react'
 import {HeadingCharacter, Wrapper} from "./styles/ListContacts.styles"
 import ContactItem from "./ContactItem"
-import {usePopupActions} from "./hook/usePopupActions"
+import {usePopupContactActions} from "./hook/usePopupActions"
 const ListContacts = ({data}) => {
-  const {setShowPopup} = usePopupActions()
-  const onClickSetting = e => {
-    console.log(e.pageY)
-  }
+  const {setShowPopup} = usePopupContactActions()
+  
   if(!Object.entries(data).length) return null;
   return (
    <Wrapper onScroll={() => setShowPopup(false)}>

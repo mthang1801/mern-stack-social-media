@@ -97,7 +97,7 @@ const Contact = () => {
 
   useEffect(() => {
     function handleClickDotsSetting(e) {
-      const dotsElements = document.querySelectorAll(`[aria-label="settings"]`);
+      const dotsElements = document.querySelectorAll(`[aria-label="chat-contact-settings"]`);
       let flag = false;
       for (let s of dotsElements) {
         if (s.contains(e.target)) {
