@@ -51,6 +51,7 @@ export const PopupSettings = styled.div`
   border: 1px solid var(--gray-deep);
   border-radius: 0.4rem;  
   flex-direction : column;
+  font-size : 0.85rem;
   & span{
     padding: 0.5rem 1rem;    
     cursor : pointer;
