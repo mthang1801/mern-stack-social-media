@@ -92,7 +92,9 @@ const Notifications = () => {
         followed: [...receiver.followed],
         sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
         receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-      });      
+      });
+
+      
       if (currentPersonalUser && currentPersonalUser._id === sender._id) {
         setCurrentPersonalUser({
           ...currentPersonalUser,
@@ -174,18 +176,17 @@ const Notifications = () => {
   }, [
     countNumberNotificationsUnseen,
     subscribeToMoreNotifications,
-    notifications,    
+    notifications,     
     user,
   ]);  
 
   useEffect(() => {
-    let timer;
+    let timer = 0;
     timer = setTimeout(() => {
       setOpenPopupNotification(false);
     }, 7000);
     return () => clearTimeout(timer);
-  }, [openPopupNotification]);
-
+  }, [openPopupNotification]);  
   if (!notifications.length)
     return <NoNotifications>No notifications</NoNotifications>;
   return notifications.map((notification) => (
