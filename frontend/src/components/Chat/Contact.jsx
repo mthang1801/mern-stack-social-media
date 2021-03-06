@@ -15,7 +15,7 @@ import Search from "./Search";
 import { useThemeUI } from "theme-ui";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import ListContacts from "./ListContacts";
-
+import ChatBoard from "./ChatBoard"
 export const ContactContext = createContext({});
 
 const Contact = () => {
@@ -144,7 +144,9 @@ const Contact = () => {
           <hr />
           <ListContacts data={contactData} onScroll={() => console.log("s")} />
         </LeftSide>
-        <RightSide></RightSide>
+        <RightSide>
+          <ChatBoard/>
+        </RightSide>
       </Wrapper>
     </ContactContext.Provider>
   );
