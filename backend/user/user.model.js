@@ -88,6 +88,17 @@ const UserSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  blocks : [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "users",
+      required: true
+    }
+  ],
+  privateChatUsers : {
+    type: Map,
+    of: Number
+  },  
 }, {timestamps : true});
 
 export const User = mongoose.model("users", UserSchema)

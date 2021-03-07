@@ -1,8 +1,22 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import { Wrapper} from "./styles/ChatBoardBody.styles";
 import Bubble from "./Bubble";
 import { useThemeUI } from "theme-ui";
+import {useQuery} from "@apollo/client"
+import {GET_CURRENT_CHAT_USER, GET_MESSAGES_STORAGE, GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
+
 const ChatBoardBody = () => {
+  //useState
+  const [messages, setMessages] = useState([]);
+  //useQuery
+  const {data : {currentChatUser}} = useQuery(GET_CURRENT_CHAT_USER, {fetchPolicy: "cache-first"});
+  const {data : {messagesStorage}} = useQuery(GET_MESSAGES_STORAGE, {fetchPolicy : "cache-first"});  
+  console.log(messagesStorage)
+  useEffect(()=>{
+    if(currentChatUser && !messagesStorage[currentChatUser._id]){
+      //do something
+    }
+  },[currentChatUser, messagesStorage])
   const { colorMode } = useThemeUI();
   return (
     <Wrapper theme={colorMode}>

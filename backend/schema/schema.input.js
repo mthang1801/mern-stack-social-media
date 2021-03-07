@@ -23,4 +23,11 @@ export const schemaInput = gql`
   input CommentInput{
     content : String!
   }
+
+  input MessageInput{
+    text : String
+    encoding: String
+    mimetype : String
+    filename : String
+  }
 `

@@ -13,6 +13,8 @@ import { GET_FRIENDS } from "./getFriends";
 import { GET_SENT_REQUESTS_TO_ADD_FRIEND } from "./getSentRequestsToAddFriend";
 import { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND } from "./getReceivedRequestsToAddFriend";
 import { GET_FRIENDS_BY_ALPHABETA } from "./getFriendsByAlphabeta";
+import { GET_CURRENT_CHAT_USER } from "./getCurrentChatUser";
+import { GET_MESSAGES_STORAGE } from "./getMessagesStorage";
 
 export { GET_TOGGLE_BUTTON_MENU };
 export { GET_POST_STATUS };
@@ -29,6 +31,8 @@ export { GET_FRIENDS };
 export { GET_SENT_REQUESTS_TO_ADD_FRIEND };
 export { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND };
 export { GET_FRIENDS_BY_ALPHABETA };
+export { GET_CURRENT_CHAT_USER };
+export { GET_MESSAGES_STORAGE };
 
 export const cacheQueries = {
   GET_TOGGLE_BUTTON_MENU,
@@ -46,4 +50,6 @@ export const cacheQueries = {
   GET_SENT_REQUESTS_TO_ADD_FRIEND,
   GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
   GET_FRIENDS_BY_ALPHABETA,
+  GET_CURRENT_CHAT_USER,
+  GET_MESSAGES_STORAGE
 };

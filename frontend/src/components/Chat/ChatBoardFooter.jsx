@@ -15,7 +15,7 @@ import {
 } from "./styles/ChatBoardFooter.styles";
 import "emoji-mart/css/emoji-mart.css";
 import { FiSend } from "react-icons/fi";
-import { EditorState } from "draft-js";
+import { EditorState, convertToRaw, convertFromRaw, convertFromHTML } from "draft-js";
 import { IoMdAttach } from "react-icons/io";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import Editor from "@draft-js-plugins/editor";
@@ -27,17 +27,30 @@ import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import "./styles/editor.css";
 import "@draft-js-plugins/mention/lib/plugin.css";
 import { useThemeUI } from "theme-ui";
-
+import {SEND_PRIVATE_MESSAGE_CHAT_TEXT} from "../../apollo/operations/mutations/chat";
+import {cacheMutations} from "../../apollo/operations/mutations/";
+import {GET_CURRENT_CHAT_USER, GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
+import {useMutation, useQuery} from "@apollo/client"
 const ChatBoardFooter = () => {
+  //useState
   const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
+  const [demoEditorState, setDemoEditorState] = useState(() =>
     EditorState.createEmpty()
   );
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const { colorMode } = useThemeUI();
   const [suggestions, setSuggestions] = useState(mentions);
   const [open, setOpen] = useState(true);
+  //useQuery
+  const {data: {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-and-network"});
+  const {data : {currentChatUser}}  =useQuery(GET_CURRENT_CHAT_USER, {fetchPolicy : "cache-and-network"});
+  //useMutation
+  const [sendPrivateMessageText] = useMutation(SEND_PRIVATE_MESSAGE_CHAT_TEXT)
+  const {setMessagesStorage} = cacheMutations
   const editorRef = useRef(null);
-
+  
   const {
     plugins,
     EmojiSelect,
@@ -106,6 +119,18 @@ const ChatBoardFooter = () => {
         focusEditorWhenTypingTabButton(e);
       });
   }, [editorRef]);
+
+  const onSendMessage = e => {
+    if(editorState.getCurrentContent().hasText() && currentChatUser){      
+      const rawData = JSON.stringify(convertToRaw(editorState.getCurrentContent()))      
+      sendPrivateMessageText({variables : {receiverId: currentChatUser._id, text : rawData}}).then(res => {
+        setMessagesStorage(currentChatUser._id, rawData)
+      })
+      .catch(err => {
+        console.log(err)
+      })     
+    }
+  }
   return (
     <Wrapper>
       <ChatActions theme={colorMode}>
@@ -123,11 +148,11 @@ const ChatBoardFooter = () => {
         <EmojiSelect />
         <Editor
           editorState={editorState}
-          onChange={setEditorState}
+          onChange={setEditorState}          
           plugins={plugins}          
           ref={editorRef}
           tabIndex="0"
-        />
+        />       
         <MentionSuggestions
           open={open}
           onOpenChange={onOpenChange}
@@ -135,7 +160,7 @@ const ChatBoardFooter = () => {
           suggestions={suggestions}
         />
         <PlaceHolder show={showPlaceholder}>Enter something</PlaceHolder>
-        <SendMessage>
+        <SendMessage onClick={onSendMessage}>
           <FiSend />
         </SendMessage>
       </ChatInput>

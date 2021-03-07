@@ -18,9 +18,19 @@ export const schemaEnum = gql`
     ACCEPTED
     REMOVED
   }
-  enum PrivateChatEnum{
-    SEND
-    DELETE
-    RECALL
+  enum PrivateChatReceiverStatusEnum{
+    SENT
+    DELIVERED 
+    SEEN 
+    DELETED
   }  
+  enum PrivateChatSenderStatusEnum{
+    SENT
+    RECALLED
+    DELETED
+  }
+  enum MessageTypeEnum{
+    TEXT
+    BLOB
+  }
 `
