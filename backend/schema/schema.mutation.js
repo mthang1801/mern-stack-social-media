@@ -11,8 +11,7 @@ export const schemaMutation = gql`
     updateComment(commentId: ID!, data: CommentInput!): Comment!
     deleteComment(commentId: ID!): Comment!
     addContact(receiverId: ID!, message: String!): Boolean!
-    acceptContact(senderId: ID!): Boolean!
-    addPrivateChat(receiverId: ID!, text: String!): PrivateChat!
+    acceptContact(senderId: ID!): Boolean!    
 
     sendRequestToAddFriend(userId: ID!): UsersContact!
     acceptRequestToAddFriend(senderId: ID!): UsersContact!
@@ -22,5 +21,6 @@ export const schemaMutation = gql`
     followUser(userId : ID!): UsersContact!
     unFollowUser(userId: ID!) : UsersContact!
 
+    sendPrivateMessageChatText(receiverId: ID!, text : String!): PrivateChatTextResult!
   }
 `;

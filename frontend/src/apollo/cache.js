@@ -7,14 +7,16 @@ import {
   Notifications,
   CountNumberNotificationsUnseen,
   NewNotifications,
-  OpenPopupNotification,  
+  OpenPopupNotification,
   CurrentPersonalUser,
   PersonalPosts,
   OpenFriendsList,
   Friends,
   SentRequestsToAddFriends,
   ReceivedRequestsToAddFriend,
-  FriendsByAlphabeta
+  FriendsByAlphabeta,
+  CurrentChatUser,
+  MessagesStorage,
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 const setPostStatusVar = makeVar(PostStatus);
@@ -33,6 +35,8 @@ const setFriendsVar = makeVar(Friends);
 const setSentRequestsToAddFriendVar = makeVar(SentRequestsToAddFriends);
 const setReceivedRequestsToAddFriendVar = makeVar(ReceivedRequestsToAddFriend);
 const setFriendsByAlphabetaVar = makeVar(FriendsByAlphabeta);
+const setCurrentChatUserVar = makeVar(CurrentChatUser);
+const setMessagesStorageVar = makeVar(MessagesStorage);
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -50,15 +54,15 @@ const cache = new InMemoryCache({
         friends: {
           read: () => setFriendsVar(),
         },
-        friendsByAlphabeta : {
-          read : () => setFriendsByAlphabetaVar()
+        friendsByAlphabeta: {
+          read: () => setFriendsByAlphabetaVar(),
         },
-        sentRequestsToAddFriend : {
-          read : () => setSentRequestsToAddFriendVar()
+        sentRequestsToAddFriend: {
+          read: () => setSentRequestsToAddFriendVar(),
         },
-        receivedRequestsToAddFriend : {
-          read : () => setReceivedRequestsToAddFriendVar()
-        },        
+        receivedRequestsToAddFriend: {
+          read: () => setReceivedRequestsToAddFriendVar(),
+        },
         currentPersonalUser: {
           read: () => setCurrentPersonalUserVar(),
         },
@@ -83,6 +87,12 @@ const cache = new InMemoryCache({
         openFriendsList: {
           read: () => setOpenFriendsListVar(),
         },
+        currentChatUser: {
+          read: () => setCurrentChatUserVar(),
+        },
+        messagesStorage: {
+          read: () => setMessagesStorageVar(),
+        },
       },
     },
   },
@@ -97,12 +107,14 @@ export {
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
   setNewNotificationsVar,
-  setOpenPopupNotificationVar,  
+  setOpenPopupNotificationVar,
   setCurrentPersonalUserVar,
   setPersonalPostsVar,
   setOpenFriendsListVar,
   setFriendsVar,
   setSentRequestsToAddFriendVar,
   setReceivedRequestsToAddFriendVar,
-  setFriendsByAlphabetaVar
+  setFriendsByAlphabetaVar,
+  setCurrentChatUserVar,
+  setMessagesStorageVar,
 };

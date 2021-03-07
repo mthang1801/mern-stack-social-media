@@ -818,7 +818,8 @@ export default createGlobalStyle`
     max-height: 5rem;
     overflow : auto;
     width : unset !important; 
-    margin-right : 5rem;        
+    margin-right : 5rem;       
+    cursor: auto; 
   }
   .DraftEditor-root a {
     color: blue;

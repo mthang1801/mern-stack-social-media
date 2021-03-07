@@ -65,10 +65,26 @@ export const schemaType = gql`
   }
 
   type PrivateChat{
-    sender : User! 
-    receiver : User!
-    status : PrivateChatEnum! 
-    text : String! 
+    sender : User
+    receiver : User
+    messageType : MessageTypeEnum!
+    receiverStatus :  PrivateChatReceiverStatusEnum!
+    senderStatus : PrivateChatSenderStatusEnum!
+    text : String
+    file : File
+    blocked: [User!]
+    createdAt : String!
+    updatedAt : String!
+  }
+
+  type PrivateChatText{
+    sender : User
+    receiver : User
+    messageType : MessageTypeEnum!
+    receiverStatus :  PrivateChatReceiverStatusEnum!
+    senderStatus : PrivateChatSenderStatusEnum!
+    text : String    
+    blocked: [User!]
     createdAt : String!
     updatedAt : String!
   }
@@ -97,7 +113,7 @@ export const schemaType = gql`
     node : Contact!
   }
   type PrivateChatSubsciptionPayload{
-    action : PrivateChatEnum! 
+    action : PrivateChatReceiverStatusEnum! 
     node : PrivateChat!
   }
 
@@ -112,4 +128,13 @@ export const schemaType = gql`
     friends : [User!]!    
   }
   
+  type PrivateChatTextResult{
+    message : PrivateChatText
+    error : Error
+  }
+
+  type Error{
+    message : String!
+    statusCode  : Int!
+  }
 `

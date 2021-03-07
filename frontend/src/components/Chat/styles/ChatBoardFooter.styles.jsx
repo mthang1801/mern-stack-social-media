@@ -73,6 +73,6 @@ export const PlaceHolder = styled.div`
   left: 1rem;
   top : 25%;
   color : var(--gray-deep);
-  cursor: alias;
+  cursor: auto;
   display : ${({show}) => show ? "block" : "none"};
 `

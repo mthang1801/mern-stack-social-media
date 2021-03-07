@@ -18,3 +18,6 @@ export { ToggleButtonMenu } from "./cache/ToggleButtonMenu";
 export { OpenPopupNotification } from "./cache/OpenPopupNotification";
 export { LoadingNotificationMore } from "./cache/LoadingNotificationsMore";
 export { OpenFriendsList } from "./cache/OpenFriendsList";
+//Chat
+export { CurrentChatUser } from "./chat/private/CurrentChatUser";
+export { MessagesStorage } from "./chat/MessagesStorage";
