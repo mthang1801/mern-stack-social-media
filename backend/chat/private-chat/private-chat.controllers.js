@@ -2,8 +2,42 @@ import getAuthUser from "../../utils/getAuthUser";
 import { PrivateChat } from "./private-chat.model";
 import { User } from "../../user/user.model";
 import { CheckResultAndHandleErrors, ApolloError } from "apollo-server-express";
+import _ from "lodash"
 import mongoose from "mongoose";
 export const privateChatControllers = {
+  fetchPrivateChatMessages : async (req, skip, limit) => {
+    try {
+      const currentUserId = getAuthUser(req);
+      const user = await User.findById(currentUserId);
+      const {privateChatUsers : privateChatUsersMap} = user;      
+      const privateChatUsersArray = [];
+      privateChatUsersMap.forEach(function(value, key){
+        privateChatUsersArray.push({userId: key, latestMsg : value})
+      })
+      const _sortedPrivateChatUsersArray = _.sortBy(privateChatUsersArray, function(o){ return -o.latestMsg})
+      const _getLimitedPrivateChatUsers = _sortedPrivateChatUsersArray.slice(skip, limit).map(({userId}) => userId);
+      //find messages between currentUser with limited user
+      let listMessages = [];     
+      let listUsers = [];
+      for(let userId of _getLimitedPrivateChatUsers ){
+        const userMessages = await PrivateChat.find({$or : [
+          { sender : userId, receiver: currentUserId},        
+          { sender : currentUserId, receiver: userId},   
+        ]}).sort({createdAt : -1}).skip(0).limit(+process.env.PRIVATE_CHAT_MESSAGES)
+        listMessages = [...listMessages, ...userMessages];  
+        const userInfo = await User.findById(userId, {name :1, slug : 1, avatar : 1 });  
+        
+        listUsers = [...listUsers, userInfo._doc]
+      }                 
+      return {
+        messages : listMessages,
+        users : listUsers
+      }
+    } catch (error) {
+      console.log(error);
+      throw new ApolloError("Server error");
+    }
+  } ,
   sendPrivateMessageChatText: async (req, receiverId, text) => {
     try {      
       const userId = getAuthUser(req);
@@ -70,4 +104,5 @@ export const privateChatControllers = {
       throw new ApolloError("Server error");
     }
   },
+  
 };
