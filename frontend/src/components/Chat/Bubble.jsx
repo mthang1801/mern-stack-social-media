@@ -36,7 +36,7 @@ const mentionPlugin = createMentionPlugin({
     );
   },
 });
-const Bubble = ({ data, me, senderAvatar }) => {
+const Bubble = ({ data, me, senderAvatar, index }) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createWithContent(convertFromRaw(JSON.parse(data.text)))
   );
@@ -48,8 +48,8 @@ const Bubble = ({ data, me, senderAvatar }) => {
     }
   },[bubbleRef])
   return (
-    <Wrapper>
-      <BubbleContainer  me={me}>
+    <Wrapper index={index}>
+      <BubbleContainer me={me} >
         <Avatar>
           <LazyLoadImage src={senderAvatar} />
         </Avatar>
@@ -72,7 +72,7 @@ const Bubble = ({ data, me, senderAvatar }) => {
             ) : (
               <Moment fromNow>{+data.createdAt}</Moment>
             )}</span>
-        <span>Dilivered</span>
+        <span>Delivered</span>
        </div>
       </BubbleTimeline>
     </Wrapper>

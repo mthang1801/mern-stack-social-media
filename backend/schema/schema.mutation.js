@@ -21,6 +21,6 @@ export const schemaMutation = gql`
     followUser(userId : ID!): UsersContact!
     unFollowUser(userId: ID!) : UsersContact!
 
-    sendPrivateMessageChatText(receiverId: ID!, text : String!): PrivateChatTextResult!
+    sendPrivateMessageChatText(receiverId: ID!, text : String!): PrivateChatResult!
   }
 `;

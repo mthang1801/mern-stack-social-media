@@ -3,6 +3,14 @@ import { pubsub } from "../../pubsub";
 import { withFilter } from "apollo-server-express";
 import { subscriptionActions } from "../../schema";
 export const privateChatResolvers = {
+  Query: {
+    fetchPrivateChatMessages: (_, args, { req }, info) =>
+      privateChatControllers.fetchPrivateChatMessages(
+        req,
+        args.skip || 0,
+        args.limit || +process.env.PRIVATE_CHAT_USERS
+      ),
+  },
   Mutation: {
     sendPrivateMessageChatText: (_, args, { req }, info) =>
       privateChatControllers.sendPrivateMessageChatText(

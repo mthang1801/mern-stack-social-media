@@ -1,6 +1,28 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+export const MentionLinkInfo = styled.div`
+  position: absolute;
+  visibility: hidden;
+  opacity: 1; 
+  left: -8%;
+  z-index: 5;
+  background-color: white;
+  padding: 0.5rem;
+  width: auto;
+  min-width: 12rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  border-radius: 0.5rem;
+  transition: var(--mainTransition);
+  font-size: 0.8rem;
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 export const Wrapper = styled.div`
   width: 100%;
   margin-bottom: 1rem;
@@ -8,6 +30,10 @@ export const Wrapper = styled.div`
     content: "";
     clear: both;
     display: table;
+  }
+  ${MentionLinkInfo}{
+    top : ${({index}) => index === 0 ? "1.5rem" : "unset"};
+    bottom : ${({index}) => index === 0 ? "unset" : "1.5rem"};
   }
 `;
 
@@ -64,30 +90,10 @@ export const Avatar = styled.div`
     height: 100%;
     border-radius: 50%;
     border: 1px solid var(--gray);
-  }
+  }  
 `;
 
-export const MentionLinkInfo = styled.div`
-  position: absolute;
-  visibility: hidden;
-  opacity: 1;
-  bottom: 1.5rem;
-  left: -8%;
-  z-index: 5;
-  background-color: white;
-  padding: 0.5rem;
-  width: auto;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  border-radius: 0.5rem;
-  transition: var(--mainTransition);
-  font-size: 0.8rem;
-  &:hover {
-    opacity: 1;
-  }
-`;
+
 
 export const Message = styled.div`
   width: calc(100% - 2rem);
@@ -130,4 +136,5 @@ export const MentionAvatar = styled.img`
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
+  margin-right: 0.4rem;
 `;

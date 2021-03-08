@@ -27,11 +27,10 @@ const ChatBoardBody = () => {
   return (
     <Wrapper theme={colorMode}>
       {currentChatUser && messagesStorage[currentChatUser._id]
-        ? messagesStorage[currentChatUser._id].map((message, idx) => {
-            console.log(message);
+        ? messagesStorage[currentChatUser._id].map((message, idx) => {            
             return (
               <Bubble
-                key={idx}
+                key={message._id}
                 data={message}
                 me={message.sender === user._id}
                 senderAvatar={
@@ -39,6 +38,7 @@ const ChatBoardBody = () => {
                     ? user.avatar
                     : currentChatUser.avatar
                 }
+                index={idx}
               />
             );
           })
