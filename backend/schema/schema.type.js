@@ -65,6 +65,7 @@ export const schemaType = gql`
   }
 
   type PrivateChat{
+    _id : ID!
     sender : User
     receiver : User
     messageType : MessageTypeEnum!
@@ -78,6 +79,7 @@ export const schemaType = gql`
   }
 
   type PrivateChatText{
+    _id : ID!
     sender : User
     receiver : User
     messageType : MessageTypeEnum!

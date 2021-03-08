@@ -1,28 +1,48 @@
-import React,{useState, useEffect} from "react";
-import { Wrapper} from "./styles/ChatBoardBody.styles";
+import React, { useState, useEffect } from "react";
+import { Wrapper } from "./styles/ChatBoardBody.styles";
 import Bubble from "./Bubble";
 import { useThemeUI } from "theme-ui";
-import {useQuery} from "@apollo/client"
-import {GET_CURRENT_CHAT_USER, GET_MESSAGES_STORAGE, GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
+import { useQuery } from "@apollo/client";
+import {
+  GET_CURRENT_CHAT_USER,
+  GET_MESSAGES_STORAGE,
+  GET_CURRENT_USER,
+} from "../../apollo/operations/queries/cache";
+
 
 const ChatBoardBody = () => {
-  //useState
-  const [messages, setMessages] = useState([]);
   //useQuery
-  const {data : {currentChatUser}} = useQuery(GET_CURRENT_CHAT_USER, {fetchPolicy: "cache-first"});
-  const {data : {messagesStorage}} = useQuery(GET_MESSAGES_STORAGE, {fetchPolicy : "cache-first"});  
-  console.log(messagesStorage)
-  useEffect(()=>{
-    if(currentChatUser && !messagesStorage[currentChatUser._id]){
-      //do something
-    }
-  },[currentChatUser, messagesStorage])
+  const {
+    data: { currentChatUser },
+  } = useQuery(GET_CURRENT_CHAT_USER, { fetchPolicy: "cache-first" });
+  const {
+    data: { user },
+  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+  const {
+    data: { messagesStorage },
+  } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-first" });
+
   const { colorMode } = useThemeUI();
+
   return (
     <Wrapper theme={colorMode}>
-      {messagesExample.map((message, idx) => (
-        <Bubble key={idx} data={message} />
-      ))}
+      {currentChatUser && messagesStorage[currentChatUser._id]
+        ? messagesStorage[currentChatUser._id].map((message, idx) => {
+            console.log(message);
+            return (
+              <Bubble
+                key={idx}
+                data={message}
+                me={message.sender === user._id}
+                senderAvatar={
+                  message.sender === user._id
+                    ? user.avatar
+                    : currentChatUser.avatar
+                }
+              />
+            );
+          })
+        : null}
     </Wrapper>
   );
 };
