@@ -15,7 +15,12 @@ import {
 } from "./styles/ChatBoardFooter.styles";
 import "emoji-mart/css/emoji-mart.css";
 import { FiSend } from "react-icons/fi";
-import { EditorState, convertToRaw, convertFromRaw, convertFromHTML } from "draft-js";
+import {
+  EditorState,
+  convertToRaw,
+  convertFromRaw,
+  convertFromHTML,
+} from "draft-js";
 import { IoMdAttach } from "react-icons/io";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import Editor from "@draft-js-plugins/editor";
@@ -27,16 +32,18 @@ import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import "./styles/editor.css";
 import "@draft-js-plugins/mention/lib/plugin.css";
 import { useThemeUI } from "theme-ui";
-import {SEND_PRIVATE_MESSAGE_CHAT_TEXT} from "../../apollo/operations/mutations/chat";
-import {cacheMutations} from "../../apollo/operations/mutations/";
-import {GET_CURRENT_CHAT_USER, GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
-import {useMutation, useQuery} from "@apollo/client"
+import { SEND_PRIVATE_MESSAGE_CHAT_TEXT } from "../../apollo/operations/mutations/chat";
+import { cacheMutations } from "../../apollo/operations/mutations/";
+import {
+  GET_CURRENT_CHAT_USER,
+  GET_CURRENT_USER,
+} from "../../apollo/operations/queries/cache";
+import { useMutation, useQuery } from "@apollo/client";
+import { stateToHTML } from "draft-js-export-html";
+import draftToHtml from 'draftjs-to-html';
 const ChatBoardFooter = () => {
   //useState
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  );
-  const [demoEditorState, setDemoEditorState] = useState(() =>
     EditorState.createEmpty()
   );
   const [showPlaceholder, setShowPlaceholder] = useState(true);
@@ -44,13 +51,17 @@ const ChatBoardFooter = () => {
   const [suggestions, setSuggestions] = useState(mentions);
   const [open, setOpen] = useState(true);
   //useQuery
-  const {data: {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-and-network"});
-  const {data : {currentChatUser}}  =useQuery(GET_CURRENT_CHAT_USER, {fetchPolicy : "cache-and-network"});
+  const {
+    data: { user },
+  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
+  const {
+    data: { currentChatUser },
+  } = useQuery(GET_CURRENT_CHAT_USER, { fetchPolicy: "cache-and-network" });
   //useMutation
-  const [sendPrivateMessageText] = useMutation(SEND_PRIVATE_MESSAGE_CHAT_TEXT)
-  const {setMessagesStorage} = cacheMutations
+  const [sendPrivateMessageText] = useMutation(SEND_PRIVATE_MESSAGE_CHAT_TEXT);
+  const { setMessagesStorage } = cacheMutations;
   const editorRef = useRef(null);
-  
+
   const {
     plugins,
     EmojiSelect,
@@ -62,6 +73,8 @@ const ChatBoardFooter = () => {
     });
     const { EmojiSelect, EmojiSuggestions } = emojiPlugin;
     const linkifyPlugin = createLinkifyPlugin({
+      target: "_blank",
+      rel : "noopener noreferrer",
       component(props) {
         return <a {...props} onClick={() => alert("Clicked on Link!")} />;
       },
@@ -89,7 +102,7 @@ const ChatBoardFooter = () => {
       },
     });
     const { MentionSuggestions } = mentionPlugin;
-    const plugins = [linkifyPlugin, mentionPlugin, emojiPlugin];
+    const plugins = [mentionPlugin, emojiPlugin,linkifyPlugin];
     return { plugins, EmojiSelect, EmojiSuggestions, MentionSuggestions };
   }, []);
 
@@ -98,11 +111,10 @@ const ChatBoardFooter = () => {
     setSuggestions(defaultSuggestionsFilter(value, mentions));
   }, []);
 
-  useEffect(()=>{
-    setShowPlaceholder(!editorState.getCurrentContent().hasText())
-  },[editorState])
+  useEffect(() => {
+    setShowPlaceholder(!editorState.getCurrentContent().hasText());
+  }, [editorState]);
 
- 
   useEffect(() => {
     function focusEditorWhenTypingTabButton(e) {
       if (e.which === 9) {
@@ -120,17 +132,32 @@ const ChatBoardFooter = () => {
       });
   }, [editorRef]);
 
-  const onSendMessage = e => {
-    if(editorState.getCurrentContent().hasText() && currentChatUser){      
-      const rawData = JSON.stringify(convertToRaw(editorState.getCurrentContent()))      
-      sendPrivateMessageText({variables : {receiverId: currentChatUser._id, text : rawData}}).then(res => {
-        setMessagesStorage(currentChatUser._id, rawData)
+  const onSendMessage = (e) => {
+    if (editorState.getCurrentContent().hasText() && currentChatUser) {
+      const rawData =JSON.stringify(
+        convertToRaw(editorState.getCurrentContent()))            
+      console.log(stateToHTML(editorState.getCurrentContent()))     
+      sendPrivateMessageText({
+        variables: { receiverId: currentChatUser._id, text: rawData },
       })
-      .catch(err => {
-        console.log(err)
-      })     
+        .then(({ data }) => {
+          const {_id, createdAt} = data.sendPrivateMessageChatText.message
+          const message = {
+            _id,
+            messageType: "TEXT",
+            sender: user._id,
+            receiver: currentChatUser._id,
+            text: rawData,
+            createdAt
+          };
+          setMessagesStorage(currentChatUser._id, message);
+          setEditorState(EditorState.createEmpty())
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-  }
+  }; 
   return (
     <Wrapper>
       <ChatActions theme={colorMode}>
@@ -148,11 +175,11 @@ const ChatBoardFooter = () => {
         <EmojiSelect />
         <Editor
           editorState={editorState}
-          onChange={setEditorState}          
-          plugins={plugins}          
+          onChange={setEditorState}
+          plugins={plugins}
           ref={editorRef}
           tabIndex="0"
-        />       
+        />
         <MentionSuggestions
           open={open}
           onOpenChange={onOpenChange}
@@ -173,24 +200,28 @@ const mentions = [
     id: 1,
     name: "Matthewwqeeqs Russell",
     email: "matthew.russell@google.com",
+    slug : "matthew",
     avatar:
       "https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg",
   },
   {
     id: 1230,
     name: "Juliasadaw Krispel-Samsel",
+    slug : "juliansadaw",
     email: "julian.krispel@google.com",
     avatar: "https://avatars2.githubusercontent.com/u/1188186?v=3&s=400",
   },
   {
     id: 66,
     name: "Jyotiewq Puri",
+    slug : "jyoti",
     email: "jyoti@yahoo.com",
     avatar: "https://avatars0.githubusercontent.com/u/2182307?v=3&s=400",
   },
   {
     id: 905,
     name: "Maxcxzc Stoiber",
+    slug : "stoiber",
     email: "max.stoiber@university.edu",
     avatar:
       "https://pbs.twimg.com/profile_images/763033229993574400/6frGyDyA_400x400.jpg",
@@ -198,12 +229,14 @@ const mentions = [
   {
     id: 54111,
     name: "Nikeq Graf",
+    slug : "graf",
     email: "info@nik-graf.com",
     avatar: "https://avatars0.githubusercontent.com/u/223045?v=3&s=400",
   },
   {
     id: 22,
     name: "Pascalewq Brandt",
+    slug : "brandt",
     email: "pascalbrandt@fastmail.com",
     avatar:
       "https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png",
@@ -211,6 +244,7 @@ const mentions = [
   {
     id: 3216361,
     name: "Matthewewqeq Russell",
+    slug : "russell",
     email: "matthew.russell@google.com",
     avatar:
       "https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg",
@@ -218,73 +252,16 @@ const mentions = [
   {
     id: 192365,
     name: "Julianewqeq Krispel-Samsel",
+    slug : "julianewqeq",
     email: "julian.krispel@google.com",
     avatar: "https://avatars2.githubusercontent.com/u/1188186?v=3&s=400",
   },
   {
     id: 23648,
     name: "Jyotiewqeqw Puri",
+    slug : "puti",
     email: "jyoti@yahoo.com",
     avatar: "https://avatars0.githubusercontent.com/u/2182307?v=3&s=400",
-  },
-  {
-    id: 36812,
-    name: "Maxewqeq Stoiber",
-    email: "max.stoiber@university.edu",
-    avatar:
-      "https://pbs.twimg.com/profile_images/763033229993574400/6frGyDyA_400x400.jpg",
-  },
-  {
-    id: 789327,
-    name: "Nikewqewqad Graf",
-    email: "info@nik-graf.com",
-    avatar: "https://avatars0.githubusercontent.com/u/223045?v=3&s=400",
-  },
-  {
-    id: 32131,
-    name: "Pascalsadwq Brandt",
-    email: "pascalbrandt@fastmail.com",
-    avatar:
-      "https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png",
-  },
-  {
-    id: 121312,
-    name: "Matthewewqe Russell",
-    email: "matthew.russell@google.com",
-    avatar:
-      "https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg",
-  },
-  {
-    id: 125134,
-    name: "Julianewq Krispel-Samsel",
-    email: "julian.krispel@google.com",
-    avatar: "https://avatars2.githubusercontent.com/u/1188186?v=3&s=400",
-  },
-  {
-    id: 3213214,
-    name: "Jyotiasd Puri",
-    email: "jyoti@yahoo.com",
-    avatar: "https://avatars0.githubusercontent.com/u/2182307?v=3&s=400",
-  },
-  {
-    id: 65361,
-    name: "Maxewq Stoiber",
-    email: "max.stoiber@university.edu",
-    avatar:
-      "https://pbs.twimg.com/profile_images/763033229993574400/6frGyDyA_400x400.jpg",
-  },
-  {
-    id: 5321,
-    name: "Nikewq Graf",
-    email: "info@nik-graf.com",
-    avatar: "https://avatars0.githubusercontent.com/u/223045?v=3&s=400",
-  },
-  {
-    id: 43,
-    name: "Pascalewq Brandt",
-    email: "pascalbrandt@fastmail.com",
-    avatar:
-      "https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png",
   },
 ];
 

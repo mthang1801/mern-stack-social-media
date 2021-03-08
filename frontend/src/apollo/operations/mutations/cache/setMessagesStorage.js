@@ -1,7 +1,7 @@
 /**
  *
  * @param {receiverId} ID
- * @param {newMessage} String
+ * @param {newMessage} Object
  */
 const setMessagesStorage = (setMessagesStorageVar) => (
   receiverId,
@@ -10,8 +10,8 @@ const setMessagesStorage = (setMessagesStorageVar) => (
   setMessagesStorageVar({
     ...setMessagesStorageVar(),
     [receiverId]: setMessagesStorageVar()[receiverId]
-      ? [...setMessagesStorageVar()[receiverId], newMessage]
-      : [newMessage],
+      ? [...setMessagesStorageVar()[receiverId], {...newMessage}]
+      : [{...newMessage}],
   });
 
 export default setMessagesStorage;
