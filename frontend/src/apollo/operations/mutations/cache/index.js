@@ -13,8 +13,9 @@ import createSetFriends from "./setFriends";
 import createSetReceivedRequestsToAddFriend from "./setReceivedRequestsToAddFriend";
 import createSetSentRequestsToAddFriend from "./setSentRequestsToAddFriend";
 import createSetFriendsByAlphabeta from "./setFriendsByAlphabeta";
-import createSetCurrentChatUser from "./setCurrentChatUser";
+import createSetInitialMessagesStorage from "./setInitialMessagesStorage";
 import createSetMessagesStorage from "./setMessagesStorage";
+import createSetCurrentChat from "./setCurrentChat"
 
 import {
   toggleButtonMenuVar,
@@ -31,9 +32,9 @@ import {
   setFriendsVar,
   setSentRequestsToAddFriendVar,
   setReceivedRequestsToAddFriendVar,
-  setFriendsByAlphabetaVar,
-  setCurrentChatUserVar,
-  setMessagesStorageVar,
+  setFriendsByAlphabetaVar,  
+  setMessagesStorageVar,  
+  setCurrentChatVar
 } from "../../../cache";
 
 const mutations = {
@@ -61,9 +62,10 @@ const mutations = {
   setReceivedRequestsToAddFriend: createSetReceivedRequestsToAddFriend(
     setReceivedRequestsToAddFriendVar
   ),
-  setFriendsByAlphabeta: createSetFriendsByAlphabeta(setFriendsByAlphabetaVar),
-  setCurrentChatUser: createSetCurrentChatUser(setCurrentChatUserVar),
-  setMessagesStorage: createSetMessagesStorage(setMessagesStorageVar),
+  setFriendsByAlphabeta: createSetFriendsByAlphabeta(setFriendsByAlphabetaVar),  
+  setInitialMessagesStorage : createSetInitialMessagesStorage(setMessagesStorageVar),
+  setMessagesStorage: createSetMessagesStorage(setMessagesStorageVar),  
+  setCurrentChat : createSetCurrentChat(setCurrentChatVar)
 };
 
 export { mutations as cacheMutations };

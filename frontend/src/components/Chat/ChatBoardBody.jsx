@@ -4,17 +4,18 @@ import Bubble from "./Bubble";
 import { useThemeUI } from "theme-ui";
 import { useQuery } from "@apollo/client";
 import {
-  GET_CURRENT_CHAT_USER,
+  GET_CURRENT_CHAT,
   GET_MESSAGES_STORAGE,
   GET_CURRENT_USER,
 } from "../../apollo/operations/queries/cache";
 
 
 const ChatBoardBody = () => {
+  
   //useQuery
   const {
-    data: { currentChatUser },
-  } = useQuery(GET_CURRENT_CHAT_USER, { fetchPolicy: "cache-first" });
+    data: { currentChat },
+  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-first" });
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
@@ -23,20 +24,23 @@ const ChatBoardBody = () => {
   } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-first" });
 
   const { colorMode } = useThemeUI();
-
+  console.log(messagesStorage[currentChat._id])
+  console.log(currentChat)
+  if(!currentChat || !messagesStorage[currentChat._id]) return null
   return (
     <Wrapper theme={colorMode}>
-      {currentChatUser && messagesStorage[currentChatUser._id]
-        ? messagesStorage[currentChatUser._id].map((message, idx) => {            
+      {currentChat && messagesStorage[currentChat._id].messages.length
+        ? messagesStorage[currentChat._id].messages.map((message, idx) => {  
+          console.log(message)          
             return (
               <Bubble
                 key={message._id}
                 data={message}
-                me={message.sender === user._id}
+                me={message.sender._id === user._id}
                 senderAvatar={
-                  message.sender === user._id
+                  message.sender._id === user._id
                     ? user.avatar
-                    : currentChatUser.avatar
+                    : currentChat.avatar
                 }
                 index={idx}
               />

@@ -66,8 +66,8 @@ export const schemaType = gql`
 
   type PrivateChat{
     _id : ID!
-    sender : User
-    receiver : User
+    sender : User!
+    receiver : User!
     messageType : MessageTypeEnum!
     receiverStatus :  PrivateChatReceiverStatusEnum!
     senderStatus : PrivateChatSenderStatusEnum!
@@ -117,14 +117,13 @@ export const schemaType = gql`
     friends : [User!]!    
   }
   
-  type PrivateChatResult{
+  type AddPrivateChatResult{
     message : PrivateChat
     error : Error
   }
 
-  type FetchPrivateChatsResult{
-    messages: [PrivateChat!]!
-    users : [User!]!
+  type FetchChatResults{
+    privateMessages: [PrivateChat!]!   
   }
 
   type Error{

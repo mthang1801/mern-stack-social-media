@@ -6,14 +6,18 @@ import {
   MessageControls,
 } from "./styles/MessageItem.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import {cacheMutations} from "../../apollo/operations/mutations"
 import Moment from "react-moment";
 import {usePopupMessagesActions} from "./hook/usePopupActions"
 import { useThemeUI } from "theme-ui";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting"
-const MessageItem = ({ friend }) => {
+
+const MessageItem = ({ messenger, latestTime }) => {
+  
   const [showSetting, setShowSettings] = useState(false);
   const {setPopupPosition, setShowPopup} = usePopupMessagesActions()
   const { colorMode } = useThemeUI();
+  const {setCurrentChat} = cacheMutations
   const onClickThreeDots = (e) => {
     e.preventDefault();    
     setShowPopup(true);
@@ -22,15 +26,14 @@ const MessageItem = ({ friend }) => {
         ? e.pageY - 0.25 * window.innerHeight
         : e.pageY;
     setPopupPosition({ left: e.pageX, top: positionY });
-  };
-
+  };  
   return (
-    <MessageItemWrapper theme={colorMode}>
+    <MessageItemWrapper theme={colorMode} onClick={() => setCurrentChat(messenger)}>
       <Avatar>
-        <LazyLoadImage src={friend.avatar} />
+        <LazyLoadImage src={messenger.avatar} />
       </Avatar>
       <UserMessageOverview>
-        <h4>{friend.name}</h4>
+        <h4>{messenger.name}</h4>
         <span>
           {"Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga fugit, eius natus iure libero reprehenderit velit sequi sint molestiae omnis".slice(
             0,
@@ -43,7 +46,13 @@ const MessageItem = ({ friend }) => {
         onMouseEnter={() => setShowSettings(true)}
         onMouseLeave={() => setShowSettings(false)}
       >
-        <Moment date={new Date()} format={"DD/MM/YYYY"} />
+        <div style={{textAlign:"right"}}>
+        {Date.now() - +latestTime > 3600000 ? (
+              <Moment date={new Date(+latestTime)} format="DD/MM/YYYY hh:mm" />
+            ) : (
+              <Moment fromNow>{+latestTime}</Moment>
+            )}
+        </div>
         <div aria-label="chat-messages-settings"  onClick={(e) => onClickThreeDots(e)}>
           <ThreeDotsSetting />
         </div>

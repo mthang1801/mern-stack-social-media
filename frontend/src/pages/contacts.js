@@ -11,7 +11,7 @@ import {
 } from "../apollo/operations/queries/user";
 import { cacheMutations } from "../apollo/operations/mutations";
 import MainBody from "../components/Body/MainBody";
-import { MainContent, MainContentFullSize, ContactTitle } from "./pages.styles";
+import { MainContent, MainContentFullSize, ContactTitle } from "./styles/pages.styles";
 import SentRequestsToAddFriend from "../components/Contact/SentRequestsToAddFriend";
 import ReceivedRequestsToAddFriend from "../components/Contact/ReceivedRequestsToAddFriend";
 import FriendsList from "../components/Contact/FriendsList";

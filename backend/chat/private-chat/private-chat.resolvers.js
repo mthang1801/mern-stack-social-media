@@ -4,8 +4,8 @@ import { withFilter } from "apollo-server-express";
 import { subscriptionActions } from "../../schema";
 export const privateChatResolvers = {
   Query: {
-    fetchPrivateChatMessages: (_, args, { req }, info) =>
-      privateChatControllers.fetchPrivateChatMessages(
+    fetchInitialChatMessages: (_, args, { req }, info) =>
+      privateChatControllers.fetchInitialChatMessages(
         req,
         args.skip || 0,
         args.limit || +process.env.PRIVATE_CHAT_USERS

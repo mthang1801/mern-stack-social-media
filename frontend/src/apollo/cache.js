@@ -15,48 +15,44 @@ import {
   SentRequestsToAddFriends,
   ReceivedRequestsToAddFriend,
   FriendsByAlphabeta,
-  CurrentChatUser,
   MessagesStorage,
+  PrivateChatUsers,
+  CurrentChat,
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
+//Post
 const setPostStatusVar = makeVar(PostStatus);
-const setUserVar = makeVar(User);
 const setPostsVar = makeVar(Posts);
+const setPersonalPostsVar = makeVar(PersonalPosts);
+//User
+const setUserVar = makeVar(User);
+const setCurrentPersonalUserVar = makeVar(CurrentPersonalUser);
+const setSentRequestsToAddFriendVar = makeVar(SentRequestsToAddFriends);
+const setReceivedRequestsToAddFriendVar = makeVar(ReceivedRequestsToAddFriend);
+//Notification
 const setNotificationsVar = makeVar(Notifications);
 const setCountNumberNotificationsUnseenVar = makeVar(
   CountNumberNotificationsUnseen
 );
 const setNewNotificationsVar = makeVar(NewNotifications);
 const setOpenPopupNotificationVar = makeVar(OpenPopupNotification);
-const setCurrentPersonalUserVar = makeVar(CurrentPersonalUser);
-const setPersonalPostsVar = makeVar(PersonalPosts);
+//Friends
 const setOpenFriendsListVar = makeVar(OpenFriendsList);
 const setFriendsVar = makeVar(Friends);
-const setSentRequestsToAddFriendVar = makeVar(SentRequestsToAddFriends);
-const setReceivedRequestsToAddFriendVar = makeVar(ReceivedRequestsToAddFriend);
 const setFriendsByAlphabetaVar = makeVar(FriendsByAlphabeta);
-const setCurrentChatUserVar = makeVar(CurrentChatUser);
+//Chat
 const setMessagesStorageVar = makeVar(MessagesStorage);
-
+const setPrivateChatUsersVar = makeVar(PrivateChatUsers);
+const setCurrentChatVar = makeVar(CurrentChat);
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        toggleButtonMenu: {
-          read: () => toggleButtonMenuVar(),
-        },
-        postStatus: {
-          read: () => setPostStatusVar(),
-        },
+        //current User
         user: {
           read: () => setUserVar(),
         },
-        friends: {
-          read: () => setFriendsVar(),
-        },
-        friendsByAlphabeta: {
-          read: () => setFriendsByAlphabetaVar(),
-        },
+        //other user
         sentRequestsToAddFriend: {
           read: () => setSentRequestsToAddFriendVar(),
         },
@@ -66,12 +62,31 @@ const cache = new InMemoryCache({
         currentPersonalUser: {
           read: () => setCurrentPersonalUserVar(),
         },
+        //UI
+        toggleButtonMenu: {
+          read: () => toggleButtonMenuVar(),
+        },
+        //post
+        postStatus: {
+          read: () => setPostStatusVar(),
+        },
         posts: {
           read: () => setPostsVar(),
         },
         personalPosts: {
           read: () => setPersonalPostsVar(),
         },
+        //Friends
+        friends: {
+          read: () => setFriendsVar(),
+        },
+        friendsByAlphabeta: {
+          read: () => setFriendsByAlphabetaVar(),
+        },
+        openFriendsList: {
+          read: () => setOpenFriendsListVar(),
+        },
+        //notification
         notifications: {
           read: () => setNotificationsVar(),
         },
@@ -84,15 +99,13 @@ const cache = new InMemoryCache({
         countNumberNotificationsUnseen: {
           read: () => setCountNumberNotificationsUnseenVar(),
         },
-        openFriendsList: {
-          read: () => setOpenFriendsListVar(),
-        },
-        currentChatUser: {
-          read: () => setCurrentChatUserVar(),
+        //Chat       
+        currentChat: {
+          read: () => setCurrentChatVar(),
         },
         messagesStorage: {
           read: () => setMessagesStorageVar(),
-        },
+        },        
       },
     },
   },
@@ -115,6 +128,7 @@ export {
   setSentRequestsToAddFriendVar,
   setReceivedRequestsToAddFriendVar,
   setFriendsByAlphabetaVar,
-  setCurrentChatUserVar,
   setMessagesStorageVar,
+  setPrivateChatUsersVar,
+  setCurrentChatVar,  
 };

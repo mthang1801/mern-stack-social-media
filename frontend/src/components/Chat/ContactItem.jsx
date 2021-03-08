@@ -15,7 +15,7 @@ const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
   const { setPopupPosition, setShowPopup } = usePopupContactActions();
   const { colorMode } = useThemeUI();
-  const {setCurrentChatUser} = cacheMutations;
+  const {setCurrentChat} = cacheMutations;
   const onClickThreeDots = (e) => {    
     e.stopPropagation()  ;
     setShowPopup(true);
@@ -31,7 +31,7 @@ const ContactItem = ({ friend }) => {
       theme={colorMode}
       onMouseEnter={() => setShowSettings(true)}
       onMouseLeave={() => setShowSettings(false)}
-      onClick={()=>setCurrentChatUser(friend)}
+      onClick={()=>setCurrentChat(friend)}
     >
       <Avatar>
         <LazyLoadImage src={friend.avatar} />

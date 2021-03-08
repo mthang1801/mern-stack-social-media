@@ -19,7 +19,7 @@ import {
   MainContent,
   MainContentLeftSide,
   MainContentRightSide,
-} from "./pages.styles.js";
+} from "./styles/pages.styles.js";
 const Home = () => {
   const {
     data: { user },

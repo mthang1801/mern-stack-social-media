@@ -1,16 +1,16 @@
 import React, {lazy} from "react";
 import Layout from "../containers/Layout";
 import { GET_CURRENT_USER } from "../apollo/operations/queries/cache";
-import { useQuery } from "@apollo/client";
+import { useQuery} from "@apollo/client";
 import CardRequestAuth from "../components/Card/CardRequestAuth";
-import { RequestAuthScreen, ChatsWrapper, SidebarNav, MainTab } from "./chats.styles";
+import { RequestAuthScreen, ChatsWrapper, SidebarNav, MainTab } from "./styles/chats.styles";
 import MenuChat from "../components/Chat/MenuChat";
 import {Route, Switch} from "react-router-dom";
 const ChatMessages = lazy(() => import("../components/Chat/Messages"))
 const ChatContacts = lazy(() => import("../components/Chat/Contact"))
 
 const ChatsPage = ({match}) => {
-  
+  //use Query
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });

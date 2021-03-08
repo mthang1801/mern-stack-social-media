@@ -35,7 +35,7 @@ import { useThemeUI } from "theme-ui";
 import { SEND_PRIVATE_MESSAGE_CHAT_TEXT } from "../../apollo/operations/mutations/chat";
 import { cacheMutations } from "../../apollo/operations/mutations/";
 import {
-  GET_CURRENT_CHAT_USER,
+  GET_CURRENT_CHAT,
   GET_CURRENT_USER,
 } from "../../apollo/operations/queries/cache";
 import { useMutation, useQuery } from "@apollo/client";
@@ -55,8 +55,8 @@ const ChatBoardFooter = () => {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
   const {
-    data: { currentChatUser },
-  } = useQuery(GET_CURRENT_CHAT_USER, { fetchPolicy: "cache-and-network" });
+    data: { currentChat },
+  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-and-network" });
   //useMutation
   const [sendPrivateMessageText] = useMutation(SEND_PRIVATE_MESSAGE_CHAT_TEXT);
   const { setMessagesStorage } = cacheMutations;
@@ -133,12 +133,12 @@ const ChatBoardFooter = () => {
   }, [editorRef]);
 
   const onSendMessage = (e) => {
-    if (editorState.getCurrentContent().hasText() && currentChatUser) {
+    if (editorState.getCurrentContent().hasText() && currentChat) {
       const rawData =JSON.stringify(
         convertToRaw(editorState.getCurrentContent()))            
       console.log(stateToHTML(editorState.getCurrentContent()))     
       sendPrivateMessageText({
-        variables: { receiverId: currentChatUser._id, text: rawData },
+        variables: { receiverId: currentChat._id, text: rawData },
       })
         .then(({ data }) => {
           const {_id, createdAt} = data.sendPrivateMessageChatText.message
@@ -146,11 +146,11 @@ const ChatBoardFooter = () => {
             _id,
             messageType: "TEXT",
             sender: user._id,
-            receiver: currentChatUser._id,
+            receiver: currentChat._id,
             text: rawData,
             createdAt
           };
-          setMessagesStorage(currentChatUser._id, message);
+          setMessagesStorage(currentChat._id, message);
           setEditorState(EditorState.createEmpty())
         })
         .catch((err) => {

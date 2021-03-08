@@ -7,6 +7,9 @@ export const MessageItemWrapper = styled.div`
   grid-gap: 0.5rem;
   cursor:pointer;
   padding: 0.5rem;  
+  @media (min-width: 600px) and (max-width :768px){
+    grid-template-columns : 1fr 5fr 1fr;
+  }
   &:hover{
     background-color : ${({theme}) => theme === "dark" ? "var(--color-hover-dark)" : "var(--color-hover-default)"};
   }
@@ -14,6 +17,8 @@ export const MessageItemWrapper = styled.div`
 
 export const Avatar = styled.div`
   width : 100%;
+  max-width : 4rem;
+  max-height: 4rem;
   & img{
     width : 100%;
     border-radius : 50%;

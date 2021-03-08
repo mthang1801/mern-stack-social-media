@@ -11,7 +11,7 @@ export const schemaQuery = gql`
     fetchUsersSentRequestToAddFriend(skip : Int, limit: Int) : [User!]!
     fetchUsersReceivedRequestToAddFriend(skip: Int, limit: Int): [User!]!
     fetchUserFriends : [User!]!
-    fetchPrivateChatMessages(limit : Int, skip: Int) : FetchPrivateChatsResult!
+    fetchInitialChatMessages(limit : Int, skip: Int) : FetchChatResults!
     loginUser (data : LoginUserInput!) : UserAuthPayload!
     fetchNotifications(skip: Int, limit: Int) : [Notification!]
     countNotificationsUnseen : Int!

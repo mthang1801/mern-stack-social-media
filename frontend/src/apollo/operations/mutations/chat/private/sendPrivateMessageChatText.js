@@ -5,6 +5,8 @@ export const SEND_PRIVATE_MESSAGE_CHAT_TEXT = gql`
     sendPrivateMessageChatText(receiverId : $receiverId, text : $text){      
       message {        
         _id
+        sender
+        receiver
         messageType        
         receiverStatus
         senderStatus

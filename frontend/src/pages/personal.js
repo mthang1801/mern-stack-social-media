@@ -1,4 +1,4 @@
-import React, { useEffect, lazy } from "react";
+import React, { useEffect } from "react";
 import PersonalHeading from "../components/Personal/PersonalHeading";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import {  
