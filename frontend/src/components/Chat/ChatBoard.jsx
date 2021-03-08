@@ -9,16 +9,7 @@ import ChatBoardBody from "./ChatBoardBody"
 import ChatBoardFooter from "./ChatBoardFooter"
 
 const ChatCenter = () => {  
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"});  
-  const {
-    data: { currentChat },
-  } = useQuery(GET_CURRENT_CHAT, {fetchPolicy : "cache-first"});  
-  
-  
-  useEffect(() => {},[])
-  if (!user && !currentChat) return null;
+
   return (
     <Wrapper>
       <ChatBoardHeading/>

@@ -12,8 +12,8 @@ import {usePopupMessagesActions} from "./hook/usePopupActions"
 import { useThemeUI } from "theme-ui";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting"
 
-const MessageItem = ({ messenger, latestTime }) => {
-  
+const MessageItem = ({ messenger, latestTime, active }) => {
+  console.log(active)
   const [showSetting, setShowSettings] = useState(false);
   const {setPopupPosition, setShowPopup} = usePopupMessagesActions()
   const { colorMode } = useThemeUI();
@@ -28,7 +28,7 @@ const MessageItem = ({ messenger, latestTime }) => {
     setPopupPosition({ left: e.pageX, top: positionY });
   };  
   return (
-    <MessageItemWrapper theme={colorMode} onClick={() => setCurrentChat(messenger)}>
+    <MessageItemWrapper theme={colorMode} active={active} onClick={() => setCurrentChat(messenger)}>
       <Avatar>
         <LazyLoadImage src={messenger.avatar} />
       </Avatar>

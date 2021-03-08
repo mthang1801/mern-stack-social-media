@@ -44,7 +44,9 @@ export const privateChatControllers = {
           .sort({ createdAt: -1 })
           .skip(0)
           .limit(+process.env.PRIVATE_CHAT_MESSAGES);
-        listPrivateMessages = [...listPrivateMessages, ...userMessages];
+          //sorting by ascending
+        const sortedUser = _.sortBy(userMessages, o=> o.createdAt)
+        listPrivateMessages = [...listPrivateMessages, ...sortedUser];
       }
       console.timeEnd("start")      
       return {

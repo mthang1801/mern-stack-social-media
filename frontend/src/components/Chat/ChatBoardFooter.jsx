@@ -158,6 +158,7 @@ const ChatBoardFooter = () => {
         });
     }
   }; 
+  if(!user || !currentChat) return null;
   return (
     <Wrapper>
       <ChatActions theme={colorMode}>

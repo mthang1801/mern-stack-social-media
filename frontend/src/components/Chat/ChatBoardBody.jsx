@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Wrapper } from "./styles/ChatBoardBody.styles";
 import Bubble from "./Bubble";
 import { useThemeUI } from "theme-ui";
@@ -22,16 +22,20 @@ const ChatBoardBody = () => {
   const {
     data: { messagesStorage },
   } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-first" });
-
+  const chatBoardBodyRef = useRef(null)
+  useEffect(() => {  
+    if(chatBoardBodyRef && chatBoardBodyRef.current){
+      chatBoardBodyRef.current.scrollIntoView({ behavior: 'smooth', block : "start" });   
+    }    
+  })    
   const { colorMode } = useThemeUI();
-  console.log(messagesStorage[currentChat._id])
-  console.log(currentChat)
-  if(!currentChat || !messagesStorage[currentChat._id]) return null
+  
+  if(!user || !currentChat || !messagesStorage[currentChat._id]) return null
   return (
     <Wrapper theme={colorMode}>
+     
       {currentChat && messagesStorage[currentChat._id].messages.length
-        ? messagesStorage[currentChat._id].messages.map((message, idx) => {  
-          console.log(message)          
+        ? messagesStorage[currentChat._id].messages.map((message, idx) => {              
             return (
               <Bubble
                 key={message._id}
@@ -46,7 +50,8 @@ const ChatBoardBody = () => {
               />
             );
           })
-        : null}
+        : null}   
+         <div ref={chatBoardBodyRef}></div>     
     </Wrapper>
   );
 };

@@ -13,6 +13,9 @@ export const MessageItemWrapper = styled.div`
   &:hover{
     background-color : ${({theme}) => theme === "dark" ? "var(--color-hover-dark)" : "var(--color-hover-default)"};
   }
+  ${({active, theme}) => active && `
+    background-color : ${theme === "dark" ? "var(--color-hover-dark)" : "var(--color-hover-default)"};
+  `}
 `
 
 export const Avatar = styled.div`
