@@ -7,97 +7,89 @@ import {
 } from "./styles/Chat.styles";
 import {
   GET_CURRENT_USER,
-  GET_FRIENDS_BY_ALPHABETA,
+  GET_FRIENDS,  
 } from "../../apollo/operations/queries/cache";
-import { FETCH_USER_FRIENDS } from "../../apollo/operations/queries/user";
+import {
+  FETCH_FRIENDS,
+} from "../../apollo/operations/queries/user";
 import { useQuery } from "@apollo/client";
 import Search from "./Search";
 import { useThemeUI } from "theme-ui";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import ListContacts from "./ListContacts";
-import ChatBoard from "./ChatBoard"
+import ChatBoard from "./ChatBoard";
 export const ContactContext = createContext({});
 
 const Contact = () => {
+  //useQuery
+  const {
+    data: { user },
+  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });  
+  const { setFriends } = cacheMutations;  
+
+  const {
+    data: { friends },
+  } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-only" });
+  const { refetch: fetchFriends } = useQuery(FETCH_FRIENDS, {
+    fetchPolicy: "cache-and-network",
+    skip: true,
+  });
   //useState
-  const [search, setSearch] = useState("");
-  const [contactData, setContactData] = useState({});
+  const [search, setSearch] = useState("");  
+  const [contactData, setContactData] = useState([]);
   const [originData, setOriginData] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({
     left: -10000,
     top: -10000,
   });
-  //useQuery
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { friendsByAlphabeta },
-  } = useQuery(GET_FRIENDS_BY_ALPHABETA, { fetchPolicy: "cache-first" });
-  const { setFriendsByAlphabeta } = cacheMutations;
-  const { refetch: fetchUserFriends } = useQuery(FETCH_USER_FRIENDS, {
-    fetchPolicy: "cache-and-network",
-    skip: true,
-  });
   const popupRef = useRef(null);
 
   useEffect(() => {
     let _mounted = true;
-    if (
-      user &&
-      fetchUserFriends &&
-      setFriendsByAlphabeta &&
-      !Object.entries(friendsByAlphabeta).length
-    ) {
-      fetchUserFriends().then(({ data }) => {
-        if (_mounted && data.fetchUserFriends) {
-          const _copyUserFriends = [...data.fetchUserFriends];
-          _copyUserFriends.sort((a, b) => a["name"].localeCompare(b["name"]));
-          const listFriendsByAlphabeta = {};
-          _copyUserFriends.forEach((friend) => {
-            if (listFriendsByAlphabeta[friend.name[0].toUpperCase()]) {
-              listFriendsByAlphabeta[friend.name[0].toUpperCase()].push(friend);
-            } else {
-              listFriendsByAlphabeta[friend.name[0].toUpperCase()] = [friend];
-            }
-          });
-          setFriendsByAlphabeta(listFriendsByAlphabeta);
-          setContactData({ ...listFriendsByAlphabeta });
-          setOriginData(_copyUserFriends);
+    if (!friends.length) {
+      fetchFriends({
+        skip: 0,
+        limit: +process.env.REACT_APP_FRIENDS_PER_LOAD,
+      }).then(({ data }) => {
+        if (_mounted) {
+          const { fetchFriends } = data;
+          //add status private to each friends because  when click contact item, it will link to current
+          //chat which need status
+          const friends = fetchFriends.map((friend) => ({
+            ...friend,
+            status: "PRIVATE",
+          }));
+          setFriends([...friends]);
+          setContactData([...friends]);
+          setOriginData([...friends]);
         }
       });
     }
     return () => (_mounted = false);
-  }, [friendsByAlphabeta, user, fetchUserFriends, setFriendsByAlphabeta]);
+  }, [friends]);
+  
 
   useEffect(() => {
-    if (friendsByAlphabeta) {
+    if (friends.length) {
       if (!search) {
-        setContactData({ ...friendsByAlphabeta });
+        setContactData([...originData]);
       } else {
-        const searchResults = {};
         const searchRegex = new RegExp(search, "i");
-
-        for (let friend of originData) {
-          if (friend["name"].match(searchRegex)) {
-            if (searchResults[friend["name"].charAt(0).toUpperCase()]) {
-              searchResults[friend["name"].charAt(0).toUpperCase()].push(
-                friend
-              );
-            } else {
-              searchResults[friend["name"].charAt(0).toUpperCase()] = [friend];
-            }
-          }
-        }
-        setContactData({ ...searchResults });
+        const searchResults = originData.filter(
+          ({ name }) => !!name.match(searchRegex)
+        );
+        setContactData([...searchResults]);
       }
     }
-  }, [search, friendsByAlphabeta, setContactData]);
+  }, [search,friends]);
+  
 
   useEffect(() => {
     function handleClickDotsSetting(e) {
-      const dotsElements = document.querySelectorAll(`[aria-label="chat-contact-settings"]`);
+      const dotsElements = document.querySelectorAll(
+        `[aria-label="chat-contact-settings"]`
+      );
       let flag = false;
       for (let s of dotsElements) {
         if (s.contains(e.target)) {
@@ -142,10 +134,10 @@ const Contact = () => {
         <LeftSide theme={colorMode}>
           <Search search={search} onChange={(e) => setSearch(e.target.value)} />
           <hr />
-          <ListContacts data={contactData} onScroll={() => console.log("s")} />
+          <ListContacts data={contactData.length ? contactData : friends} />
         </LeftSide>
         <RightSide>
-          <ChatBoard/>
+          <ChatBoard />
         </RightSide>
       </Wrapper>
     </ContactContext.Provider>

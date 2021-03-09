@@ -7,25 +7,25 @@ import {
   MentionWrapper,
   MentionInfo,
   MentionLinkInfo,
-  MentionAvatar,  
-  BubbleTimeline
+  MentionAvatar,
+  BubbleTimeline,
 } from "./styles/Bubble.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { convertFromRaw, EditorState } from "draft-js";
 import Editor from "@draft-js-plugins/editor";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import createMentionPlugin from "@draft-js-plugins/mention";
-import Moment from "react-moment"
+import Moment from "react-moment";
 const linkifyPlugin = createLinkifyPlugin({
   target: "_blank",
   rel: "noopener noreferrer",
 });
 const mentionPlugin = createMentionPlugin({
-  mentionComponent({ mention }) {   
+  mentionComponent({ mention }) {
     return (
       <MentionWrapper to={`/${mention.slug}`}>
         <MentionLinkInfo to={`/${mention.slug}`}>
-          <MentionAvatar src={mention.avatar}/>
+          <MentionAvatar src={mention.avatar} />
           <MentionInfo>
             <span>{mention.name}</span>
             <span>@{mention.slug}</span>
@@ -40,16 +40,21 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createWithContent(convertFromRaw(JSON.parse(message.text)))
   );
-  const [bubbleDimensions, setBubbleDimensions] = useState({width: 0, height: 0, x : 0, y : 0});
-  const bubbleRef = useRef(null)
+  const [bubbleDimensions, setBubbleDimensions] = useState({
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
+  });
+  const bubbleRef = useRef(null);
   useEffect(() => {
-    if(bubbleRef.current){
+    if (bubbleRef.current) {
       setBubbleDimensions(bubbleRef.current.getBoundingClientRect());
     }
-  },[bubbleRef]) 
+  }, [bubbleRef]);
   return (
     <Wrapper index={index}>
-      <BubbleContainer me={me} >
+      <BubbleContainer me={me}>
         <Avatar>
           <LazyLoadImage src={senderAvatar} />
         </Avatar>
@@ -65,15 +70,20 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
           ) : null}
         </Message>
       </BubbleContainer>
-      <BubbleTimeline width={bubbleDimensions.width}>
-       <div>
-       <span>{Date.now() - +message.createdAt > 3600000 ? (
-              <Moment date={new Date(+message.createdAt)} format="DD/MM/YYYY hh:mm" />
+      <BubbleTimeline width={bubbleDimensions.width} me={me}>
+        <div>
+          <span>
+            {Date.now() - +message.createdAt > 3600000 * 48 ? (
+              <Moment
+                date={new Date(+message.createdAt)}
+                format="DD/MM"
+              />
             ) : (
               <Moment fromNow>{+message.createdAt}</Moment>
-            )}</span>
-        <span>Delivered</span>
-       </div>
+            )}
+          </span>
+          <span>Delivered</span>
+        </div>
       </BubbleTimeline>
     </Wrapper>
   );

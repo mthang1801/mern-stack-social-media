@@ -3,12 +3,17 @@ import styled from "styled-components";
 export const MessageItemWrapper = styled.div`
   width : 100%; 
   display : grid; 
-  grid-template-columns : 1fr 3fr 1fr;
+  grid-template-columns : 1fr 3fr 3fr;
   grid-gap: 0.5rem;
   cursor:pointer;
   padding: 0.5rem;  
+  & > *{
+    overflow : hidden ;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+  }
   @media (min-width: 600px) and (max-width :768px){
-    grid-template-columns : 1fr 5fr 1fr;
+    grid-template-columns : 1fr 4fr 3fr;
   }
   &:hover{
     background-color : ${({theme}) => theme === "dark" ? "var(--color-hover-dark)" : "var(--color-hover-default)"};

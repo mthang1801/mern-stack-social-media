@@ -138,7 +138,7 @@ const ChatBoardFooter = () => {
       })
         .then(({ data }) => {
           const {message, status} = data.sendMessageChatText;              
-          const receiver = message.receiver;          
+          const {receiver} = message;          
           //always set hasSeenLatestMessage is true  because  this user is sender
           setMessagesStorage(receiver, message, status, true);
           setEditorState(EditorState.createEmpty())
@@ -147,8 +147,7 @@ const ChatBoardFooter = () => {
           console.log(err);
         });
     }
-  }; 
-  
+  };   
   return (
     <Wrapper style={{display : !user || !currentChat ? "none" : "block"}}>
       <ChatActions theme={colorMode}>

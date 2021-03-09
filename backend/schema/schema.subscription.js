@@ -8,12 +8,13 @@ export const schemaSubscription = gql`
 
     updateCountNotificationsWhenSeen(userId: ID!): ID!
     commentActions(postId: ID!): CommentSubscriptionPayload
-    contactActions(userId: ID!): ContactSubscriptionPayload!
-    privateChatActions(userId: ID!): PrivateChatSubsciptionPayload!
+    contactActions(userId: ID!): ContactSubscriptionPayload!    
    
     rejectRequestToAddFriendSubscription(userId: ID!): UsersContact!
     cancelRequestToAddFriendSubscription(userId: ID!): UsersContact!
     removeFriendSubscription(userId: ID!) : UsersContact!
+
+    sentMessageChatSubscription(userId: ID!): ChatSubscriptionPayload!
   }
 `;
 
@@ -27,5 +28,5 @@ export const subscriptionActions = {
   REMOVE_FRIEND : "REMOVE_FRIEND",
   COMMENT_ACTIONS: "COMMENT_ACTIONS",
   CONTACT_ACTIONS: "CONTACT_ACTIONS",
-  PRIVATE_CHAT_ACTIONS: "PRIVATE_CHAT_ACTIONS",
+  SENT_CHAT: "SENT_CHAT",
 };

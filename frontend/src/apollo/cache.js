@@ -14,7 +14,6 @@ import {
   Friends,
   SentRequestsToAddFriends,
   ReceivedRequestsToAddFriend,
-  FriendsByAlphabeta,
   MessagesStorage,
   PrivateChatUsers,
   CurrentChat,
@@ -39,7 +38,6 @@ const setOpenPopupNotificationVar = makeVar(OpenPopupNotification);
 //Friends
 const setOpenFriendsListVar = makeVar(OpenFriendsList);
 const setFriendsVar = makeVar(Friends);
-const setFriendsByAlphabetaVar = makeVar(FriendsByAlphabeta);
 //Chat
 const setMessagesStorageVar = makeVar(MessagesStorage);
 const setPrivateChatUsersVar = makeVar(PrivateChatUsers);
@@ -79,9 +77,6 @@ const cache = new InMemoryCache({
         //Friends
         friends: {
           read: () => setFriendsVar(),
-        },
-        friendsByAlphabeta: {
-          read: () => setFriendsByAlphabetaVar(),
         },
         openFriendsList: {
           read: () => setOpenFriendsListVar(),
@@ -127,7 +122,6 @@ export {
   setFriendsVar,
   setSentRequestsToAddFriendVar,
   setReceivedRequestsToAddFriendVar,
-  setFriendsByAlphabetaVar,
   setMessagesStorageVar,
   setPrivateChatUsersVar,
   setCurrentChatVar,  

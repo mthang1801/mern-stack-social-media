@@ -10,6 +10,7 @@ import getAuthUser from "../utils/getAuthUser";
 import { fields, actions } from "../fields-actions";
 import { Notification } from "../notification/notification.model";
 import mongoose from "mongoose";
+import _ from "lodash";
 export const userController = {
   users: () => User.find(),
   createUser: async (data) => {
@@ -65,7 +66,7 @@ export const userController = {
       tokenExpire: process.env.JWT_TOKEN_EXPIRE,
     };
   },
-  fetchCurrentUser: async (req) => {    
+  fetchCurrentUser: async (req) => {
     const userId = getAuthUser(req, false);
     const user = await User.findById(userId).populate({
       path: "notifications",
@@ -121,11 +122,16 @@ export const userController = {
       //do something
       return [];
     }
-    const user = await User.findById(currentUserId).populate({
-      path: "friends",
-      options: { limit: +limit, skip: +skip },
-    });
-    return user.friends;
+    const friendsList = await User.find(
+      { friends: currentUserId },
+      { name: 1, slug: 1, avatar: 1 }
+    )
+      .collation({ locale: "en" })
+      .sort({ name: 1 })
+      .skip(+skip)
+      .limit(+limit);
+
+    return friendsList;
   },
   sendRequestToAddFriend: async (
     req,
@@ -216,15 +222,7 @@ export const userController = {
       options: { skip: +skip, limit: +limit },
     });
     return currentUser.receivedRequestToAddFriend;
-  },
-  fetchUserFriends :async (req) => {
-    const userId = getAuthUser(req); 
-    const user = await User.findById(userId).populate("friends");
-    if(!user){
-      throw new AuthenticationError("User not found");
-    }
-    return user.friends;
-  },
+  }, 
   acceptRequestToAddFriend: async (
     req,
     senderId,
