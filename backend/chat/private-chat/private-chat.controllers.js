@@ -10,8 +10,9 @@ export const privateChatControllers = {
       console.time("start");
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
-      const { privateChatUsers: privateChatUsersMap } = user;
+      const { messengers: privateChatUsersMap } = user;
       const privateChatUsersArray = [];
+      console.log(privateChatUsersMap);
       privateChatUsersMap.forEach(function (value, key) {
         privateChatUsersArray.push({ userId: key, latestMsg: value });
       });
@@ -35,7 +36,7 @@ export const privateChatControllers = {
         })
           .populate({
             path: "sender",
-            options: { name: 1, slug: 1, avatar: 1 },
+            options: { name: 1, slug: 1, avatar: 1},
           })
           .populate({
             path: "receiver",
@@ -44,73 +45,87 @@ export const privateChatControllers = {
           .sort({ createdAt: -1 })
           .skip(0)
           .limit(+process.env.PRIVATE_CHAT_MESSAGES);
-          //sorting by ascending
-        const sortedUser = _.sortBy(userMessages, o=> o.createdAt)
+        //sorting by ascending
+        const sortedUser = _.sortBy(userMessages, (o) => o.createdAt);
         listPrivateMessages = [...listPrivateMessages, ...sortedUser];
       }
-      console.timeEnd("start")      
+      console.timeEnd("start");
       return {
-        privateMessages: listPrivateMessages,      
+        privateMessages: listPrivateMessages,
       };
     } catch (error) {
       console.log(error);
       throw new ApolloError("Server error");
     }
   },
-  sendPrivateMessageChatText: async (req, receiverId, text) => {
+  // status received either PRIVATE or GROUP
+  sendMessageChatText: async (req, receiverId, text, status) => {
     try {
       const userId = getAuthUser(req);
-      const user = await User.findById(userId);
-
-      if (!user) {
-        return {
-          error: {
-            message: "UnAuthorized",
-            statusCode: 400,
-          },
-        };
-      }
-      const receiver = await User.findOne({
-        _id: receiverId,
-        blocks: { $ne: userId },
-      });
-      if (!receiver) {
-        return {
-          error: {
-            message: "You can't send message to this person",
-            statusCode: 400,
-          },
-        };
-      }
-      if (text) {
-        const newPrivateChatText = new PrivateChat({
-          sender: userId,
-          receiver: receiverId,
-          messageType: "TEXT",
-          text,
+      if (status === "PRIVATE") {
+        const user = await User.findById(userId, {
+          name: 1,
+          slug: 1,
+          avatar: 1,
+          messengers : 1
         });
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        user.privateChatUsers
-          ? user.privateChatUsers.set(receiverId.toString(), Date.now())
-          : (user.privateChatUsers = new Map([
-              [receiverId.toString(), Date.now()],
-            ]));
 
-        await user.save();
-        receiver.privateChatUsers
-          ? receiver.privateChatUsers.set(userId.toString(), Date.now())
-          : (receiver.privateChatUsers = new Map([
-              [userId.toString(), Date.now()],
-            ]));
-        await receiver.save();
-        await newPrivateChatText.save();
-        await session.commitTransaction();
-        session.endSession();
-        console.log("success");
-        return {
-          message: newPrivateChatText,
-        };
+        if (!user) {
+          return {
+            error: {
+              message: "UnAuthorized",
+              statusCode: 400,
+            },
+          };
+        }
+        const receiver = await User.findOne(
+          {
+            _id: receiverId,
+            blocks: { $ne: userId },
+          },
+          { name: 1, slug: 1, avatar: 1, messengers: 1 }
+        );
+        if (!receiver) {
+          return {
+            error: {
+              message: "You can't send message to this person",
+              statusCode: 400,
+            },
+          };
+        }
+        if (text) {
+          const newPrivateChatText = new PrivateChat({
+            sender: userId,
+            receiver: receiverId,
+            messageType: "TEXT",
+            text,
+          });
+          const session = await mongoose.startSession();
+          session.startTransaction();
+          console.log(user.messengers);
+          if (user.messengers && user.messengers.size) {
+            user.messengers.set(receiverId.toString(), Date.now());
+          } else {
+            user.messengers = new Map([[receiverId.toString(), Date.now()]]);
+          }
+
+          await user.save();
+          if (receiver.messengers && receiver.messengers.size) {
+            receiver.messengers.set(userId.toString(), Date.now());
+          } else {
+            receiver.messengers = new Map([[userId.toString(), Date.now()]]);
+          }
+          await receiver.save();
+          await newPrivateChatText.save();
+          await session.commitTransaction();
+          session.endSession();
+          console.log("success");
+          const _cloneChatText = newPrivateChatText._doc;
+          return {
+            message: { ..._cloneChatText, sender: user, receiver },
+            status: "PRIVATE",
+          };
+        }
       }
       return {
         error: {

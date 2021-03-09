@@ -6,29 +6,39 @@ import {
   MessageControls,
 } from "./styles/MessageItem.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import {cacheMutations} from "../../apollo/operations/mutations"
+import { cacheMutations } from "../../apollo/operations/mutations";
 import Moment from "react-moment";
-import {usePopupMessagesActions} from "./hook/usePopupActions"
+import { usePopupMessagesActions } from "./hook/usePopupActions";
 import { useThemeUI } from "theme-ui";
-import ThreeDotsSetting from "../UI/ThreeDotsSetting"
+import ThreeDotsSetting from "../UI/ThreeDotsSetting";
 
-const MessageItem = ({ messenger, latestTime, active }) => {
-  console.log(active)
+const MessageItem = ({
+  messenger,
+  latestTime,
+  active,
+  status,
+  hasSeenLatestMessage,
+}) => {
   const [showSetting, setShowSettings] = useState(false);
-  const {setPopupPosition, setShowPopup} = usePopupMessagesActions()
+  const { setPopupPosition, setShowPopup } = usePopupMessagesActions();
   const { colorMode } = useThemeUI();
-  const {setCurrentChat} = cacheMutations
+  const { setCurrentChat } = cacheMutations;
   const onClickThreeDots = (e) => {
-    e.preventDefault();    
+    e.preventDefault();
     setShowPopup(true);
     const positionY =
       e.pageY > window.innerHeight * 0.75
         ? e.pageY - 0.25 * window.innerHeight
         : e.pageY;
     setPopupPosition({ left: e.pageX, top: positionY });
-  };  
+  };
   return (
-    <MessageItemWrapper theme={colorMode} active={active} onClick={() => setCurrentChat(messenger)}>
+    <MessageItemWrapper
+      theme={colorMode}
+      active={active}
+      hasSeenLatestMessage={hasSeenLatestMessage}
+      onClick={() => setCurrentChat({ ...messenger, status })}
+    >
       <Avatar>
         <LazyLoadImage src={messenger.avatar} />
       </Avatar>
@@ -45,15 +55,19 @@ const MessageItem = ({ messenger, latestTime, active }) => {
         show={showSetting}
         onMouseEnter={() => setShowSettings(true)}
         onMouseLeave={() => setShowSettings(false)}
+        hasSeenLatestMessage={hasSeenLatestMessage}
       >
-        <div style={{textAlign:"right"}}>
-        {Date.now() - +latestTime > 3600000 ? (
-              <Moment date={new Date(+latestTime)} format="DD/MM/YYYY hh:mm" />
-            ) : (
-              <Moment fromNow>{+latestTime}</Moment>
-            )}
+        <div style={{ textAlign: "right" }}>
+          {Date.now() - +latestTime > 3600000 ? (
+            <Moment date={new Date(+latestTime)} format="DD/MM/YYYY" />
+          ) : (
+            <Moment fromNow>{+latestTime}</Moment>
+          )}
         </div>
-        <div aria-label="chat-messages-settings"  onClick={(e) => onClickThreeDots(e)}>
+        <div
+          aria-label="chat-messages-settings"
+          onClick={(e) => onClickThreeDots(e)}
+        >
           <ThreeDotsSetting />
         </div>
       </MessageControls>

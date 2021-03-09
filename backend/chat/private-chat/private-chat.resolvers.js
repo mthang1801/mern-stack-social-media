@@ -12,11 +12,12 @@ export const privateChatResolvers = {
       ),
   },
   Mutation: {
-    sendPrivateMessageChatText: (_, args, { req }, info) =>
-      privateChatControllers.sendPrivateMessageChatText(
+    sendMessageChatText: (_, args, { req }, info) =>
+      privateChatControllers.sendMessageChatText(
         req,
         args.receiverId,
-        args.text
+        args.text,
+        args.status
       ),
   },
   Subscription: {

@@ -95,7 +95,7 @@ const UserSchema = new mongoose.Schema({
       required: true
     }
   ],
-  privateChatUsers : {
+  messengers : {
     type: Map,
     of: Number
   },  
