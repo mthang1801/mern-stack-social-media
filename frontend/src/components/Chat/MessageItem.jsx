@@ -11,10 +11,15 @@ import Moment from "react-moment";
 import { usePopupMessagesActions } from "./hook/usePopupActions";
 import { useThemeUI } from "theme-ui";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
-
+import {
+  ContentState,
+  convertFromRaw,
+  convertToRaw,
+  EditorState,
+} from "draft-js";
 const MessageItem = ({
   messenger,
-  latestTime,
+  latestMessage,
   active,
   status,
   hasSeenLatestMessage,
@@ -32,6 +37,7 @@ const MessageItem = ({
         : e.pageY;
     setPopupPosition({ left: e.pageX, top: positionY });
   };
+
   return (
     <MessageItemWrapper
       theme={colorMode}
@@ -45,10 +51,15 @@ const MessageItem = ({
       <UserMessageOverview>
         <h4>{messenger.name}</h4>
         <span>
-          {"Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga fugit, eius natus iure libero reprehenderit velit sequi sint molestiae omnis".slice(
-            0,
-            20
-          ) + "..."}
+          {latestMessage.messageType === "TEXT"
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(latestMessage.text))
+              )
+                .getCurrentContent()
+                .getPlainText().slice(0, 20) + "..."
+            : latestMessage === "PICTURE"
+            ? "a picture"
+            : "a file"}
         </span>
       </UserMessageOverview>
       <MessageControls
@@ -58,10 +69,13 @@ const MessageItem = ({
         hasSeenLatestMessage={hasSeenLatestMessage}
       >
         <div style={{ textAlign: "right" }}>
-          {Date.now() - +latestTime > 3600000 ? (
-            <Moment date={new Date(+latestTime)} format="DD/MM/YYYY" />
+          {Date.now() - +latestMessage.createdAt > 3600000 ? (
+            <Moment
+              date={new Date(+latestMessage.createdAt)}
+              format="DD/MM/YYYY"
+            />
           ) : (
-            <Moment fromNow>{+latestTime}</Moment>
+            <Moment fromNow>{+latestMessage.createdAt}</Moment>
           )}
         </div>
         <div

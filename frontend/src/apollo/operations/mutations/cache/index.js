@@ -12,7 +12,6 @@ import createSetOpenFriendsList from "./setOpenFriendsList";
 import createSetFriends from "./setFriends";
 import createSetReceivedRequestsToAddFriend from "./setReceivedRequestsToAddFriend";
 import createSetSentRequestsToAddFriend from "./setSentRequestsToAddFriend";
-import createSetFriendsByAlphabeta from "./setFriendsByAlphabeta";
 import createSetInitialMessagesStorage from "./setInitialMessagesStorage";
 import createSetMessagesStorage from "./setMessagesStorage";
 import createSetCurrentChat from "./setCurrentChat"
@@ -31,8 +30,7 @@ import {
   setOpenFriendsListVar,
   setFriendsVar,
   setSentRequestsToAddFriendVar,
-  setReceivedRequestsToAddFriendVar,
-  setFriendsByAlphabetaVar,  
+  setReceivedRequestsToAddFriendVar,  
   setMessagesStorageVar,  
   setCurrentChatVar
 } from "../../../cache";
@@ -61,8 +59,7 @@ const mutations = {
   ),
   setReceivedRequestsToAddFriend: createSetReceivedRequestsToAddFriend(
     setReceivedRequestsToAddFriendVar
-  ),
-  setFriendsByAlphabeta: createSetFriendsByAlphabeta(setFriendsByAlphabetaVar),  
+  ),  
   setInitialMessagesStorage : createSetInitialMessagesStorage(setMessagesStorageVar),
   setMessagesStorage: createSetMessagesStorage(setMessagesStorageVar),  
   setCurrentChat : createSetCurrentChat(setCurrentChatVar)

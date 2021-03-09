@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const MentionLinkInfo = styled.div`
   position: absolute;
   visibility: hidden;
-  opacity: 1; 
+  opacity: 1;
   left: -8%;
   z-index: 5;
   background-color: white;
@@ -31,9 +31,9 @@ export const Wrapper = styled.div`
     clear: both;
     display: table;
   }
-  ${MentionLinkInfo}{
-    top : ${({index}) => index === 0 ? "1.5rem" : "unset"};
-    bottom : ${({index}) => index === 0 ? "unset" : "1.5rem"};
+  ${MentionLinkInfo} {
+    top: ${({ index }) => (index === 0 ? "1.5rem" : "unset")};
+    bottom: ${({ index }) => (index === 0 ? "unset" : "1.5rem")};
   }
 `;
 
@@ -67,20 +67,30 @@ export const BubbleTimeline = styled.div`
     clear: both;
     display: table;
   }
-  
-  font-size: 0.85rem;  
-  & > div{
+
+  font-size: 0.85rem;
+  & > div {
+    ${({ me }) =>
+      me
+        ? `
     margin-left: 2.5rem;
-    display : flex;
-    justify-content : space-between;
-    ${({width}) => width ? `    
+    `
+        : `
+    margin-left: auto; 
+    margin-right : 2.5rem;
+      
+    `};
+    display: flex;
+    justify-content: space-between;
+    ${({ width }) =>
+      width
+        ? `    
     width : ${width}px;
-  ` : `
+  `
+        : `
     display : none; 
   `}
   }
-  
-  
 `;
 export const Avatar = styled.div`
   width: 2rem;
@@ -90,10 +100,8 @@ export const Avatar = styled.div`
     height: 100%;
     border-radius: 50%;
     border: 1px solid var(--gray);
-  }  
+  }
 `;
-
-
 
 export const Message = styled.div`
   width: calc(100% - 2rem);
@@ -113,6 +121,7 @@ export const Message = styled.div`
     max-height: unset;
     margin-right: 0;
     max-height: unset;
+    padding: 0.5rem;
   }
 `;
 export const MentionWrapper = styled(Link)`

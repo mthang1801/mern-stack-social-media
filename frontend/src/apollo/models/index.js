@@ -4,7 +4,6 @@ export { CurrentPersonalUser } from "./User/CurrentPersonalUser";
 export { Friends } from "./User/Friends";
 export { SentRequestsToAddFriends } from "./User/SentRequestsToAddFriend";
 export { ReceivedRequestsToAddFriend } from "./User/ReceivedRequestsToAddFriend";
-export { FriendsByAlphabeta } from "./User/FriendsByAlphabeta";
 //Post
 export { PostStatus } from "./Post/PostStatus";
 export { Posts } from "./Post/Posts";

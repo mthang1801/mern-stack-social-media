@@ -32,9 +32,9 @@ export const schemaType = gql`
     updatedAt : String!
   }
   type File{
-    filename: String!
-    mimetype: String!
-    encoding: String!
+    filename: String
+    mimetype: String
+    encoding: String
   }
   type Comment {
     _id : ID! 
@@ -101,9 +101,10 @@ export const schemaType = gql`
     action : ContactEnum!
     node : Contact!
   }
-  type PrivateChatSubsciptionPayload{
+  type ChatSubscriptionPayload{
     action : PrivateChatReceiverStatusEnum! 
-    node : PrivateChat!
+    status : ChatStatusEnum!
+    message : PrivateChat    
   }
 
   type UsersContact{

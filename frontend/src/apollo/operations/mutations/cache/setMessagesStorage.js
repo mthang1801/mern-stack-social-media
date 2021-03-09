@@ -12,7 +12,7 @@ const setMessagesStorage = (setMessagesStorageVar) => (
         ? [...setMessagesStorageVar()[messenger._id].messages, { ...message }]
         : [{ ...message }],
       status,
-      latestMessage: +message.createdAt,
+      latestMessage : message,      
       hasSeenLatestMessage,
     },
   });

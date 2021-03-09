@@ -1,65 +1,67 @@
-import getAuthUser from "../../utils/getAuthUser";
+import getAuthUser from "../utils/getAuthUser";
 import { PrivateChat } from "./private-chat.model";
-import { User } from "../../user/user.model";
+import { User } from "../user/user.model";
 import { CheckResultAndHandleErrors, ApolloError } from "apollo-server-express";
 import _ from "lodash";
 import mongoose from "mongoose";
 export const privateChatControllers = {
   fetchInitialChatMessages: async (req, skip, limit) => {
-    try {
-      console.time("start");
+    try {      
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
       const { messengers: privateChatUsersMap } = user;
-      const privateChatUsersArray = [];
-      console.log(privateChatUsersMap);
-      privateChatUsersMap.forEach(function (value, key) {
-        privateChatUsersArray.push({ userId: key, latestMsg: value });
-      });
-      const _sortedPrivateChatUsersArray = _.sortBy(
-        privateChatUsersArray,
-        function (o) {
-          return -o.latestMsg;
-        }
-      );
-      const _getLimitedPrivateChatUsers = _sortedPrivateChatUsersArray
-        .slice(skip, limit)
-        .map(({ userId }) => userId);
-      //find messages between currentUser with limited user
-      let listPrivateMessages = [];
-      for (let userId of _getLimitedPrivateChatUsers) {
-        const userMessages = await PrivateChat.find({
-          $or: [
-            { sender: userId, receiver: currentUserId },
-            { sender: currentUserId, receiver: userId },
-          ],
-        })
-          .populate({
-            path: "sender",
-            options: { name: 1, slug: 1, avatar: 1},
+      if(privateChatUsersMap && privateChatUsersMap.size){
+        const privateChatUsersArray = [];     
+        privateChatUsersMap.forEach(function (value, key) {
+          privateChatUsersArray.push({ userId: key, latestMsg: value });
+        });
+        const _sortedPrivateChatUsersArray = _.sortBy(
+          privateChatUsersArray,
+          function (o) {
+            return -o.latestMsg;
+          }
+        );
+        const _getLimitedPrivateChatUsers = _sortedPrivateChatUsersArray
+          .slice(skip, limit)
+          .map(({ userId }) => userId);
+        //find messages between currentUser with limited user
+        let listPrivateMessages = [];
+        for (let userId of _getLimitedPrivateChatUsers) {
+          const userMessages = await PrivateChat.find({
+            $or: [
+              { sender: userId, receiver: currentUserId },
+              { sender: currentUserId, receiver: userId },
+            ],
           })
-          .populate({
-            path: "receiver",
-            options: { name: 1, slug: 1, avatar: 1 },
-          })
-          .sort({ createdAt: -1 })
-          .skip(0)
-          .limit(+process.env.PRIVATE_CHAT_MESSAGES);
-        //sorting by ascending
-        const sortedUser = _.sortBy(userMessages, (o) => o.createdAt);
-        listPrivateMessages = [...listPrivateMessages, ...sortedUser];
+            .populate({
+              path: "sender",
+              options: { name: 1, slug: 1, avatar: 1},
+            })
+            .populate({
+              path: "receiver",
+              options: { name: 1, slug: 1, avatar: 1 },
+            })
+            .sort({ createdAt: -1 })
+            .skip(0)
+            .limit(+process.env.PRIVATE_CHAT_MESSAGES);
+          //sorting by ascending
+          const sortedUser = _.sortBy(userMessages, (o) => o.createdAt);
+          listPrivateMessages = [...listPrivateMessages, ...sortedUser];
+        }      
+        return {
+          privateMessages: listPrivateMessages,
+        };
       }
-      console.timeEnd("start");
       return {
-        privateMessages: listPrivateMessages,
-      };
+        privateMessages : []
+      }
     } catch (error) {
       console.log(error);
       throw new ApolloError("Server error");
     }
   },
   // status received either PRIVATE or GROUP
-  sendMessageChatText: async (req, receiverId, text, status) => {
+  sendMessageChatText: async (req, receiverId, text, status, pubsub, sentMessageChatSubscription) => {
     try {
       const userId = getAuthUser(req);
       if (status === "PRIVATE") {
@@ -101,8 +103,7 @@ export const privateChatControllers = {
             text,
           });
           const session = await mongoose.startSession();
-          session.startTransaction();
-          console.log(user.messengers);
+          session.startTransaction();          
           if (user.messengers && user.messengers.size) {
             user.messengers.set(receiverId.toString(), Date.now());
           } else {
@@ -116,11 +117,17 @@ export const privateChatControllers = {
             receiver.messengers = new Map([[userId.toString(), Date.now()]]);
           }
           await receiver.save();
-          await newPrivateChatText.save();
+          await newPrivateChatText.save();         
           await session.commitTransaction();
-          session.endSession();
-          console.log("success");
+          session.endSession();          
           const _cloneChatText = newPrivateChatText._doc;
+          pubsub.publish(sentMessageChatSubscription,{
+            sentMessageChatSubscription : {
+              action : "SENT",
+              status: "PRIVATE",
+              message : { ..._cloneChatText, sender: user, receiver }
+            }
+          })
           return {
             message: { ..._cloneChatText, sender: user, receiver },
             status: "PRIVATE",
