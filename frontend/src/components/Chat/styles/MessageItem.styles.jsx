@@ -16,6 +16,11 @@ export const MessageItemWrapper = styled.div`
   ${({active, theme}) => active && `
     background-color : ${theme === "dark" ? "var(--color-hover-dark)" : "var(--color-hover-default)"};
   `}
+  ${({hasSeenLatestMessage}) => !hasSeenLatestMessage && `
+    & *{
+      font-weight: 600 !important;
+    }
+  `}
 `
 
 export const Avatar = styled.div`
@@ -33,6 +38,11 @@ export const UserMessageOverview = styled.div`
   overflow : hidden;
   h4{
     font-size : 1rem;
+    font-weight: 400;
+  }
+  span{
+    font-size : 0.9rem;
+    opacity: 0.8;
   }
 `
 
@@ -42,8 +52,12 @@ export const MessageControls = styled.div`
   justify-content : space-between;
   align-items : flex-end;
   time{
-    font-size : 0.85rem;
-    opacity: 0.3;
+    font-size : 0.7rem;
+    opacity: 0.5;
+    ${({hasSeenLatestMessage}) => !hasSeenLatestMessage && `
+      color : var(--red);
+      opacity: 1;
+    `}
   }
   span{
     display : block;

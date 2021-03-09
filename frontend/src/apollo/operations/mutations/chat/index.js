@@ -1,5 +1,5 @@
-import { SEND_PRIVATE_MESSAGE_CHAT_TEXT } from "./private/sendPrivateMessageChatText";
-export { SEND_PRIVATE_MESSAGE_CHAT_TEXT };
+import { SEND_MESSAGE_CHAT_TEXT } from "./private/sendMessageChatText";
+export { SEND_MESSAGE_CHAT_TEXT };
 export const chatMutations = {
-  SEND_PRIVATE_MESSAGE_CHAT_TEXT,
+  SEND_MESSAGE_CHAT_TEXT,
 };

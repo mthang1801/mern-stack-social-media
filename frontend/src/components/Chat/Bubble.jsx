@@ -36,9 +36,9 @@ const mentionPlugin = createMentionPlugin({
     );
   },
 });
-const Bubble = ({ data, me, senderAvatar, index }) => {
+const Bubble = ({ message, me, senderAvatar, index }) => {
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createWithContent(convertFromRaw(JSON.parse(data.text)))
+    EditorState.createWithContent(convertFromRaw(JSON.parse(message.text)))
   );
   const [bubbleDimensions, setBubbleDimensions] = useState({width: 0, height: 0, x : 0, y : 0});
   const bubbleRef = useRef(null)
@@ -46,7 +46,7 @@ const Bubble = ({ data, me, senderAvatar, index }) => {
     if(bubbleRef.current){
       setBubbleDimensions(bubbleRef.current.getBoundingClientRect());
     }
-  },[bubbleRef])
+  },[bubbleRef]) 
   return (
     <Wrapper index={index}>
       <BubbleContainer me={me} >
@@ -54,7 +54,7 @@ const Bubble = ({ data, me, senderAvatar, index }) => {
           <LazyLoadImage src={senderAvatar} />
         </Avatar>
         <Message me={me} ref={bubbleRef}>
-          {data.messageType === "TEXT" ? (
+          {message.messageType === "TEXT" ? (
             <Editor
               editorState={editorState}
               setEditorState={setEditorState}
@@ -67,10 +67,10 @@ const Bubble = ({ data, me, senderAvatar, index }) => {
       </BubbleContainer>
       <BubbleTimeline width={bubbleDimensions.width}>
        <div>
-       <span>{Date.now() - +data.createdAt > 3600000 ? (
-              <Moment date={new Date(+data.createdAt)} format="DD/MM/YYYY hh:mm" />
+       <span>{Date.now() - +message.createdAt > 3600000 ? (
+              <Moment date={new Date(+message.createdAt)} format="DD/MM/YYYY hh:mm" />
             ) : (
-              <Moment fromNow>{+data.createdAt}</Moment>
+              <Moment fromNow>{+message.createdAt}</Moment>
             )}</span>
         <span>Delivered</span>
        </div>

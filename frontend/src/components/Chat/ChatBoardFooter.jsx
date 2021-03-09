@@ -32,15 +32,13 @@ import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import "./styles/editor.css";
 import "@draft-js-plugins/mention/lib/plugin.css";
 import { useThemeUI } from "theme-ui";
-import { SEND_PRIVATE_MESSAGE_CHAT_TEXT } from "../../apollo/operations/mutations/chat";
+import { SEND_MESSAGE_CHAT_TEXT } from "../../apollo/operations/mutations/chat";
 import { cacheMutations } from "../../apollo/operations/mutations/";
 import {
   GET_CURRENT_CHAT,
   GET_CURRENT_USER,
 } from "../../apollo/operations/queries/cache";
 import { useMutation, useQuery } from "@apollo/client";
-import { stateToHTML } from "draft-js-export-html";
-import draftToHtml from 'draftjs-to-html';
 const ChatBoardFooter = () => {
   //useState
   const [editorState, setEditorState] = useState(() =>
@@ -58,7 +56,7 @@ const ChatBoardFooter = () => {
     data: { currentChat },
   } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-and-network" });
   //useMutation
-  const [sendPrivateMessageText] = useMutation(SEND_PRIVATE_MESSAGE_CHAT_TEXT);
+  const [sendMessageChatText] = useMutation(SEND_MESSAGE_CHAT_TEXT);
   const { setMessagesStorage } = cacheMutations;
   const editorRef = useRef(null);
 
@@ -130,27 +128,19 @@ const ChatBoardFooter = () => {
       window.removeEventListener("keyup", (e) => {
         focusEditorWhenTypingTabButton(e);
       });
-  }, [editorRef]);
-
+  }, [editorRef]);  
   const onSendMessage = (e) => {
     if (editorState.getCurrentContent().hasText() && currentChat) {
       const rawData =JSON.stringify(
-        convertToRaw(editorState.getCurrentContent()))            
-      console.log(stateToHTML(editorState.getCurrentContent()))     
-      sendPrivateMessageText({
-        variables: { receiverId: currentChat._id, text: rawData },
+        convertToRaw(editorState.getCurrentContent()))                      
+        sendMessageChatText({
+        variables: { receiverId: currentChat._id, text: rawData, status: currentChat.status || "PRIVATE" },
       })
         .then(({ data }) => {
-          const {_id, createdAt} = data.sendPrivateMessageChatText.message
-          const message = {
-            _id,
-            messageType: "TEXT",
-            sender: user._id,
-            receiver: currentChat._id,
-            text: rawData,
-            createdAt
-          };
-          setMessagesStorage(currentChat._id, message);
+          const {message, status} = data.sendMessageChatText;              
+          const receiver = message.receiver;          
+          //always set hasSeenLatestMessage is true  because  this user is sender
+          setMessagesStorage(receiver, message, status, true);
           setEditorState(EditorState.createEmpty())
         })
         .catch((err) => {
@@ -158,9 +148,9 @@ const ChatBoardFooter = () => {
         });
     }
   }; 
-  if(!user || !currentChat) return null;
+  
   return (
-    <Wrapper>
+    <Wrapper style={{display : !user || !currentChat ? "none" : "block"}}>
       <ChatActions theme={colorMode}>
         <Label htmlFor="chat-photo" style={{ color: "#fb8c00" }}>
           <HiOutlinePhotograph />

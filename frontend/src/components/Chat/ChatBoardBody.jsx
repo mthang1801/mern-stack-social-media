@@ -28,18 +28,16 @@ const ChatBoardBody = () => {
       chatBoardBodyRef.current.scrollIntoView({ behavior: 'smooth', block : "start" });   
     }    
   })    
-  const { colorMode } = useThemeUI();
-  
-  if(!user || !currentChat || !messagesStorage[currentChat._id]) return null
+  const { colorMode } = useThemeUI();  
   return (
     <Wrapper theme={colorMode}>
      
-      {currentChat && messagesStorage[currentChat._id].messages.length
+      {currentChat && messagesStorage[currentChat._id] &&  messagesStorage[currentChat._id].messages.length && user
         ? messagesStorage[currentChat._id].messages.map((message, idx) => {              
             return (
               <Bubble
                 key={message._id}
-                data={message}
+                message={message}
                 me={message.sender._id === user._id}
                 senderAvatar={
                   message.sender._id === user._id

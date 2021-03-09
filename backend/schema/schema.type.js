@@ -117,8 +117,9 @@ export const schemaType = gql`
     friends : [User!]!    
   }
   
-  type AddPrivateChatResult{
+  type AddChatResult{
     message : PrivateChat
+    status: ChatStatusEnum
     error : Error
   }
 

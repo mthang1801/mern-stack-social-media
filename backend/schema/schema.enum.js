@@ -33,4 +33,8 @@ export const schemaEnum = gql`
     TEXT
     BLOB
   }
+  enum ChatStatusEnum{
+    PRIVATE
+    GROUP
+  }
 `
