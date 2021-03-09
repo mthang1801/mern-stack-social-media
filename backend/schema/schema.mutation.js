@@ -22,5 +22,7 @@ export const schemaMutation = gql`
     unFollowUser(userId: ID!) : UsersContact!
 
     sendMessageChatText(receiverId: ID!, text : String!, status: String!): AddChatResult!
+    updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched(listSenderId : [ID!]!) : Boolean!
+    updatePrivateReceiverStatusSentToDeliveredWhenReceivedNewMessage(messageId: ID!) : Boolean
   }
 `;

@@ -66,7 +66,7 @@ export const BubbleTimeline = styled.div`
     content: "";
     clear: both;
     display: table;
-  }
+  }  
 
   font-size: 0.85rem;
   & > div {

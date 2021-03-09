@@ -37,7 +37,7 @@ const MessageItem = ({
         : e.pageY;
     setPopupPosition({ left: e.pageX, top: positionY });
   };
-
+  
   return (
     <MessageItemWrapper
       theme={colorMode}
