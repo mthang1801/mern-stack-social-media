@@ -16,6 +16,8 @@ import Editor from "@draft-js-plugins/editor";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import createMentionPlugin from "@draft-js-plugins/mention";
 import Moment from "react-moment";
+import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
+import {useQuery} from "@apollo/client"
 const linkifyPlugin = createLinkifyPlugin({
   target: "_blank",
   rel: "noopener noreferrer",
@@ -40,6 +42,7 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createWithContent(convertFromRaw(JSON.parse(message.text)))
   );
+  const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"});
   const [bubbleDimensions, setBubbleDimensions] = useState({
     width: 0,
     height: 0,
@@ -52,6 +55,7 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
       setBubbleDimensions(bubbleRef.current.getBoundingClientRect());
     }
   }, [bubbleRef]);
+ 
   return (
     <Wrapper index={index}>
       <BubbleContainer me={me}>
@@ -82,7 +86,7 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
               <Moment fromNow>{+message.createdAt}</Moment>
             )}
           </span>
-          <span>Delivered</span>
+          {user._id === message.sender._id ? <span style={{textTransform: "capitalize"}}>{message.receiverStatus.toLowerCase()}</span> : null }
         </div>
       </BubbleTimeline>
     </Wrapper>

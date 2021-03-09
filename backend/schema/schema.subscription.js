@@ -15,6 +15,7 @@ export const schemaSubscription = gql`
     removeFriendSubscription(userId: ID!) : UsersContact!
 
     sentMessageChatSubscription(userId: ID!): ChatSubscriptionPayload!
+    notifySenderThatReceiverHasReceivedMessageChat(userId: ID!) : ChatSubscriptionPayload!
   }
 `;
 
@@ -29,4 +30,5 @@ export const subscriptionActions = {
   COMMENT_ACTIONS: "COMMENT_ACTIONS",
   CONTACT_ACTIONS: "CONTACT_ACTIONS",
   SENT_CHAT: "SENT_CHAT",
+  UPDATE_RECEIVER_RECEIVED_CHAT : "UPDATE_RECEIVER_RECEIVED_CHAT" //Change Sent to Delivered
 };
