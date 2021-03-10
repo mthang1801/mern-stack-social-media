@@ -18,6 +18,11 @@ export const FETCH_INITIAL_CHAT_MESSAGES = gql`
           avatar
         }
         messageType        
+        file{
+          data 
+          filename
+          mimetype
+        }
         receiverStatus
         senderStatus
         text        

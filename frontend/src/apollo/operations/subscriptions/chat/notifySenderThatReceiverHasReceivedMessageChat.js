@@ -24,7 +24,7 @@ export const NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT = gql`
         senderStatus
         text
         file {
-          encoding
+          data
           filename
           mimetype
         }

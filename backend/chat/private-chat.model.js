@@ -14,13 +14,13 @@ const PrivateChatSchema = new mongoose.Schema(
     },
     messageType: {
       type: String,
-      enum: ["TEXT", "BLOB"],
+      enum: ["TEXT", "IMAGE", "FILE"],
     },
     text: {
       type: String,
     },
     file: {
-      encoding: Buffer,
+      data: Buffer,
       mimetype: String,
       filename: String,
     },

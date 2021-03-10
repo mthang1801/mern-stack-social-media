@@ -3,11 +3,14 @@ import { PrivateChat } from "./private-chat.model";
 import { User } from "../user/user.model";
 import { CheckResultAndHandleErrors, ApolloError } from "apollo-server-express";
 import _ from "lodash";
+import decodeBase64 from "../utils/decodeBase64";
 import mongoose from "mongoose";
+import bufferToBase64 from "../utils/bufferToBase64"
 export const chatControllers = {
   fetchInitialChatMessages: async (req, skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
     try {
+      console.time("start");
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
       const { messengers: privateChatUsersMap } = user;
@@ -36,23 +39,38 @@ export const chatControllers = {
           })
             .populate({
               path: "sender",
-              options: { name: 1, slug: 1, avatar: 1 },
+              select: { name: 1, slug: 1, avatar: 1 },
             })
             .populate({
               path: "receiver",
-              options: { name: 1, slug: 1, avatar: 1 },
+              select: { name: 1, slug: 1, avatar: 1 },
             })
             .sort({ createdAt: -1 })
             .skip(0)
             .limit(+process.env.PRIVATE_CHAT_MESSAGES);
           //sorting by ascending
-          const sortedUser = _.sortBy(userMessages, (o) => o.createdAt);
+          const sortedUser = _.sortBy([...userMessages], (o) => o.createdAt);
           listPrivateMessages = [...listPrivateMessages, ...sortedUser];
         }
+        //loop array, check messageType is IMAGE or FILE and convert data to base64
+        const _cloneListPrivateMessages = [...listPrivateMessages].map((message) => {
+          const _cloneMessage= message._doc;
+          if (
+            message.messageType === "IMAGE" ||
+            message.messageType === "FILE"
+          ) {
+            return {
+              ..._cloneMessage,
+              file : {..._cloneMessage.file, data : `data:${_cloneMessage.file.mimetype};base64,${_cloneMessage.file.data.toString("base64")}`}
+            }
+          }
+          return {..._cloneMessage}; 
+        });
+        console.timeEnd("start")       ;
         return {
-          privateMessages: listPrivateMessages,
+          privateMessages: _cloneListPrivateMessages,
         };
-      }
+      }    
       return {
         privateMessages: [],
       };
@@ -132,13 +150,13 @@ export const chatControllers = {
           pubsub.publish(sentMessageChatSubscription, {
             sentMessageChatSubscription: {
               action: "SENT",
-              status: "PRIVATE",
+              status,
               message: { ..._cloneChatText, sender: user, receiver },
             },
           });
           return {
             message: { ..._cloneChatText, sender: user, receiver },
-            status: "PRIVATE",
+            status,
           };
         }
       }
@@ -151,6 +169,97 @@ export const chatControllers = {
     } catch (error) {
       console.log(error);
       throw new ApolloError("Server error");
+    }
+  },
+  sendMessageChatFile: async (req, receiverId, file, status, messageType, pubsub, sentMessageChatSubscription) => {
+    try {      
+      const { encoding, filename, mimetype } = file;
+      const currentUserId = getAuthUser(req);
+      const currentUser = await User.findById(currentUserId, {
+        name: 1,
+        slug: 1,
+        avatar: 1,
+        messengers: 1,
+      });
+      const receiver = await User.findOne(
+        {
+          _id: receiverId,
+          blocks: { $ne: currentUserId },
+        },
+        { name: 1, slug: 1, avatar: 1, messengers: 1 }
+      );
+      if (!receiver) {
+        return {
+          error: {
+            message: "User not found",
+            statusCode: 400,
+          },
+        };
+      }
+      const { data } = decodeBase64(encoding);
+      if (status === "PRIVATE") {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        const newPrivateMessageFile = new PrivateChat({
+          sender: currentUserId,
+          receiver: receiverId,
+          messageType,
+          file: {
+            data,
+            filename,
+            mimetype,
+          },
+        });
+        if (currentUser.messengers && currentUser.messengers.size) {
+          currentUser.messengers.set(receiverId.toString(), Date.now());
+        } else {
+          currentUser.messengers = new Map([
+            [receiverId.toString(), Date.now()],
+          ]);
+        }
+
+        await currentUser.save();
+        if (receiver.messengers && receiver.messengers.size) {
+          receiver.messengers.set(currentUserId.toString(), Date.now());
+        } else {
+          receiver.messengers = new Map([
+            [currentUserId.toString(), Date.now()],
+          ]);
+        }
+        await receiver.save();
+        await newPrivateMessageFile.save();
+        await session.commitTransaction();
+        session.endSession();
+        const _cloneNewPrivateMessageFile = newPrivateMessageFile._doc;
+        const messageResult = {
+          ..._cloneNewPrivateMessageFile,
+          sender: currentUser,
+          receiver,
+          file: {
+            ..._cloneNewPrivateMessageFile.file,
+            data: encoding,
+          },
+        }
+        pubsub.publish(sentMessageChatSubscription, {
+          sentMessageChatSubscription : {
+            action : "SENT",
+            message : messageResult,
+            status
+          }
+        })
+        return {
+          message: messageResult ,
+          status,
+        };
+      }
+      return {
+        error: {
+          message: "Send message fail, there were some errors occured",
+          statusCode: 400,
+        },
+      };
+    } catch (error) {
+      throw new ApolloError(error.message);
     }
   },
   updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched: async (
@@ -174,7 +283,7 @@ export const chatControllers = {
   updatePrivateReceiverStatusSentToDeliveredWhenReceivedNewMessage: async (
     req,
     messageId,
-    pubsub, 
+    pubsub,
     notifySenderThatReceiverHasReceivedMessageChat
   ) => {
     try {
@@ -183,14 +292,19 @@ export const chatControllers = {
         { _id: messageId, receiver: currentUserId, receiverStatus: "SENT" },
         { receiverStatus: "DELIVERED" },
         { new: true }
-      ).populate({path: "sender", select: "name slug avatar"}).populate({path: "receiver", select: "name slug avatar"})
+      )
+        .populate({ path: "sender", select: "name slug avatar" })
+        .populate({ path: "receiver", select: "name slug avatar" });
+      const _cloneUpdatedMessage = updatedMessage._doc;
+      _cloneUpdatedMessage.file.data =  `data:${_cloneUpdatedMessage.file.mimetype};base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;
+      console.log(_cloneUpdatedMessage)
       pubsub.publish(notifySenderThatReceiverHasReceivedMessageChat, {
-        notifySenderThatReceiverHasReceivedMessageChat : {
+        notifySenderThatReceiverHasReceivedMessageChat: {
           action: "DELIVERED",
-          status : "PRIVATE",
-          message : updatedMessage
-        }
-      })
+          status: "PRIVATE",
+          message: updatedMessage,
+        },
+      });
       return true;
     } catch (error) {
       throw new ApolloError(error.message);

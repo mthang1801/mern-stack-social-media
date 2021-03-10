@@ -34,6 +34,7 @@
     "react-i18next": "^11.8.5",
     "react-icons": "^4.1.0",
     "react-image-gallery": "^1.0.9",
+    "react-image-lightbox": "^5.1.1",
     "react-lazy-load-image-component": "^1.5.1",
     "react-moment": "^1.1.1",
     "react-reveal": "^1.2.2",

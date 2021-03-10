@@ -49,8 +49,7 @@ const ChatsPage = ({ match }) => {
           const { privateMessages } = data.fetchInitialChatMessages;
           let storage = {};
           privateMessages.forEach((newMessage) => {
-            //check message is sent Status to, then push senderId to privateMessagesHaveReceiverSentStatus variable
-            console.log(newMessage);
+            //check message is sent Status to, then push senderId to privateMessagesHaveReceiverSentStatus variable           
             if (
               newMessage.receiver._id === user._id &&
               newMessage.receiverStatus === "SENT" &&

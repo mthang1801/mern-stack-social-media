@@ -9,6 +9,7 @@ import {
   MentionLinkInfo,
   MentionAvatar,
   BubbleTimeline,
+  ImageContainer
 } from "./styles/Bubble.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { convertFromRaw, EditorState } from "draft-js";
@@ -16,8 +17,10 @@ import Editor from "@draft-js-plugins/editor";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import createMentionPlugin from "@draft-js-plugins/mention";
 import Moment from "react-moment";
-import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
-import {useQuery} from "@apollo/client"
+import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
+import { useQuery } from "@apollo/client";
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
 const linkifyPlugin = createLinkifyPlugin({
   target: "_blank",
   rel: "noopener noreferrer",
@@ -40,9 +43,17 @@ const mentionPlugin = createMentionPlugin({
 });
 const Bubble = ({ message, me, senderAvatar, index }) => {
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createWithContent(convertFromRaw(JSON.parse(message.text)))
+    message.messageType === "TEXT"
+      ? EditorState.createWithContent(convertFromRaw(JSON.parse(message.text)))
+      : null
   );
-  const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"});
+  const [isOpen, setIsOpen] = useState(false);
+  if(message.messageType === "IMAGE"){
+    console.log(message)
+  }
+  const {
+    data: { user },
+  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
   const [bubbleDimensions, setBubbleDimensions] = useState({
     width: 0,
     height: 0,
@@ -55,14 +66,14 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
       setBubbleDimensions(bubbleRef.current.getBoundingClientRect());
     }
   }, [bubbleRef]);
- 
+
   return (
     <Wrapper index={index}>
       <BubbleContainer me={me}>
         <Avatar>
           <LazyLoadImage src={senderAvatar} />
         </Avatar>
-        <Message me={me} ref={bubbleRef}>
+        <Message me={me} ref={bubbleRef} messageType={message.messageType}>
           {message.messageType === "TEXT" ? (
             <Editor
               editorState={editorState}
@@ -71,6 +82,14 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
               onChange={setEditorState}
               readOnly
             />
+          ) : message.messageType === "IMAGE" ? (
+            <ImageContainer>
+              <img src={message.file.data} alt={message.file.filename} onClick={() => setIsOpen(true)}/>
+              {isOpen && <Lightbox 
+                mainSrc={message.file.data}
+                onCloseRequest={() => setIsOpen(false)}
+              />}
+            </ImageContainer>
           ) : null}
         </Message>
       </BubbleContainer>
@@ -78,15 +97,16 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
         <div>
           <span>
             {Date.now() - +message.createdAt > 3600000 * 48 ? (
-              <Moment
-                date={new Date(+message.createdAt)}
-                format="DD/MM"
-              />
+              <Moment date={new Date(+message.createdAt)} format="DD/MM" />
             ) : (
               <Moment fromNow>{+message.createdAt}</Moment>
             )}
           </span>
-          {user._id === message.sender._id ? <span style={{textTransform: "capitalize"}}>{message.receiverStatus.toLowerCase()}</span> : null }
+          {user._id === message.sender._id ? (
+            <span style={{ textTransform: "capitalize" }}>
+              {message.receiverStatus.toLowerCase()}
+            </span>
+          ) : null}
         </div>
       </BubbleTimeline>
     </Wrapper>

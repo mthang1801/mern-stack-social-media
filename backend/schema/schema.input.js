@@ -30,4 +30,10 @@ export const schemaInput = gql`
     mimetype : String
     filename : String
   }
+
+  input ChatFileInput{
+    encoding : String!
+    filename : String!
+    mimetype : String!
+  }
 `

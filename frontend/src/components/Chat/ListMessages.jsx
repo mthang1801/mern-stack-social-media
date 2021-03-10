@@ -24,13 +24,12 @@ const ListMessages = () => {
     console.log("render")
     const _convertStorageToArray = Object.values(messagesStorage);
    
-    const _sortedByLatestMessages = _.sortBy(_convertStorageToArray,[function(o) { return -o.latestMessage; }])
+    const _sortedByLatestMessages = _.sortBy(_convertStorageToArray,[function(o) { return -o.latestMessage.createdAt; }])
     console.log(_sortedByLatestMessages)
     _setMessagesStorage([..._sortedByLatestMessages])    
   }, [messagesStorage])
 
-  const { setShowPopup } = usePopupMessagesActions();
-  console.log(_messagesStorage)
+  const { setShowPopup } = usePopupMessagesActions();  
   
   return (
     <ListMessagesWrapper onScroll={() => setShowPopup(false)}>
@@ -40,8 +39,7 @@ const ListMessages = () => {
           messenger={profile}  
           status={status}                
           hasSeenLatestMessage={hasSeenLatestMessage}
-          latestMessage={latestMessage}
-          
+          latestMessage={latestMessage}          
           active={currentChat && currentChat._id === profile._id}
         />
       )) : null}

@@ -5,7 +5,7 @@ import {setContext} from "@apollo/client/link/context"
 import fetch from "isomorphic-fetch"
 import {WebSocketLink} from "apollo-link-ws"
 
-const httpLink = new HttpLink({
+const httpLink = new HttpLink({  
   uri : "http://localhost:5000/graphql",
   fetch
 })

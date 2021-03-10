@@ -24,7 +24,7 @@ export const SENT_MESSAGE_CHAT_SUBSCRIPTION = gql`
         senderStatus
         text
         file {
-          encoding
+          data
           filename
           mimetype
         }
