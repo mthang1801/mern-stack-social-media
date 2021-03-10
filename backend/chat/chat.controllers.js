@@ -57,7 +57,7 @@ export const chatControllers = {
           const _cloneMessage= message._doc;
           if (
             message.messageType === "IMAGE" ||
-            message.messageType === "FILE"
+            message.messageType === "ATTACHMENT"
           ) {
             return {
               ..._cloneMessage,
@@ -173,7 +173,7 @@ export const chatControllers = {
   },
   sendMessageChatFile: async (req, receiverId, file, status, messageType, pubsub, sentMessageChatSubscription) => {
     try {      
-      const { encoding, filename, mimetype } = file;
+      const { encoding, filename, mimetype } = file;            
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId, {
         name: 1,
@@ -196,7 +196,7 @@ export const chatControllers = {
           },
         };
       }
-      const { data } = decodeBase64(encoding);
+      const { data } = decodeBase64(encoding);      
       if (status === "PRIVATE") {
         const session = await mongoose.startSession();
         session.startTransaction();
@@ -259,7 +259,12 @@ export const chatControllers = {
         },
       };
     } catch (error) {
-      throw new ApolloError(error.message);
+      return {
+        error: {
+          message: "Send message fail, there were some errors occured",
+          statusCode: 400,
+        },
+      };
     }
   },
   updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched: async (
@@ -296,8 +301,7 @@ export const chatControllers = {
         .populate({ path: "sender", select: "name slug avatar" })
         .populate({ path: "receiver", select: "name slug avatar" });
       const _cloneUpdatedMessage = updatedMessage._doc;
-      _cloneUpdatedMessage.file.data =  `data:${_cloneUpdatedMessage.file.mimetype};base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;
-      console.log(_cloneUpdatedMessage)
+      _cloneUpdatedMessage.file.data =  `data:${_cloneUpdatedMessage.file.mimetype};base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;      
       pubsub.publish(notifySenderThatReceiverHasReceivedMessageChat, {
         notifySenderThatReceiverHasReceivedMessageChat: {
           action: "DELIVERED",

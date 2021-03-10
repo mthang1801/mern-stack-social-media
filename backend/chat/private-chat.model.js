@@ -14,7 +14,7 @@ const PrivateChatSchema = new mongoose.Schema(
     },
     messageType: {
       type: String,
-      enum: ["TEXT", "IMAGE", "FILE"],
+      enum: ["TEXT", "IMAGE", "ATTACHMENT"],
     },
     text: {
       type: String,

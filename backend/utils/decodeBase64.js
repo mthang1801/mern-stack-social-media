@@ -1,7 +1,10 @@
-function decodeBase64(dataString) {
+function decodeBase64(dataString) {    
   const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  if(!matches){
+    throw new Error("invalid data");
+  }
   let response = {};
-
+  console.log(matches.length)
   if (matches.length !== 3) {
     return new Error("Invalid input string");
   }
