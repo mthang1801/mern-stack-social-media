@@ -21,6 +21,16 @@ export const chatResolvers = {
         pubsub,
         subscriptionActions.SENT_CHAT
       ),
+    sendMessageChatFile: (_, args, { req }, info) =>
+      chatControllers.sendMessageChatFile(
+        req,
+        args.receiverId,
+        args.file,
+        args.status,
+        args.messageType,
+        pubsub,
+        subscriptionActions.SENT_CHAT
+      ),
     updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched: (
       _,
       args,
@@ -57,11 +67,14 @@ export const chatResolvers = {
     },
     notifySenderThatReceiverHasReceivedMessageChat: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.UPDATE_RECEIVER_RECEIVED_CHAT),
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.UPDATE_RECEIVER_RECEIVED_CHAT
+          ),
         (payload, { userId }) => {
           const {
             message,
-          } = payload.notifySenderThatReceiverHasReceivedMessageChat;         
+          } = payload.notifySenderThatReceiverHasReceivedMessageChat;
           return message.sender._id.toString() === userId.toString();
         }
       ),

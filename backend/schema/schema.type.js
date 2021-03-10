@@ -34,6 +34,7 @@ export const schemaType = gql`
   type File{
     filename: String
     mimetype: String
+    data: String
     encoding: String
   }
   type Comment {

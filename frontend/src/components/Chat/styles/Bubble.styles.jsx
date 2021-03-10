@@ -25,7 +25,7 @@ export const MentionLinkInfo = styled.div`
 
 export const Wrapper = styled.div`
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 1rem;  
   &::after {
     content: "";
     clear: both;
@@ -66,7 +66,7 @@ export const BubbleTimeline = styled.div`
     content: "";
     clear: both;
     display: table;
-  }  
+  }
 
   font-size: 0.85rem;
   & > div {
@@ -106,10 +106,11 @@ export const Avatar = styled.div`
 export const Message = styled.div`
   width: calc(100% - 2rem);
   border-radius: 0.5rem;
-  box-shadow: var(--lightShadow);
   word-break: break-all;
-  ${({ me }) =>
-    me
+  ${({ me, messageType }) =>
+    messageType !== "TEXT"
+      ? null
+      : me
       ? `
     background : linear-gradient(to right bottom, #e1f5fe, #b3e5fc,#81d4fa) ;  
   `
@@ -146,4 +147,13 @@ export const MentionAvatar = styled.img`
   height: 2rem;
   border-radius: 50%;
   margin-right: 0.4rem;
+`;
+
+export const ImageContainer = styled.div`
+  width: 100%;
+  max-width: 18rem;
+  cursor : pointer;
+  & img {
+    width: 100%;
+  }
 `;

@@ -16,23 +16,13 @@ const ChatsPage = lazy(() => import("../pages/chats"));
 
 function App() {
   const { colorMode } = useThemeUI();
-  const [fetched, setFetched] = useState(false)
+  const [fetched, setFetched] = useState(false);
   const { setCurrentUser, setPersonalUsers } = cacheMutations;
 
- const [fetchCurrentUser,{ data , error }] = useLazyQuery(FETCH_CURRENT_USER, {
+  const [fetchCurrentUser, { data, error }] = useLazyQuery(FETCH_CURRENT_USER, {
     fetchPolicy: "cache-and-network",
-    // onCompleted : data => {    
-    //   console.log(data)  
-    //   setCurrentUser({...data.fetchCurrentUser})      
-    //   setFetched(true);
-    // },
-    // onError : error => {
-    //   setFetched(true);
-    // }
   });
- 
 
- 
   useEffect(() => {
     let _isMounted = true;
     if (_isMounted) {
@@ -40,19 +30,18 @@ function App() {
     }
     return () => (_isMounted = false);
   }, [fetchCurrentUser]);
-  useEffect(() => {   
+  useEffect(() => {
     if (data && data.fetchCurrentUser) {
       setCurrentUser({ ...data.fetchCurrentUser });
-      // setPersonalUsers(data.fetchCurrentUser);     
+      // setPersonalUsers(data.fetchCurrentUser);
       setFetched(true);
     }
-    if(error){
-      setFetched(true)
+    if (error) {
+      setFetched(true);
     }
-
   }, [data, setCurrentUser, setPersonalUsers, error]);
-  console.log("render")
-  if(!fetched) return null
+  console.log("render");
+  if (!fetched) return null;
   return (
     <Router>
       <GlobalStyles theme={colorMode} />

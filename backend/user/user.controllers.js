@@ -73,7 +73,7 @@ export const userController = {
       populate: { path: "creator" },
     });
     if (!user) {
-      throw new AuthenticationError("User not found");
+      return null;
     }
     return user;
   },

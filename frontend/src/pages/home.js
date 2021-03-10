@@ -48,14 +48,14 @@ const Home = () => {
 
   useEffect(() => {
     let _mounted = true;
-    if (!posts.length) {
+    if (!posts.length && user) {
       fetchPosts().then(({ data: { fetchPosts } }) => {
         if (_mounted) {
           setPosts([...fetchPosts]);
         }
       });
     }
-    if (loadingMore) {
+    if (user && loadingMore) {
       const skip = posts.length;
       const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
       fetchPosts({ skip, limit }).then(({ data: { fetchPosts } }) => {
@@ -66,7 +66,7 @@ const Home = () => {
       });
     }
     return () => (_mounted = false);
-  }, [posts, fetchPosts, setPosts, loadingMore]);
+  }, [posts, fetchPosts, setPosts, loadingMore, user]);
 
   useEffect(() => {
     window.addEventListener("scroll", (e) => {
@@ -85,7 +85,7 @@ const Home = () => {
   }, []);
 
   const handleOpenFriendsList = async () => {
-    if (friends.length < +process.env.REACT_APP_FRIENDS_PER_LOAD) {
+    if (friends.length < +process.env.REACT_APP_FRIENDS_PER_LOAD && user) {
       const skip = friends.length;
       const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD;
       fetchFriends({ skip, limit }).then(({ data }) => {

@@ -35,7 +35,7 @@ const useChatSubscriptions = () => {
             status,
             message,
           } = subscriptionData.data.sentMessageChatSubscription;
-          const { sender } = message;
+          const { sender } = message;      
           setMessagesStorage(sender, message, status, false);
           //update Delivered status
           updatePrivateReceiverStatusSentToDeliveredWhenReceivedNewMessage({
