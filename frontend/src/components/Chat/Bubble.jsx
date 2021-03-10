@@ -9,7 +9,8 @@ import {
   MentionLinkInfo,
   MentionAvatar,
   BubbleTimeline,
-  ImageContainer
+  ImageContainer,
+  AttachmentContainer,
 } from "./styles/Bubble.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { convertFromRaw, EditorState } from "draft-js";
@@ -19,8 +20,8 @@ import createMentionPlugin from "@draft-js-plugins/mention";
 import Moment from "react-moment";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
 import { useQuery } from "@apollo/client";
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
+import Lightbox from "react-image-lightbox";
+import "react-image-lightbox/style.css";
 const linkifyPlugin = createLinkifyPlugin({
   target: "_blank",
   rel: "noopener noreferrer",
@@ -48,8 +49,8 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
       : null
   );
   const [isOpen, setIsOpen] = useState(false);
-  if(message.messageType === "IMAGE"){
-    console.log(message)
+  if (message.messageType === "IMAGE") {
+    console.log(message);
   }
   const {
     data: { user },
@@ -66,7 +67,7 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
       setBubbleDimensions(bubbleRef.current.getBoundingClientRect());
     }
   }, [bubbleRef]);
-
+  
   return (
     <Wrapper index={index}>
       <BubbleContainer me={me}>
@@ -84,12 +85,28 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
             />
           ) : message.messageType === "IMAGE" ? (
             <ImageContainer>
-              <img src={message.file.data} alt={message.file.filename} onClick={() => setIsOpen(true)}/>
-              {isOpen && <Lightbox 
-                mainSrc={message.file.data}
-                onCloseRequest={() => setIsOpen(false)}
-              />}
+              <img
+                src={message.file.data}
+                alt={message.file.filename}
+                onClick={() => setIsOpen(true)}
+              />
+              {isOpen && (
+                <Lightbox
+                  mainSrc={message.file.data}
+                  onCloseRequest={() => setIsOpen(false)}
+                />
+              )}
             </ImageContainer>
+          ) : message.messageType === "ATTACHMENT" ? (
+            <AttachmentContainer>
+              <a
+                href={message.file.data}
+                download={message.file.filename}
+                title={message.file.filename}
+              >
+                {message.file.filename}
+              </a>
+            </AttachmentContainer>
           ) : null}
         </Message>
       </BubbleContainer>

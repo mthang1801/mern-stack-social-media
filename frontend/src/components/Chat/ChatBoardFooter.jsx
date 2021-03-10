@@ -152,11 +152,15 @@ const ChatBoardFooter = () => {
           console.log(err);
         });
     }
-  };  
+  };
   const onChangeInputChatImage = async (e) => {
     const fileData = e.target.files[0];
     const maxSize = 1024 * 1024;
-    if (fileData.size > maxSize) {
+    if (fileData && fileData.size > maxSize) {
+      return false;
+    }
+    const validFiles = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
+    if (!validFiles.includes(fileData.type)) {
       return false;
     }
     const {
@@ -164,8 +168,9 @@ const ChatBoardFooter = () => {
       name: filename,
       mimetype,
     } = await generateBase64Image(fileData);
+
     if (currentChat) {
-      const {data} = await sendMessageChatFile({
+      const { data } = await sendMessageChatFile({
         variables: {
           receiverId: currentChat._id,
           encoding,
@@ -174,11 +179,45 @@ const ChatBoardFooter = () => {
           status: currentChat.status,
           messageType: "IMAGE",
         },
-      })
-      const {message,status} = data.sendMessageChatFile;
+      });
+      const { message, status } = data.sendMessageChatFile;
       const messenger = message.receiver;
-      console.log(message)
-      setMessagesStorage(messenger, message, status, true );
+      setMessagesStorage(messenger, message, status, true);
+    }
+  };
+
+  const onChangeInputChatAttachment = async (e) => {
+    const fileData = e.target.files[0];
+    const maxSize = 1024 * 1024 * 5;
+    if (fileData && fileData.size > maxSize) {
+      return false;
+    }
+    const validExtensions = new RegExp("(.*?).(docx|doc|pdf|xml|bmp|ppt|xls|txt)$");
+    if (!validExtensions.test(e.target.value.toLowerCase())) {
+      return false;
+    }
+    const {
+      src: encoding,
+      name: filename,
+      mimetype,
+    } = await generateBase64Image(fileData);    
+    if (currentChat) {
+      const { data } = await sendMessageChatFile({
+        variables: {
+          receiverId: currentChat._id,
+          encoding,
+          filename,
+          mimetype,
+          status: currentChat.status,
+          messageType: "ATTACHMENT",
+        },
+      });
+      const { message, status, error } = data.sendMessageChatFile;
+      if(error){
+        return ;
+      }
+      const messenger = message.receiver;
+      setMessagesStorage(messenger, message, status, true);
     }
   };
   return (
@@ -195,7 +234,12 @@ const ChatBoardFooter = () => {
         </Label>
         <Label htmlFor="chat-attachment" style={{ color: "#4527a0 " }}>
           <IoMdAttach />
-          <input type="file" id="chat-attachment" name="chat-attachment" />
+          <input
+            type="file"
+            id="chat-attachment"
+            name="chat-attachment"
+            onChange={onChangeInputChatAttachment}
+          />
         </Label>
       </ChatActions>
       <ChatInput onClick={() => editorRef.current?.focus()}>

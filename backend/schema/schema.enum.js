@@ -32,7 +32,7 @@ export const schemaEnum = gql`
   enum MessageTypeEnum{
     TEXT
     IMAGE
-    PICTURE
+    ATTACHMENT
   }
   enum ChatStatusEnum{
     PRIVATE

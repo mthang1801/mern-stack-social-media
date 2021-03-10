@@ -108,7 +108,7 @@ export const Message = styled.div`
   border-radius: 0.5rem;
   word-break: break-all;
   ${({ me, messageType }) =>
-    messageType !== "TEXT"
+    messageType !== "TEXT" && messageType !== "ATTACHMENT"
       ? null
       : me
       ? `
@@ -157,3 +157,17 @@ export const ImageContainer = styled.div`
     width: 100%;
   }
 `;
+
+export const AttachmentContainer = styled.div`
+  width: 100%; 
+  max-width: 18rem;
+  
+  & a{
+    display : block;
+    text-decoration : underline;
+    padding: 0.5rem;
+    overflow: hidden ; 
+    text-overflow : ellipsis; 
+    white-space: nowrap;
+  }
+`
