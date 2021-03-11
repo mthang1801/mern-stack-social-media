@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { ListMessagesWrapper } from "./styles/ListMessages.styles";
+import { ListConversationsWrapper } from "./styles/ListConversations.styles";
 import { useQuery } from "@apollo/client";
 import {
-  GET_CURRENT_USER,
   GET_MESSAGES_STORAGE,
   GET_CURRENT_CHAT,
 } from "../../apollo/operations/queries/cache";
-import MessageItem from "./MessageItem";
+import ConversationItem from "./ConversationItem";
 import _ from "lodash";
 import { usePopupMessagesActions } from "./hook/usePopupActions";
-const ListMessages = () => {
+const ListConversations = () => {
   //use Query  
   const {
     data: { currentChat },
@@ -31,9 +30,9 @@ const ListMessages = () => {
 
   const { setShowPopup } = usePopupMessagesActions();    
   return (
-    <ListMessagesWrapper onScroll={() => setShowPopup(false)}>
+    <ListConversationsWrapper onScroll={() => setShowPopup(false)}>
       {_messagesStorage.length ? _messagesStorage.map(({ profile, scope, latestMessage, hasSeenLatestMessage }) => (
-        <MessageItem
+        <ConversationItem
           key={profile._id}
           messenger={profile}  
           scope={scope}                
@@ -42,8 +41,8 @@ const ListMessages = () => {
           active={currentChat && currentChat._id === profile._id}
         />
       )) : null}
-    </ListMessagesWrapper>
+    </ListConversationsWrapper>
   );
 };
 
-export default React.memo(ListMessages);
+export default React.memo(ListConversations);

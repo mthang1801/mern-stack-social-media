@@ -18,7 +18,7 @@ import { FETCH_INITIAL_CHAT_MESSAGES } from "../apollo/operations/queries/chat";
 import { UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../apollo/operations/mutations/chat";
 import { cacheMutations } from "../apollo/operations/mutations";
 import useChatSubscriptions from "../components/Global/useChatSubscriptions";
-const ChatMessages = lazy(() => import("../components/Chat/Messages"));
+const ChatConversations = lazy(() => import("../components/Chat/Conversations"));
 const ChatContacts = lazy(() => import("../components/Chat/Contact"));
 
 const ChatsPage = ({ match }) => {
@@ -43,26 +43,26 @@ const ChatsPage = ({ match }) => {
   useChatSubscriptions();
   useEffect(() => {
     if (!Object.keys(messagesStorage).length && user) {
-      let privateMessagesHaveReceiverSentStatus = new Set();
+      let personalMessagesHaveReceiverSentStatus = new Set();
       fetchInitialChatMessages()
         .then(({ data }) => {
-          const { privateMessages } = data.fetchInitialChatMessages;
+          const { personalMessages } = data.fetchInitialChatMessages;
           let storage = {};
-          privateMessages.forEach((newMessage) => {
-            //check message is sent Status to, then push senderId to privateMessagesHaveReceiverSentStatus variable           
+          personalMessages.forEach((newMessage) => {
+            //check message is sent Status to, then push senderId to personalMessagesHaveReceiverSentStatus variable           
             if (
               newMessage.receiver._id === user._id &&
               newMessage.receiverStatus === "SENT" &&
-              newMessage.__typename === "PrivateChat"
+              newMessage.__typename === "PersonalChat"
             ) {
-              privateMessagesHaveReceiverSentStatus.add(newMessage.sender._id);
+              personalMessagesHaveReceiverSentStatus.add(newMessage.sender._id);
             }
             const messenger =
               newMessage.receiver._id === user._id
                 ? newMessage.sender
                 : newMessage.receiver;
 
-            // setMessagesStorage( messenger,message, "PRIVATE")
+            // setMessagesStorage( messenger,message, "PERSONAL")
             if (messenger && messenger._id) {
               const checkMessengerExist = storage[messenger._id];
               let updateNewMessage;
@@ -84,7 +84,7 @@ const ChatsPage = ({ match }) => {
                 updateNewMessage = {
                   profile: { ...messenger },
                   messages: [{ ...newMessage }],
-                  scope: "PRIVATE",
+                  scope: "PERSONAL",
                   latestMessage: newMessage,
                   hasSeenLatestMessage:
                     newMessage.receiver._id === user._id &&
@@ -100,10 +100,10 @@ const ChatsPage = ({ match }) => {
             }
           });
           setInitialMessagesStorage(storage);        
-          if (privateMessagesHaveReceiverSentStatus.size) {
+          if (personalMessagesHaveReceiverSentStatus.size) {
             updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched({
               variables: {
-                listSenderId: [...privateMessagesHaveReceiverSentStatus],
+                listSenderId: [...personalMessagesHaveReceiverSentStatus],
               },
             })
           }
@@ -127,7 +127,7 @@ const ChatsPage = ({ match }) => {
         </SidebarNav>
         <MainTab>
           <Switch>
-            <Route exact path={match.path} component={ChatMessages} />
+            <Route exact path={match.path} component={ChatConversations} />
             <Route
               exact
               path={`${match.path}/contacts`}

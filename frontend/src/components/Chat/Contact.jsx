@@ -54,11 +54,11 @@ const Contact = () => {
       }).then(({ data }) => {
         if (_mounted) {
           const { fetchFriends } = data;
-          //add status private to each friends because  when click contact item, it will link to current
+          //add status PERSONAL to each friends because  when click contact item, it will link to current
           //chat which need status
           const friends = fetchFriends.map((friend) => ({
             ...friend,
-            status: "PRIVATE",
+            scope: "PERSONAL",
           }));
           setFriends([...friends]);
           setContactData([...friends]);

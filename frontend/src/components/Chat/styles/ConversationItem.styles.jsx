@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-export const MessageItemWrapper = styled.div`
+export const ConversationItemWrapper = styled.div`
   width : 100%; 
   display : grid; 
-  grid-template-columns : 1fr 3fr 2fr;
+  grid-template-columns : 1fr 3fr 2.5fr;
   grid-gap: 0.5rem;
   cursor:pointer;
   padding: 0.5rem;  
@@ -38,7 +38,7 @@ export const Avatar = styled.div`
   }
 `
 
-export const UserMessageOverview = styled.div`
+export const ConversationOverview = styled.div`
   width : 100%;   
   overflow : hidden;
   h4{
@@ -51,7 +51,7 @@ export const UserMessageOverview = styled.div`
   }
 `
 
-export const MessageControls = styled.div`  
+export const ConversationControls = styled.div`  
   display : flex; 
   flex-direction : column; 
   justify-content : space-between;

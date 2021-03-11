@@ -3,8 +3,7 @@ function decodeBase64(dataString) {
   if(!matches){
     throw new Error("invalid data");
   }
-  let response = {};
-  console.log(matches.length)
+  let response = {};  
   if (matches.length !== 3) {
     return new Error("Invalid input string");
   }

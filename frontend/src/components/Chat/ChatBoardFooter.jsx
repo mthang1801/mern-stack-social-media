@@ -138,7 +138,7 @@ const ChatBoardFooter = () => {
         variables: {
           receiverId: currentChat._id,
           text: rawData,
-          scope: currentChat.scope || "PRIVATE",
+          scope: currentChat.scope || "PERSONAL",
         },
       })
         .then(({ data }) => {

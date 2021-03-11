@@ -18,13 +18,13 @@ export const schemaEnum = gql`
     ACCEPTED
     REMOVED
   }
-  enum PrivateChatReceiverStatusEnum{
+  enum PersonalChatReceiverStatusEnum{
     SENT
     DELIVERED 
     SEEN 
     DELETED
   }  
-  enum PrivateChatSenderStatusEnum{
+  enum PersonalChatSenderStatusEnum{
     SENT
     RECALLED
     DELETED
@@ -35,7 +35,7 @@ export const schemaEnum = gql`
     ATTACHMENT
   }
   enum ChatScopeEnum{
-    PRIVATE
+    PERSONAL
     GROUP
   }
 `

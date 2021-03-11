@@ -65,13 +65,13 @@ export const schemaType = gql`
     createdAt : String!     
   }
 
-  type PrivateChat{
+  type PersonalChat{
     _id : ID!
     sender : User!
     receiver : User!
     messageType : MessageTypeEnum!
-    receiverStatus :  PrivateChatReceiverStatusEnum!
-    senderStatus : PrivateChatSenderStatusEnum!
+    receiverStatus :  PersonalChatReceiverStatusEnum!
+    senderStatus : PersonalChatSenderStatusEnum!
     text : String
     file : File
     blocked: [User!]
@@ -104,13 +104,13 @@ export const schemaType = gql`
   }
 
   type ChatSubscriptionPayload{
-    action : PrivateChatReceiverStatusEnum! 
+    action : PersonalChatReceiverStatusEnum! 
     scope : ChatScopeEnum! 
-    message : PrivateChat    
+    message : PersonalChat    
   }
 
   type SeenAllMessagesSubscriptionPayload{
-    action : PrivateChatReceiverStatusEnum!
+    action : PersonalChatReceiverStatusEnum!
     scope: ChatScopeEnum!    
     senderId : ID!
     receiverId : ID!
@@ -128,13 +128,13 @@ export const schemaType = gql`
   }
   
   type AddChatResult{
-    message : PrivateChat
+    message : PersonalChat
     scope: ChatScopeEnum!    
     error : Error
   }
 
   type FetchChatResults{
-    privateMessages: [PrivateChat!]!   
+    personalMessages: [PersonalChat!]!   
   }
 
   type Error{

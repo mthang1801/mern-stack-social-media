@@ -8,7 +8,7 @@ export const chatResolvers = {
       chatControllers.fetchInitialChatMessages(
         req,
         args.skip || 0,
-        args.limit || +process.env.PRIVATE_CHAT_USERS
+        args.limit || +process.env.PERSONAL_CHAT_USERS
       ),
   },
   Mutation: {

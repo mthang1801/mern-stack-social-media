@@ -1,10 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
-  MessageItemWrapper,
+  ConversationItemWrapper,
   Avatar,
-  UserMessageOverview,
-  MessageControls,
-} from "./styles/MessageItem.styles";
+  ConversationOverview,
+  ConversationControls,
+} from "./styles/ConversationItem.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import Moment from "react-moment";
@@ -45,7 +45,7 @@ const MessageItem = ({
     updateHaveSeenAllMessages({variables : {conversationId: messenger._id , scope}});
   }
   return (
-    <MessageItemWrapper
+    <ConversationItemWrapper
       theme={colorMode}
       active={active}
       hasSeenLatestMessage={hasSeenLatestMessage}
@@ -54,7 +54,7 @@ const MessageItem = ({
       <Avatar>
         <LazyLoadImage src={messenger.avatar} />
       </Avatar>
-      <UserMessageOverview>
+      <ConversationOverview>
         <h4>{messenger.name}</h4>
         <small>
           {latestMessage.messageType === "TEXT"
@@ -67,8 +67,8 @@ const MessageItem = ({
             ? "sent an image"
             : "sent an attachment"}
         </small>
-      </UserMessageOverview>
-      <MessageControls
+      </ConversationOverview>
+      <ConversationControls
         show={showSetting}
         onMouseEnter={() => setShowSettings(true)}
         onMouseLeave={() => setShowSettings(false)}
@@ -78,7 +78,7 @@ const MessageItem = ({
           {Date.now() - +latestMessage.createdAt > 3600000 ? (
             <Moment
               date={new Date(+latestMessage.createdAt)}
-              format="DD/MM/YYYY"
+              format="DD/MM/YYYY"              
             />
           ) : (
             <Moment fromNow>{+latestMessage.createdAt}</Moment>
@@ -90,8 +90,8 @@ const MessageItem = ({
         >
           <ThreeDotsSetting />
         </div>
-      </MessageControls>
-    </MessageItemWrapper>
+      </ConversationControls>
+    </ConversationItemWrapper>
   );
 };
 

@@ -20,7 +20,7 @@ const useChatSubscriptions = () => {
   const {data: {currentChat}} = useQuery(GET_CURRENT_CHAT, {fetchPolicy: "cache-only"})
   const { setMessagesStorage, updateMessagesStorage, updateMessagesStorageWhenReceiverSeenAllMessages } = cacheMutations;
   const [
-    updatePrivateReceiverWhenReceivedNewMessage,
+    updatePersonalReceiverWhenReceivedNewMessage,
   ] = useMutation(
     UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE
   );
@@ -42,7 +42,7 @@ const useChatSubscriptions = () => {
           setMessagesStorage(sender, message, scope, false);
           //update Delivered status
           const messageStatus = currentChat?._id === sender._id ? "SEEN" : "DELIVERED";
-          updatePrivateReceiverWhenReceivedNewMessage({
+          updatePersonalReceiverWhenReceivedNewMessage({
             variables: { messageId: message._id, messageStatus  },
           });
         },
