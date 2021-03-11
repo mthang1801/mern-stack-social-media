@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import chatSubscriptions from "../../apollo/operations/subscriptions/chat";
 import { FETCH_INITIAL_CHAT_MESSAGES } from "../../apollo/operations/queries/chat/fetchInitialChatMessages";
 import { useQuery, useMutation } from "@apollo/client";
@@ -13,12 +13,12 @@ const useChatSubscriptions = () => {
     skip: true,
     fetchPolicy: "cache-and-network",
   });
-  const {SENT_MESSAGE_CHAT_SUBSCRIPTION, NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT} = chatSubscriptions
+  const {SENT_MESSAGE_CHAT_SUBSCRIPTION, NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT, SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES} = chatSubscriptions
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
   const {data: {currentChat}} = useQuery(GET_CURRENT_CHAT, {fetchPolicy: "cache-only"})
-  const { setMessagesStorage, updateMessagesStorage } = cacheMutations;
+  const { setMessagesStorage, updateMessagesStorage, updateMessagesStorageWhenReceiverSeenAllMessages } = cacheMutations;
   const [
     updatePrivateReceiverWhenReceivedNewMessage,
   ] = useMutation(
@@ -27,6 +27,7 @@ const useChatSubscriptions = () => {
   useEffect(() => {
     let unsubscribeChatMessage;
     let unsubscribeNotifySenderThatReceiverHasReceivedMessage; 
+    let unsubscribeSubscribeReceiverHasSeenAllMessages; 
     if (subscribeChatMessage && user) {
       unsubscribeChatMessage = subscribeChatMessage({
         document: SENT_MESSAGE_CHAT_SUBSCRIPTION,
@@ -43,7 +44,7 @@ const useChatSubscriptions = () => {
           const messageStatus = currentChat?._id === sender._id ? "SEEN" : "DELIVERED";
           updatePrivateReceiverWhenReceivedNewMessage({
             variables: { messageId: message._id, messageStatus  },
-          }).then((res) => console.log(res));
+          });
         },
       });
       unsubscribeNotifySenderThatReceiverHasReceivedMessage = subscribeChatMessage({
@@ -55,6 +56,14 @@ const useChatSubscriptions = () => {
           updateMessagesStorage(receiver, message, status, action === "SEEN" );
         }
       })
+      unsubscribeSubscribeReceiverHasSeenAllMessages = subscribeChatMessage({
+        document : SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES, 
+        variables : {userId : user._id} , 
+        updateQuery : (_, {subscriptionData}) => {
+          const {receiverId} = subscriptionData.data.senderSubscribeWhenReceiverHasSeenAllMessages;          
+          updateMessagesStorageWhenReceiverSeenAllMessages(receiverId)
+        }
+      })
     }
     return () => {
       if (unsubscribeChatMessage) {
@@ -62,6 +71,9 @@ const useChatSubscriptions = () => {
       }
       if(unsubscribeNotifySenderThatReceiverHasReceivedMessage){
         unsubscribeNotifySenderThatReceiverHasReceivedMessage()
+      }
+      if(unsubscribeSubscribeReceiverHasSeenAllMessages){
+        unsubscribeSubscribeReceiverHasSeenAllMessages();
       }
     };
   }, [subscribeChatMessage, user,currentChat]);

@@ -40,7 +40,7 @@ export const chatResolvers = {
       chatControllers.updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched(
         req,
         args.listSenderId
-      ),      
+      ),
     updatePrivateReceiverWhenReceivedNewMessage: (_, args, { req }, info) =>
       chatControllers.updatePrivateReceiverWhenReceivedNewMessage(
         req,
@@ -49,14 +49,21 @@ export const chatResolvers = {
         pubsub,
         subscriptionActions.UPDATE_RECEIVER_RECEIVED_CHAT
       ),
-   
+    updateHaveSeenAllMessages: (_, args, { req }, info) =>
+      chatControllers.updateHaveSeenAllMessages(
+        req,
+        args.conversationId,
+        args.status,
+        pubsub,
+        subscriptionActions.UPDATE_RECEIVER_SEEN_ALL_MESSAGES
+      ),
   },
   Subscription: {
     sentMessageChatSubscription: {
       subscribe: withFilter(
         () => pubsub.asyncIterator(subscriptionActions.SENT_CHAT),
         (payload, { userId }) => {
-          const { message } = payload.sentMessageChatSubscription;          
+          const { message } = payload.sentMessageChatSubscription;
           return message.receiver._id.toString() === userId.toString();
         }
       ),
@@ -67,15 +74,15 @@ export const chatResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.UPDATE_RECEIVER_RECEIVED_CHAT
           ),
-        (payload, { userId }) => {          
+        (payload, { userId }) => {
           const {
-            message
-          } = payload.notifySenderThatReceiverHasReceivedMessageChat;         
+            message,
+          } = payload.notifySenderThatReceiverHasReceivedMessageChat;
           return message.sender._id.toString() === userId.toString();
         }
       ),
     },
-    notifySenderThatReceiverHasSeenAllMessages: {
+    senderSubscribeWhenReceiverHasSeenAllMessages: {
       subscribe: withFilter(
         () =>
           pubsub.asyncIterator(
@@ -83,9 +90,9 @@ export const chatResolvers = {
           ),
         (payload, { userId }) => {
           const {
-            message,
-          } = payload.notifySenderThatReceiverHasSeenAllMessages;
-          return message.sender._id.toString() === userId.toString();
+            senderId
+          } = payload.senderSubscribeWhenReceiverHasSeenAllMessages;
+          return senderId.toString() === userId.toString();
         }
       ),
     },

@@ -2,7 +2,7 @@ import getAuthUser from "../utils/getAuthUser";
 import { PrivateChat } from "./private-chat.model";
 import { User } from "../user/user.model";
 import { CheckResultAndHandleErrors, ApolloError } from "apollo-server-express";
-import _ from "lodash";
+import _, { find } from "lodash";
 import decodeBase64 from "../utils/decodeBase64";
 import mongoose from "mongoose";
 import bufferToBase64 from "../utils/bufferToBase64";
@@ -188,8 +188,7 @@ export const chatControllers = {
     sentMessageChatSubscription
   ) => {
     try {
-      const { encoding, filename, mimetype } = file;
-      console.log(messageType);
+      const { encoding, filename, mimetype } = file;      
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId, {
         name: 1,
@@ -323,7 +322,7 @@ export const chatControllers = {
         _cloneUpdatedMessage.file.data = `data:${
           _cloneUpdatedMessage.file.mimetype
         };base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;
-      }     
+      }
 
       pubsub.publish(notifySenderThatReceiverHasReceivedMessageChat, {
         notifySenderThatReceiverHasReceivedMessageChat: {
@@ -333,6 +332,42 @@ export const chatControllers = {
         },
       });
       return true;
+    } catch (error) {
+      throw new ApolloError(error.message);
+    }
+  },
+  updateHaveSeenAllMessages: async (
+    req,
+    conversationId,
+    status,
+    pubsub,
+    senderSubscribeWhenReceiverHasSeenAllMessages
+  ) => {
+    try {
+      const currentUserId = getAuthUser(req);
+      if (status === "PRIVATE") {
+        const updatedResult = await PrivateChat.updateMany(
+          {
+            receiver: currentUserId,
+            sender: conversationId,
+            receiverStatus: { $ne: "SEEN" },
+          },
+          { receiverStatus: "SEEN" },
+          { new: true }
+        );        
+        if (updatedResult.nModified) {
+          pubsub.publish(senderSubscribeWhenReceiverHasSeenAllMessages, {
+            senderSubscribeWhenReceiverHasSeenAllMessages: {
+              status,
+              action: "SEEN",
+              senderId: conversationId,
+              receiverId: currentUserId,
+            },
+          });
+        }
+        return true;
+      }
+      return false;
     } catch (error) {
       throw new ApolloError(error.message);
     }

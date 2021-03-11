@@ -16,7 +16,7 @@ export const schemaSubscription = gql`
 
     sentMessageChatSubscription(userId: ID!): ChatSubscriptionPayload!
     notifySenderThatReceiverHasReceivedMessageChat(userId: ID!) : ChatSubscriptionPayload!
-    notifySenderThatReceiverHasSeenAllMessages(userId: ID!) : SeenAllMessagesSubscriptionPayload!
+    senderSubscribeWhenReceiverHasSeenAllMessages(userId: ID!) : SeenAllMessagesSubscriptionPayload!
   }
 `;
 

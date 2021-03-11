@@ -111,6 +111,7 @@ export const schemaType = gql`
   type SeenAllMessagesSubscriptionPayload{
     action : PrivateChatReceiverStatusEnum!
     status: ChatStatusEnum!    
+    senderId : ID!
     receiverId : ID!
   }
 

@@ -15,9 +15,9 @@ import {
   convertFromRaw,
   EditorState,
 } from "draft-js";
-import {UPDATE_ALL_MESSAGES_WHEN_RECEIVER_CLICK_MESSAGE_ITEM} from "../../apollo/operations/mutations/chat"
-import {GET_CURRENT_CHAT} from "../../apollo/operations/queries/cache/getCurrentChat"
-import {useMutation, useQuery} from "@apollo/client"
+import {UPDATE_ALL_MESSAGES_WHEN_RECEIVER_CLICK_MESSAGE_ITEM, UPDATE_HAVE_SEEN_ALL_MESSAGES} from "../../apollo/operations/mutations/chat"
+
+import {useMutation} from "@apollo/client"
 const MessageItem = ({
   messenger,
   latestMessage,
@@ -29,8 +29,8 @@ const MessageItem = ({
   const { setPopupPosition, setShowPopup } = usePopupMessagesActions();
   const { colorMode } = useThemeUI();
   const { setCurrentChat } = cacheMutations;  
-  const [updateAllMessages] = useMutation(UPDATE_ALL_MESSAGES_WHEN_RECEIVER_CLICK_MESSAGE_ITEM)
-
+  const [updateHaveSeenAllMessages] = useMutation(UPDATE_HAVE_SEEN_ALL_MESSAGES)
+  
   const onClickThreeDots = (e) => {
     e.preventDefault();
     setShowPopup(true);
@@ -42,7 +42,7 @@ const MessageItem = ({
   };
   const onClickMessageItem = e => {
     setCurrentChat({ ...messenger, status });
-    // updateAllMessages({variables : {senderId: messenger._id , status}});
+    updateHaveSeenAllMessages({variables : {conversationId: messenger._id , status}});
   }
   return (
     <MessageItemWrapper

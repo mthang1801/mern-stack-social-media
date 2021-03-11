@@ -29,8 +29,7 @@ const ListMessages = () => {
     _setMessagesStorage([..._sortedByLatestMessages])    
   }, [messagesStorage])
 
-  const { setShowPopup } = usePopupMessagesActions();  
-  console.log(_messagesStorage)
+  const { setShowPopup } = usePopupMessagesActions();    
   return (
     <ListMessagesWrapper onScroll={() => setShowPopup(false)}>
       {_messagesStorage.length ? _messagesStorage.map(({ profile, status, latestMessage, hasSeenLatestMessage }) => (
