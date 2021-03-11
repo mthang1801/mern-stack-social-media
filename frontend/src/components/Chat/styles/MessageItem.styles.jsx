@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const MessageItemWrapper = styled.div`
   width : 100%; 
   display : grid; 
-  grid-template-columns : 1fr 3fr 3fr;
+  grid-template-columns : 1fr 3fr 2fr;
   grid-gap: 0.5rem;
   cursor:pointer;
   padding: 0.5rem;  

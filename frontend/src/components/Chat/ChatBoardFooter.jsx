@@ -186,21 +186,25 @@ const ChatBoardFooter = () => {
     }
   };
 
-  const onChangeInputChatAttachment = async (e) => {
+  const onChangeInputChatAttachment = async (e) => {    
+    e.preventDefault();
     const fileData = e.target.files[0];
     const maxSize = 1024 * 1024 * 5;
     if (fileData && fileData.size > maxSize) {
+      console.log("oversize");
       return false;
     }
     const validExtensions = new RegExp("(.*?).(docx|doc|pdf|xml|bmp|ppt|xls|txt)$");
     if (!validExtensions.test(e.target.value.toLowerCase())) {
+      console.log("invalid file")
       return false;
     }
     const {
       src: encoding,
       name: filename,
       mimetype,
-    } = await generateBase64Image(fileData);    
+    } = await generateBase64Image(fileData); 
+         
     if (currentChat) {
       const { data } = await sendMessageChatFile({
         variables: {
@@ -214,11 +218,13 @@ const ChatBoardFooter = () => {
       });
       const { message, status, error } = data.sendMessageChatFile;
       if(error){
+        console.log(error)
         return ;
       }
       const messenger = message.receiver;
       setMessagesStorage(messenger, message, status, true);
     }
+    document.getElementById("chat-attachment").value =  "";
   };
   return (
     <Wrapper style={{ display: !user || !currentChat ? "none" : "block" }}>
@@ -238,7 +244,7 @@ const ChatBoardFooter = () => {
             type="file"
             id="chat-attachment"
             name="chat-attachment"
-            onChange={onChangeInputChatAttachment}
+            onChange={onChangeInputChatAttachment}            
           />
         </Label>
       </ChatActions>

@@ -12,11 +12,12 @@ import { usePopupMessagesActions } from "./hook/usePopupActions";
 import { useThemeUI } from "theme-ui";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
 import {
-  ContentState,
   convertFromRaw,
-  convertToRaw,
   EditorState,
 } from "draft-js";
+import {UPDATE_ALL_MESSAGES_WHEN_RECEIVER_CLICK_MESSAGE_ITEM} from "../../apollo/operations/mutations/chat"
+import {GET_CURRENT_CHAT} from "../../apollo/operations/queries/cache/getCurrentChat"
+import {useMutation, useQuery} from "@apollo/client"
 const MessageItem = ({
   messenger,
   latestMessage,
@@ -27,7 +28,9 @@ const MessageItem = ({
   const [showSetting, setShowSettings] = useState(false);
   const { setPopupPosition, setShowPopup } = usePopupMessagesActions();
   const { colorMode } = useThemeUI();
-  const { setCurrentChat } = cacheMutations;
+  const { setCurrentChat } = cacheMutations;  
+  const [updateAllMessages] = useMutation(UPDATE_ALL_MESSAGES_WHEN_RECEIVER_CLICK_MESSAGE_ITEM)
+
   const onClickThreeDots = (e) => {
     e.preventDefault();
     setShowPopup(true);
@@ -37,30 +40,33 @@ const MessageItem = ({
         : e.pageY;
     setPopupPosition({ left: e.pageX, top: positionY });
   };
-  
+  const onClickMessageItem = e => {
+    setCurrentChat({ ...messenger, status });
+    // updateAllMessages({variables : {senderId: messenger._id , status}});
+  }
   return (
     <MessageItemWrapper
       theme={colorMode}
       active={active}
       hasSeenLatestMessage={hasSeenLatestMessage}
-      onClick={() => setCurrentChat({ ...messenger, status })}
+      onClick={onClickMessageItem}
     >
       <Avatar>
         <LazyLoadImage src={messenger.avatar} />
       </Avatar>
       <UserMessageOverview>
         <h4>{messenger.name}</h4>
-        <span>
+        <small>
           {latestMessage.messageType === "TEXT"
             ? EditorState.createWithContent(
                 convertFromRaw(JSON.parse(latestMessage.text))
               )
                 .getCurrentContent()
-                .getPlainText().slice(0, 20) + "..."
+                .getPlainText().slice(0, 30) + "..."
             : latestMessage === "PICTURE"
-            ? "a picture"
-            : "a file"}
-        </span>
+            ? "sent an image"
+            : "sent an attachment"}
+        </small>
       </UserMessageOverview>
       <MessageControls
         show={showSetting}
