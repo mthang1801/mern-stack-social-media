@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const PrivateChatSchema = new mongoose.Schema(
+const PersonalChatSchema = new mongoose.Schema(
   {
     sender: {
       type: mongoose.Schema.Types.ObjectId,
@@ -45,4 +45,4 @@ const PrivateChatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const PrivateChat = mongoose.model("private-chats", PrivateChatSchema);
+export const PersonalChat = mongoose.model("personal-chats", PersonalChatSchema);

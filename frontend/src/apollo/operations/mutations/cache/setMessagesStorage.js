@@ -1,7 +1,7 @@
 const setMessagesStorage = (setMessagesStorageVar) => (
   messenger,
   message,
-  status,
+  scope,
   hasSeenLatestMessage = false
 ) => {
   return setMessagesStorageVar({
@@ -11,7 +11,7 @@ const setMessagesStorage = (setMessagesStorageVar) => (
       messages: setMessagesStorageVar()[messenger._id]
         ? [...setMessagesStorageVar()[messenger._id].messages, { ...message }]
         : [{ ...message }],
-      status,
+      scope,
       latestMessage : {...message},      
       hasSeenLatestMessage,
     },

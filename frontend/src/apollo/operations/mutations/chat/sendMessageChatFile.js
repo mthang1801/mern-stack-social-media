@@ -6,13 +6,13 @@ export const SEND_MESSAGE_CHAT_FILE = gql`
     $encoding: String!
     $filename: String!
     $mimetype: String!
-    $status: String!
+    $scope: String!
     $messageType: String!
   ) {
     sendMessageChatFile(
       receiverId: $receiverId,
       file: { encoding: $encoding, filename: $filename, mimetype: $mimetype },
-      status: $status,
+      scope: $scope,
       messageType: $messageType
     ) {
       message {
@@ -41,7 +41,7 @@ export const SEND_MESSAGE_CHAT_FILE = gql`
         createdAt
         updatedAt
       }
-      status
+      scope
       error {
         message
         statusCode

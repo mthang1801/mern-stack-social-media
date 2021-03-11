@@ -15,7 +15,7 @@ import {
 import MenuChat from "../components/Chat/MenuChat";
 import { Route, Switch } from "react-router-dom";
 import { FETCH_INITIAL_CHAT_MESSAGES } from "../apollo/operations/queries/chat";
-import { UPDATE_PRIVATE_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../apollo/operations/mutations/chat";
+import { UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../apollo/operations/mutations/chat";
 import { cacheMutations } from "../apollo/operations/mutations";
 import useChatSubscriptions from "../components/Global/useChatSubscriptions";
 const ChatMessages = lazy(() => import("../components/Chat/Messages"));
@@ -36,8 +36,8 @@ const ChatsPage = ({ match }) => {
       skip: true,
     }
   );
-  const [updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched] = useMutation(
-    UPDATE_PRIVATE_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED
+  const [updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched] = useMutation(
+    UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED
   );
   const { setInitialMessagesStorage } = cacheMutations;
   useChatSubscriptions();
@@ -84,7 +84,7 @@ const ChatsPage = ({ match }) => {
                 updateNewMessage = {
                   profile: { ...messenger },
                   messages: [{ ...newMessage }],
-                  status: "PRIVATE",
+                  scope: "PRIVATE",
                   latestMessage: newMessage,
                   hasSeenLatestMessage:
                     newMessage.receiver._id === user._id &&
@@ -101,7 +101,7 @@ const ChatsPage = ({ match }) => {
           });
           setInitialMessagesStorage(storage);        
           if (privateMessagesHaveReceiverSentStatus.size) {
-            updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched({
+            updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched({
               variables: {
                 listSenderId: [...privateMessagesHaveReceiverSentStatus],
               },

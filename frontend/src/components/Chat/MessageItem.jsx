@@ -15,14 +15,14 @@ import {
   convertFromRaw,
   EditorState,
 } from "draft-js";
-import {UPDATE_ALL_MESSAGES_WHEN_RECEIVER_CLICK_MESSAGE_ITEM, UPDATE_HAVE_SEEN_ALL_MESSAGES} from "../../apollo/operations/mutations/chat"
+import { UPDATE_HAVE_SEEN_ALL_MESSAGES} from "../../apollo/operations/mutations/chat"
 
 import {useMutation} from "@apollo/client"
 const MessageItem = ({
   messenger,
   latestMessage,
   active,
-  status,
+  scope,
   hasSeenLatestMessage,
 }) => {
   const [showSetting, setShowSettings] = useState(false);
@@ -41,8 +41,8 @@ const MessageItem = ({
     setPopupPosition({ left: e.pageX, top: positionY });
   };
   const onClickMessageItem = e => {
-    setCurrentChat({ ...messenger, status });
-    updateHaveSeenAllMessages({variables : {conversationId: messenger._id , status}});
+    setCurrentChat({ ...messenger, scope });
+    updateHaveSeenAllMessages({variables : {conversationId: messenger._id , scope}});
   }
   return (
     <MessageItemWrapper

@@ -138,14 +138,14 @@ const ChatBoardFooter = () => {
         variables: {
           receiverId: currentChat._id,
           text: rawData,
-          status: currentChat.status || "PRIVATE",
+          scope: currentChat.scope || "PRIVATE",
         },
       })
         .then(({ data }) => {
-          const { message, status } = data.sendMessageChatText;
+          const { message, scope } = data.sendMessageChatText;
           const { receiver } = message;
           //always set hasSeenLatestMessage is true  because  this user is sender
-          setMessagesStorage(receiver, message, status, true);
+          setMessagesStorage(receiver, message, scope, true);
           setEditorState(EditorState.createEmpty());
         })
         .catch((err) => {
@@ -153,6 +153,7 @@ const ChatBoardFooter = () => {
         });
     }
   };
+  console.log(currentChat)
   const onChangeInputChatImage = async (e) => {
     const fileData = e.target.files[0];
     const maxSize = 1024 * 1024;
@@ -176,13 +177,13 @@ const ChatBoardFooter = () => {
           encoding,
           filename,
           mimetype,
-          status: currentChat.status,
+          scope: currentChat.scope,
           messageType: "IMAGE",
         },
       });
-      const { message, status } = data.sendMessageChatFile;
+      const { message, scope } = data.sendMessageChatFile;
       const messenger = message.receiver;
-      setMessagesStorage(messenger, message, status, true);
+      setMessagesStorage(messenger, message, scope, true);
     }
   };
 
@@ -212,17 +213,17 @@ const ChatBoardFooter = () => {
           encoding,
           filename,
           mimetype,
-          status: currentChat.status,
+          scope: currentChat.scope,
           messageType: "ATTACHMENT",
         },
       });
-      const { message, status, error } = data.sendMessageChatFile;
+      const { message, scope, error } = data.sendMessageChatFile;
       if(error){
         console.log(error)
         return ;
       }
       const messenger = message.receiver;
-      setMessagesStorage(messenger, message, status, true);
+      setMessagesStorage(messenger, message, scope, true);
     }
     document.getElementById("chat-attachment").value =  "";
   };
