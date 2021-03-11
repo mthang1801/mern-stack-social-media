@@ -1,8 +1,8 @@
 import {gql} from "@apollo/client";
 
 export const SEND_MESSAGE_CHAT_TEXT = gql`
-  mutation ($receiverId: ID!, $text : String!, $status: String!){
-    sendMessageChatText(receiverId : $receiverId, text : $text, status: $status){      
+  mutation ($receiverId: ID!, $text : String!, $scope: String!){
+    sendMessageChatText(receiverId : $receiverId, text : $text, scope: $scope){      
       message {        
         _id
         sender{
@@ -24,7 +24,7 @@ export const SEND_MESSAGE_CHAT_TEXT = gql`
         createdAt
         updatedAt   
       }  
-      status 
+      scope 
       error {
         message
         statusCode

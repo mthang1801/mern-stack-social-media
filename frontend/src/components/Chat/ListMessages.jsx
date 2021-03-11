@@ -32,11 +32,11 @@ const ListMessages = () => {
   const { setShowPopup } = usePopupMessagesActions();    
   return (
     <ListMessagesWrapper onScroll={() => setShowPopup(false)}>
-      {_messagesStorage.length ? _messagesStorage.map(({ profile, status, latestMessage, hasSeenLatestMessage }) => (
+      {_messagesStorage.length ? _messagesStorage.map(({ profile, scope, latestMessage, hasSeenLatestMessage }) => (
         <MessageItem
           key={profile._id}
           messenger={profile}  
-          status={status}                
+          scope={scope}                
           hasSeenLatestMessage={hasSeenLatestMessage}
           latestMessage={latestMessage}          
           active={currentChat && currentChat._id === profile._id}

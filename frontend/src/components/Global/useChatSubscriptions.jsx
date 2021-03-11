@@ -4,7 +4,7 @@ import { FETCH_INITIAL_CHAT_MESSAGES } from "../../apollo/operations/queries/cha
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_CURRENT_USER, GET_CURRENT_CHAT } from "../../apollo/operations/queries/cache";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import { UPDATE_PRIVATE_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE } from "../../apollo/operations/mutations/chat";
+import { UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE } from "../../apollo/operations/mutations/chat";
 
 const useChatSubscriptions = () => {
   const {
@@ -22,7 +22,7 @@ const useChatSubscriptions = () => {
   const [
     updatePrivateReceiverWhenReceivedNewMessage,
   ] = useMutation(
-    UPDATE_PRIVATE_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE
+    UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE
   );
   useEffect(() => {
     let unsubscribeChatMessage;
@@ -35,11 +35,11 @@ const useChatSubscriptions = () => {
         updateQuery: (_, { subscriptionData }) => {
           const {
             action,
-            status,
+            scope,
             message,
           } = subscriptionData.data.sentMessageChatSubscription;
           const { sender } = message;      
-          setMessagesStorage(sender, message, status, false);
+          setMessagesStorage(sender, message, scope, false);
           //update Delivered status
           const messageStatus = currentChat?._id === sender._id ? "SEEN" : "DELIVERED";
           updatePrivateReceiverWhenReceivedNewMessage({
@@ -51,9 +51,9 @@ const useChatSubscriptions = () => {
         document : NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT,
         variables : {userId: user._id},
         updateQuery : (_, {subscriptionData}) => {
-          const {action, status, message} = subscriptionData.data.notifySenderThatReceiverHasReceivedMessageChat;          
+          const {action, scope, message} = subscriptionData.data.notifySenderThatReceiverHasReceivedMessageChat;          
           const {receiver} = message;
-          updateMessagesStorage(receiver, message, status, action === "SEEN" );
+          updateMessagesStorage(receiver, message, scope, action === "SEEN" );
         }
       })
       unsubscribeSubscribeReceiverHasSeenAllMessages = subscribeChatMessage({

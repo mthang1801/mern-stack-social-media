@@ -34,7 +34,7 @@ export const schemaEnum = gql`
     IMAGE
     ATTACHMENT
   }
-  enum ChatStatusEnum{
+  enum ChatScopeEnum{
     PRIVATE
     GROUP
   }

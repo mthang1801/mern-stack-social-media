@@ -4,7 +4,7 @@ export const NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT = gql`
   subscription ($userId : ID!){
     notifySenderThatReceiverHasReceivedMessageChat(userId: $userId){
       action
-      status
+      scope
       message {
         _id
         sender {

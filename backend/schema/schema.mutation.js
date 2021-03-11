@@ -21,10 +21,10 @@ export const schemaMutation = gql`
     followUser(userId : ID!): UsersContact!
     unFollowUser(userId: ID!) : UsersContact!
 
-    sendMessageChatText(receiverId: ID!, text : String!, status: String!): AddChatResult!
-    sendMessageChatFile(receiverId: ID!, file : ChatFileInput!, status: String!, messageType: String!) : AddChatResult
-    updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched(listSenderId : [ID!]!) : Boolean!   
-    updatePrivateReceiverWhenReceivedNewMessage(messageId: ID!, messageStatus : String!) : Boolean!
-    updateHaveSeenAllMessages(conversationId: ID!, status: String!) : Boolean
+    sendMessageChatText(receiverId: ID!, text : String!, scope: String!): AddChatResult!
+    sendMessageChatFile(receiverId: ID!, file : ChatFileInput!, scope: String!, messageType: String!) : AddChatResult
+    updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched(listSenderId : [ID!]!) : Boolean!   
+    updatePersonalReceiverWhenReceivedNewMessage(messageId: ID!, messageStatus : String!) : Boolean!
+    updateHaveSeenAllMessages(conversationId: ID!, scope: String!) : Boolean
   }
 `;

@@ -102,15 +102,16 @@ export const schemaType = gql`
     action : ContactEnum!
     node : Contact!
   }
+
   type ChatSubscriptionPayload{
     action : PrivateChatReceiverStatusEnum! 
-    status : ChatStatusEnum!
+    scope : ChatScopeEnum! 
     message : PrivateChat    
   }
 
   type SeenAllMessagesSubscriptionPayload{
     action : PrivateChatReceiverStatusEnum!
-    status: ChatStatusEnum!    
+    scope: ChatScopeEnum!    
     senderId : ID!
     receiverId : ID!
   }
@@ -128,7 +129,7 @@ export const schemaType = gql`
   
   type AddChatResult{
     message : PrivateChat
-    status: ChatStatusEnum
+    scope: ChatScopeEnum!    
     error : Error
   }
 

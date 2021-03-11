@@ -1,16 +1,16 @@
 import getAuthUser from "../utils/getAuthUser";
-import { PrivateChat } from "./private-chat.model";
+import { PersonalChat } from "./personal-chat.model";
 import { User } from "../user/user.model";
-import { CheckResultAndHandleErrors, ApolloError } from "apollo-server-express";
-import _, { find } from "lodash";
+import { ApolloError } from "apollo-server-express";
+import _ from "lodash";
 import decodeBase64 from "../utils/decodeBase64";
 import mongoose from "mongoose";
-import bufferToBase64 from "../utils/bufferToBase64";
+
 export const chatControllers = {
   fetchInitialChatMessages: async (req, skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
     try {
-      console.time("start");
+      console.time("start");      
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
       const { messengers: privateChatUsersMap } = user;
@@ -19,19 +19,19 @@ export const chatControllers = {
         privateChatUsersMap.forEach(function (value, key) {
           privateChatUsersArray.push({ userId: key, latestMsg: value });
         });
-        const _sortedPrivateChatUsersArray = _.sortBy(
+        const _sortedPersonalChatUsersArray = _.sortBy(
           privateChatUsersArray,
           function (o) {
             return -o.latestMsg;
           }
         );
-        const _getLimitedPrivateChatUsers = _sortedPrivateChatUsersArray
+        const _getLimitedPersonalChatUsers = _sortedPersonalChatUsersArray
           .slice(skip, limit)
           .map(({ userId }) => userId);
         //find messages between currentUser with limited user
-        let listPrivateMessages = [];
-        for (let userId of _getLimitedPrivateChatUsers) {
-          const userMessages = await PrivateChat.find({
+        let listPersonalMessages = [];
+        for (let userId of _getLimitedPersonalChatUsers) {
+          const userMessages = await PersonalChat.find({
             $or: [
               { sender: userId, receiver: currentUserId },
               { sender: currentUserId, receiver: userId },
@@ -50,10 +50,10 @@ export const chatControllers = {
             .limit(+process.env.PRIVATE_CHAT_MESSAGES);
           //sorting by ascending
           const sortedUser = _.sortBy([...userMessages], (o) => o.createdAt);
-          listPrivateMessages = [...listPrivateMessages, ...sortedUser];
+          listPersonalMessages = [...listPersonalMessages, ...sortedUser];
         }
         //loop array, check messageType is IMAGE or FILE and convert data to base64
-        const _cloneListPrivateMessages = [...listPrivateMessages].map(
+        const _cloneListPersonalMessages = [...listPersonalMessages].map(
           (message) => {
             const _cloneMessage = message._doc;
             if (
@@ -69,13 +69,13 @@ export const chatControllers = {
                   };base64,${_cloneMessage.file.data.toString("base64")}`,
                 },
               };
-            }
+            }          
             return { ..._cloneMessage };
           }
-        );
+        );        
         console.timeEnd("start");
         return {
-          privateMessages: _cloneListPrivateMessages,
+          privateMessages: _cloneListPersonalMessages,
         };
       }
       return {
@@ -86,18 +86,18 @@ export const chatControllers = {
       throw new ApolloError("Server error");
     }
   },
-  // status received either PRIVATE or GROUP
+  // scope received either PRIVATE or GROUP
   sendMessageChatText: async (
     req,
     receiverId,
     text,
-    status,
+    scope,
     pubsub,
     sentMessageChatSubscription
   ) => {
     try {
       const userId = getAuthUser(req);
-      if (status === "PRIVATE") {
+      if (scope === "PRIVATE") {
         const user = await User.findById(userId, {
           name: 1,
           slug: 1,
@@ -129,7 +129,7 @@ export const chatControllers = {
           };
         }
         if (text) {
-          const newPrivateChatText = new PrivateChat({
+          const newPersonalChatText = new PersonalChat({
             sender: userId,
             receiver: receiverId,
             messageType: "TEXT",
@@ -150,20 +150,20 @@ export const chatControllers = {
             receiver.messengers = new Map([[userId.toString(), Date.now()]]);
           }
           await receiver.save();
-          await newPrivateChatText.save();
+          await newPersonalChatText.save();
           await session.commitTransaction();
           session.endSession();
-          const _cloneChatText = newPrivateChatText._doc;
+          const _cloneChatText = newPersonalChatText._doc;
           pubsub.publish(sentMessageChatSubscription, {
             sentMessageChatSubscription: {
               action: "SENT",
-              status,
+              scope,
               message: { ..._cloneChatText, sender: user, receiver },
             },
           });
           return {
             message: { ..._cloneChatText, sender: user, receiver },
-            status,
+            scope,
           };
         }
       }
@@ -182,7 +182,7 @@ export const chatControllers = {
     req,
     receiverId,
     file,
-    status,
+    scope,
     messageType,
     pubsub,
     sentMessageChatSubscription
@@ -212,10 +212,10 @@ export const chatControllers = {
         };
       }
       const { data } = decodeBase64(encoding);
-      if (status === "PRIVATE") {
+      if (scope === "PRIVATE") {
         const session = await mongoose.startSession();
         session.startTransaction();
-        const newPrivateMessageFile = new PrivateChat({
+        const newPersonalMessageFile = new PersonalChat({
           sender: currentUserId,
           receiver: receiverId,
           messageType,
@@ -242,16 +242,16 @@ export const chatControllers = {
           ]);
         }
         await receiver.save();
-        await newPrivateMessageFile.save();
+        await newPersonalMessageFile.save();
         await session.commitTransaction();
         session.endSession();
-        const _cloneNewPrivateMessageFile = newPrivateMessageFile._doc;
+        const _cloneNewPersonalMessageFile = newPersonalMessageFile._doc;
         const messageResult = {
-          ..._cloneNewPrivateMessageFile,
+          ..._cloneNewPersonalMessageFile,
           sender: currentUser,
           receiver,
           file: {
-            ..._cloneNewPrivateMessageFile.file,
+            ..._cloneNewPersonalMessageFile.file,
             data: encoding,
           },
         };
@@ -259,12 +259,12 @@ export const chatControllers = {
           sentMessageChatSubscription: {
             action: "SENT",
             message: messageResult,
-            status,
+            scope,
           },
         });
         return {
           message: messageResult,
-          status,
+          scope,
         };
       }
       return {
@@ -282,14 +282,14 @@ export const chatControllers = {
       };
     }
   },
-  updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched: async (
+  updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched: async (
     req,
     listSenderId
   ) => {
     try {
       const currentUserId = getAuthUser(req);
       for (let senderId of listSenderId) {
-        await PrivateChat.updateMany(
+        await PersonalChat.updateMany(
           { sender: senderId, receiver: currentUserId, receiverStatus: "SENT" },
           { receiverStatus: "DELIVERED" },
           { new: true }
@@ -300,16 +300,16 @@ export const chatControllers = {
       throw new ApolloError(error.message);
     }
   },
-  updatePrivateReceiverWhenReceivedNewMessage: async (
+  updatePersonalReceiverWhenReceivedNewMessage: async (
     req,
     messageId,
     messageStatus,
-    pubsub,
+    pubsub,    
     notifySenderThatReceiverHasReceivedMessageChat
   ) => {
     try {
       const currentUserId = getAuthUser(req);
-      const updatedMessage = await PrivateChat.findOneAndUpdate(
+      const updatedMessage = await PersonalChat.findOneAndUpdate(
         { _id: messageId, receiver: currentUserId },
         { receiverStatus: messageStatus },
         { new: true }
@@ -327,7 +327,7 @@ export const chatControllers = {
       pubsub.publish(notifySenderThatReceiverHasReceivedMessageChat, {
         notifySenderThatReceiverHasReceivedMessageChat: {
           action: messageStatus,
-          status: "PRIVATE",
+          scope: "PRIVATE",
           message: _cloneUpdatedMessage,
         },
       });
@@ -339,14 +339,14 @@ export const chatControllers = {
   updateHaveSeenAllMessages: async (
     req,
     conversationId,
-    status,
+    scope,
     pubsub,
     senderSubscribeWhenReceiverHasSeenAllMessages
   ) => {
     try {
       const currentUserId = getAuthUser(req);
-      if (status === "PRIVATE") {
-        const updatedResult = await PrivateChat.updateMany(
+      if (scope === "PRIVATE") {
+        const updatedResult = await PersonalChat.updateMany(
           {
             receiver: currentUserId,
             sender: conversationId,
@@ -358,7 +358,7 @@ export const chatControllers = {
         if (updatedResult.nModified) {
           pubsub.publish(senderSubscribeWhenReceiverHasSeenAllMessages, {
             senderSubscribeWhenReceiverHasSeenAllMessages: {
-              status,
+              scope,
               action: "SEEN",
               senderId: conversationId,
               receiverId: currentUserId,

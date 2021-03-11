@@ -4,7 +4,7 @@ export const SENT_MESSAGE_CHAT_SUBSCRIPTION = gql`
   subscription($userId: ID!) {
     sentMessageChatSubscription(userId: $userId) {
       action
-      status
+      scope
       message {
         _id
         sender {

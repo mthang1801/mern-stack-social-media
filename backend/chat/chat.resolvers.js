@@ -17,7 +17,7 @@ export const chatResolvers = {
         req,
         args.receiverId,
         args.text,
-        args.status,
+        args.scope,
         pubsub,
         subscriptionActions.SENT_CHAT
       ),
@@ -26,23 +26,23 @@ export const chatResolvers = {
         req,
         args.receiverId,
         args.file,
-        args.status,
+        args.scope,
         args.messageType,
         pubsub,
         subscriptionActions.SENT_CHAT
       ),
-    updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched: (
+    updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched: (
       _,
       args,
       { req },
       info
     ) =>
-      chatControllers.updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched(
+      chatControllers.updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched(
         req,
         args.listSenderId
       ),
-    updatePrivateReceiverWhenReceivedNewMessage: (_, args, { req }, info) =>
-      chatControllers.updatePrivateReceiverWhenReceivedNewMessage(
+    updatePersonalReceiverWhenReceivedNewMessage: (_, args, { req }, info) =>
+      chatControllers.updatePersonalReceiverWhenReceivedNewMessage(
         req,
         args.messageId,
         args.messageStatus,
@@ -53,7 +53,7 @@ export const chatResolvers = {
       chatControllers.updateHaveSeenAllMessages(
         req,
         args.conversationId,
-        args.status,
+        args.scope,
         pubsub,
         subscriptionActions.UPDATE_RECEIVER_SEEN_ALL_MESSAGES
       ),
