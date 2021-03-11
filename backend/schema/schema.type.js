@@ -108,6 +108,12 @@ export const schemaType = gql`
     message : PrivateChat    
   }
 
+  type SeenAllMessagesSubscriptionPayload{
+    action : PrivateChatReceiverStatusEnum!
+    status: ChatStatusEnum!    
+    receiverId : ID!
+  }
+
   type UsersContact{
     sender: User!
     receiver : User!

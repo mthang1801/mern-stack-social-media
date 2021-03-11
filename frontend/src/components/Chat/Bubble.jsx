@@ -49,9 +49,7 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
       : null
   );
   const [isOpen, setIsOpen] = useState(false);
-  if (message.messageType === "IMAGE") {
-    console.log(message);
-  }
+
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });

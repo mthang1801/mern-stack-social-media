@@ -40,27 +40,23 @@ export const chatResolvers = {
       chatControllers.updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched(
         req,
         args.listSenderId
-      ),
-    updatePrivateReceiverStatusSentToDeliveredWhenReceivedNewMessage: (
-      _,
-      args,
-      { req },
-      info
-    ) => {
-      chatControllers.updatePrivateReceiverStatusSentToDeliveredWhenReceivedNewMessage(
+      ),      
+    updatePrivateReceiverWhenReceivedNewMessage: (_, args, { req }, info) =>
+      chatControllers.updatePrivateReceiverWhenReceivedNewMessage(
         req,
         args.messageId,
+        args.messageStatus,
         pubsub,
         subscriptionActions.UPDATE_RECEIVER_RECEIVED_CHAT
-      );
-    },
+      ),
+   
   },
   Subscription: {
     sentMessageChatSubscription: {
       subscribe: withFilter(
         () => pubsub.asyncIterator(subscriptionActions.SENT_CHAT),
         (payload, { userId }) => {
-          const { message } = payload.sentMessageChatSubscription;
+          const { message } = payload.sentMessageChatSubscription;          
           return message.receiver._id.toString() === userId.toString();
         }
       ),
@@ -71,10 +67,24 @@ export const chatResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.UPDATE_RECEIVER_RECEIVED_CHAT
           ),
+        (payload, { userId }) => {          
+          const {
+            message
+          } = payload.notifySenderThatReceiverHasReceivedMessageChat;         
+          return message.sender._id.toString() === userId.toString();
+        }
+      ),
+    },
+    notifySenderThatReceiverHasSeenAllMessages: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.UPDATE_RECEIVER_SEEN_ALL_MESSAGES
+          ),
         (payload, { userId }) => {
           const {
             message,
-          } = payload.notifySenderThatReceiverHasReceivedMessageChat;
+          } = payload.notifySenderThatReceiverHasSeenAllMessages;
           return message.sender._id.toString() === userId.toString();
         }
       ),

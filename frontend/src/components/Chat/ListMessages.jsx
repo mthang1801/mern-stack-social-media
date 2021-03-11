@@ -30,10 +30,10 @@ const ListMessages = () => {
   }, [messagesStorage])
 
   const { setShowPopup } = usePopupMessagesActions();  
-  
+  console.log(_messagesStorage)
   return (
     <ListMessagesWrapper onScroll={() => setShowPopup(false)}>
-      {_messagesStorage.length ? _messagesStorage.map(({ profile, messages, status, latestMessage, hasSeenLatestMessage }) => (
+      {_messagesStorage.length ? _messagesStorage.map(({ profile, status, latestMessage, hasSeenLatestMessage }) => (
         <MessageItem
           key={profile._id}
           messenger={profile}  

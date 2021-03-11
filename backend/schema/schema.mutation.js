@@ -23,7 +23,7 @@ export const schemaMutation = gql`
 
     sendMessageChatText(receiverId: ID!, text : String!, status: String!): AddChatResult!
     sendMessageChatFile(receiverId: ID!, file : ChatFileInput!, status: String!, messageType: String!) : AddChatResult
-    updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched(listSenderId : [ID!]!) : Boolean!
-    updatePrivateReceiverStatusSentToDeliveredWhenReceivedNewMessage(messageId: ID!) : Boolean
+    updatePrivateReceiverStatusSentToDeliveredWhenReceiverFetched(listSenderId : [ID!]!) : Boolean!   
+    updatePrivateReceiverWhenReceivedNewMessage(messageId: ID!, messageStatus : String!) : Boolean!
   }
 `;

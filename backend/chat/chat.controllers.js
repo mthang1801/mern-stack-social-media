@@ -5,7 +5,7 @@ import { CheckResultAndHandleErrors, ApolloError } from "apollo-server-express";
 import _ from "lodash";
 import decodeBase64 from "../utils/decodeBase64";
 import mongoose from "mongoose";
-import bufferToBase64 from "../utils/bufferToBase64"
+import bufferToBase64 from "../utils/bufferToBase64";
 export const chatControllers = {
   fetchInitialChatMessages: async (req, skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
@@ -53,24 +53,31 @@ export const chatControllers = {
           listPrivateMessages = [...listPrivateMessages, ...sortedUser];
         }
         //loop array, check messageType is IMAGE or FILE and convert data to base64
-        const _cloneListPrivateMessages = [...listPrivateMessages].map((message) => {
-          const _cloneMessage= message._doc;
-          if (
-            message.messageType === "IMAGE" ||
-            message.messageType === "ATTACHMENT"
-          ) {
-            return {
-              ..._cloneMessage,
-              file : {..._cloneMessage.file, data : `data:${_cloneMessage.file.mimetype};base64,${_cloneMessage.file.data.toString("base64")}`}
+        const _cloneListPrivateMessages = [...listPrivateMessages].map(
+          (message) => {
+            const _cloneMessage = message._doc;
+            if (
+              message.messageType === "IMAGE" ||
+              message.messageType === "ATTACHMENT"
+            ) {
+              return {
+                ..._cloneMessage,
+                file: {
+                  ..._cloneMessage.file,
+                  data: `data:${
+                    _cloneMessage.file.mimetype
+                  };base64,${_cloneMessage.file.data.toString("base64")}`,
+                },
+              };
             }
+            return { ..._cloneMessage };
           }
-          return {..._cloneMessage}; 
-        });
-        console.timeEnd("start")       ;
+        );
+        console.timeEnd("start");
         return {
           privateMessages: _cloneListPrivateMessages,
         };
-      }    
+      }
       return {
         privateMessages: [],
       };
@@ -171,9 +178,18 @@ export const chatControllers = {
       throw new ApolloError("Server error");
     }
   },
-  sendMessageChatFile: async (req, receiverId, file, status, messageType, pubsub, sentMessageChatSubscription) => {
-    try {      
-      const { encoding, filename, mimetype } = file;            
+  sendMessageChatFile: async (
+    req,
+    receiverId,
+    file,
+    status,
+    messageType,
+    pubsub,
+    sentMessageChatSubscription
+  ) => {
+    try {
+      const { encoding, filename, mimetype } = file;
+      console.log(messageType);
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId, {
         name: 1,
@@ -196,7 +212,7 @@ export const chatControllers = {
           },
         };
       }
-      const { data } = decodeBase64(encoding);      
+      const { data } = decodeBase64(encoding);
       if (status === "PRIVATE") {
         const session = await mongoose.startSession();
         session.startTransaction();
@@ -239,16 +255,16 @@ export const chatControllers = {
             ..._cloneNewPrivateMessageFile.file,
             data: encoding,
           },
-        }
+        };
         pubsub.publish(sentMessageChatSubscription, {
-          sentMessageChatSubscription : {
-            action : "SENT",
-            message : messageResult,
-            status
-          }
-        })
+          sentMessageChatSubscription: {
+            action: "SENT",
+            message: messageResult,
+            status,
+          },
+        });
         return {
-          message: messageResult ,
+          message: messageResult,
           status,
         };
       }
@@ -285,28 +301,35 @@ export const chatControllers = {
       throw new ApolloError(error.message);
     }
   },
-  updatePrivateReceiverStatusSentToDeliveredWhenReceivedNewMessage: async (
+  updatePrivateReceiverWhenReceivedNewMessage: async (
     req,
     messageId,
+    messageStatus,
     pubsub,
     notifySenderThatReceiverHasReceivedMessageChat
   ) => {
     try {
       const currentUserId = getAuthUser(req);
       const updatedMessage = await PrivateChat.findOneAndUpdate(
-        { _id: messageId, receiver: currentUserId, receiverStatus: "SENT" },
-        { receiverStatus: "DELIVERED" },
+        { _id: messageId, receiver: currentUserId },
+        { receiverStatus: messageStatus },
         { new: true }
       )
         .populate({ path: "sender", select: "name slug avatar" })
         .populate({ path: "receiver", select: "name slug avatar" });
-      const _cloneUpdatedMessage = updatedMessage._doc;
-      _cloneUpdatedMessage.file.data =  `data:${_cloneUpdatedMessage.file.mimetype};base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;      
+
+      let _cloneUpdatedMessage = updatedMessage._doc;
+      if (updatedMessage.messageType !== "TEXT") {
+        _cloneUpdatedMessage.file.data = `data:${
+          _cloneUpdatedMessage.file.mimetype
+        };base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;
+      }     
+
       pubsub.publish(notifySenderThatReceiverHasReceivedMessageChat, {
         notifySenderThatReceiverHasReceivedMessageChat: {
-          action: "DELIVERED",
+          action: messageStatus,
           status: "PRIVATE",
-          message: updatedMessage,
+          message: _cloneUpdatedMessage,
         },
       });
       return true;
