@@ -3,7 +3,7 @@ import {gql} from "@apollo/client"
 export const FETCH_INITIAL_CHAT_MESSAGES = gql`
   query ($limit: Int, $skip: Int){
     fetchInitialChatMessages(skip: $skip, limit : $limit){
-      privateMessages{
+      personalMessages{
         _id
         sender{
           _id

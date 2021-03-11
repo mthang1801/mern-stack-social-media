@@ -206,8 +206,7 @@ export const userController = {
       throw new ApolloError("Add friend failed.");
     }
   },
-  fetchUsersSentRequestToAddFriend: async (req, skip, limit) => {
-    console.log("render");
+  fetchUsersSentRequestToAddFriend: async (req, skip, limit) => {    
     const currentUserId = await getAuthUser(req);
     const currentUser = await User.findById(currentUserId).populate({
       path: "sentRequestToAddFriend",

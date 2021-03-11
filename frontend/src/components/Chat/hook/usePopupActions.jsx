@@ -1,6 +1,6 @@
 import {useContext} from "react"
 import {ContactContext} from "../Contact"
-import {MessagesContext} from "../Messages"
+import {MessagesContext} from "../Conversations"
 
 export const usePopupContactActions = () => {
   const {setPopupPosition, setShowPopup} = useContext(ContactContext)

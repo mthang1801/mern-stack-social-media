@@ -14,8 +14,7 @@ import {
   Friends,
   SentRequestsToAddFriends,
   ReceivedRequestsToAddFriend,
-  MessagesStorage,
-  PrivateChatUsers,
+  MessagesStorage,  
   CurrentChat,
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
@@ -40,7 +39,6 @@ const setOpenFriendsListVar = makeVar(OpenFriendsList);
 const setFriendsVar = makeVar(Friends);
 //Chat
 const setMessagesStorageVar = makeVar(MessagesStorage);
-const setPrivateChatUsersVar = makeVar(PrivateChatUsers);
 const setCurrentChatVar = makeVar(CurrentChat);
 const cache = new InMemoryCache({
   typePolicies: {
@@ -122,7 +120,6 @@ export {
   setFriendsVar,
   setSentRequestsToAddFriendVar,
   setReceivedRequestsToAddFriendVar,
-  setMessagesStorageVar,
-  setPrivateChatUsersVar,
+  setMessagesStorageVar,  
   setCurrentChatVar,  
 };

@@ -13,14 +13,14 @@ export const chatControllers = {
       console.time("start");      
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
-      const { messengers: privateChatUsersMap } = user;
-      if (privateChatUsersMap && privateChatUsersMap.size) {
-        const privateChatUsersArray = [];
-        privateChatUsersMap.forEach(function (value, key) {
-          privateChatUsersArray.push({ userId: key, latestMsg: value });
+      const { messengers: personalChatUsersMap } = user;
+      if (personalChatUsersMap && personalChatUsersMap.size) {
+        const personalChatUsersArray = [];
+        personalChatUsersMap.forEach(function (value, key) {
+          personalChatUsersArray.push({ userId: key, latestMsg: value });
         });
         const _sortedPersonalChatUsersArray = _.sortBy(
-          privateChatUsersArray,
+          personalChatUsersArray,
           function (o) {
             return -o.latestMsg;
           }
@@ -47,7 +47,7 @@ export const chatControllers = {
             })
             .sort({ createdAt: -1 })
             .skip(0)
-            .limit(+process.env.PRIVATE_CHAT_MESSAGES);
+            .limit(+process.env.PERSONAL_CHAT_MESSAGES);
           //sorting by ascending
           const sortedUser = _.sortBy([...userMessages], (o) => o.createdAt);
           listPersonalMessages = [...listPersonalMessages, ...sortedUser];
@@ -75,18 +75,18 @@ export const chatControllers = {
         );        
         console.timeEnd("start");
         return {
-          privateMessages: _cloneListPersonalMessages,
+          personalMessages: _cloneListPersonalMessages,
         };
       }
       return {
-        privateMessages: [],
+        personalMessages: [],
       };
     } catch (error) {
       console.log(error);
       throw new ApolloError("Server error");
     }
   },
-  // scope received either PRIVATE or GROUP
+  // scope received either PERSONAL or GROUP
   sendMessageChatText: async (
     req,
     receiverId,
@@ -97,7 +97,7 @@ export const chatControllers = {
   ) => {
     try {
       const userId = getAuthUser(req);
-      if (scope === "PRIVATE") {
+      if (scope === "PERSONAL") {
         const user = await User.findById(userId, {
           name: 1,
           slug: 1,
@@ -212,7 +212,7 @@ export const chatControllers = {
         };
       }
       const { data } = decodeBase64(encoding);
-      if (scope === "PRIVATE") {
+      if (scope === "PERSONAL") {
         const session = await mongoose.startSession();
         session.startTransaction();
         const newPersonalMessageFile = new PersonalChat({
@@ -327,7 +327,7 @@ export const chatControllers = {
       pubsub.publish(notifySenderThatReceiverHasReceivedMessageChat, {
         notifySenderThatReceiverHasReceivedMessageChat: {
           action: messageStatus,
-          scope: "PRIVATE",
+          scope: "PERSONAL",
           message: _cloneUpdatedMessage,
         },
       });
@@ -345,7 +345,7 @@ export const chatControllers = {
   ) => {
     try {
       const currentUserId = getAuthUser(req);
-      if (scope === "PRIVATE") {
+      if (scope === "PERSONAL") {
         const updatedResult = await PersonalChat.updateMany(
           {
             receiver: currentUserId,

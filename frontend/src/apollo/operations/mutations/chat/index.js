@@ -1,7 +1,7 @@
 import { SEND_MESSAGE_CHAT_TEXT } from "./sendMessageChatText";
 import { SEND_MESSAGE_CHAT_FILE } from "./sendMessageChatFile";
-import { UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "./private/updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched";
-import { UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE } from "./private/updatePersonalReceiverWhenReceivedNewMessage";
+import { UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "./personal/updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched";
+import { UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE } from "./personal/updatePersonalReceiverWhenReceivedNewMessage";
 import { UPDATE_HAVE_SEEN_ALL_MESSAGES } from "./updateHaveSeenAllMessages";
 
 export { SEND_MESSAGE_CHAT_TEXT };

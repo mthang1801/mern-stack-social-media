@@ -5,26 +5,25 @@ import {
   RightSide,
   PopupSettings,
 } from "./styles/Chat.styles";
-import {
-  GET_CURRENT_USER,
-  GET_MESSAGES_STORAGE,
-} from "../../apollo/operations/queries/cache";
+import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
 import { useQuery } from "@apollo/client";
 import Search from "./Search";
-import ListMessages from "./ListMessages";
+import ListConversations from "./ListConversations";
 import { useThemeUI } from "theme-ui";
 import ChatBoard from "./ChatBoard";
 
-
 export const MessagesContext = createContext({});
-const Messages = () => {
+const Conversations = () => {
   //query
   const {
     data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });  
- 
+  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+
   //state
   const [showPopup, setShowPopup] = useState(false);
+  const [search, setSearch] = useState("");
+  const [originalData, setOriginalData] = useState([]);
+
   const [popupPosition, setPopupPosition] = useState({
     left: -10000,
     top: -10000,
@@ -58,8 +57,6 @@ const Messages = () => {
       });
   });
 
-  
-
   if (!user) return null;
   return (
     <MessagesContext.Provider value={{ setShowPopup, setPopupPosition }}>
@@ -84,7 +81,7 @@ const Messages = () => {
         <LeftSide theme={colorMode}>
           <Search />
           <hr />
-          <ListMessages />
+          <ListConversations />
         </LeftSide>
         <RightSide>
           <ChatBoard />
@@ -94,4 +91,4 @@ const Messages = () => {
   );
 };
 
-export default Messages;
+export default Conversations;
