@@ -7,11 +7,9 @@ import {
 } from "./styles/Chat.styles";
 import {
   GET_CURRENT_USER,
-  GET_FRIENDS,  
+  GET_FRIENDS,
 } from "../../apollo/operations/queries/cache";
-import {
-  FETCH_FRIENDS,
-} from "../../apollo/operations/queries/user";
+import { FETCH_FRIENDS } from "../../apollo/operations/queries/user";
 import { useQuery } from "@apollo/client";
 import Search from "./Search";
 import { useThemeUI } from "theme-ui";
@@ -24,18 +22,21 @@ const Contact = () => {
   //useQuery
   const {
     data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });  
-  const { setFriends } = cacheMutations;  
+  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+  const { setFriends } = cacheMutations;
 
   const {
     data: { friends },
   } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-only" });
-  const { refetch: fetchFriends } = useQuery(FETCH_FRIENDS, {
-    fetchPolicy: "cache-and-network",
-    skip: true,
-  });
+  const { refetch: fetchFriends, fetchMore: fetchMoreFriends } = useQuery(
+    FETCH_FRIENDS,
+    {
+      fetchPolicy: "cache-and-network",
+      skip: true,
+    }
+  );
   //useState
-  const [search, setSearch] = useState("");  
+  const [search, setSearch] = useState("");
   const [contactData, setContactData] = useState([]);
   const [originData, setOriginData] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -68,7 +69,6 @@ const Contact = () => {
     }
     return () => (_mounted = false);
   }, [friends]);
-  
 
   useEffect(() => {
     if (friends.length) {
@@ -82,8 +82,14 @@ const Contact = () => {
         setContactData([...searchResults]);
       }
     }
-  }, [search,friends]);
-  
+  }, [search, friends]);
+
+  useEffect(() => {    
+    if (friends.length !== originData.length) {
+      setContactData([...friends]);
+      setOriginData([...friends]);
+    }
+  }, [friends]);
 
   useEffect(() => {
     function handleClickDotsSetting(e) {

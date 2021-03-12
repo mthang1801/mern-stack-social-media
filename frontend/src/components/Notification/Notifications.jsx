@@ -139,9 +139,9 @@ const Notifications = () => {
             receiver,
             sender,
           } = subscriptionData.data.notifyReceivedRequestToAddFriend;
-          // push new sender to received requests to add friend cache
-          const filterSendersRequest = receivedRequestsToAddFriend.filter(senderRequest => senderRequest._id !== sender._id)
-          setReceivedRequestsToAddFriend([{...sender}, ...filterSendersRequest])
+          
+          // push new sender to received requests to add friend cache                    
+          setReceivedRequestsToAddFriend([{...sender}, ...receivedRequestsToAddFriend])
           updatedNotifications(newNotification, sender, receiver);
         },
       });
@@ -176,6 +176,7 @@ const Notifications = () => {
   }, [
     countNumberNotificationsUnseen,
     subscribeToMoreNotifications,
+    receivedRequestsToAddFriend,
     notifications,     
     user,
   ]);  

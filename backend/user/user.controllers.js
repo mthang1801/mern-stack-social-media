@@ -105,7 +105,7 @@ export const userController = {
       })
       .populate({
         path: "friends",
-        options: { limit: +process.env.CONTACT_FRIENDS_PER_PAGE },
+        options: { limit: +process.env.CONTACT_FRIENDS_PER_PAGE, sort: {name : 1}, collation :{locale : "en"} },
       });
     if (!currentUser) {
       throw new AuthenticationError("User not found");
