@@ -1,3 +1,3 @@
-const setFriends = setFriendsVar => friends => setFriendsVar(friends)
+const setFriends = setFriendsVar => friendsList => setFriendsVar([...friendsList])
 
 export default setFriends

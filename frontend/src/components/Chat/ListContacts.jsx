@@ -1,18 +1,48 @@
-import React from 'react'
-import {HeadingCharacter, Wrapper} from "./styles/ListContacts.styles"
-import ContactItem from "./ContactItem"
-import {usePopupContactActions} from "./hook/usePopupActions"
-const ListContacts = ({data}) => {
-  const {setShowPopup} = usePopupContactActions()
-  console.log(data)
-  if(!data.length) return null;
-  return (
-   <Wrapper onScroll={() => setShowPopup(false)}>
-     {data.map(friend => (
-       <ContactItem key={`contact-${friend._id}`} friend={friend}/>
-     ))}   
-   </Wrapper>
-  )
-}
+import React, { useState, useEffect } from "react";
+import { HeadingCharacter, Wrapper } from "./styles/ListContacts.styles";
+import ContactItem from "./ContactItem";
+import { usePopupContactActions } from "./hook/usePopupActions";
+import { useQuery } from "@apollo/client";
+import { FETCH_FRIENDS } from "../../apollo/operations/queries/user/fetchFriends";
+import { cacheMutations } from "../../apollo/operations/mutations/cache";
+const ListContacts = ({ data }) => {
+  const { setShowPopup } = usePopupContactActions();
+  const [loadContactMore, setLoadContactMore] = useState(false);
+  const { refetch: fetchMoreContacts } = useQuery(FETCH_FRIENDS, {
+    skip: true,
+    fetchPolicy: "cache-and-network",
+  });
+  const { setFriends } = cacheMutations;
+  const onScrollListContacts = (e) => {
+    e.preventDefault();
+    const { clientHeight, scrollHeight, scrollTop } = e.target;
+    if (clientHeight + scrollTop > scrollHeight * 0.75) {
+      setLoadContactMore(true);
+    }
+  };
 
-export default ListContacts
+  useEffect(() => {
+    if (loadContactMore) {
+      const skip = data.length;
+      const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD;
+      fetchMoreContacts({ skip, limit }).then(({ data: { fetchFriends } }) => {
+        setFriends([...data, ...fetchFriends]);
+        setLoadContactMore(false);
+      });
+    }
+  }, [loadContactMore]);
+
+  if (!data.length) return null;
+  return (
+    <Wrapper
+      onScroll={() => setShowPopup(false)}
+      onScrollCapture={onScrollListContacts}
+    >
+      {data.map((friend) => (
+        <ContactItem key={`contact-${friend._id}`} friend={friend} />
+      ))}
+    </Wrapper>
+  );
+};
+
+export default React.memo(ListContacts);

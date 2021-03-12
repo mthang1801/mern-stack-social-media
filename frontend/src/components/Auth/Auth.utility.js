@@ -6,6 +6,9 @@ import {
   Notifications,
   NewNotifications,
   CountNumberNotificationsUnseen,  
+  CurrentChat,
+  Friends,
+  MessagesStorage
 } from "../../apollo/models";
 const clearCache = () => {
   const {
@@ -13,19 +16,25 @@ const clearCache = () => {
     setCountNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,
-    setPosts,       
+    setPosts,      
+    setCurrentChat ,
+    setFriends,
+    setMessagesStorage
   } = cacheMutations;
   setCurrentUser(User);
   setCountNumberNotificationsUnseen(CountNumberNotificationsUnseen);
   setPosts(Posts);
   setNotifications(Notifications);
   setNewNotifications(NewNotifications);  
+  setCurrentChat(CurrentChat);
+  setFriends(Friends);
+  setMessagesStorage(MessagesStorage)
 }
 
 const logout = async () => {
   localStorage.removeItem("token");
   localStorage.removeItem("tokenExpire");    
-  await client.clearStore();  
+  await client.resetStore();  
   clearCache();
 };
 

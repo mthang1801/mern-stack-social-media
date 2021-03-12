@@ -16,6 +16,7 @@ import {
   ReceivedRequestsToAddFriend,
   MessagesStorage,  
   CurrentChat,
+  ContactList
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 //Post
@@ -57,7 +58,7 @@ const cache = new InMemoryCache({
         },
         currentPersonalUser: {
           read: () => setCurrentPersonalUserVar(),
-        },
+        },      
         //UI
         toggleButtonMenu: {
           read: () => toggleButtonMenuVar(),
