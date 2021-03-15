@@ -42,7 +42,7 @@ const mentionPlugin = createMentionPlugin({
     );
   },
 });
-const Bubble = ({ message, me,user, senderAvatar, index }) => {  
+const Bubble = ({ message, me, user, senderAvatar, index }) => {
   const [editorState, setEditorState] = useState(() =>
     message.messageType === "TEXT"
       ? EditorState.createWithContent(convertFromRaw(JSON.parse(message.text)))
@@ -62,7 +62,7 @@ const Bubble = ({ message, me,user, senderAvatar, index }) => {
       setBubbleDimensions(bubbleRef.current.getBoundingClientRect());
     }
   }, [bubbleRef]);
-  if(!user) return null; 
+  if (!user) return null;
   return (
     <Wrapper index={index}>
       <BubbleContainer me={me}>
@@ -108,11 +108,7 @@ const Bubble = ({ message, me,user, senderAvatar, index }) => {
       <BubbleTimeline width={bubbleDimensions.width} me={me}>
         <div>
           <span>
-            {Date.now() - +message.createdAt > 3600000 * 48 ? (
-              <Moment date={new Date(+message.createdAt)} format="DD/MM" />
-            ) : (
-              <Moment fromNow>{+message.createdAt}</Moment>
-            )}
+            <Moment fromNow>{+message.createdAt}</Moment>
           </span>
           {user._id === message.sender._id ? (
             <span style={{ textTransform: "capitalize" }}>

@@ -17,9 +17,11 @@ import createSetMessagesStorage from "./setMessagesStorage";
 import createSetCurrentChat from "./setCurrentChat";
 import createClearCurrentChat from "./clearCurrentChat";
 import createUpdateMessagesStorage from "./updateMessagesStorage";
+import createUpdateHasSeenLatestMessage from './updateHasSeenLatestMessage';
 import createClearMessageStorage from "./clearMessageStorage";
 import createUpdateMessagesStorageWhenReceiverSeenAllMessages from "./updateMessagesStorageWhenReceiverSeenAllMessages";
-
+import createSetNumberOfConversations from "./setNumberOfConversations";
+import createUpdateMoreMessages from "./updateMoreMessages"
 import {
   toggleButtonMenuVar,
   setPostStatusVar,
@@ -37,6 +39,7 @@ import {
   setReceivedRequestsToAddFriendVar,
   setMessagesStorageVar,
   setCurrentChatVar,
+  setNumberOfConversationsVar
 } from "../../../cache";
 
 const mutations = {
@@ -69,13 +72,15 @@ const mutations = {
   ),
   setMessagesStorage: createSetMessagesStorage(setMessagesStorageVar),
   updateMessagesStorage: createUpdateMessagesStorage(setMessagesStorageVar),
+  updateHasSeenLatestMessage : createUpdateHasSeenLatestMessage(setMessagesStorageVar),
   setCurrentChat: createSetCurrentChat(setCurrentChatVar),
   clearCurrentChat : createClearCurrentChat(setCurrentChatVar),
   updateMessagesStorageWhenReceiverSeenAllMessages: createUpdateMessagesStorageWhenReceiverSeenAllMessages(
     setMessagesStorageVar
   ),
   clearMessageStorage: createClearMessageStorage(setMessagesStorageVar),
-  
+  setNumberOfConversations : createSetNumberOfConversations(setNumberOfConversationsVar),
+  updateMoreMessages : createUpdateMoreMessages(setMessagesStorageVar)
 };
 
 export { mutations as cacheMutations };

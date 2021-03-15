@@ -16,7 +16,7 @@ import {
   ReceivedRequestsToAddFriend,
   MessagesStorage,  
   CurrentChat,
-  ContactList
+  NumberOfConversations
 } from "./models";
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
 //Post
@@ -41,6 +41,7 @@ const setFriendsVar = makeVar(Friends);
 //Chat
 const setMessagesStorageVar = makeVar(MessagesStorage);
 const setCurrentChatVar = makeVar(CurrentChat);
+const setNumberOfConversationsVar = makeVar(NumberOfConversations);
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -99,7 +100,10 @@ const cache = new InMemoryCache({
         },
         messagesStorage: {
           read: () => setMessagesStorageVar(),
-        },        
+        },  
+        numberOfConversations : {
+          read : () => setNumberOfConversationsVar()
+        }              
       },
     },
   },
@@ -123,4 +127,5 @@ export {
   setReceivedRequestsToAddFriendVar,
   setMessagesStorageVar,  
   setCurrentChatVar,  
+  setNumberOfConversationsVar
 };
