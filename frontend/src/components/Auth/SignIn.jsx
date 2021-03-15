@@ -43,6 +43,7 @@ const SignIn = withLoginQuery(
     constructor(props) {
       super(props);
       this.signInRef = React.createRef();
+      this._isMounted = true ;
     }
     state = {
       email: "",
@@ -64,24 +65,32 @@ const SignIn = withLoginQuery(
         });
       }
     }
-    componentWillUnmount() {
-      clearTimeout(this.timer);      
-    }
+    
 
     handleChange = (e) => {
       const { name, value } = e.target;
       this.setState({ [name]: value });
-    };
+    };    
+    unsubscribeLogin ;
     async componentDidUpdate(prevProps) {
       if (prevProps.error !== this.props.error) {
         this.clearForm();
       }
       if (prevProps.data !== this.props.data && this.props.data) {
-        const { user, token, tokenExpire } = this.props.data.loginUser;                
-        this.props.setCurrentUser({...user});
-        await login(token, tokenExpire)        
-        this.clearForm();        
+        const { user, token, tokenExpire } = this.props.data.loginUser;    
+        if(this._isMounted){
+          this.unsubscribeLogin = await login(user, token, tokenExpire)  
+          this.clearForm();       
+        }        
+               
       }
+    }
+    componentWillUnmount() {
+      clearTimeout(this.timer);      
+      this._isMounted = false 
+      if(this.unsubscribeLogin){
+        this.unsubscribeLogin();
+      }      
     }
     clearForm = () => {
       this.setState({
@@ -92,7 +101,7 @@ const SignIn = withLoginQuery(
       });
       setTimeout(() => {
         this.setState({ loaded: true });
-      }, 500);
+      }, 10);
     };
 
     onSubmitSigninForm = async (e) => {
@@ -105,6 +114,7 @@ const SignIn = withLoginQuery(
       this.props.loginUser({ variables: { email, password } });
     };
     handleChangeGoogleRecaptcha = (value) => {
+      console.log(value)
       this.setState({ captcha_value: value, disabled: false });
       if (value === null) this.setState({ disabled: true });
     };
@@ -143,6 +153,7 @@ const SignIn = withLoginQuery(
               label="Password"
               onChange={this.handleChange}
               required
+              autocomplete="on"
             />
             {loaded && (
               <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />

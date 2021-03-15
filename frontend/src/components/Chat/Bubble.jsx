@@ -42,7 +42,7 @@ const mentionPlugin = createMentionPlugin({
     );
   },
 });
-const Bubble = ({ message, me, senderAvatar, index }) => {
+const Bubble = ({ message, me,user, senderAvatar, index }) => {  
   const [editorState, setEditorState] = useState(() =>
     message.messageType === "TEXT"
       ? EditorState.createWithContent(convertFromRaw(JSON.parse(message.text)))
@@ -50,9 +50,6 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
   );
   const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
   const [bubbleDimensions, setBubbleDimensions] = useState({
     width: 0,
     height: 0,
@@ -65,7 +62,7 @@ const Bubble = ({ message, me, senderAvatar, index }) => {
       setBubbleDimensions(bubbleRef.current.getBoundingClientRect());
     }
   }, [bubbleRef]);
-  
+  if(!user) return null; 
   return (
     <Wrapper index={index}>
       <BubbleContainer me={me}>

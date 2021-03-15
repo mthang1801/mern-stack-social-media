@@ -4,11 +4,11 @@ import { withFilter } from "apollo-server-express";
 import { subscriptionActions } from "../schema";
 export const chatResolvers = {
   Query: {
-    fetchInitialChatMessages: (_, args, { req }, info) =>
-      chatControllers.fetchInitialChatMessages(
+    fetchChatConversations: (_, args, { req }, info) =>
+      chatControllers.fetchChatConversations(
         req,
         args.skip || 0,
-        args.limit || +process.env.PERSONAL_CHAT_USERS
+        args.limit || +process.env.NUMBER_CONVERSATIONS_LIMITATION
       ),
   },
   Mutation: {

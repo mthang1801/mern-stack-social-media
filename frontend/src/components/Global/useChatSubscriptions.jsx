@@ -1,34 +1,46 @@
 import { useEffect } from "react";
 import chatSubscriptions from "../../apollo/operations/subscriptions/chat";
-import { FETCH_INITIAL_CHAT_MESSAGES } from "../../apollo/operations/queries/chat/fetchInitialChatMessages";
+import { FETCH_CHAT_CONVERSATIONS } from "../../apollo/operations/queries/chat/fetchChatConversations";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_CURRENT_USER, GET_CURRENT_CHAT } from "../../apollo/operations/queries/cache";
+import {
+  GET_CURRENT_USER,
+  GET_CURRENT_CHAT,
+} from "../../apollo/operations/queries/cache";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import { UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE } from "../../apollo/operations/mutations/chat";
 
 const useChatSubscriptions = () => {
+  const { subscribeToMore: subscribeChatMessage } = useQuery(
+    FETCH_CHAT_CONVERSATIONS,
+    {
+      skip: true,
+      fetchPolicy: "cache-and-network",
+    }
+  );
   const {
-    subscribeToMore: subscribeChatMessage,
-  } = useQuery(FETCH_INITIAL_CHAT_MESSAGES, {
-    skip: true,
-    fetchPolicy: "cache-and-network",
-  });
-  const {SENT_MESSAGE_CHAT_SUBSCRIPTION, NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT, SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES} = chatSubscriptions
+    SENT_MESSAGE_CHAT_SUBSCRIPTION,
+    NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT,
+    SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES,
+  } = chatSubscriptions;
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
-  const {data: {currentChat}} = useQuery(GET_CURRENT_CHAT, {fetchPolicy: "cache-only"})
-  const { setMessagesStorage, updateMessagesStorage, updateMessagesStorageWhenReceiverSeenAllMessages } = cacheMutations;
-  const [
-    updatePersonalReceiverWhenReceivedNewMessage,
-  ] = useMutation(
+  const {
+    data: { currentChat },
+  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-only" });
+  const {
+    setMessagesStorage,
+    updateMessagesStorage,
+    updateMessagesStorageWhenReceiverSeenAllMessages,
+  } = cacheMutations;
+  const [updatePersonalReceiverWhenReceivedNewMessage] = useMutation(
     UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE
   );
   useEffect(() => {
     let unsubscribeChatMessage;
-    let unsubscribeNotifySenderThatReceiverHasReceivedMessage; 
-    let unsubscribeSubscribeReceiverHasSeenAllMessages; 
-    if (subscribeChatMessage && user) {
+    let unsubscribeNotifySenderThatReceiverHasReceivedMessage;
+    let unsubscribeSubscribeReceiverHasSeenAllMessages;
+    if (subscribeChatMessage && user) {      
       unsubscribeChatMessage = subscribeChatMessage({
         document: SENT_MESSAGE_CHAT_SUBSCRIPTION,
         variables: { userId: user._id },
@@ -38,45 +50,54 @@ const useChatSubscriptions = () => {
             scope,
             message,
           } = subscriptionData.data.sentMessageChatSubscription;
-          const { sender } = message;      
+          const { sender } = message;
           setMessagesStorage(sender, message, scope, false);
           //update Delivered status
-          const messageStatus = currentChat?._id === sender._id ? "SEEN" : "DELIVERED";
+          const messageStatus =
+            currentChat?._id === sender._id ? "SEEN" : "DELIVERED";
           updatePersonalReceiverWhenReceivedNewMessage({
-            variables: { messageId: message._id, messageStatus  },
+            variables: { messageId: message._id, messageStatus },
           });
         },
       });
-      unsubscribeNotifySenderThatReceiverHasReceivedMessage = subscribeChatMessage({
-        document : NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT,
-        variables : {userId: user._id},
-        updateQuery : (_, {subscriptionData}) => {
-          const {action, scope, message} = subscriptionData.data.notifySenderThatReceiverHasReceivedMessageChat;          
-          const {receiver} = message;
-          updateMessagesStorage(receiver, message, scope, action === "SEEN" );
+      unsubscribeNotifySenderThatReceiverHasReceivedMessage = subscribeChatMessage(
+        {
+          document: NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT,
+          variables: { userId: user._id },
+          updateQuery: (_, { subscriptionData }) => {
+            const {
+              action,
+              scope,
+              message,
+            } = subscriptionData.data.notifySenderThatReceiverHasReceivedMessageChat;
+            const { receiver } = message;
+            updateMessagesStorage(receiver, message, scope, action === "SEEN");
+          },
         }
-      })
+      );
       unsubscribeSubscribeReceiverHasSeenAllMessages = subscribeChatMessage({
-        document : SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES, 
-        variables : {userId : user._id} , 
-        updateQuery : (_, {subscriptionData}) => {
-          const {receiverId} = subscriptionData.data.senderSubscribeWhenReceiverHasSeenAllMessages;          
-          updateMessagesStorageWhenReceiverSeenAllMessages(receiverId)
-        }
-      })
+        document: SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES,
+        variables: { userId: user._id },
+        updateQuery: (_, { subscriptionData }) => {
+          const {
+            receiverId,
+          } = subscriptionData.data.senderSubscribeWhenReceiverHasSeenAllMessages;
+          updateMessagesStorageWhenReceiverSeenAllMessages(receiverId);
+        },
+      });
     }
     return () => {
       if (unsubscribeChatMessage) {
-        unsubscribeChatMessage();
+        unsubscribeChatMessage();      
       }
-      if(unsubscribeNotifySenderThatReceiverHasReceivedMessage){
-        unsubscribeNotifySenderThatReceiverHasReceivedMessage()
+      if (unsubscribeNotifySenderThatReceiverHasReceivedMessage) {
+        unsubscribeNotifySenderThatReceiverHasReceivedMessage();
       }
-      if(unsubscribeSubscribeReceiverHasSeenAllMessages){
+      if (unsubscribeSubscribeReceiverHasSeenAllMessages) {
         unsubscribeSubscribeReceiverHasSeenAllMessages();
       }
     };
-  }, [subscribeChatMessage, user,currentChat]);
+  }, [subscribeChatMessage, user, currentChat]);
 };
 
 export default useChatSubscriptions;

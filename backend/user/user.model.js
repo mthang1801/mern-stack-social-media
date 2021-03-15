@@ -95,10 +95,23 @@ const UserSchema = new mongoose.Schema({
       required: true
     }
   ],
-  messengers : {
-    type: Map,
-    of: Number
-  },  
+  conversations : [
+    {
+      conversationId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "personal-chats",        
+        required: true         
+      }, 
+      latestMessage : {
+        type : Number,
+        default : Date.now,        
+      }, 
+      isGroup : {
+        type : Boolean, 
+        default : false 
+      }
+    }
+  ]
 }, {timestamps : true});
 
 export const User = mongoose.model("users", UserSchema)

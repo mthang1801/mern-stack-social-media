@@ -14,11 +14,14 @@ import {
 } from "./styles/chats.styles";
 import MenuChat from "../components/Chat/MenuChat";
 import { Route, Switch } from "react-router-dom";
-import { FETCH_INITIAL_CHAT_MESSAGES } from "../apollo/operations/queries/chat";
+import { FETCH_CHAT_CONVERSATIONS } from "../apollo/operations/queries/chat";
 import { UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../apollo/operations/mutations/chat";
 import { cacheMutations } from "../apollo/operations/mutations";
 import useChatSubscriptions from "../components/Global/useChatSubscriptions";
-const ChatConversations = lazy(() => import("../components/Chat/Conversations"));
+import { RiContactsBookLine } from "react-icons/ri";
+const ChatConversations = lazy(() =>
+  import("../components/Chat/Conversations")
+);
 const ChatContacts = lazy(() => import("../components/Chat/Contact"));
 
 const ChatsPage = ({ match }) => {
@@ -29,88 +32,58 @@ const ChatsPage = ({ match }) => {
   const {
     data: { messagesStorage },
   } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-first" });
-  const { refetch: fetchInitialChatMessages } = useQuery(
-    FETCH_INITIAL_CHAT_MESSAGES,
+  const { refetch: fetchChatConversations } = useQuery(
+    FETCH_CHAT_CONVERSATIONS,
     {
       fetchPolicy: "cache-and-network",
       skip: true,
     }
   );
-  const [updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched] = useMutation(
+  const [
+    updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched,
+  ] = useMutation(
     UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED
   );
   const { setInitialMessagesStorage } = cacheMutations;
   useChatSubscriptions();
-  useEffect(() => {
-    if (!Object.keys(messagesStorage).length && user) {
-      let personalMessagesHaveReceiverSentStatus = new Set();
-      fetchInitialChatMessages()
-        .then(({ data }) => {
-          const { personalMessages } = data.fetchInitialChatMessages;
-          let storage = {};
-          personalMessages.forEach((newMessage) => {
-            //check message is sent Status to, then push senderId to personalMessagesHaveReceiverSentStatus variable           
-            if (
-              newMessage.receiver._id === user._id &&
-              newMessage.receiverStatus === "SENT" &&
-              newMessage.__typename === "PersonalChat"
-            ) {
-              personalMessagesHaveReceiverSentStatus.add(newMessage.sender._id);
-            }
-            const messenger =
-              newMessage.receiver._id === user._id
-                ? newMessage.sender
-                : newMessage.receiver;
 
-            // setMessagesStorage( messenger,message, "PERSONAL")
-            if (messenger && messenger._id) {
-              const checkMessengerExist = storage[messenger._id];
-              let updateNewMessage;
-              if (checkMessengerExist) {
-                updateNewMessage = {
-                  ...checkMessengerExist,
-                  messages: [
-                    ...checkMessengerExist.messages,
-                    { ...newMessage },
-                  ],
-                  latestMessage: newMessage,
-                  hasSeenLatestMessage:
-                    newMessage.receiver._id === user._id &&
-                    newMessage.receiverStatus !== "SEEN"
-                      ? false
-                      : true,
-                };
-              } else {
-                updateNewMessage = {
-                  profile: { ...messenger },
-                  messages: [{ ...newMessage }],
-                  scope: "PERSONAL",
-                  latestMessage: newMessage,
-                  hasSeenLatestMessage:
-                    newMessage.receiver._id === user._id &&
-                    newMessage.receiverStatus !== "SEEN"
-                      ? false
-                      : true,
-                };
+  useEffect(() => {
+    let _isMounted = true;
+    if (!Object.keys(messagesStorage).length && user) {   
+      console.log("render")  
+      let personalMessagesHaveReceiverSentStatus = new Set();
+      fetchChatConversations().then(({ data }) => {
+        if (_isMounted) {          
+          const { conversations } = data.fetchChatConversations;
+          let storage = {};          
+          conversations.forEach((conversation) => {
+            if (conversation.scope === "PERSONAL") {
+              storage[conversation.profile._id] = { ...conversation };
+              if (
+                conversation.latestMessage.receiver._id.toString() ===
+                  user._id.toString() &&
+                conversation.latestMessage.receiverStatus === "SENT"
+              ) {
+                personalMessagesHaveReceiverSentStatus.add(
+                  conversation.latestMessage.sender._id
+                );
               }
-              storage = {
-                ...storage,
-                [messenger._id]: { ...updateNewMessage },
-              };
             }
-          });
-          setInitialMessagesStorage(storage);        
+          });          
+          setInitialMessagesStorage({ ...storage });
           if (personalMessagesHaveReceiverSentStatus.size) {
             updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched({
               variables: {
                 listSenderId: [...personalMessagesHaveReceiverSentStatus],
               },
-            })
+            });
           }
-        })
-      
+        }
+      });
     }
-  }, [messagesStorage, user]);
+    return () => _isMounted = false ;
+  }, []);
+  console.log(messagesStorage)
   if (!user)
     return (
       <Layout>

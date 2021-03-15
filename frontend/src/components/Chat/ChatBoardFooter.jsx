@@ -129,7 +129,7 @@ const ChatBoardFooter = () => {
         focusEditorWhenTypingTabButton(e);
       });
   }, [editorRef]);
-  const onSendMessage = (e) => {
+  const onSendMessage = (e) => {    
     if (editorState.getCurrentContent().hasText() && currentChat) {
       const rawData = JSON.stringify(
         convertToRaw(editorState.getCurrentContent())
@@ -153,7 +153,7 @@ const ChatBoardFooter = () => {
         });
     }
   };
-  console.log(currentChat)
+
   const onChangeInputChatImage = async (e) => {
     const fileData = e.target.files[0];
     const maxSize = 1024 * 1024;
@@ -184,6 +184,7 @@ const ChatBoardFooter = () => {
       const { message, scope } = data.sendMessageChatFile;
       const messenger = message.receiver;
       setMessagesStorage(messenger, message, scope, true);
+      document.getElementById("chat-image").value =  "";
     }
   };
 

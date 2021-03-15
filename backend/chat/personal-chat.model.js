@@ -6,12 +6,12 @@ const PersonalChatSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
       required: true,
-    },
+    },    
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
       required: true,
-    },
+    },    
     messageType: {
       type: String,
       enum: ["TEXT", "IMAGE", "ATTACHMENT"],
