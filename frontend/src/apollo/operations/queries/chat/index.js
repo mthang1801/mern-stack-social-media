@@ -1,7 +1,7 @@
-import {FETCH_INITIAL_CHAT_MESSAGES} from "./fetchInitialChatMessages"
+import {FETCH_CHAT_CONVERSATIONS} from "./fetchChatConversations"
 
-export {FETCH_INITIAL_CHAT_MESSAGES};
+export {FETCH_CHAT_CONVERSATIONS};
 
 export const chatQueries = {
-  FETCH_INITIAL_CHAT_MESSAGES
+  FETCH_CHAT_CONVERSATIONS
 }

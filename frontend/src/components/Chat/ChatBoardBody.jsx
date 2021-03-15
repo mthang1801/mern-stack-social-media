@@ -34,18 +34,20 @@ const ChatBoardBody = () => {
     },10)
     return () => clearTimeout(timer);
   })    
-  const { colorMode } = useThemeUI();  
+ 
+  const { colorMode } = useThemeUI();    
   return (
     <Wrapper theme={colorMode} id="body-board" >     
-      {currentChat && messagesStorage[currentChat._id] &&  messagesStorage[currentChat._id].messages.length && user
+      {currentChat && messagesStorage[currentChat._id] && messagesStorage[currentChat._id].messages.length && user
         ? messagesStorage[currentChat._id].messages.map((message, idx) => {              
             return (
               <Bubble
-                key={message._id}
+                key={`bubble-${message._id}`}
                 message={message}
-                me={message.sender._id === user._id}
+                user={user}
+                me={message.sender && message.sender._id === user._id}
                 senderAvatar={
-                  message.sender._id === user._id
+                  message.sender && message.sender._id === user._id
                     ? user.avatar
                     : currentChat.avatar
                 }

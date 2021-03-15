@@ -19,7 +19,7 @@ import { UPDATE_HAVE_SEEN_ALL_MESSAGES} from "../../apollo/operations/mutations/
 
 import {useMutation} from "@apollo/client"
 const MessageItem = ({
-  messenger,
+  conversation,
   latestMessage,
   active,
   scope,
@@ -28,7 +28,7 @@ const MessageItem = ({
   const [showSetting, setShowSettings] = useState(false);
   const { setPopupPosition, setShowPopup } = usePopupMessagesActions();
   const { colorMode } = useThemeUI();
-  const { setCurrentChat } = cacheMutations;  
+  const { setCurrentChat, setHasSeenLatestMessage } = cacheMutations;  
   const [updateHaveSeenAllMessages] = useMutation(UPDATE_HAVE_SEEN_ALL_MESSAGES)
   
   const onClickThreeDots = (e) => {
@@ -40,22 +40,24 @@ const MessageItem = ({
         : e.pageY;
     setPopupPosition({ left: e.pageX, top: positionY });
   };
-  const onClickMessageItem = e => {
-    setCurrentChat({ ...messenger, scope });
-    updateHaveSeenAllMessages({variables : {conversationId: messenger._id , scope}});
+  const onClickConversationItem = e => {
+    setCurrentChat({ ...conversation, scope });
+    updateHaveSeenAllMessages({variables : {conversationId: conversation._id , scope}}).then(res => {
+      setHasSeenLatestMessage(conversation._id)
+    });
   }
   return (
     <ConversationItemWrapper
       theme={colorMode}
       active={active}
       hasSeenLatestMessage={hasSeenLatestMessage}
-      onClick={onClickMessageItem}
+      onClick={onClickConversationItem}
     >
       <Avatar>
-        <LazyLoadImage src={messenger.avatar} />
+        <LazyLoadImage src={conversation.avatar} />
       </Avatar>
       <ConversationOverview>
-        <h4>{messenger.name}</h4>
+        <h4>{conversation.name}</h4>
         <small>
           {latestMessage.messageType === "TEXT"
             ? EditorState.createWithContent(

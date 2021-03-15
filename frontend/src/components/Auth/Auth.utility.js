@@ -17,35 +17,37 @@ const clearCache = () => {
     setNotifications,
     setNewNotifications,
     setPosts,      
-    setCurrentChat ,
+    clearCurrentChat ,
     setFriends,
-    setMessagesStorage
+    clearMessageStorage
   } = cacheMutations;
   setCurrentUser(User);
   setCountNumberNotificationsUnseen(CountNumberNotificationsUnseen);
   setPosts(Posts);
   setNotifications(Notifications);
   setNewNotifications(NewNotifications);  
-  setCurrentChat(CurrentChat);
+  clearCurrentChat();
   setFriends(Friends);
-  setMessagesStorage(MessagesStorage)
+  clearMessageStorage();
 }
 
 const logout = async () => {
   localStorage.removeItem("token");
   localStorage.removeItem("tokenExpire");    
-  await client.resetStore();  
   clearCache();
+  await client.resetStore();  
+  
 };
 
-const login = async (token, tokenExpire) => {
-  logout();
+const login = async (user, token, tokenExpire) => {
+  await logout();  
   localStorage.setItem("token", token);
   localStorage.setItem(
     "tokenExpire",
     new Date(Date.now() + tokenExpire * 1000)
   );
-  await client.resetStore();
+  const {setCurrentUser} = cacheMutations  
+  setCurrentUser({...user})
 };
 
 export { logout, login };

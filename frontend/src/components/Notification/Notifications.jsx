@@ -1,21 +1,20 @@
-import React, { useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 import NotificationItem from "./NotificationItem";
 import styled from "styled-components";
 import { useQuery } from "@apollo/client";
-import { 
+import {
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_NOTIFICATIONS,
   GET_CURRENT_USER,
-  GET_OPEN_POPUP_NOTIFICATION,  
+  GET_OPEN_POPUP_NOTIFICATION,
   GET_CURRENT_PERSONAL_USER,
-  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND
+  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
 } from "../../apollo/operations/queries/cache";
 import {
   FETCH_NOTIFICATIONS,
-  FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, 
+  FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
 } from "../../apollo/operations/queries/notification";
-import {cacheMutations} from "../../apollo/operations/mutations";
-import subcriptions from "../../apollo/operations/subscriptions";
+import { cacheMutations } from "../../apollo/operations/mutations";
 import subscriptions from "../../apollo/operations/subscriptions";
 const Notifications = () => {
   //useQuery
@@ -31,12 +30,13 @@ const Notifications = () => {
   } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
     fetchPolicy: "cache-first",
   });
-  const {   
-    subscribeToMore: subscribeToMoreNotifications,
-  } = useQuery(FETCH_NOTIFICATIONS, {
-    skip: true,
-    fetchPolicy: "cache-and-network",
-  });
+  const { subscribeToMore: subscribeToMoreNotifications } = useQuery(
+    FETCH_NOTIFICATIONS,
+    {
+      skip: true,
+      fetchPolicy: "cache-and-network",
+    }
+  );
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
@@ -45,31 +45,38 @@ const Notifications = () => {
   } = useQuery(GET_NOTIFICATIONS, { fetchPolicy: "cache-only" });
   const {
     data: { openPopupNotification },
-  } = useQuery(GET_OPEN_POPUP_NOTIFICATION, { fetchPolicy: "cache-first" }); 
+  } = useQuery(GET_OPEN_POPUP_NOTIFICATION, { fetchPolicy: "cache-first" });
   const {
     data: { currentPersonalUser },
   } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
   const {
     data: { receivedRequestsToAddFriend },
-  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, { fetchPolicy: "cache-first" });
+  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
+    fetchPolicy: "cache-first",
+  });
   //mutations
   const {
     setCountNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,
-    setOpenPopupNotification,      
+    setOpenPopupNotification,
     setCurrentUser,
     setCurrentPersonalUser,
-    setReceivedRequestsToAddFriend
+    setReceivedRequestsToAddFriend,
   } = cacheMutations;
 
   useEffect(() => {
+    let _isMounted = true;
     if (countNumberNotificationsUnseen === null) {
       fetchCountNumberNotificationsUnseen().then(
-        ({ data: { countNotificationsUnseen } }) =>
-          setCountNumberNotificationsUnseen(countNotificationsUnseen)
+        ({ data: { countNotificationsUnseen } }) => {
+          if (_isMounted) {
+            setCountNumberNotificationsUnseen(countNotificationsUnseen);
+          }
+        }
       );
     }
+    return () => (_isMounted = false);
   }, [
     countNumberNotificationsUnseen,
     fetchCountNumberNotificationsUnseen,
@@ -94,7 +101,6 @@ const Notifications = () => {
         receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
       });
 
-      
       if (currentPersonalUser && currentPersonalUser._id === sender._id) {
         setCurrentPersonalUser({
           ...currentPersonalUser,
@@ -117,7 +123,7 @@ const Notifications = () => {
     if (subscribeToMoreNotifications && user) {
       unsubscribePostCreated = subscribeToMoreNotifications({
         document:
-          subcriptions.notificationSubscription.POST_CREATED_SUBSCRIPTIONS,
+          subscriptions.notificationSubscription.POST_CREATED_SUBSCRIPTIONS,
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
@@ -129,7 +135,7 @@ const Notifications = () => {
       });
       unsubscribeRequestAddFriend = subscribeToMoreNotifications({
         document:
-          subcriptions.notificationSubscription
+          subscriptions.notificationSubscription
             .NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND,
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
@@ -139,9 +145,12 @@ const Notifications = () => {
             receiver,
             sender,
           } = subscriptionData.data.notifyReceivedRequestToAddFriend;
-          
-          // push new sender to received requests to add friend cache                    
-          setReceivedRequestsToAddFriend([{...sender}, ...receivedRequestsToAddFriend])
+
+          // push new sender to received requests to add friend cache
+          setReceivedRequestsToAddFriend([
+            { ...sender },
+            ...receivedRequestsToAddFriend,
+          ]);
           updatedNotifications(newNotification, sender, receiver);
         },
       });
@@ -177,9 +186,9 @@ const Notifications = () => {
     countNumberNotificationsUnseen,
     subscribeToMoreNotifications,
     receivedRequestsToAddFriend,
-    notifications,     
+    notifications,
     user,
-  ]);  
+  ]);
 
   useEffect(() => {
     let timer = 0;
@@ -187,7 +196,7 @@ const Notifications = () => {
       setOpenPopupNotification(false);
     }, 7000);
     return () => clearTimeout(timer);
-  }, [openPopupNotification]);  
+  }, [openPopupNotification]);
   if (!notifications.length)
     return <NoNotifications>No notifications</NoNotifications>;
   return notifications.map((notification) => (

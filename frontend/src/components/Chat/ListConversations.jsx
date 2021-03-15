@@ -19,12 +19,9 @@ const ListConversations = () => {
   //use State
   const [_messagesStorage, _setMessagesStorage] = useState([]);
 
-  useEffect(() => {
-    console.log("render")
-    const _convertStorageToArray = Object.values(messagesStorage);
-   
-    const _sortedByLatestMessages = _.sortBy(_convertStorageToArray,[function(o) { return -o.latestMessage.createdAt; }])
-    console.log(_sortedByLatestMessages)
+  useEffect(() => {    
+    const _convertStorageToArray = Object.values(messagesStorage);   
+    const _sortedByLatestMessages = _.sortBy(_convertStorageToArray,[function(o) { return -o.latestMessage.createdAt; }])    
     _setMessagesStorage([..._sortedByLatestMessages])    
   }, [messagesStorage])
 
@@ -34,7 +31,7 @@ const ListConversations = () => {
       {_messagesStorage.length ? _messagesStorage.map(({ profile, scope, latestMessage, hasSeenLatestMessage }) => (
         <ConversationItem
           key={profile._id}
-          messenger={profile}  
+          conversation={profile}  
           scope={scope}                
           hasSeenLatestMessage={hasSeenLatestMessage}
           latestMessage={latestMessage}          

@@ -5,10 +5,30 @@ export const LOGIN = gql`
     loginUser(data: { email: $email, password: $password }) {
       user {
         _id
-        name
-        email
-        password
+      name
+      nickname
+      slug
+      email       
+      friends
+      notifications{
+        _id
+        field
+        action
+        hasSeen
+        creator{
+          _id
+          name 
+          avatar
+        }
+        href 
+        acceptInvite        
         createdAt
+      }    
+      avatar  
+      following
+      followed 
+      sentRequestToAddFriend
+      receivedRequestToAddFriend
       }
       token
       tokenExpire

@@ -33,7 +33,7 @@ const SettingAccount = ({ className }) => {
       });
   }, []);
 
-  const onLogout = async () => {        
+  const onLogout = () => {        
     logout();  
   }  
 

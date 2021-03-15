@@ -51,7 +51,10 @@ export const userController = {
   },
   loginUser: async (data) => {
     const { email, password } = data;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate({
+      path: "notifications",
+      populate: { path: "creator" },
+    });
 
     if (!user) {
       throw new UserInputError("email or password was not correct");

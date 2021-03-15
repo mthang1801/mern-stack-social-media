@@ -63,7 +63,7 @@ const Control = () => {
       });
   }, []);
 
-  const handleClickNotification = async () => {
+  const handleClickNotification = async () => {    
     if (notifications.length <  +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE) {        
       const skip = notifications.length;
       const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
@@ -89,16 +89,20 @@ const Control = () => {
     }
   };
   useEffect(() => {
+    let _isMounted = true; 
     if (loadingNotificationsMore && fetchNotifications) {
       const skip = notifications.length;
       const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
       fetchNotifications({ skip, limit }).then(
         ({ data: { fetchNotifications } }) => {
-          setNotifications([...notifications, ...fetchNotifications]);
-          setLoadingNotificationsMore(false);
+          if(_isMounted){
+            setNotifications([...notifications, ...fetchNotifications]);
+            setLoadingNotificationsMore(false);
+          }          
         }
       );
     }
+    return () => _isMounted = false;
   }, [loadingNotificationsMore]);
   return (
     <Wrapper>

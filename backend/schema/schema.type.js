@@ -133,8 +133,16 @@ export const schemaType = gql`
     error : Error
   }
 
-  type FetchChatResults{
-    personalMessages: [PersonalChat!]!   
+  type ConversationsResult{
+    conversations : [Conversation!]!
+  }
+
+  type Conversation{
+    profile : User!
+    messages : [PersonalChat!]
+    scope : ChatScopeEnum!
+    latestMessage : PersonalChat
+    hasSeenLatestMessage : Boolean
   }
 
   type Error{

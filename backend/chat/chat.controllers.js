@@ -7,79 +7,95 @@ import decodeBase64 from "../utils/decodeBase64";
 import mongoose from "mongoose";
 
 export const chatControllers = {
-  fetchInitialChatMessages: async (req, skip, limit) => {
+  fetchChatConversations: async (req, skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
     try {
-      console.time("start");      
+      console.time("fetchChatConversations");
+      console.log("render")
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
-      const { messengers: personalChatUsersMap } = user;
-      if (personalChatUsersMap && personalChatUsersMap.size) {
-        const personalChatUsersArray = [];
-        personalChatUsersMap.forEach(function (value, key) {
-          personalChatUsersArray.push({ userId: key, latestMsg: value });
-        });
-        const _sortedPersonalChatUsersArray = _.sortBy(
-          personalChatUsersArray,
-          function (o) {
-            return -o.latestMsg;
+      const { conversations } = user;
+      if (conversations.length) {
+        const sortedConversations = _.sortBy(
+          conversations,
+          (o) => -o.latestMessage
+        ).slice(skip, limit);
+        let conversationsResult = [];
+        for (let conversation of sortedConversations) {
+          const { isGroup, conversationId } = conversation;
+          let getConversations;
+          let scope; //["PERSONAL", "GROUP"]
+          if (isGroup) {
+            //here is GROUP conversation
+            // do later with group chat
+            scope = "GROUP";
+            continue;
+          } else {
+            // here is PERSONAL conversation
+            getConversations = await PersonalChat.find({
+              $or: [
+                { sender: currentUserId, receiver: conversationId },
+                { sender: conversationId, receiver: currentUserId },
+              ],
+            })
+              .populate({ path: "sender", select: "name slug avatar" })
+              .populate({ path: "receiver", select: "name slug avatar" })
+              .sort({ createdAt: -1 })
+              .skip(0)
+              .limit(+process.env.PERSONAL_CHAT_MESSAGES);
+            getConversations = getConversations.map((conversation) => {
+              const _messages = conversation._doc;
+              if (
+                _messages.messageType === "IMAGE" ||
+                _messages.messageType === "ATTACHMENT"
+              ) {
+                return {
+                  ..._messages,
+                  file: {
+                    ..._messages.file,
+                    data: `data:${
+                      _messages.file.mimetype
+                    };base64,${_messages.file.data.toString("base64")}`,
+                  },
+                };
+              }
+              return { ..._messages };
+            });
+            scope = "PERSONAL";
           }
-        );
-        const _getLimitedPersonalChatUsers = _sortedPersonalChatUsersArray
-          .slice(skip, limit)
-          .map(({ userId }) => userId);
-        //find messages between currentUser with limited user
-        let listPersonalMessages = [];
-        for (let userId of _getLimitedPersonalChatUsers) {
-          const userMessages = await PersonalChat.find({
-            $or: [
-              { sender: userId, receiver: currentUserId },
-              { sender: currentUserId, receiver: userId },
-            ],
-          })
-            .populate({
-              path: "sender",
-              select: { name: 1, slug: 1, avatar: 1 },
-            })
-            .populate({
-              path: "receiver",
-              select: { name: 1, slug: 1, avatar: 1 },
-            })
-            .sort({ createdAt: -1 })
-            .skip(0)
-            .limit(+process.env.PERSONAL_CHAT_MESSAGES);
-          //sorting by ascending
-          const sortedUser = _.sortBy([...userMessages], (o) => o.createdAt);
-          listPersonalMessages = [...listPersonalMessages, ...sortedUser];
+
+          if (getConversations.length) {
+            const profile =
+              getConversations[0].sender._id.toString() ===
+              conversationId.toString()
+                ? getConversations[0].sender
+                : getConversations[0].receiver;
+            const latestMessage = getConversations[0];
+            const hasSeenLatestMessage =
+              latestMessage.receiver._id.toString() ===
+                currentUserId.toString() &&
+              latestMessage.receiverStatus !== "SEEN"
+                ? false
+                : true;
+            conversationsResult = [
+              ...conversationsResult,
+              {
+                profile,
+                messages: [...getConversations.reverse()],
+                scope,
+                latestMessage,
+                hasSeenLatestMessage,
+              },
+            ];
+          }
         }
-        //loop array, check messageType is IMAGE or FILE and convert data to base64
-        const _cloneListPersonalMessages = [...listPersonalMessages].map(
-          (message) => {
-            const _cloneMessage = message._doc;
-            if (
-              message.messageType === "IMAGE" ||
-              message.messageType === "ATTACHMENT"
-            ) {
-              return {
-                ..._cloneMessage,
-                file: {
-                  ..._cloneMessage.file,
-                  data: `data:${
-                    _cloneMessage.file.mimetype
-                  };base64,${_cloneMessage.file.data.toString("base64")}`,
-                },
-              };
-            }          
-            return { ..._cloneMessage };
-          }
-        );        
-        console.timeEnd("start");
+        console.timeEnd("fetchChatConversations");
         return {
-          personalMessages: _cloneListPersonalMessages,
+          conversations: conversationsResult,
         };
       }
       return {
-        personalMessages: [],
+        conversations: [],
       };
     } catch (error) {
       console.log(error);
@@ -96,16 +112,16 @@ export const chatControllers = {
     sentMessageChatSubscription
   ) => {
     try {
-      const userId = getAuthUser(req);
+      const currentUserId = getAuthUser(req);
       if (scope === "PERSONAL") {
-        const user = await User.findById(userId, {
+        const currentUser = await User.findById(currentUserId, {
           name: 1,
           slug: 1,
           avatar: 1,
-          messengers: 1,
+          conversations: 1,
         });
 
-        if (!user) {
+        if (!currentUser) {
           return {
             error: {
               message: "UnAuthorized",
@@ -116,9 +132,9 @@ export const chatControllers = {
         const receiver = await User.findOne(
           {
             _id: receiverId,
-            blocks: { $ne: userId },
+            blocks: { $ne: currentUserId },
           },
-          { name: 1, slug: 1, avatar: 1, messengers: 1 }
+          { name: 1, slug: 1, avatar: 1, conversations: 1 }
         );
         if (!receiver) {
           return {
@@ -130,26 +146,62 @@ export const chatControllers = {
         }
         if (text) {
           const newPersonalChatText = new PersonalChat({
-            sender: userId,
+            sender: currentUserId,
             receiver: receiverId,
             messageType: "TEXT",
             text,
           });
           const session = await mongoose.startSession();
           session.startTransaction();
-          if (user.messengers && user.messengers.size) {
-            user.messengers.set(receiverId.toString(), Date.now());
+
+          if (!currentUser.conversations) {
+            currentUser.conversations = [
+              { conversationId: receiverId.toString() },
+            ];
           } else {
-            user.messengers = new Map([[receiverId.toString(), Date.now()]]);
+            //check conversation has contained receiverd Id
+            const checkIndexExisted = currentUser.conversations.findIndex(
+              (conversation) =>
+                conversation.conversationId.toString() === receiverId.toString()
+            );          
+            if (checkIndexExisted === -1) {
+              currentUser.conversations.push({
+                conversationId: receiverId.toString(),
+              });
+            } else {
+              currentUser.conversations.set(checkIndexExisted, {
+                conversationId: receiverId.toString(),
+                latestMessage: Date.now(),
+              });
+            }
           }
 
-          await user.save();
-          if (receiver.messengers && receiver.messengers.size) {
-            receiver.messengers.set(userId.toString(), Date.now());
+          if (!receiver.conversations) {
+            receiver.conversations = [
+              { conversationId: currentUserId.toString() },
+            ];
           } else {
-            receiver.messengers = new Map([[userId.toString(), Date.now()]]);
+            //check conversation has contained receiverd Id
+            const checkIndexExisted = receiver.conversations.findIndex(
+              (conversation) =>
+                conversation.conversationId.toString() ===
+                currentUserId.toString()
+            );
+            if (checkIndexExisted === -1) {
+              receiver.conversations.push({
+                conversationId: currentUserId.toString(),
+              });
+            } else {
+              receiver.conversations.set(checkIndexExisted, {
+                conversationId: currentUserId.toString(),
+                latestMessage: Date.now(),
+              });
+            }
           }
+
+          await currentUser.save();
           await receiver.save();
+
           await newPersonalChatText.save();
           await session.commitTransaction();
           session.endSession();
@@ -158,11 +210,11 @@ export const chatControllers = {
             sentMessageChatSubscription: {
               action: "SENT",
               scope,
-              message: { ..._cloneChatText, sender: user, receiver },
+              message: { ..._cloneChatText, sender: currentUser, receiver },
             },
           });
           return {
-            message: { ..._cloneChatText, sender: user, receiver },
+            message: { ..._cloneChatText, sender: currentUser, receiver },
             scope,
           };
         }
@@ -188,20 +240,20 @@ export const chatControllers = {
     sentMessageChatSubscription
   ) => {
     try {
-      const { encoding, filename, mimetype } = file;      
+      const { encoding, filename, mimetype } = file;
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId, {
         name: 1,
         slug: 1,
         avatar: 1,
-        messengers: 1,
+        conversations: 1,
       });
       const receiver = await User.findOne(
         {
           _id: receiverId,
           blocks: { $ne: currentUserId },
         },
-        { name: 1, slug: 1, avatar: 1, messengers: 1 }
+        { name: 1, slug: 1, avatar: 1, conversations: 1 }
       );
       if (!receiver) {
         return {
@@ -225,22 +277,52 @@ export const chatControllers = {
             mimetype,
           },
         });
-        if (currentUser.messengers && currentUser.messengers.size) {
-          currentUser.messengers.set(receiverId.toString(), Date.now());
+
+        if (!currentUser.conversations) {
+          currentUser.conversations = [
+            { conversationId: receiverId.toString() },
+          ];
         } else {
-          currentUser.messengers = new Map([
-            [receiverId.toString(), Date.now()],
-          ]);
+          //check conversation has contained receiverd Id
+          const checkIndexExisted = currentUser.conversations.findIndex(
+            (conversation) =>
+              conversation.conversationId.toString() === receiverId.toString()
+          );          
+          if (checkIndexExisted === -1) {
+            currentUser.conversations.push({
+              conversationId: receiverId.toString(),
+            });
+          } else {
+            currentUser.conversations.set(checkIndexExisted, {
+              conversationId: receiverId.toString(),
+              latestMessage: Date.now(),
+            });
+          }
         }
 
-        await currentUser.save();
-        if (receiver.messengers && receiver.messengers.size) {
-          receiver.messengers.set(currentUserId.toString(), Date.now());
+        if (!receiver.conversations) {
+          receiver.conversations = [
+            { conversationId: currentUserId.toString() },
+          ];
         } else {
-          receiver.messengers = new Map([
-            [currentUserId.toString(), Date.now()],
-          ]);
+          //check conversation has contained receiverd Id
+          const checkIndexExisted = receiver.conversations.findIndex(
+            (conversation) =>
+              conversation.conversationId.toString() ===
+              currentUserId.toString()
+          );
+          if (checkIndexExisted === -1) {
+            receiver.conversations.push({
+              conversationId: currentUserId.toString(),
+            });
+          } else {
+            receiver.conversations.set(checkIndexExisted, {
+              conversationId: currentUserId.toString(),
+              latestMessage: Date.now(),
+            });
+          }
         }
+        await currentUser.save();
         await receiver.save();
         await newPersonalMessageFile.save();
         await session.commitTransaction();
@@ -304,7 +386,7 @@ export const chatControllers = {
     req,
     messageId,
     messageStatus,
-    pubsub,    
+    pubsub,
     notifySenderThatReceiverHasReceivedMessageChat
   ) => {
     try {
@@ -354,7 +436,7 @@ export const chatControllers = {
           },
           { receiverStatus: "SEEN" },
           { new: true }
-        );        
+        );
         if (updatedResult.nModified) {
           pubsub.publish(senderSubscribeWhenReceiverHasSeenAllMessages, {
             senderSubscribeWhenReceiverHasSeenAllMessages: {
