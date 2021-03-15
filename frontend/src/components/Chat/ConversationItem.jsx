@@ -11,13 +11,10 @@ import Moment from "react-moment";
 import { usePopupMessagesActions } from "./hook/usePopupActions";
 import { useThemeUI } from "theme-ui";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
-import {
-  convertFromRaw,
-  EditorState,
-} from "draft-js";
-import { UPDATE_HAVE_SEEN_ALL_MESSAGES} from "../../apollo/operations/mutations/chat"
+import { convertFromRaw, EditorState } from "draft-js";
+import { UPDATE_HAVE_SEEN_ALL_MESSAGES } from "../../apollo/operations/mutations/chat";
 
-import {useMutation} from "@apollo/client"
+import { useMutation } from "@apollo/client";
 const MessageItem = ({
   conversation,
   latestMessage,
@@ -28,9 +25,11 @@ const MessageItem = ({
   const [showSetting, setShowSettings] = useState(false);
   const { setPopupPosition, setShowPopup } = usePopupMessagesActions();
   const { colorMode } = useThemeUI();
-  const { setCurrentChat, setHasSeenLatestMessage } = cacheMutations;  
-  const [updateHaveSeenAllMessages] = useMutation(UPDATE_HAVE_SEEN_ALL_MESSAGES)
-  
+  const { setCurrentChat, updateHasSeenLatestMessage } = cacheMutations;
+  const [updateHaveSeenAllMessages] = useMutation(
+    UPDATE_HAVE_SEEN_ALL_MESSAGES
+  );
+
   const onClickThreeDots = (e) => {
     e.preventDefault();
     setShowPopup(true);
@@ -40,12 +39,14 @@ const MessageItem = ({
         : e.pageY;
     setPopupPosition({ left: e.pageX, top: positionY });
   };
-  const onClickConversationItem = e => {
+  const onClickConversationItem = (e) => {
     setCurrentChat({ ...conversation, scope });
-    updateHaveSeenAllMessages({variables : {conversationId: conversation._id , scope}}).then(res => {
-      setHasSeenLatestMessage(conversation._id)
+    updateHaveSeenAllMessages({
+      variables: { conversationId: conversation._id, scope },
+    }).then((res) => {
+      updateHasSeenLatestMessage(conversation._id);
     });
-  }
+  };
   return (
     <ConversationItemWrapper
       theme={colorMode}
@@ -64,7 +65,8 @@ const MessageItem = ({
                 convertFromRaw(JSON.parse(latestMessage.text))
               )
                 .getCurrentContent()
-                .getPlainText().slice(0, 30) + "..."
+                .getPlainText()
+                .slice(0, 30) + "..."
             : latestMessage === "PICTURE"
             ? "sent an image"
             : "sent an attachment"}
@@ -77,14 +79,7 @@ const MessageItem = ({
         hasSeenLatestMessage={hasSeenLatestMessage}
       >
         <div style={{ textAlign: "right" }}>
-          {Date.now() - +latestMessage.createdAt > 3600000 ? (
-            <Moment
-              date={new Date(+latestMessage.createdAt)}
-              format="DD/MM/YYYY"              
-            />
-          ) : (
-            <Moment fromNow>{+latestMessage.createdAt}</Moment>
-          )}
+          <Moment fromNow>{+latestMessage.createdAt}</Moment>
         </div>
         <div
           aria-label="chat-messages-settings"

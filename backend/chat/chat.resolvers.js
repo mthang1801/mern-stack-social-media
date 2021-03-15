@@ -10,6 +10,14 @@ export const chatResolvers = {
         args.skip || 0,
         args.limit || +process.env.NUMBER_CONVERSATIONS_LIMITATION
       ),
+    fetchMessages: (_, args, { req }, info) =>
+      chatControllers.fetchMessages(
+        req,
+        args.conversationId,
+        args.scope,
+        args.skip,
+        args.limit
+      ),
   },
   Mutation: {
     sendMessageChatText: (_, args, { req }, info) =>
@@ -90,7 +98,7 @@ export const chatResolvers = {
           ),
         (payload, { userId }) => {
           const {
-            senderId
+            senderId,
           } = payload.senderSubscribeWhenReceiverHasSeenAllMessages;
           return senderId.toString() === userId.toString();
         }

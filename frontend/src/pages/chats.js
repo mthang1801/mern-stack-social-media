@@ -1,4 +1,4 @@
-import React, { lazy, useEffect } from "react";
+import React, { lazy, useEffect, useState } from "react";
 import Layout from "../containers/Layout";
 import {
   GET_CURRENT_USER,
@@ -18,7 +18,7 @@ import { FETCH_CHAT_CONVERSATIONS } from "../apollo/operations/queries/chat";
 import { UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../apollo/operations/mutations/chat";
 import { cacheMutations } from "../apollo/operations/mutations";
 import useChatSubscriptions from "../components/Global/useChatSubscriptions";
-import { RiContactsBookLine } from "react-icons/ri";
+
 const ChatConversations = lazy(() =>
   import("../components/Chat/Conversations")
 );
@@ -44,17 +44,18 @@ const ChatsPage = ({ match }) => {
   ] = useMutation(
     UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED
   );
-  const { setInitialMessagesStorage } = cacheMutations;
+  const { setInitialMessagesStorage, setNumberOfConversations } = cacheMutations;
+  //useState
+  
   useChatSubscriptions();
 
   useEffect(() => {
     let _isMounted = true;
-    if (!Object.keys(messagesStorage).length && user) {   
-      console.log("render")  
+    if (!Object.keys(messagesStorage).length && user) {         
       let personalMessagesHaveReceiverSentStatus = new Set();
       fetchChatConversations().then(({ data }) => {
         if (_isMounted) {          
-          const { conversations } = data.fetchChatConversations;
+          const { conversations, numberOfConversations } = data.fetchChatConversations;
           let storage = {};          
           conversations.forEach((conversation) => {
             if (conversation.scope === "PERSONAL") {
@@ -78,6 +79,7 @@ const ChatsPage = ({ match }) => {
               },
             });
           }
+          setNumberOfConversations(numberOfConversations);
         }
       });
     }

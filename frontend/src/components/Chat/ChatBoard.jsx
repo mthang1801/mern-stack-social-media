@@ -1,4 +1,4 @@
-import React from "react";
+import React, {createRef} from "react";
 import {
   Wrapper
 } from "./styles/ChatBoard.styles";
@@ -8,7 +8,7 @@ import ChatBoardBody from "./ChatBoardBody"
 import ChatBoardFooter from "./ChatBoardFooter"
 
 const ChatCenter = () => {  
-
+  
   return (
     <Wrapper>
       <ChatBoardHeading/>

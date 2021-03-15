@@ -135,6 +135,7 @@ export const schemaType = gql`
 
   type ConversationsResult{
     conversations : [Conversation!]!
+    numberOfConversations : Int!
   }
 
   type Conversation{
@@ -143,6 +144,10 @@ export const schemaType = gql`
     scope : ChatScopeEnum!
     latestMessage : PersonalChat
     hasSeenLatestMessage : Boolean
+  }  
+
+  type MessagesResult{
+    messages : [PersonalChat!]    
   }
 
   type Error{

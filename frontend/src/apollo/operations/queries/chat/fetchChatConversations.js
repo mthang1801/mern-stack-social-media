@@ -64,6 +64,7 @@ export const FETCH_CHAT_CONVERSATIONS = gql`
         }
         hasSeenLatestMessage
       }
+      numberOfConversations
     }
   }
 `;

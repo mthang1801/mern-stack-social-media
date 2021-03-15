@@ -20,3 +20,4 @@ export { OpenFriendsList } from "./cache/OpenFriendsList";
 //Chat
 export { MessagesStorage } from "./chat/MessagesStorage";
 export { CurrentChat } from "./chat/CurrentChat";
+export { NumberOfConversations } from "./chat/NumberOfConversations"

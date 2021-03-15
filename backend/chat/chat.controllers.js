@@ -1,7 +1,7 @@
 import getAuthUser from "../utils/getAuthUser";
 import { PersonalChat } from "./personal-chat.model";
 import { User } from "../user/user.model";
-import { ApolloError } from "apollo-server-express";
+import { ApolloError, UserInputError } from "apollo-server-express";
 import _ from "lodash";
 import decodeBase64 from "../utils/decodeBase64";
 import mongoose from "mongoose";
@@ -10,8 +10,7 @@ export const chatControllers = {
   fetchChatConversations: async (req, skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
     try {
-      console.time("fetchChatConversations");
-      console.log("render")
+      console.time("fetchChatConversations");   
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
       const { conversations } = user;
@@ -19,7 +18,7 @@ export const chatControllers = {
         const sortedConversations = _.sortBy(
           conversations,
           (o) => -o.latestMessage
-        ).slice(skip, limit);
+        ).slice(skip, limit + skip);
         let conversationsResult = [];
         for (let conversation of sortedConversations) {
           const { isGroup, conversationId } = conversation;
@@ -42,7 +41,7 @@ export const chatControllers = {
               .populate({ path: "receiver", select: "name slug avatar" })
               .sort({ createdAt: -1 })
               .skip(0)
-              .limit(+process.env.PERSONAL_CHAT_MESSAGES);
+              .limit(+process.env.NUMBER_OF_MESSAGES_PER_LOAD);
             getConversations = getConversations.map((conversation) => {
               const _messages = conversation._doc;
               if (
@@ -92,11 +91,68 @@ export const chatControllers = {
         console.timeEnd("fetchChatConversations");
         return {
           conversations: conversationsResult,
+          numberOfConversations: conversations.length,
         };
       }
       return {
         conversations: [],
+        numberOfConversations: 0,
       };
+    } catch (error) {
+      console.log(error);
+      throw new ApolloError("Server error");
+    }
+  },
+  fetchMessages: async (req, conversationId, scope, skip, limit) => {
+    try {            
+      const currentUserId = getAuthUser(req);      
+      if (scope === "PERSONAL") {
+        const numberMessages = await PersonalChat.countDocuments({  $or: [
+          { sender: currentUserId, receiver: conversationId },
+          { sender: conversationId, receiver: currentUserId },
+        ]})
+        if(numberMessages <= skip){
+          return {
+            messages : [],
+          }
+        }
+        let personalMessages = await PersonalChat.find({
+          $or: [
+            { sender: currentUserId, receiver: conversationId },
+            { sender: conversationId, receiver: currentUserId },
+          ],
+        })
+          .populate({ path: "sender", select: "name slug avatar" })
+          .populate({ path: "receiver", select: "name slug avatar" })
+          .sort({ createdAt: -1 })
+          .skip(+skip)
+          .limit(+limit);
+        personalMessages = personalMessages.map((message) => {
+          const _messages = message._doc;
+          if (
+            _messages.messageType === "IMAGE" ||
+            _messages.messageType === "ATTACHMENT"
+          ) {
+            return {
+              ..._messages,
+              file: {
+                ..._messages.file,
+                data: `data:${
+                  _messages.file.mimetype
+                };base64,${_messages.file.data.toString("base64")}`,
+              },
+            };
+          }
+          return { ..._messages };
+        });
+       
+        return {
+          messages : personalMessages.reverse(),           
+        }
+      } else if (scope === "GROUP") {
+      } else {
+        throw new UserInputError("invalid scope");
+      }
     } catch (error) {
       console.log(error);
       throw new ApolloError("Server error");
@@ -163,7 +219,7 @@ export const chatControllers = {
             const checkIndexExisted = currentUser.conversations.findIndex(
               (conversation) =>
                 conversation.conversationId.toString() === receiverId.toString()
-            );          
+            );
             if (checkIndexExisted === -1) {
               currentUser.conversations.push({
                 conversationId: receiverId.toString(),
@@ -287,7 +343,7 @@ export const chatControllers = {
           const checkIndexExisted = currentUser.conversations.findIndex(
             (conversation) =>
               conversation.conversationId.toString() === receiverId.toString()
-          );          
+          );
           if (checkIndexExisted === -1) {
             currentUser.conversations.push({
               conversationId: receiverId.toString(),

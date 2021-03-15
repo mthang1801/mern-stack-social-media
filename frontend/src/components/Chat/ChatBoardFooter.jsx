@@ -258,7 +258,7 @@ const ChatBoardFooter = () => {
           onChange={setEditorState}
           plugins={plugins}
           ref={editorRef}
-          tabIndex="0"
+          tabIndex="0"          
         />
         <MentionSuggestions
           open={open}
