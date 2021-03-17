@@ -111,7 +111,14 @@ const UserSchema = new mongoose.Schema({
         default : false 
       }
     }
-  ]
+  ],
+  isOnline : {
+    type : Boolean, 
+    default : false 
+  },
+  offlinedAt : {
+    type: Date    
+  }
 }, {timestamps : true});
 
 export const User = mongoose.model("users", UserSchema)

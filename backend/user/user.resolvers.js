@@ -92,7 +92,7 @@ export const userResolvers = {
         pubsub,
         subscriptionActions.REMOVE_FRIEND
       );
-    },
+    },    
   },
   User: {
     password: (_, args, ctx, info) => userController.hidePassword(),

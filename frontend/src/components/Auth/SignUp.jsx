@@ -20,7 +20,7 @@ import GoogleLogin from "./FacebookAuth";
 import { useMutation } from "@apollo/client";
 import { SIGNUP } from "../../apollo/operations/mutations/user";
 import {cacheMutations} from "../../apollo/operations/mutations";
-import {login} from "../../utils/auth"
+import {login} from "./Auth.utility"
 const INITIAL_STATE = {
   controls: {
     name: {
@@ -86,13 +86,11 @@ const INITIAL_STATE = {
 
 function withSignUpMutation(WrappedComponent) {
   return function MutationWrapper(props) {
-    const [createUser, { data, loading, error }] = useMutation(SIGNUP, {errorPolicy : "all"});
-    const {setCurrentUser} = cacheMutations    
+    const [createUser, { data, loading, error }] = useMutation(SIGNUP, {errorPolicy : "all"});      
     return (
       <WrappedComponent
         createUser={createUser}        
-        data={data}
-        setCurrentUser={setCurrentUser}
+        data={data}        
         loading={loading}        
         error={error}        
         {...props}
@@ -112,15 +110,18 @@ const SignUp = withSignUpMutation(
     }
     componentWillUnmount(){
       clearTimeout(this.timer)
+      if(this.unsubcribeLogin){
+        this.unsubcribeLogin();
+      }
     }
-    componentDidUpdate(prevProps){
+    unsubcribeLogin; 
+    async componentDidUpdate(prevProps){
       if(prevProps.error !== this.props.error){
         this.clearForm();        
       }
       if(prevProps.data !== this.props.data && this.props.data )  {
-        const { user, token, tokenExpire} = this.props.data.createUser;             
-        this.props.setCurrentUser({...user})
-        login(token, tokenExpire)
+        const { user, token, tokenExpire} = this.props.data.createUser;                    
+        this.unsubcribeLogin = await login(user, token, tokenExpire)
         this.clearForm() ;
       }
     }

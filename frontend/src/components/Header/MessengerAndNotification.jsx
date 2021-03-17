@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, memo } from "react";
+import React, { useEffect, useState, useRef, memo, useCallback } from "react";
 import styled from "styled-components";
 import { TiMessages } from "react-icons/ti";
 import { IoMdNotifications } from "react-icons/io";
@@ -63,8 +63,9 @@ const Control = () => {
       });
   }, []);
 
-  const handleClickNotification = async () => {    
-    if (notifications.length <  +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE) {        
+  const handleClickNotification = useCallback(async () => {    
+    if (notifications.length <  +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE) {  
+      console.log("fetch notifications")           
       const skip = notifications.length;
       const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
       fetchNotifications({ skip, limit }).then(
@@ -73,9 +74,9 @@ const Control = () => {
           setLoadingNotificationsMore(false);
         }
       );
-    }
+    }    
     setOpenNotificationBoard((prevStatus) => !prevStatus);
-  };
+  });
   
   const handleClickFlashPopupNotification =  () => {       
     handleClickNotification();

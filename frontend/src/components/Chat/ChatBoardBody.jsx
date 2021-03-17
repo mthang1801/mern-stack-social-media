@@ -49,7 +49,7 @@ const ChatBoardBody = () => {
     }else{
       setShouldScrollIntoView(false);
     }
-    if( scrollTop + clientHeight <  (scrollHeight - scrollTop) / 2 && scrollTop + clientHeight > (scrollHeight - scrollTop) / 2 - 40 ){
+    if( scrollTop + clientHeight <  (scrollHeight - scrollTop) / 2 && scrollTop + clientHeight > (scrollHeight - scrollTop) / 2 - 60 ){
       if(!loadMoreMessages){
         setLoadMoreMessages(true);
       }

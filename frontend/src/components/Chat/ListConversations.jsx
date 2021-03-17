@@ -42,7 +42,7 @@ const ListConversations = () => {
   const onScrollListConversations = e => {
     setShowPopup(false);
     const {scrollHeight, scrollTop, clientHeight} = e.target;    
-    if(scrollTop + clientHeight > scrollHeight * 0.75 && scrollTop + clientHeight < scrollHeight * 0.75 + 40){
+    if(scrollTop + clientHeight > scrollHeight * 0.7 && scrollTop + clientHeight < scrollHeight * 0.7 + 40){
       if(!loadMoreConversations){
         setLoadMoreConversations(true); 
       }      

@@ -14,3 +14,9 @@
 ### Chat model
 
 - scope: "GROUP" or "PERSONAL"
+
+## Note 
+
+### Resetting auth token in connectionParams
+
+[https://spectrum.chat/apollo/subscriptions/resetting-auth-token-in-connectionparams~19706e38-8e22-42f6-b4d1-a0e1a07c3a5c](https://spectrum.chat/apollo/subscriptions/resetting-auth-token-in-connectionparams~19706e38-8e22-42f6-b4d1-a0e1a07c3a5c)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Layout from "../containers/Layout";
 import Posts from "../components/Post/Posts";
 import { useQuery } from "@apollo/client";
@@ -13,7 +13,7 @@ import { FETCH_POSTS } from "../apollo/operations/queries/post";
 import { cacheMutations } from "../apollo/operations/mutations";
 import HomeSidebar from "../components/Sidebar/HomeSidebar";
 import MainBody from "../components/Body/MainBody";
-import FriendsComponent from "../components/Sidebar/FriendsComponent";
+import FriendsBoard from "../components/Sidebar/FriendsBoard";
 import ButtonToggleFriendsList from "../components/Controls/ButtonToggleFriendsList";
 import {
   MainContent,
@@ -84,8 +84,10 @@ const Home = () => {
       });
   }, []);
 
-  const handleOpenFriendsList = async () => {
+  const handleOpenFriendsList = useCallback(async () => {    
     if (friends.length < +process.env.REACT_APP_FRIENDS_PER_LOAD && user) {
+      console.log("fetch friends");
+      console.log(friends)
       const skip = friends.length;
       const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD;
       fetchFriends({ skip, limit }).then(({ data }) => {
@@ -97,7 +99,7 @@ const Home = () => {
     } else {
       setOpenFriendsList();
     }
-  };
+  });
   return (
     <Layout>
       <MainBody>
@@ -109,7 +111,7 @@ const Home = () => {
             <HomeSidebar user={user} />
           </MainContentRightSide>
         </MainContent>
-        <FriendsComponent />
+        <FriendsBoard/>
         <ButtonToggleFriendsList
           hide={openFriendsList}
           onClick={handleOpenFriendsList}
