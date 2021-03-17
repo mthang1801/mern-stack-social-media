@@ -29,11 +29,11 @@ const authLink = setContext((_, {headers}) => {
 
 const wsLink = new WebSocketLink({
   uri : "ws://localhost:5000/graphql",
-  options : {
-    reconnect: true,
+  options : {           
+    reconnect: true,    
     connectionParams : {
       authToken : localStorage.getItem("token") ? `Bearer ${localStorage.getItem("token")}` : ""
-    }
+    },        
   }
 })
 
@@ -45,9 +45,19 @@ const link = split(
   wsLink,
   authLink.concat(httpLink),
 )
+
 const client = new ApolloClient({
   link ,
   cache
 })
 
-export {client}
+const restartWebsocketConnection = () => {  
+  // wsLink.subscriptionClient.close();
+  // wsLink.subscriptionClient.connect();
+  wsLink.subscriptionClient.tryReconnect();
+}
+const closeWebsocketConnection = () => {
+  wsLink.subscriptionClient.close();
+}
+
+export {client , restartWebsocketConnection, closeWebsocketConnection}

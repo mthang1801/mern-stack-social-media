@@ -7,6 +7,8 @@ export const FETCH_FRIENDS = gql`
       name
       slug
       avatar
+      isOnline 
+      offlinedAt
     }
   }
 `

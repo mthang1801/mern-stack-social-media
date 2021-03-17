@@ -17,6 +17,8 @@ export const schemaType = gql`
     followed : [ID!]!
     sentRequestToAddFriend : [ID!]!
     receivedRequestToAddFriend : [ID!]
+    isOnline : Boolean!
+    offlinedAt : String
     createdAt : String
     updatedAt : String
   }
@@ -149,6 +151,7 @@ export const schemaType = gql`
   type MessagesResult{
     messages : [PersonalChat!]    
   }
+
 
   type Error{
     message : String!

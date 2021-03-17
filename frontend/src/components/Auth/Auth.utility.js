@@ -1,4 +1,4 @@
-import { client } from "../../apollo/client";
+import { client, restartWebsocketConnection, closeWebsocketConnection } from "../../apollo/client";
 import {cacheMutations} from "../../apollo/operations/mutations";
 import {
   User,
@@ -35,8 +35,8 @@ const logout = async () => {
   localStorage.removeItem("token");
   localStorage.removeItem("tokenExpire");    
   clearCache();
-  await client.resetStore();  
-  
+  await client.resetStore();   
+  closeWebsocketConnection() 
 };
 
 const login = async (user, token, tokenExpire) => {
@@ -45,9 +45,10 @@ const login = async (user, token, tokenExpire) => {
   localStorage.setItem(
     "tokenExpire",
     new Date(Date.now() + tokenExpire * 1000)
-  );
+  );  
   const {setCurrentUser} = cacheMutations  
-  setCurrentUser({...user})
+  setCurrentUser({...user})  
+  restartWebsocketConnection()
 };
 
 export { logout, login };

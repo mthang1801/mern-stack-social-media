@@ -14,8 +14,8 @@ const ButtonOpenFriendsList = ({...props}) => {
 }
 
 const Button = styled.button`
-  width : 60px;
-  height: 60px;
+  width : 3.5rem;
+  height: 3.5rem;
   font-size : 2rem;
   position : fixed;
   bottom : 2rem;

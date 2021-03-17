@@ -42,8 +42,7 @@ const FriendsList = ({ show }) => {
       autoHideDuration={200}
       autoHeightMin={0}
       autoHeightMax={200}            
-    >      
-    
+    >          
       <FriendsListWrapper show={show} theme={colorMode}>
         <TitleContacts>
           <FriendsListTitle hide={openSearch}>{i18n.store.data[lang].translation.contacts.contactsList}</FriendsListTitle>

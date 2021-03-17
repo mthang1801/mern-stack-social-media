@@ -1,7 +1,7 @@
 import styled, {css} from 'styled-components'
 import {Link} from "react-router-dom"
 
-export const FriendsComponentWrapper = styled.div`
+export const FriendsBoardWrapper = styled.div`
   position : fixed; 
   top : 60px;
   right: 0 ;

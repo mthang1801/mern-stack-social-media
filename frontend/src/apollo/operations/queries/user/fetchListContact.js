@@ -20,6 +20,8 @@ export const FETCH_LIST_CONTACT = gql`
         name
         slug
         avatar
+        isOnline
+        offlinedAt
       }
     }
   }

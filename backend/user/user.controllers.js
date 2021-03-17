@@ -70,7 +70,7 @@ export const userController = {
     };
   },
   fetchCurrentUser: async (req) => {
-    const userId = getAuthUser(req, false);
+    const userId = getAuthUser(req, false);   
     const user = await User.findById(userId).populate({
       path: "notifications",
       populate: { path: "creator" },
@@ -108,7 +108,7 @@ export const userController = {
       })
       .populate({
         path: "friends",
-        options: { limit: +process.env.CONTACT_FRIENDS_PER_PAGE, sort: {name : 1}, collation :{locale : "en"} },
+        options: { limit: +process.env.CONTACT_FRIENDS_PER_PAGE, sort: {isOnline: 1, name : 1}, collation :{locale : "en"} },
       });
     if (!currentUser) {
       throw new AuthenticationError("User not found");
@@ -120,6 +120,7 @@ export const userController = {
     };
   },
   fetchFriends: async (req, skip, limit, userId) => {
+    console.time("fetchFriend")
     const currentUserId = getAuthUser(req, false);
     if (userId) {
       //do something
@@ -127,13 +128,13 @@ export const userController = {
     }
     const friendsList = await User.find(
       { friends: currentUserId },
-      { name: 1, slug: 1, avatar: 1 }
+      { name: 1, slug: 1, avatar: 1, isOnline : 1, offlinedAt :1 }
     )
       .collation({ locale: "en" })
-      .sort({ name: 1 })
+      .sort({ "isOnline": 1, "name": 1 })
       .skip(+skip)
       .limit(+limit);
-
+      console.timeEnd("fetchFriend")
     return friendsList;
   },
   sendRequestToAddFriend: async (

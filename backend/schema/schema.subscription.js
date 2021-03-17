@@ -16,7 +16,7 @@ export const schemaSubscription = gql`
 
     sentMessageChatSubscription(userId: ID!): ChatSubscriptionPayload!
     notifySenderThatReceiverHasReceivedMessageChat(userId: ID!) : ChatSubscriptionPayload!
-    senderSubscribeWhenReceiverHasSeenAllMessages(userId: ID!) : SeenAllMessagesSubscriptionPayload!
+    senderSubscribeWhenReceiverHasSeenAllMessages(userId: ID!) : SeenAllMessagesSubscriptionPayload!    
   }
 `;
 
@@ -32,5 +32,5 @@ export const subscriptionActions = {
   CONTACT_ACTIONS: "CONTACT_ACTIONS",
   SENT_CHAT: "SENT_CHAT",
   UPDATE_RECEIVER_RECEIVED_CHAT : "UPDATE_RECEIVER_RECEIVED_CHAT", //Change Sent to Delivered
-  UPDATE_RECEIVER_SEEN_ALL_MESSAGES : "UPDATE_RECEIVER_SEEN_ALL_MESSAGES"
+  UPDATE_RECEIVER_SEEN_ALL_MESSAGES : "UPDATE_RECEIVER_SEEN_ALL_MESSAGES",  
 };
