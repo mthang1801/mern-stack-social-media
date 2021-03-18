@@ -29,23 +29,6 @@ export const FriendsListWrapper = styled.div`
   `}  
 `
 
-export const LinkItem = styled(Link)`
-  display : flex;
-  padding: 0.3rem 0.7rem;
-  align-items : center;
-  &:hover{
-    opacity : 1;
-    background-color  :${({theme}) => theme === "dark" ? "var(--color-background-dark)" : "var(--color-background-default)"}
-  }
-  & img{
-    margin-right: 0.5rem;
-    width : 2rem;
-    height :2rem;
-    border-radius : 50%;
-    border: 1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};    
-  }
-
-`
 export const TitleContacts = styled.div`
   display : flex;
   justify-content : space-between;
@@ -108,4 +91,8 @@ export const ButtonClose = styled.button`
   position : absolute;
   top : 50vh;
   right:  0;
+`
+
+export const ImageContainer = styled.div`
+
 `

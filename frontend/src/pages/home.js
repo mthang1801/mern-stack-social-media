@@ -85,20 +85,18 @@ const Home = () => {
   }, []);
 
   const handleOpenFriendsList = useCallback(async () => {    
-    if (friends.length < +process.env.REACT_APP_FRIENDS_PER_LOAD && user) {
-      console.log("fetch friends");
-      console.log(friends)
-      const skip = friends.length;
-      const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD;
-      fetchFriends({ skip, limit }).then(({ data }) => {
-        if (data?.fetchFriends) {
-          setFriends([...friends, ...data.fetchFriends]);
-          setOpenFriendsList();
-        }
-      });
-    } else {
+    // if (friends.length < +process.env.REACT_APP_FRIENDS_PER_LOAD && user) {
+    //   const skip = friends.length;
+    //   const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD;
+    //   fetchFriends({ skip, limit }).then(({ data }) => {
+    //     if (data?.fetchFriends) {
+    //       setFriends([...friends, ...data.fetchFriends]);
+    //       setOpenFriendsList();
+    //     }
+    //   });
+    // } else {
       setOpenFriendsList();
-    }
+    // }
   });
   return (
     <Layout>

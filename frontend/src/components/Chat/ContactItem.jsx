@@ -9,15 +9,15 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useThemeUI } from "theme-ui";
 import { usePopupContactActions } from "./hook/usePopupActions";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
-import {cacheMutations} from "../../apollo/operations/mutations"
+import { cacheMutations } from "../../apollo/operations/mutations";
 
 const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
   const { setPopupPosition, setShowPopup } = usePopupContactActions();
   const { colorMode } = useThemeUI();
-  const {setCurrentChat} = cacheMutations;
-  const onClickThreeDots = (e) => {    
-    e.stopPropagation()  ;
+  const { setCurrentChat } = cacheMutations;
+  const onClickThreeDots = (e) => {
+    e.stopPropagation();
     setShowPopup(true);
     const positionY =
       e.pageY > window.innerHeight * 0.75
@@ -31,13 +31,17 @@ const ContactItem = ({ friend }) => {
       theme={colorMode}
       onMouseEnter={() => setShowSettings(true)}
       onMouseLeave={() => setShowSettings(false)}
-      onClick={()=>setCurrentChat(friend)}
+      onClick={() => setCurrentChat(friend)}
     >
-      <Avatar>
+      <Avatar active={friend.isOnline}>
         <LazyLoadImage src={friend.avatar} />
       </Avatar>
       <UserContactOverview>{friend.name}</UserContactOverview>
-      <ContactControls show={showSetting} onClick={(e) => onClickThreeDots(e)}  aria-label="chat-contact-settings">
+      <ContactControls
+        show={showSetting}
+        onClick={(e) => onClickThreeDots(e)}
+        aria-label="chat-contact-settings"
+      >
         <ThreeDotsSetting />
       </ContactControls>
     </ContactItemWrapper>

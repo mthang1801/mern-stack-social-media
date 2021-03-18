@@ -5,19 +5,20 @@ import { useQuery } from "@apollo/client";
 const SignIn = lazy(() => import("../components/Auth/SignIn"));
 const SignUp = lazy(() => import("../components/Auth/SignUp"));
 
-const AuthPage = (props) => {
+const AuthPage = ({setIsAuth, ...props}) => {
   const { match, location, history } = props;
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: "cache-only",
-  });
-  console.log(user)
+  }); 
   useEffect(() => {
     if (user && location.state && location.state.from) {
       history.replace(location.state.from);
+      setIsAuth(true);
     } else if (user) {
       history.replace("/");
+      setIsAuth(true);
     }
   }, [user, history, location.state]);
   return (

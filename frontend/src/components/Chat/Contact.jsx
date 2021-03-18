@@ -67,6 +67,7 @@ const Contact = () => {
         }
       });
     }
+
     return () => (_mounted = false);
   }, [friends]);
 
@@ -84,7 +85,7 @@ const Contact = () => {
     }
   }, [search, friends]);
 
-  useEffect(() => {    
+  useEffect(() => {
     if (friends.length !== originData.length) {
       setContactData([...friends]);
       setOriginData([...friends]);

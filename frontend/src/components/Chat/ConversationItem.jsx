@@ -54,7 +54,7 @@ const MessageItem = ({
       hasSeenLatestMessage={hasSeenLatestMessage}
       onClick={onClickConversationItem}
     >
-      <Avatar>
+      <Avatar active={conversation.isOnline}>
         <LazyLoadImage src={conversation.avatar} />
       </Avatar>
       <ConversationOverview>

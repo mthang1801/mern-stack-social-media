@@ -37,8 +37,8 @@ export const chatControllers = {
                 { sender: conversationId, receiver: currentUserId },
               ],
             })
-              .populate({ path: "sender", select: "name slug avatar" })
-              .populate({ path: "receiver", select: "name slug avatar" })
+              .populate({ path: "sender", select: "name slug avatar isOnline offlinedAt" })
+              .populate({ path: "receiver", select: "name slug avatar isOnline offlinedAt" })
               .sort({ createdAt: -1 })
               .skip(0)
               .limit(+process.env.NUMBER_OF_MESSAGES_PER_LOAD);
