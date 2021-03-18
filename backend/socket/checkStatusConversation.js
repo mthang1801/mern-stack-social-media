@@ -3,13 +3,14 @@ import {pushSocketIdIntoArray, emitResponseToArray, removeSocketIdFromArray} fro
 const checkStatusConversation = io => {
   let clients = {};
   io.on("connection", socket => {
-    socket.on("userId" , async userId => {
-      await pushSocketIdIntoArray(clients, userId, socket.id);      
-      
+    socket.on("client-send-user-info" , async user => {      
+      await pushSocketIdIntoArray(clients, user._id, socket.id);        
+      socket.broadcast.emit("server-send-user-online", user)        
+      console.log(clients)  
     })
     
-    socket.on("disconnect", async () => {
-      await removeSocketIdFromArray(clients, socket, socket.id)
+    socket.on("disconnect", async () => {      
+      await removeSocketIdFromArray(io, clients, socket, socket.id)
     })
   })
 }

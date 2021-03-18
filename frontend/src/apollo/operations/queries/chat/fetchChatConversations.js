@@ -9,6 +9,8 @@ export const FETCH_CHAT_CONVERSATIONS = gql`
           name
           slug
           avatar
+          isOnline
+          offlinedAt
         }
         messages {
           _id

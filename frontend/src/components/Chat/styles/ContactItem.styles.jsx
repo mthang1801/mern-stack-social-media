@@ -17,10 +17,26 @@ export const ContactItemWrapper = styled.div`
 export const Avatar = styled.div`
   width: 2.5rem;
   height: 2.5rem;
+  position : relative;
   & img {
     width: 100%;
     border-radius: 50%;
   }
+  ${({active}) => active && `
+    & img{
+      border: 2px solid var(--green);
+    }
+    &::after{
+      position: absolute;
+      content: ""; /* this is important */
+      height: 0.5rem;
+      width: 0.5rem;
+      border-radius : 50%;
+      background-color : var(--green);
+      right: 0%;
+      top: 65%;      
+    }
+  `}
 `;
 
 export const UserContactOverview = styled.div`

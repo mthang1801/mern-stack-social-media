@@ -131,7 +131,7 @@ export const userController = {
       { name: 1, slug: 1, avatar: 1, isOnline : 1, offlinedAt :1 }
     )
       .collation({ locale: "en" })
-      .sort({ "isOnline": 1, "name": 1 })
+      .sort({ isOnline: -1, name: 1 })
       .skip(+skip)
       .limit(+limit);
       console.timeEnd("fetchFriend")

@@ -29,13 +29,29 @@ export const ConversationItemWrapper = styled.div`
 `
 
 export const Avatar = styled.div`
-  width : 100%;
-  max-width : 4rem;
-  max-height: 4rem;
+  
+  width : 2.5rem;
+  height: 2.5rem;
+  position : relative;
   & img{
     width : 100%;
     border-radius : 50%;
   }
+  ${({active}) => active && `
+    & img {
+      border: 2px solid var(--green);
+    }
+    &::after{
+      position: absolute;
+      content: ""; /* this is important */
+      height: 0.5rem;
+      width: 0.5rem;
+      border-radius : 50%;
+      background-color : var(--green);
+      right: 0%;
+      top: 70%;
+    }
+  `}
 `
 
 export const ConversationOverview = styled.div`
