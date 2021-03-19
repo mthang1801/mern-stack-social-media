@@ -18,8 +18,7 @@ import Editor from "@draft-js-plugins/editor";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import createMentionPlugin from "@draft-js-plugins/mention";
 import Moment from "react-moment";
-import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
-import { useQuery } from "@apollo/client";
+import LazyLoad from "react-lazyload";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 const linkifyPlugin = createLinkifyPlugin({
@@ -64,60 +63,62 @@ const Bubble = ({ message, me, user, senderAvatar, index }) => {
   }, [bubbleRef]);
   if (!user) return null;
   return (
-    <Wrapper index={index}>
-      <BubbleContainer me={me}>
-        <Avatar>
-          <LazyLoadImage src={senderAvatar} />
-        </Avatar>
-        <Message me={me} ref={bubbleRef} messageType={message.messageType}>
-          {message.messageType === "TEXT" ? (
-            <Editor
-              editorState={editorState}
-              setEditorState={setEditorState}
-              plugins={[linkifyPlugin, mentionPlugin]}
-              onChange={setEditorState}
-              readOnly
-            />
-          ) : message.messageType === "IMAGE" ? (
-            <ImageContainer>
-              <img
-                src={message.file.data}
-                alt={message.file.filename}
-                onClick={() => setIsOpen(true)}
+    <LazyLoad>
+      <Wrapper index={index}>
+        <BubbleContainer me={me}>
+          <Avatar>
+            <LazyLoadImage src={senderAvatar} />
+          </Avatar>
+          <Message me={me} ref={bubbleRef} messageType={message.messageType}>
+            {message.messageType === "TEXT" ? (
+              <Editor
+                editorState={editorState}
+                setEditorState={setEditorState}
+                plugins={[linkifyPlugin, mentionPlugin]}
+                onChange={setEditorState}
+                readOnly
               />
-              {isOpen && (
-                <Lightbox
-                  mainSrc={message.file.data}
-                  onCloseRequest={() => setIsOpen(false)}
+            ) : message.messageType === "IMAGE" ? (
+              <ImageContainer>
+                <img
+                  src={message.file.data}
+                  alt={message.file.filename}
+                  onClick={() => setIsOpen(true)}
                 />
-              )}
-            </ImageContainer>
-          ) : message.messageType === "ATTACHMENT" ? (
-            <AttachmentContainer>
-              <a
-                href={message.file.data}
-                download={message.file.filename}
-                title={message.file.filename}
-              >
-                {message.file.filename}
-              </a>
-            </AttachmentContainer>
-          ) : null}
-        </Message>
-      </BubbleContainer>
-      <BubbleTimeline width={bubbleDimensions.width} me={me}>
-        <div>
-          <span>
-            <Moment fromNow>{+message.createdAt}</Moment>
-          </span>
-          {user._id === message.sender._id ? (
-            <span style={{ textTransform: "capitalize" }}>
-              {message.receiverStatus.toLowerCase()}
+                {isOpen && (
+                  <Lightbox
+                    mainSrc={message.file.data}
+                    onCloseRequest={() => setIsOpen(false)}
+                  />
+                )}
+              </ImageContainer>
+            ) : message.messageType === "ATTACHMENT" ? (
+              <AttachmentContainer>
+                <a
+                  href={message.file.data}
+                  download={message.file.filename}
+                  title={message.file.filename}
+                >
+                  {message.file.filename}
+                </a>
+              </AttachmentContainer>
+            ) : null}
+          </Message>
+        </BubbleContainer>
+        <BubbleTimeline width={bubbleDimensions.width} me={me}>
+          <div>
+            <span>
+              <Moment fromNow>{+message.createdAt}</Moment>
             </span>
-          ) : null}
-        </div>
-      </BubbleTimeline>
-    </Wrapper>
+            {user._id === message.sender._id ? (
+              <span style={{ textTransform: "capitalize" }}>
+                {message.receiverStatus.toLowerCase()}
+              </span>
+            ) : null}
+          </div>
+        </BubbleTimeline>
+      </Wrapper>
+    </LazyLoad>
   );
 };
 

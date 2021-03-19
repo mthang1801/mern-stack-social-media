@@ -22,6 +22,8 @@ import createClearMessageStorage from "./clearMessageStorage";
 import createUpdateMessagesStorageWhenReceiverSeenAllMessages from "./updateMessagesStorageWhenReceiverSeenAllMessages";
 import createSetNumberOfConversations from "./setNumberOfConversations";
 import createUpdateMoreMessages from "./updateMoreMessages"
+import createUpdateUserOnlineOffline from "./updateUserOnlineOffline"
+import createUpdateUserOnlineOfflineMessagesStorage from "./updateUserOnlineOfflineMessagesStorage"
 import {
   toggleButtonMenuVar,
   setPostStatusVar,
@@ -80,7 +82,9 @@ const mutations = {
   ),
   clearMessageStorage: createClearMessageStorage(setMessagesStorageVar),
   setNumberOfConversations : createSetNumberOfConversations(setNumberOfConversationsVar),
-  updateMoreMessages : createUpdateMoreMessages(setMessagesStorageVar)
+  updateMoreMessages : createUpdateMoreMessages(setMessagesStorageVar),
+  updateUserOnlineOffline : createUpdateUserOnlineOffline(setFriendsVar),
+  updateUserOnlineOfflineMessagesStorage : createUpdateUserOnlineOfflineMessagesStorage(setMessagesStorageVar)
 };
 
 export { mutations as cacheMutations };

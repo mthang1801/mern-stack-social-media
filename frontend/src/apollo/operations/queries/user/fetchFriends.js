@@ -9,6 +9,7 @@ export const FETCH_FRIENDS = gql`
       avatar
       isOnline 
       offlinedAt
+      createdAt
     }
   }
 `

@@ -5,12 +5,11 @@ const checkStatusConversation = io => {
   io.on("connection", socket => {
     socket.on("client-send-user-info" , async user => {      
       await pushSocketIdIntoArray(clients, user._id, socket.id);        
-      socket.broadcast.emit("server-send-user-online", user)        
-      console.log(clients)  
+      socket.broadcast.emit("server-send-user-online", user)              
     })
     
     socket.on("disconnect", async () => {      
-      await removeSocketIdFromArray(io, clients, socket, socket.id)
+      await removeSocketIdFromArray(io, clients, socket)
     })
   })
 }

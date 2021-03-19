@@ -229,7 +229,7 @@ const ChatBoardFooter = () => {
     document.getElementById("chat-attachment").value =  "";
   };
   return (
-    <Wrapper style={{ display: !user || !currentChat ? "none" : "block" }}>
+    <Wrapper style={{ display: !user || !currentChat || !Object.entries(currentChat).length ? "none" : "block" }}>
       <ChatActions theme={colorMode}>
         <Label htmlFor="chat-image" style={{ color: "#fb8c00" }}>
           <HiOutlinePhotograph />

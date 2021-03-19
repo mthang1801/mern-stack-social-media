@@ -45,7 +45,7 @@ export const PopupSettings = styled.div`
   position: fixed;
   display : ${({show}) => show ? "flex" : "none"};
   left : ${({left}) => left > 340 ? "370px" : left> 300 ? "350px" : `${left}px`};
-  top : ${({top}) => top -20 + "px"};
+  top : ${({top}) => top -50 + "px"};
   width : 12rem;  
   background-color : white;
   border: 1px solid var(--gray-deep);

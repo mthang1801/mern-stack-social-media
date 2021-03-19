@@ -21,7 +21,7 @@ const ChatsPage = lazy(() => import("../pages/chats"));
 function App() { 
   const { colorMode } = useThemeUI();
   const [fetched, setFetched] = useState(false);
-  const [isAuth, setIsAuth] = useState(false)
+  const [isAuth, setIsAuth] = useState(null)
   const { setCurrentUser, setFriends, setNotifications } = cacheMutations;
   const {refetch : fetchCurrentUser} = useQuery(FETCH_CURRENT_USER, {fetchPolicy : "cache-and-network"});
   const {refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {

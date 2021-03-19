@@ -5,6 +5,7 @@ import { usePopupContactActions } from "./hook/usePopupActions";
 import { useQuery } from "@apollo/client";
 import { FETCH_FRIENDS } from "../../apollo/operations/queries/user/fetchFriends";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import LazyLoad from "react-lazyload";
 const ListContacts = ({ data }) => {
   const { setShowPopup } = usePopupContactActions();
   const [loadContactMore, setLoadContactMore] = useState(false);
@@ -30,8 +31,7 @@ const ListContacts = ({ data }) => {
         setLoadContactMore(false);
       });
     }
-  }, [loadContactMore]);
-
+  }, [loadContactMore]);  
   if (!data.length) return null;
   return (
     <Wrapper
@@ -39,7 +39,9 @@ const ListContacts = ({ data }) => {
       onScrollCapture={onScrollListContacts}
     >
       {data.map((friend) => (
-        <ContactItem key={`contact-${friend._id}`} friend={friend} />
+        <LazyLoad key={`contact-${friend._id}`}>
+          <ContactItem friend={friend} />
+        </LazyLoad>
       ))}
     </Wrapper>
   );

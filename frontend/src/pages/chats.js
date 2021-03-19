@@ -84,8 +84,7 @@ const ChatsPage = ({ match }) => {
       });
     }
     return () => _isMounted = false ;
-  }, []);
-  console.log(messagesStorage)
+  }, []);  
   if (!user)
     return (
       <Layout>
