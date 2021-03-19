@@ -11,6 +11,7 @@ export const FETCH_CHAT_CONVERSATIONS = gql`
           avatar
           isOnline
           offlinedAt
+          createdAt
         }
         messages {
           _id

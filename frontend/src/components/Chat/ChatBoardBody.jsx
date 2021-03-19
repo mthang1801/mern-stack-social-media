@@ -10,7 +10,7 @@ import {
 } from "../../apollo/operations/queries/cache";
 import { FETCH_MESSAGES } from "../../apollo/operations/queries/chat";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-
+import LazyLoad from "react-lazyload";
 const ChatBoardBody = () => {
   //useState
   const [loadMoreMessages, setLoadMoreMessages] = useState(false);
@@ -66,7 +66,7 @@ const ChatBoardBody = () => {
     }
     if (
       scrollTop + clientHeight < (scrollHeight - scrollTop) / 2 &&
-      scrollTop + clientHeight > (scrollHeight - scrollTop) / 2 - 60
+      scrollTop + clientHeight > (scrollHeight - scrollTop) / 2 - 100
     ) {
       if (!loadMoreMessages) {
         setLoadMoreMessages(true);
@@ -94,30 +94,33 @@ const ChatBoardBody = () => {
     return () => (_isMounted = false);
   }, [loadMoreMessages, setLoadMoreMessages, updateMoreMessages]);
   return (
-    <Wrapper theme={colorMode} id="body-board" onScroll={onScrollBoardBody}>
-      {currentChat &&
-      messagesStorage[currentChat._id] &&
-      messagesStorage[currentChat._id].messages.length &&
-      user
-        ? messagesStorage[currentChat._id].messages.map((message, idx) => {
-            return (
-              <Bubble
-                key={`bubble-${message._id}`}
-                message={message}
-                user={user}
-                me={message.sender && message.sender._id === user._id}
-                senderAvatar={
-                  message.sender && message.sender._id === user._id
-                    ? user.avatar
-                    : currentChat.avatar
-                }
-                index={idx}
-              />
-            );
-          })
-        : null}
-      <div ref={chatBoardBodyRef}></div>
-    </Wrapper>
+   
+      <Wrapper theme={colorMode} id="body-board" onScroll={onScrollBoardBody}>
+         <LazyLoad>
+        {currentChat &&
+        messagesStorage[currentChat._id] &&
+        messagesStorage[currentChat._id].messages.length &&
+        user
+          ? messagesStorage[currentChat._id].messages.map((message, idx) => {
+              return (
+                <Bubble
+                  key={`bubble-${message._id}`}
+                  message={message}
+                  user={user}
+                  me={message.sender && message.sender._id === user._id}
+                  senderAvatar={
+                    message.sender && message.sender._id === user._id
+                      ? user.avatar
+                      : currentChat.avatar
+                  }
+                  index={idx}
+                />
+              );
+            })
+          : null}
+        <div ref={chatBoardBodyRef}></div>
+        </LazyLoad>
+      </Wrapper>    
   );
 };
 

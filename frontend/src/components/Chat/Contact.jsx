@@ -23,18 +23,12 @@ const Contact = () => {
   const {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
-  const { setFriends } = cacheMutations;
+  const { setCurrentChat } = cacheMutations;
 
   const {
     data: { friends },
   } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-only" });
-  const { refetch: fetchFriends, fetchMore: fetchMoreFriends } = useQuery(
-    FETCH_FRIENDS,
-    {
-      fetchPolicy: "cache-and-network",
-      skip: true,
-    }
-  );
+  
   //useState
   const [search, setSearch] = useState("");
   const [contactData, setContactData] = useState([]);
@@ -45,31 +39,6 @@ const Contact = () => {
     top: -10000,
   });
   const popupRef = useRef(null);
-
-  useEffect(() => {
-    let _mounted = true;
-    if (!friends.length) {
-      fetchFriends({
-        skip: 0,
-        limit: +process.env.REACT_APP_FRIENDS_PER_LOAD,
-      }).then(({ data }) => {
-        if (_mounted) {
-          const { fetchFriends } = data;
-          //add status PERSONAL to each friends because  when click contact item, it will link to current
-          //chat which need status
-          const friends = fetchFriends.map((friend) => ({
-            ...friend,
-            scope: "PERSONAL",
-          }));
-          setFriends([...friends]);
-          setContactData([...friends]);
-          setOriginData([...friends]);
-        }
-      });
-    }
-
-    return () => (_mounted = false);
-  }, [friends]);
 
   useEffect(() => {
     if (friends.length) {
@@ -85,12 +54,14 @@ const Contact = () => {
     }
   }, [search, friends]);
 
-  useEffect(() => {
-    if (friends.length !== originData.length) {
-      setContactData([...friends]);
-      setOriginData([...friends]);
-    }
+  useEffect(() => {    
+    setContactData([...friends]);
+    setOriginData([...friends]);    
   }, [friends]);
+
+  useEffect(() => {
+    setCurrentChat(null);
+  },[])
 
   useEffect(() => {
     function handleClickDotsSetting(e) {
@@ -120,6 +91,9 @@ const Contact = () => {
   });
   const { colorMode } = useThemeUI();
 
+  const onChangeSearch = React.useCallback((e) => {
+    setSearch(e.target.value);
+  },[])
   if (!user) return null;
   return (
     <ContactContext.Provider value={{ setShowPopup, setPopupPosition }}>
@@ -127,7 +101,7 @@ const Contact = () => {
         ref={popupRef}
         show={showPopup}
         left={popupPosition.left}
-        top={popupPosition.top}
+        top={popupPosition.top+50}
       >
         <span>Mark as favorite</span>
         <hr />
@@ -139,7 +113,7 @@ const Contact = () => {
       </PopupSettings>
       <Wrapper theme={colorMode}>
         <LeftSide theme={colorMode}>
-          <Search search={search} onChange={(e) => setSearch(e.target.value)} />
+          <Search search={search} onChange={onChangeSearch} />
           <hr />
           <ListContacts data={contactData.length ? contactData : friends} />
         </LeftSide>

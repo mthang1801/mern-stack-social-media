@@ -6,11 +6,13 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import {MdLocalPhone} from "react-icons/md";
 import {BsCameraVideo} from "react-icons/bs";
 import {FaPhotoVideo, FaRegFileAlt} from "react-icons/fa";
+import Moment from "react-moment"
 const ChatBoardHeading = () => {
   const {
     data: { currentChat },
   } = useQuery(GET_CURRENT_CHAT);
-  if (!currentChat) return null;
+  
+  if (!currentChat || !Object.keys(currentChat).length) return null;
   return (
     <Wrapper>
         <User>
@@ -19,7 +21,7 @@ const ChatBoardHeading = () => {
           </Avatar>
           <UserInfo>
             <h4>{currentChat.name}</h4>
-            <small>Current Online</small>
+            <small>{currentChat.isOnline ? "Current Online" :currentChat.offlinedAt ? <Moment fromNow>{new Date(+currentChat.offlinedAt)}</Moment> : null}</small>
           </UserInfo>
         </User>
         <Controls>

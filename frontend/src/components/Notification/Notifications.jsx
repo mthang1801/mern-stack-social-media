@@ -16,6 +16,7 @@ import {
 } from "../../apollo/operations/queries/notification";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import subscriptions from "../../apollo/operations/subscriptions";
+import LazyLoad from "react-lazyload";
 const Notifications = () => {
   //useQuery
   const { refetch: fetchCountNumberNotificationsUnseen } = useQuery(
@@ -199,13 +200,18 @@ const Notifications = () => {
   }, [openPopupNotification]);
   if (!notifications.length)
     return <NoNotifications>No notifications</NoNotifications>;
-  return notifications.map((notification) => (
-    <NotificationItem
-      key={`notification-${notification._id}`}
-      notifications={notifications}
-      notification={notification}
-    />
-  ));
+  return (
+    <LazyLoad>
+      {notifications.map((notification) => (
+        <NotificationItem
+          key={`notification-${notification._id}`}
+          notifications={notifications}
+          notification={notification}
+        />
+      ))}
+      ;
+    </LazyLoad>
+  );
 };
 
 const NoNotifications = styled.div`

@@ -18,7 +18,7 @@ const AuthPage = ({setIsAuth, ...props}) => {
       setIsAuth(true);
     } else if (user) {
       history.replace("/");
-      setIsAuth(true);
+      setIsAuth(Date.now());
     }
   }, [user, history, location.state]);
   return (

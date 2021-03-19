@@ -22,12 +22,13 @@ const emitResponseToArray = (io, clients, userId, eventName, data) => {
   })
 }
 
-const removeSocketIdFromArray = async (io, clients, socket, socketId) => {
+const removeSocketIdFromArray = async (io, clients, socket) => {
+  const  socketId = socket.id;   
   for(let userId in clients){
     if(clients[userId].includes(socketId)){
-      clients[userId] = clients[userId].filter(_id => _id !== socketId && _id.connected);      
-      if(!clients[userId].length){     
-        io.emit("server-send-user-is-offline", userId);
+      clients[userId] = clients[userId].filter(_id => _id !== socketId && _id.connected );      
+      if(!clients[userId].length){         
+        socket.broadcast.emit("server-send-user-is-offline", userId);
         await User.findByIdAndUpdate(userId, {isOnline : false , offlinedAt : Date.now()})        
         delete clients[userId]
         console.log(clients)

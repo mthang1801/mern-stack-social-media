@@ -122,8 +122,8 @@ export const chatControllers = {
             { sender: conversationId, receiver: currentUserId },
           ],
         })
-          .populate({ path: "sender", select: "name slug avatar" })
-          .populate({ path: "receiver", select: "name slug avatar" })
+          .populate({ path: "sender", select: "name slug avatar isOnline offlinedAt" })
+          .populate({ path: "receiver", select: "name slug avatar isOnline offlinedAt" })
           .sort({ createdAt: -1 })
           .skip(+skip)
           .limit(+limit);
@@ -190,7 +190,7 @@ export const chatControllers = {
             _id: receiverId,
             blocks: { $ne: currentUserId },
           },
-          { name: 1, slug: 1, avatar: 1, conversations: 1 }
+          { name: 1, slug: 1, avatar: 1, conversations: 1, isOnline : 1, offlinedAt : 1 }
         );
         if (!receiver) {
           return {
@@ -303,6 +303,8 @@ export const chatControllers = {
         slug: 1,
         avatar: 1,
         conversations: 1,
+        isOnline : 1 ,
+        offlinedAt : 1
       });
       const receiver = await User.findOne(
         {
@@ -452,8 +454,8 @@ export const chatControllers = {
         { receiverStatus: messageStatus },
         { new: true }
       )
-        .populate({ path: "sender", select: "name slug avatar" })
-        .populate({ path: "receiver", select: "name slug avatar" });
+        .populate({ path: "sender", select: "name slug avatar isOnline offlinedAt" })
+        .populate({ path: "receiver", select: "name slug avatar isOnline offlinedAt" });
 
       let _cloneUpdatedMessage = updatedMessage._doc;
       if (updatedMessage.messageType !== "TEXT") {

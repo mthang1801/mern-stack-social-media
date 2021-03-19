@@ -6,6 +6,7 @@ import {
   PopupSettings,
 } from "./styles/Chat.styles";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
+import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import { useQuery } from "@apollo/client";
 import Search from "./Search";
 import ListConversations from "./ListConversations";
@@ -22,14 +23,19 @@ const Conversations = () => {
   //state
   const [showPopup, setShowPopup] = useState(false);
   const [search, setSearch] = useState("");
-  const [originalData, setOriginalData] = useState([]);
-
+  const [originalData, setOriginalData] = useState([]);  
   const [popupPosition, setPopupPosition] = useState({
     left: -10000,
     top: -10000,
   });
+  const {setCurrentChat} = cacheMutations
   const { colorMode } = useThemeUI();
   const popupRef = useRef(null);
+
+  useEffect(()=>{
+    setCurrentChat(null);
+  },[])
+
   useEffect(() => {
     function handleClickDotsSetting(e) {
       const dotsElements = document.querySelectorAll(
