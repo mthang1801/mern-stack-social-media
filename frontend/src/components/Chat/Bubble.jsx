@@ -60,10 +60,11 @@ const Bubble = ({ message, me, user, senderAvatar, index }) => {
     if (bubbleRef.current) {
       setBubbleDimensions(bubbleRef.current.getBoundingClientRect());
     }
-  }, [bubbleRef]);
-  if (!user) return null;
+  }, [bubbleRef]);  
+  
+  if (!user) return null;  
   return (
-    <LazyLoad>
+    
       <Wrapper index={index}>
         <BubbleContainer me={me}>
           <Avatar>
@@ -118,7 +119,7 @@ const Bubble = ({ message, me, user, senderAvatar, index }) => {
           </div>
         </BubbleTimeline>
       </Wrapper>
-    </LazyLoad>
+    
   );
 };
 

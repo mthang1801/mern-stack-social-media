@@ -47,7 +47,9 @@ export const chatResolvers = {
     ) =>
       chatControllers.updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched(
         req,
-        args.listSenderId
+        args.listSenderId,
+        pubsub, 
+        subscriptionActions.UPDATE_RECEIVER_ONLINE_RECEIVED_ALL_MESSAGE
       ),
     updatePersonalReceiverWhenReceivedNewMessage: (_, args, { req }, info) =>
       chatControllers.updatePersonalReceiverWhenReceivedNewMessage(
@@ -104,5 +106,14 @@ export const chatResolvers = {
         }
       ),
     },
+    notifySendersThatReceiverOnlineHasReceivedMessagesChat : {
+      subscribe : withFilter(
+        () => pubsub.asyncIterator(subscriptionActions.UPDATE_RECEIVER_ONLINE_RECEIVED_ALL_MESSAGE),
+        (payload, {userId}) => {
+          console.log(payload)
+          return payload.notifySendersThatReceiverOnlineHasReceivedMessagesChat.senders.includes(userId.toString())
+        }
+      )
+    }
   },
 };

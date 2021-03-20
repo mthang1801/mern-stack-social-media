@@ -148,6 +148,11 @@ export const schemaType = gql`
     hasSeenLatestMessage : Boolean
   }  
 
+  type ListSendersConversationsPayload{
+    senders : [ID!]!
+    receiver : ID!
+  }
+
   type MessagesResult{
     messages : [PersonalChat!]    
   }
