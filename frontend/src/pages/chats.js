@@ -51,7 +51,8 @@ const ChatsPage = ({ match }) => {
 
   useEffect(() => {
     let _isMounted = true;
-    if (!Object.keys(messagesStorage).length && user) {         
+    if (!Object.keys(messagesStorage).length && user) {  
+      //fetch conversations 
       let personalMessagesHaveReceiverSentStatus = new Set();
       fetchChatConversations().then(({ data }) => {
         if (_isMounted) {          
@@ -71,7 +72,9 @@ const ChatsPage = ({ match }) => {
               }
             }
           });          
+          
           setInitialMessagesStorage({ ...storage });
+          //update those conversations to received when user online if he/she has offlined before       
           if (personalMessagesHaveReceiverSentStatus.size) {
             updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched({
               variables: {

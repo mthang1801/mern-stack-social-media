@@ -31,7 +31,7 @@ const ListContacts = ({ data }) => {
         setLoadContactMore(false);
       });
     }
-  }, [loadContactMore]);  
+  }, [loadContactMore]);
   if (!data.length) return null;
   return (
     <Wrapper
@@ -39,9 +39,7 @@ const ListContacts = ({ data }) => {
       onScrollCapture={onScrollListContacts}
     >
       {data.map((friend) => (
-        <LazyLoad key={`contact-${friend._id}`}>
-          <ContactItem friend={friend} />
-        </LazyLoad>
+        <ContactItem key={`contact-${friend._id}`} friend={friend} />
       ))}
     </Wrapper>
   );

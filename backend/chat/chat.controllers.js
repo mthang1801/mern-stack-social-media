@@ -10,7 +10,7 @@ export const chatControllers = {
   fetchChatConversations: async (req, skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
     try {
-      console.time("fetchChatConversations");   
+      console.time("fetchChatConversations");
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
       const { conversations } = user;
@@ -52,9 +52,8 @@ export const chatControllers = {
                   ..._messages,
                   file: {
                     ..._messages.file,
-                    data: `data:${
-                      _messages.file.mimetype
-                    };base64,${_messages.file.data.toString("base64")}`,
+                    data: `data:${_messages.file.mimetype
+                      };base64,${_messages.file.data.toString("base64")}`,
                   },
                 };
               }
@@ -66,14 +65,14 @@ export const chatControllers = {
           if (getConversations.length) {
             const profile =
               getConversations[0].sender._id.toString() ===
-              conversationId.toString()
+                conversationId.toString()
                 ? getConversations[0].sender
                 : getConversations[0].receiver;
             const latestMessage = getConversations[0];
             const hasSeenLatestMessage =
               latestMessage.receiver._id.toString() ===
                 currentUserId.toString() &&
-              latestMessage.receiverStatus !== "SEEN"
+                latestMessage.receiverStatus !== "SEEN"
                 ? false
                 : true;
             conversationsResult = [
@@ -99,21 +98,23 @@ export const chatControllers = {
         numberOfConversations: 0,
       };
     } catch (error) {
-      console.log(error);
+      console.log(`102-${error.message}`)
       throw new ApolloError("Server error");
     }
   },
   fetchMessages: async (req, conversationId, scope, skip, limit) => {
-    try {            
-      const currentUserId = getAuthUser(req);      
+    try {
+      const currentUserId = getAuthUser(req);
       if (scope === "PERSONAL") {
-        const numberMessages = await PersonalChat.countDocuments({  $or: [
-          { sender: currentUserId, receiver: conversationId },
-          { sender: conversationId, receiver: currentUserId },
-        ]})
-        if(numberMessages <= skip){
+        const numberMessages = await PersonalChat.countDocuments({
+          $or: [
+            { sender: currentUserId, receiver: conversationId },
+            { sender: conversationId, receiver: currentUserId },
+          ]
+        })
+        if (numberMessages <= skip) {
           return {
-            messages : [],
+            messages: [],
           }
         }
         let personalMessages = await PersonalChat.find({
@@ -137,24 +138,24 @@ export const chatControllers = {
               ..._messages,
               file: {
                 ..._messages.file,
-                data: `data:${
-                  _messages.file.mimetype
-                };base64,${_messages.file.data.toString("base64")}`,
+                data: `data:${_messages.file.mimetype
+                  };base64,${_messages.file.data.toString("base64")}`,
               },
             };
           }
           return { ..._messages };
         });
-       
+
         return {
-          messages : personalMessages.reverse(),           
+          messages: personalMessages.reverse(),
         }
       } else if (scope === "GROUP") {
       } else {
         throw new UserInputError("invalid scope");
       }
     } catch (error) {
-      console.log(error);
+      console.log(`157-${error.message}`)
+
       throw new ApolloError("Server error");
     }
   },
@@ -190,7 +191,7 @@ export const chatControllers = {
             _id: receiverId,
             blocks: { $ne: currentUserId },
           },
-          { name: 1, slug: 1, avatar: 1, conversations: 1, isOnline : 1, offlinedAt : 1 }
+          { name: 1, slug: 1, avatar: 1, conversations: 1, isOnline: 1, offlinedAt: 1 }
         );
         if (!receiver) {
           return {
@@ -282,7 +283,7 @@ export const chatControllers = {
         },
       };
     } catch (error) {
-      console.log(error);
+      console.log(`286-${error.message}`)
       throw new ApolloError("Server error");
     }
   },
@@ -303,8 +304,8 @@ export const chatControllers = {
         slug: 1,
         avatar: 1,
         conversations: 1,
-        isOnline : 1 ,
-        offlinedAt : 1
+        isOnline: 1,
+        offlinedAt: 1
       });
       const receiver = await User.findOne(
         {
@@ -414,6 +415,7 @@ export const chatControllers = {
         },
       };
     } catch (error) {
+      console.log(`418-${error.message}`)
       return {
         error: {
           message: "Send message fail, there were some errors occured",
@@ -424,7 +426,9 @@ export const chatControllers = {
   },
   updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched: async (
     req,
-    listSenderId
+    listSenderId,
+    pubsub,
+    notifySendersThatReceiverOnlineHasReceivedMessagesChat
   ) => {
     try {
       const currentUserId = getAuthUser(req);
@@ -435,8 +439,15 @@ export const chatControllers = {
           { new: true }
         );
       }
+      pubsub.publish(notifySendersThatReceiverOnlineHasReceivedMessagesChat, {
+        notifySendersThatReceiverOnlineHasReceivedMessagesChat: {
+          senders: listSenderId,
+          receiver: currentUserId
+        }
+      })
       return true;
     } catch (error) {
+      console.log(`448-${error.message}`)
       throw new ApolloError(error.message);
     }
   },
@@ -459,9 +470,8 @@ export const chatControllers = {
 
       let _cloneUpdatedMessage = updatedMessage._doc;
       if (updatedMessage.messageType !== "TEXT") {
-        _cloneUpdatedMessage.file.data = `data:${
-          _cloneUpdatedMessage.file.mimetype
-        };base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;
+        _cloneUpdatedMessage.file.data = `data:${_cloneUpdatedMessage.file.mimetype
+          };base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;
       }
 
       pubsub.publish(notifySenderThatReceiverHasReceivedMessageChat, {
@@ -473,6 +483,7 @@ export const chatControllers = {
       });
       return true;
     } catch (error) {
+      console.log(`485-${error.message}`)
       throw new ApolloError(error.message);
     }
   },
@@ -509,6 +520,7 @@ export const chatControllers = {
       }
       return false;
     } catch (error) {
+      console.log(`522-${error.message}`)
       throw new ApolloError(error.message);
     }
   },

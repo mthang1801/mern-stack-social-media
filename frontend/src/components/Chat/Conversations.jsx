@@ -32,6 +32,7 @@ const Conversations = () => {
   const { colorMode } = useThemeUI();
   const popupRef = useRef(null);
 
+  //empty current chat when change page
   useEffect(()=>{
     setCurrentChat(null);
   },[])

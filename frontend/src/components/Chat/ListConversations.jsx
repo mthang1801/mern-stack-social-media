@@ -112,15 +112,14 @@ const ListConversations = () => {
       {_messagesStorage.length
         ? _messagesStorage.map(
             ({ profile, scope, latestMessage, hasSeenLatestMessage }) => (
-              <LazyLoad key={profile._id}>
-                <ConversationItem
-                  conversation={profile}
-                  scope={scope}
-                  hasSeenLatestMessage={hasSeenLatestMessage}
-                  latestMessage={latestMessage}
-                  active={currentChat && currentChat._id === profile._id}
-                />
-              </LazyLoad>
+              <ConversationItem
+                key={`conversation-${profile._id}`}
+                conversation={profile}
+                scope={scope}
+                hasSeenLatestMessage={hasSeenLatestMessage}
+                latestMessage={latestMessage}
+                active={currentChat && currentChat._id === profile._id}
+              />
             )
           )
         : null}

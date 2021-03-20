@@ -21,6 +21,7 @@ const useChatSubscriptions = () => {
     SENT_MESSAGE_CHAT_SUBSCRIPTION,
     NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT,
     SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES,
+    NOTIFY_SENDERS_RECEIVER_ONLINE_HAS_RECEIVED_MESSAGES,
   } = chatSubscriptions;
   const {
     data: { user },
@@ -32,6 +33,7 @@ const useChatSubscriptions = () => {
     setMessagesStorage,
     updateMessagesStorage,
     updateMessagesStorageWhenReceiverSeenAllMessages,
+    updateMessagesStorageToReceivedWhenUserOnline,
   } = cacheMutations;
   const [updatePersonalReceiverWhenReceivedNewMessage] = useMutation(
     UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE
@@ -40,7 +42,8 @@ const useChatSubscriptions = () => {
     let unsubscribeChatMessage;
     let unsubscribeNotifySenderThatReceiverHasReceivedMessage;
     let unsubscribeSubscribeReceiverHasSeenAllMessages;
-    if (subscribeChatMessage && user) {      
+    let unsubscribeNotifySendersReceiverOnlineHasReceivedMessages;
+    if (subscribeChatMessage && user) {
       unsubscribeChatMessage = subscribeChatMessage({
         document: SENT_MESSAGE_CHAT_SUBSCRIPTION,
         variables: { userId: user._id },
@@ -85,16 +88,31 @@ const useChatSubscriptions = () => {
           updateMessagesStorageWhenReceiverSeenAllMessages(receiverId);
         },
       });
+      unsubscribeNotifySendersReceiverOnlineHasReceivedMessages = subscribeChatMessage(
+        {
+          document: NOTIFY_SENDERS_RECEIVER_ONLINE_HAS_RECEIVED_MESSAGES,
+          variables: { userId: user._id },
+          updateQuery: (_, { subscriptionData }) => {
+            const {
+              receiver,
+            } = subscriptionData.data.notifySendersThatReceiverOnlineHasReceivedMessagesChat;
+            updateMessagesStorageToReceivedWhenUserOnline(receiver);
+          },
+        }
+      );
     }
     return () => {
       if (unsubscribeChatMessage) {
-        unsubscribeChatMessage();      
+        unsubscribeChatMessage();
       }
       if (unsubscribeNotifySenderThatReceiverHasReceivedMessage) {
         unsubscribeNotifySenderThatReceiverHasReceivedMessage();
       }
       if (unsubscribeSubscribeReceiverHasSeenAllMessages) {
         unsubscribeSubscribeReceiverHasSeenAllMessages();
+      }
+      if(unsubscribeNotifySendersReceiverOnlineHasReceivedMessages){
+        unsubscribeNotifySendersReceiverOnlineHasReceivedMessages()
       }
     };
   }, [subscribeChatMessage, user, currentChat]);

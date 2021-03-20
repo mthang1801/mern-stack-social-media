@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from "react";
+import React, { useState, useEffect, createRef, useCallback } from "react";
 import { Wrapper } from "./styles/ChatBoardBody.styles";
 import Bubble from "./Bubble";
 import { useThemeUI } from "theme-ui";
@@ -10,7 +10,7 @@ import {
 } from "../../apollo/operations/queries/cache";
 import { FETCH_MESSAGES } from "../../apollo/operations/queries/chat";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import LazyLoad from "react-lazyload";
+
 const ChatBoardBody = () => {
   //useState
   const [loadMoreMessages, setLoadMoreMessages] = useState(false);
@@ -58,19 +58,19 @@ const ChatBoardBody = () => {
   const { colorMode } = useThemeUI();
 
   const onScrollBoardBody = (e) => {
+    e.preventDefault();
     const { scrollHeight, scrollTop, clientHeight } = e.target;
     if (scrollTop + clientHeight === scrollHeight) {
       setShouldScrollIntoView(true);
     } else {
       setShouldScrollIntoView(false);
     }
+    
     if (
       scrollTop + clientHeight < (scrollHeight - scrollTop) / 2 &&
-      scrollTop + clientHeight > (scrollHeight - scrollTop) / 2 - 100
+      scrollTop + clientHeight > (scrollHeight - scrollTop) / 2 - 100 
     ) {
-      if (!loadMoreMessages) {
-        setLoadMoreMessages(true);
-      }
+      setLoadMoreMessages(true);
     }
   };
 
@@ -92,35 +92,38 @@ const ChatBoardBody = () => {
       );
     }
     return () => (_isMounted = false);
-  }, [loadMoreMessages, setLoadMoreMessages, updateMoreMessages]);
+  }, [loadMoreMessages]);
+  console.log(currentChat);
+  console.log(currentChat && messagesStorage[currentChat._id]);
   return (
-   
-      <Wrapper theme={colorMode} id="body-board" onScroll={onScrollBoardBody}>
-         <LazyLoad>
-        {currentChat &&
-        messagesStorage[currentChat._id] &&
-        messagesStorage[currentChat._id].messages.length &&
-        user
-          ? messagesStorage[currentChat._id].messages.map((message, idx) => {
-              return (
-                <Bubble
-                  key={`bubble-${message._id}`}
-                  message={message}
-                  user={user}
-                  me={message.sender && message.sender._id === user._id}
-                  senderAvatar={
-                    message.sender && message.sender._id === user._id
-                      ? user.avatar
-                      : currentChat.avatar
-                  }
-                  index={idx}
-                />
-              );
-            })
-          : null}
-        <div ref={chatBoardBodyRef}></div>
-        </LazyLoad>
-      </Wrapper>    
+    <Wrapper
+      theme={colorMode}
+      id="body-board"
+      onScrollCapture={onScrollBoardBody}
+    >
+      {currentChat &&
+      messagesStorage[currentChat._id] &&
+      messagesStorage[currentChat._id].messages.length &&
+      user
+        ? messagesStorage[currentChat._id].messages.map((message, idx) => {
+            return (
+              <Bubble
+                key={`bubble-${message._id}`}
+                message={message}
+                user={user}
+                me={message.sender && message.sender._id === user._id}
+                senderAvatar={
+                  message.sender && message.sender._id === user._id
+                    ? user.avatar
+                    : currentChat.avatar
+                }
+                index={idx}
+              />
+            );
+          })
+        : null}
+      <div ref={chatBoardBodyRef}></div>
+    </Wrapper>
   );
 };
 
