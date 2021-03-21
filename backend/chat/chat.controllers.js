@@ -7,10 +7,15 @@ import decodeBase64 from "../utils/decodeBase64";
 import mongoose from "mongoose";
 
 export const chatControllers = {
-  fetchChatConversations: async (req, skip, limit) => {
+  fetchChatConversations: async (req, except,skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
     try {
       console.time("fetchChatConversations");
+      //convert except to Object
+      const _exceptToObject = {}; 
+      for(let item of except){
+        _exceptToObject[item] = true ; 
+      }      
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
       const { conversations } = user;
@@ -24,6 +29,9 @@ export const chatControllers = {
           const { isGroup, conversationId } = conversation;
           let getConversations;
           let scope; //["PERSONAL", "GROUP"]
+          if(_exceptToObject[conversationId.toString()]) {            
+            continue; 
+          }
           if (isGroup) {
             //here is GROUP conversation
             // do later with group chat
@@ -36,12 +44,19 @@ export const chatControllers = {
                 { sender: currentUserId, receiver: conversationId },
                 { sender: conversationId, receiver: currentUserId },
               ],
+
             })
-              .populate({ path: "sender", select: "name slug avatar isOnline offlinedAt" })
-              .populate({ path: "receiver", select: "name slug avatar isOnline offlinedAt" })
+              .populate({
+                path: "sender",
+                select: "name slug avatar isOnline offlinedAt",
+              })
+              .populate({
+                path: "receiver",
+                select: "name slug avatar isOnline offlinedAt",
+              })
               .sort({ createdAt: -1 })
-              .skip(0)
-              .limit(+process.env.NUMBER_OF_MESSAGES_PER_LOAD);
+              .skip(+skip)
+              .limit(+limit);
             getConversations = getConversations.map((conversation) => {
               const _messages = conversation._doc;
               if (
@@ -52,8 +67,9 @@ export const chatControllers = {
                   ..._messages,
                   file: {
                     ..._messages.file,
-                    data: `data:${_messages.file.mimetype
-                      };base64,${_messages.file.data.toString("base64")}`,
+                    data: `data:${
+                      _messages.file.mimetype
+                    };base64,${_messages.file.data.toString("base64")}`,
                   },
                 };
               }
@@ -65,14 +81,14 @@ export const chatControllers = {
           if (getConversations.length) {
             const profile =
               getConversations[0].sender._id.toString() ===
-                conversationId.toString()
+              conversationId.toString()
                 ? getConversations[0].sender
                 : getConversations[0].receiver;
             const latestMessage = getConversations[0];
             const hasSeenLatestMessage =
               latestMessage.receiver._id.toString() ===
                 currentUserId.toString() &&
-                latestMessage.receiverStatus !== "SEEN"
+              latestMessage.receiverStatus !== "SEEN"
                 ? false
                 : true;
             conversationsResult = [
@@ -85,9 +101,9 @@ export const chatControllers = {
                 hasSeenLatestMessage,
               },
             ];
-          }
+          }          
         }
-        console.timeEnd("fetchChatConversations");
+        console.timeEnd("fetchChatConversations");        
         return {
           conversations: conversationsResult,
           numberOfConversations: conversations.length,
@@ -98,10 +114,10 @@ export const chatControllers = {
         numberOfConversations: 0,
       };
     } catch (error) {
-      console.log(`102-${error.message}`)
+      console.log(`102-${error.message}`);
       throw new ApolloError("Server error");
     }
-  },
+  },  
   fetchMessages: async (req, conversationId, scope, skip, limit) => {
     try {
       const currentUserId = getAuthUser(req);
@@ -110,12 +126,12 @@ export const chatControllers = {
           $or: [
             { sender: currentUserId, receiver: conversationId },
             { sender: conversationId, receiver: currentUserId },
-          ]
-        })
+          ],
+        });
         if (numberMessages <= skip) {
           return {
             messages: [],
-          }
+          };
         }
         let personalMessages = await PersonalChat.find({
           $or: [
@@ -123,8 +139,14 @@ export const chatControllers = {
             { sender: conversationId, receiver: currentUserId },
           ],
         })
-          .populate({ path: "sender", select: "name slug avatar isOnline offlinedAt" })
-          .populate({ path: "receiver", select: "name slug avatar isOnline offlinedAt" })
+          .populate({
+            path: "sender",
+            select: "name slug avatar isOnline offlinedAt",
+          })
+          .populate({
+            path: "receiver",
+            select: "name slug avatar isOnline offlinedAt",
+          })
           .sort({ createdAt: -1 })
           .skip(+skip)
           .limit(+limit);
@@ -138,8 +160,9 @@ export const chatControllers = {
               ..._messages,
               file: {
                 ..._messages.file,
-                data: `data:${_messages.file.mimetype
-                  };base64,${_messages.file.data.toString("base64")}`,
+                data: `data:${
+                  _messages.file.mimetype
+                };base64,${_messages.file.data.toString("base64")}`,
               },
             };
           }
@@ -148,16 +171,79 @@ export const chatControllers = {
 
         return {
           messages: personalMessages.reverse(),
-        }
+        };
       } else if (scope === "GROUP") {
       } else {
         throw new UserInputError("invalid scope");
       }
     } catch (error) {
-      console.log(`157-${error.message}`)
+      console.log(`157-${error.message}`);
 
       throw new ApolloError("Server error");
     }
+  },
+  fetchSingleChatConversation: async (req, conversationId, scope) => {   
+    console.time("fetch single chat conversations") 
+    const currentUserId = getAuthUser(req);
+    if (scope === "PERSONAL") {
+      let getConversations = await PersonalChat.find({
+        $or: [
+          { sender: currentUserId, receiver: conversationId },
+          { sender: conversationId, receiver: currentUserId },
+        ],
+      })
+        .populate({
+          path: "sender",
+          select: "name slug avatar isOnline offlinedAt",
+        })
+        .populate({
+          path: "receiver",
+          select: "name slug avatar isOnline offlinedAt",
+        })
+        .sort({ createdAt: -1 })
+        .skip(0)
+        .limit(+process.env.NUMBER_OF_MESSAGES_PER_LOAD);      
+      if (getConversations.length) {
+        getConversations = getConversations.map((conversation) => {
+          const _messages = conversation._doc;
+          if (
+            _messages.messageType === "IMAGE" ||
+            _messages.messageType === "ATTACHMENT"
+          ) {
+            return {
+              ..._messages,
+              file: {
+                ..._messages.file,
+                data: `data:${
+                  _messages.file.mimetype
+                };base64,${_messages.file.data.toString("base64")}`,
+              },
+            };
+          }
+          return { ..._messages };
+        });
+        const profile =
+          getConversations[0].sender._id.toString() ===
+          conversationId.toString()
+            ? getConversations[0].sender
+            : getConversations[0].receiver;
+        const latestMessage = getConversations[0];
+        const hasSeenLatestMessage =
+          latestMessage.receiver._id.toString() === currentUserId.toString() &&
+          latestMessage.receiverStatus !== "SEEN"
+            ? false
+            : true;    
+            console.timeEnd("fetch single chat conversations")    
+        return {
+          profile,
+          messages: [...getConversations.reverse()],
+          scope,
+          latestMessage,
+          hasSeenLatestMessage,
+        };
+      }
+    }
+    return null;
   },
   // scope received either PERSONAL or GROUP
   sendMessageChatText: async (
@@ -191,7 +277,14 @@ export const chatControllers = {
             _id: receiverId,
             blocks: { $ne: currentUserId },
           },
-          { name: 1, slug: 1, avatar: 1, conversations: 1, isOnline: 1, offlinedAt: 1 }
+          {
+            name: 1,
+            slug: 1,
+            avatar: 1,
+            conversations: 1,
+            isOnline: 1,
+            offlinedAt: 1,
+          }
         );
         if (!receiver) {
           return {
@@ -283,7 +376,7 @@ export const chatControllers = {
         },
       };
     } catch (error) {
-      console.log(`286-${error.message}`)
+      console.log(`286-${error.message}`);
       throw new ApolloError("Server error");
     }
   },
@@ -305,7 +398,7 @@ export const chatControllers = {
         avatar: 1,
         conversations: 1,
         isOnline: 1,
-        offlinedAt: 1
+        offlinedAt: 1,
       });
       const receiver = await User.findOne(
         {
@@ -415,7 +508,7 @@ export const chatControllers = {
         },
       };
     } catch (error) {
-      console.log(`418-${error.message}`)
+      console.log(`418-${error.message}`);
       return {
         error: {
           message: "Send message fail, there were some errors occured",
@@ -442,12 +535,12 @@ export const chatControllers = {
       pubsub.publish(notifySendersThatReceiverOnlineHasReceivedMessagesChat, {
         notifySendersThatReceiverOnlineHasReceivedMessagesChat: {
           senders: listSenderId,
-          receiver: currentUserId
-        }
-      })
+          receiver: currentUserId,
+        },
+      });
       return true;
     } catch (error) {
-      console.log(`448-${error.message}`)
+      console.log(`448-${error.message}`);
       throw new ApolloError(error.message);
     }
   },
@@ -465,13 +558,20 @@ export const chatControllers = {
         { receiverStatus: messageStatus },
         { new: true }
       )
-        .populate({ path: "sender", select: "name slug avatar isOnline offlinedAt" })
-        .populate({ path: "receiver", select: "name slug avatar isOnline offlinedAt" });
+        .populate({
+          path: "sender",
+          select: "name slug avatar isOnline offlinedAt",
+        })
+        .populate({
+          path: "receiver",
+          select: "name slug avatar isOnline offlinedAt",
+        });
 
       let _cloneUpdatedMessage = updatedMessage._doc;
       if (updatedMessage.messageType !== "TEXT") {
-        _cloneUpdatedMessage.file.data = `data:${_cloneUpdatedMessage.file.mimetype
-          };base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;
+        _cloneUpdatedMessage.file.data = `data:${
+          _cloneUpdatedMessage.file.mimetype
+        };base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;
       }
 
       pubsub.publish(notifySenderThatReceiverHasReceivedMessageChat, {
@@ -483,7 +583,7 @@ export const chatControllers = {
       });
       return true;
     } catch (error) {
-      console.log(`485-${error.message}`)
+      console.log(`485-${error.message}`);
       throw new ApolloError(error.message);
     }
   },
@@ -520,7 +620,7 @@ export const chatControllers = {
       }
       return false;
     } catch (error) {
-      console.log(`522-${error.message}`)
+      console.log(`522-${error.message}`);
       throw new ApolloError(error.message);
     }
   },

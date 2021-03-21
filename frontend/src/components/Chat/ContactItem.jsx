@@ -10,12 +10,28 @@ import { useThemeUI } from "theme-ui";
 import { usePopupContactActions } from "./hook/usePopupActions";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
 import { cacheMutations } from "../../apollo/operations/mutations";
+import { GET_MESSAGES_STORAGE } from "../../apollo/operations/queries/cache";
+import { FETCH_SINGLE_CHAT_CONVERSATION } from "../../apollo/operations/queries/chat/fetchSingleChatConversation";
+import { useQuery } from "@apollo/client";
 
 const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
+  const {
+    data: { messagesStorage },
+  } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-only" });
   const { setPopupPosition, setShowPopup } = usePopupContactActions();
   const { colorMode } = useThemeUI();
-  const { setCurrentChat } = cacheMutations;
+  const {
+    setCurrentChat,
+    addNewConversationToMessagesStorage,
+  } = cacheMutations;
+  const { refetch: fetchSingleChatConversation } = useQuery(
+    FETCH_SINGLE_CHAT_CONVERSATION,
+    {
+      fetchPolicy: "network-only",
+      skip: true,
+    }
+  );
   const onClickThreeDots = (e) => {
     e.stopPropagation();
     setShowPopup(true);
@@ -26,12 +42,28 @@ const ContactItem = ({ friend }) => {
     setPopupPosition({ left: e.pageX, top: positionY });
   };
 
+  const onSetCurrentChat = async (e) => {
+    if (!messagesStorage[friend._id]) {
+      const { data } = await fetchSingleChatConversation({
+        conversationId: friend._id,
+        scope: "PERSONAL",
+      });
+      if (data) {
+        const { fetchSingleChatConversation } = data;
+        addNewConversationToMessagesStorage(
+          friend._id,
+          fetchSingleChatConversation
+        );
+      }
+    }
+    setCurrentChat({...friend, scope: "PERSONAL"});
+  };  
   return (
     <ContactItemWrapper
       theme={colorMode}
       onMouseEnter={() => setShowSettings(true)}
       onMouseLeave={() => setShowSettings(false)}
-      onClick={() => setCurrentChat(friend)}
+      onClick={onSetCurrentChat}
     >
       <Avatar active={friend.isOnline}>
         <LazyLoadImage src={friend.avatar} />

@@ -13,7 +13,6 @@ import { FETCH_CHAT_CONVERSATIONS } from "../../apollo/operations/queries/chat/f
 import { useQuery, useMutation } from "@apollo/client";
 import { UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../../apollo/operations/mutations/chat";
 import { cacheMutations } from "../../apollo/operations/mutations";
-import LazyLoad from "react-lazyload";
 const ListConversations = () => {
   //use Query
   const {
@@ -51,31 +50,50 @@ const ListConversations = () => {
     ]);
     _setMessagesStorage([..._sortedByLatestMessages]);
   }, [messagesStorage]);
-
-  const onScrollListConversations = (e) => {
-    setShowPopup(false);
-    const { scrollHeight, scrollTop, clientHeight } = e.target;
-    if (
-      scrollTop + clientHeight > scrollHeight * 0.7 &&
-      scrollTop + clientHeight < scrollHeight * 0.7 + 40
-    ) {
-      if (!loadMoreConversations) {
-        setLoadMoreConversations(true);
-      }
+ 
+  useEffect(() => {
+    let isScrolling;
+    function onScrollListConversations(e) {
+      clearTimeout(isScrolling);
+      isScrolling = setTimeout(() => {
+        const { scrollTop, clientHeight, scrollHeight } = e.target;
+        console.log(scrollTop, clientHeight, scrollHeight)
+        if (scrollTop + clientHeight > 0.8 * scrollHeight) {         
+          setLoadMoreConversations(true);
+        }
+      }, 66);
     }
-  };
-
+    document.getElementById("list-conversations").addEventListener(
+      "scroll",
+      (e) => {
+        onScrollListConversations(e);
+      },
+      false
+    );
+    return () => {
+      clearTimeout(isScrolling);
+      document.getElementById("list-conversations").removeEventListener(
+        "scroll",
+        (e) => {
+          onScrollListConversations(e);
+        },
+        false
+      );
+    };
+  });
   useEffect(() => {
     let _isMounted = true;
+
     if (
       loadMoreConversations &&
-      user &&
       numberOfConversations > _messagesStorage.length
     ) {
+      console.log("load more");
       const skip = _messagesStorage.length;
       const limit = +process.env.REACT_APP_NUMBER_CONVERSATIONS_LIMITATION;
+      const except = Object.keys(messagesStorage);
       let personalMessagesHaveReceiverSentStatus = new Set();
-      fetchMoreConversations({ skip, limit }).then(({ data }) => {
+      fetchMoreConversations({ except, skip, limit }).then(({ data }) => {
         if (_isMounted) {
           const { conversations } = data.fetchChatConversations;
           let storage = {};
@@ -105,10 +123,10 @@ const ListConversations = () => {
         }
       });
     }
-  }, [loadMoreConversations, user]);
+  }, [loadMoreConversations, numberOfConversations]);
 
   return (
-    <ListConversationsWrapper onScroll={onScrollListConversations}>
+    <ListConversationsWrapper id="list-conversations">
       {_messagesStorage.length
         ? _messagesStorage.map(
             ({ profile, scope, latestMessage, hasSeenLatestMessage }) => (

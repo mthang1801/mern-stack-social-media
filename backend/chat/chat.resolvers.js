@@ -7,9 +7,11 @@ export const chatResolvers = {
     fetchChatConversations: (_, args, { req }, info) =>
       chatControllers.fetchChatConversations(
         req,
+        args.except || [],
         args.skip || 0,
         args.limit || +process.env.NUMBER_CONVERSATIONS_LIMITATION
       ),
+   
     fetchMessages: (_, args, { req }, info) =>
       chatControllers.fetchMessages(
         req,
@@ -17,6 +19,12 @@ export const chatResolvers = {
         args.scope,
         args.skip,
         args.limit
+      ),
+    fetchSingleChatConversation: (_, args, { req }, info) =>
+      chatControllers.fetchSingleChatConversation(
+        req,
+        args.conversationId,
+        args.scope
       ),
   },
   Mutation: {
@@ -48,7 +56,7 @@ export const chatResolvers = {
       chatControllers.updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched(
         req,
         args.listSenderId,
-        pubsub, 
+        pubsub,
         subscriptionActions.UPDATE_RECEIVER_ONLINE_RECEIVED_ALL_MESSAGE
       ),
     updatePersonalReceiverWhenReceivedNewMessage: (_, args, { req }, info) =>
@@ -106,14 +114,19 @@ export const chatResolvers = {
         }
       ),
     },
-    notifySendersThatReceiverOnlineHasReceivedMessagesChat : {
-      subscribe : withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.UPDATE_RECEIVER_ONLINE_RECEIVED_ALL_MESSAGE),
-        (payload, {userId}) => {
-          console.log(payload)
-          return payload.notifySendersThatReceiverOnlineHasReceivedMessagesChat.senders.includes(userId.toString())
+    notifySendersThatReceiverOnlineHasReceivedMessagesChat: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.UPDATE_RECEIVER_ONLINE_RECEIVED_ALL_MESSAGE
+          ),
+        (payload, { userId }) => {
+          console.log(payload);
+          return payload.notifySendersThatReceiverOnlineHasReceivedMessagesChat.senders.includes(
+            userId.toString()
+          );
         }
-      )
-    }
+      ),
+    },
   },
 };

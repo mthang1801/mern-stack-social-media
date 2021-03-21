@@ -31,6 +31,7 @@ const ChatBoardBody = () => {
   const chatBoardBodyRef = createRef(null);
   const { updateMoreMessages } = cacheMutations;
   const [shouldScrollIntoView, setShouldScrollIntoView] = useState(true);
+  const { colorMode } = useThemeUI();
   useEffect(() => {
     let timer;
     timer = setTimeout(() => {
@@ -55,24 +56,43 @@ const ChatBoardBody = () => {
     return () => clearTimeout(timer);
   }, [currentChat]);
 
-  const { colorMode } = useThemeUI();
-
-  const onScrollBoardBody = (e) => {
-    e.preventDefault();
-    const { scrollHeight, scrollTop, clientHeight } = e.target;
-    if (scrollTop + clientHeight === scrollHeight) {
-      setShouldScrollIntoView(true);
-    } else {
-      setShouldScrollIntoView(false);
+  useEffect(() => {
+    let isScrolling;
+    function onScrollBodyBoard(e) {
+      clearTimeout(isScrolling);
+      isScrolling = setTimeout(() => {
+        const { scrollHeight, scrollTop, clientHeight } = e.target;
+        if (scrollTop + clientHeight === scrollHeight) {
+          setShouldScrollIntoView(true);
+        } else {
+          setShouldScrollIntoView(false);
+        }
+        if (
+          scrollTop + clientHeight <
+          (scrollHeight - scrollTop) / 2 + scrollHeight * 0.15
+        ) {
+          setLoadMoreMessages(true);
+        }
+      }, 66);
     }
-    
-    if (
-      scrollTop + clientHeight < (scrollHeight - scrollTop) / 2 &&
-      scrollTop + clientHeight > (scrollHeight - scrollTop) / 2 - 100 
-    ) {
-      setLoadMoreMessages(true);
-    }
-  };
+    document.getElementById("body-board").addEventListener(
+      "scroll",
+      function (e) {
+        onScrollBodyBoard(e);
+      },
+      false
+    );
+    return () => {
+      clearTimeout(isScrolling);
+      document.getElementById("body-board").removeEventListener(
+        "scroll",
+        function (e) {
+          onScrollBodyBoard(e);
+        },
+        false
+      );
+    };
+  });
 
   useEffect(() => {
     let _isMounted = true;
@@ -93,13 +113,12 @@ const ChatBoardBody = () => {
     }
     return () => (_isMounted = false);
   }, [loadMoreMessages]);
-  console.log(currentChat);
-  console.log(currentChat && messagesStorage[currentChat._id]);
+
   return (
     <Wrapper
       theme={colorMode}
       id="body-board"
-      onScrollCapture={onScrollBoardBody}
+      // onScrollCapture={onScrollBoardBody}
     >
       {currentChat &&
       messagesStorage[currentChat._id] &&

@@ -140,9 +140,13 @@ export const schemaType = gql`
     numberOfConversations : Int!
   }
 
+  type Conversations{
+    conversations : [Conversations!]!
+  }
+
   type Conversation{
     profile : User!
-    messages : [PersonalChat!]
+    messages : [PersonalChat!]!
     scope : ChatScopeEnum!
     latestMessage : PersonalChat
     hasSeenLatestMessage : Boolean

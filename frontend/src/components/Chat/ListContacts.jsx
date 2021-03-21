@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { HeadingCharacter, Wrapper } from "./styles/ListContacts.styles";
+import { Wrapper } from "./styles/ListContacts.styles";
 import ContactItem from "./ContactItem";
 import { usePopupContactActions } from "./hook/usePopupActions";
 import { useQuery } from "@apollo/client";
 import { FETCH_FRIENDS } from "../../apollo/operations/queries/user/fetchFriends";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import LazyLoad from "react-lazyload";
 const ListContacts = ({ data }) => {
   const { setShowPopup } = usePopupContactActions();
   const [loadContactMore, setLoadContactMore] = useState(false);

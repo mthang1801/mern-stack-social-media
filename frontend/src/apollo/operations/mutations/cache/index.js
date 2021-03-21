@@ -25,6 +25,7 @@ import createUpdateMoreMessages from "./updateMoreMessages"
 import createUpdateUserOnlineOffline from "./updateUserOnlineOffline"
 import createUpdateUserOnlineOfflineMessagesStorage from "./updateUserOnlineOfflineMessagesStorage"
 import createUpdateMessagesStorageToReceivedWhenUserOnline from "./updateMessagesStorageToReceivedWhenUserOnline"
+import createAddNewConversationToMessagesStorage from "./addNewConversationToMessagesStorage";
 import createSetMoreFriends from "./setMoreFriends"
 import {
   toggleButtonMenuVar,
@@ -45,7 +46,6 @@ import {
   setCurrentChatVar,
   setNumberOfConversationsVar
 } from "../../../cache";
-import setMoreFriends from "./setMoreFriends";
 
 const mutations = {
   toggleButtonMenu: createToggleButtonMenu(toggleButtonMenuVar),
@@ -89,7 +89,8 @@ const mutations = {
   updateUserOnlineOffline : createUpdateUserOnlineOffline(setFriendsVar),
   setMoreFriends : createSetMoreFriends(setFriendsVar),
   updateUserOnlineOfflineMessagesStorage : createUpdateUserOnlineOfflineMessagesStorage(setMessagesStorageVar),
-  updateMessagesStorageToReceivedWhenUserOnline : createUpdateMessagesStorageToReceivedWhenUserOnline(setMessagesStorageVar)
+  updateMessagesStorageToReceivedWhenUserOnline : createUpdateMessagesStorageToReceivedWhenUserOnline(setMessagesStorageVar),
+  addNewConversationToMessagesStorage : createAddNewConversationToMessagesStorage(setMessagesStorageVar)
 };
 
 export { mutations as cacheMutations };

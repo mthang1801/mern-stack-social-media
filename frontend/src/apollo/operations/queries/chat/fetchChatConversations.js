@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_CHAT_CONVERSATIONS = gql`
-  query($skip: Int, $limit: Int) {
-    fetchChatConversations(skip: $skip, limit: $limit) {
+  query($except: [ID!], $skip: Int, $limit: Int) {
+    fetchChatConversations(except: $except, skip: $skip, limit: $limit) {
       conversations {
         profile {
           _id
