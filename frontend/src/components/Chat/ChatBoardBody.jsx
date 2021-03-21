@@ -46,16 +46,19 @@ const ChatBoardBody = () => {
 
   useEffect(() => {
     let timer;
-    timer = setTimeout(() => {
-      if (chatBoardBodyRef.current) {
-        chatBoardBodyRef.current.scrollIntoView({
-          behavior: "auto",
-        });
-      }
-    }, 10);
+    if(messagesStorage[currentChat?._id]?.latestMessage.sender._id === user._id ){
+      timer = setTimeout(() => {
+        if (chatBoardBodyRef.current) {
+          chatBoardBodyRef.current.scrollIntoView({
+            behavior: "auto",
+          });
+        }
+      }, 10);
+    }
+    
     return () => clearTimeout(timer);
-  }, [currentChat]);
-
+  }, [currentChat,messagesStorage[currentChat?._id]?.messages, user]);
+  
   useEffect(() => {
     let isScrolling;
     function onScrollBodyBoard(e) {

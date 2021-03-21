@@ -12,12 +12,16 @@ export const NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT = gql`
           name
           slug
           avatar
+          isOnline
+          offlinedAt
         }
         receiver {
           _id
           name
           slug
           avatar
+          isOnline
+          offlinedAt
         }
         messageType
         receiverStatus

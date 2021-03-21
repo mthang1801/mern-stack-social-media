@@ -22,12 +22,16 @@ export const SEND_MESSAGE_CHAT_FILE = gql`
           name
           slug
           avatar
+          isOnline
+          offlinedAt
         }
         receiver {
           _id
           name
           slug
           avatar
+          isOnline
+          offlinedAt
         }
         messageType
         file{

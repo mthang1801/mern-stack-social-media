@@ -4,12 +4,10 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
 import { cacheMutations } from "../apollo/operations/mutations";
 import { FETCH_CURRENT_USER, FETCH_FRIENDS } from "../apollo/operations/queries/user";
-import { GET_FRIENDS } from "../apollo/operations/queries/cache";
 import { FETCH_NOTIFICATIONS } from "../apollo/operations/queries/notification";
 import { useQuery } from "@apollo/client";
 import ErrorBoundary from "../containers/ErrorBoundary";
 import Explores from "../pages/explores";
-import io from "socket.io-client"
 import useUserStatusSubscriptions from "../components/Global/useUserStatusSubscriptions"
 const HomePage = lazy(() => import("../pages/home"));
 const AuthPage = lazy(() => import("../pages/auth"));
@@ -22,7 +20,7 @@ function App() {
   const { colorMode } = useThemeUI();
   const [fetched, setFetched] = useState(false);
   const [isAuth, setIsAuth] = useState(null)
-  const { setCurrentUser, setFriends, setNotifications } = cacheMutations;
+  const { setFriends, setNotifications, setCurrentUser } = cacheMutations;  
   const {refetch : fetchCurrentUser} = useQuery(FETCH_CURRENT_USER, {fetchPolicy : "cache-and-network"});
   const {refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",

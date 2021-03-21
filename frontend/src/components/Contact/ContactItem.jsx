@@ -13,7 +13,7 @@ import useLanguage from "../Global/useLanguage";
 import { BsChatDots, BsCameraVideo, BsThreeDotsVertical } from "react-icons/bs";
 import { MdStarBorder } from "react-icons/md";
 import { IoMdCall } from "react-icons/io";
-import subscriptions from "../../apollo/operations/subscriptions"
+
 import {
   GET_CURRENT_USER,
   GET_CURRENT_PERSONAL_USER,

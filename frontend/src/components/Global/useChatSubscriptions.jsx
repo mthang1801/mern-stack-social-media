@@ -54,6 +54,7 @@ const useChatSubscriptions = () => {
             message,
           } = subscriptionData.data.sentMessageChatSubscription;
           const { sender } = message;
+        
           setMessagesStorage(sender, message, scope, false);
           //update Delivered status
           const messageStatus =

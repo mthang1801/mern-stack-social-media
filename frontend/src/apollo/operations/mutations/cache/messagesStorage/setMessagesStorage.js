@@ -4,12 +4,14 @@ const setMessagesStorage = (setMessagesStorageVar) => (
   scope,
   hasSeenLatestMessage = false
 ) => {
+  const storage = {...setMessagesStorageVar()};
+
   return setMessagesStorageVar({
-    ...setMessagesStorageVar(),
+    ...storage,
     [conversation._id]: {
       profile: { ...conversation },
-      messages: setMessagesStorageVar()[conversation._id]
-        ? [...setMessagesStorageVar()[conversation._id].messages, { ...message }]
+      messages: storage[conversation._id]
+        ? [...storage[conversation._id].messages, { ...message }]
         : [{ ...message }],
       scope,
       latestMessage : {...message},      

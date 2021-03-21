@@ -1,32 +1,41 @@
-import createToggleButtonMenu from "./toggleButtonMenu";
-import createSetPostStatus from "./setPostStatus";
-import createSetCurrentUser from "./setCurrentUser";
-import createSetPosts from "./setPosts";
-import createSetNotifications from "./setNotifications";
-import createSetCountNumberNotificationsUnseen from "./setCountNumberNotificationsUnseen";
-import createSetNewNotifications from "./setNewNotifications";
-import createSetOpenPopupNotification from "./setOpenPopupNotification";
-import createSetCurrentPersonalUser from "./setCurrentPersonalUser";
-import createSetPersonalPosts from "./setPersonalPosts";
-import createSetOpenFriendsList from "./setOpenFriendsList";
-import createSetFriends from "./setFriends";
-import createSetReceivedRequestsToAddFriend from "./setReceivedRequestsToAddFriend";
-import createSetSentRequestsToAddFriend from "./setSentRequestsToAddFriend";
-import createSetInitialMessagesStorage from "./setInitialMessagesStorage";
-import createSetMessagesStorage from "./setMessagesStorage";
-import createSetCurrentChat from "./setCurrentChat";
-import createClearCurrentChat from "./clearCurrentChat";
-import createUpdateMessagesStorage from "./updateMessagesStorage";
-import createUpdateHasSeenLatestMessage from './updateHasSeenLatestMessage';
-import createClearMessageStorage from "./clearMessageStorage";
-import createUpdateMessagesStorageWhenReceiverSeenAllMessages from "./updateMessagesStorageWhenReceiverSeenAllMessages";
-import createSetNumberOfConversations from "./setNumberOfConversations";
-import createUpdateMoreMessages from "./updateMoreMessages"
-import createUpdateUserOnlineOffline from "./updateUserOnlineOffline"
-import createUpdateUserOnlineOfflineMessagesStorage from "./updateUserOnlineOfflineMessagesStorage"
-import createUpdateMessagesStorageToReceivedWhenUserOnline from "./updateMessagesStorageToReceivedWhenUserOnline"
-import createAddNewConversationToMessagesStorage from "./addNewConversationToMessagesStorage";
-import createSetMoreFriends from "./setMoreFriends"
+//Controls
+import createToggleButtonMenu from "./controls/toggleButtonMenu";
+//Post
+import createSetPostStatus from "./post/setPostStatus";
+import createSetPosts from "./post/setPosts";
+import createSetPersonalPosts from "./post/setPersonalPosts";
+//User
+import createSetCurrentUser from "./user/setCurrentUser";
+import createSetCurrentPersonalUser from "./user/setCurrentPersonalUser";
+import createClearCurrentChat from "./user/clearCurrentChat";
+//Notifications
+import createSetNotifications from "./notifications/setNotifications";
+import createSetCountNumberNotificationsUnseen from "./notifications/setCountNumberNotificationsUnseen";
+import createSetNewNotifications from "./notifications/setNewNotifications";
+import createSetOpenPopupNotification from "./notifications/setOpenPopupNotification";
+//Friends
+import createSetOpenFriendsList from "./friends/setOpenFriendsList";
+import createSetFriends from "./friends/setFriends";
+import createSetReceivedRequestsToAddFriend from "./friends/setReceivedRequestsToAddFriend";
+import createSetSentRequestsToAddFriend from "./friends/setSentRequestsToAddFriend";
+import createSetMoreFriends from "./friends/setMoreFriends"
+//Messages Storage
+import createSetInitialMessagesStorage from "./messagesStorage/setInitialMessagesStorage";
+import createSetMessagesStorage from "./messagesStorage/setMessagesStorage";
+import createUpdateMessagesStorage from "./messagesStorage/updateMessagesStorage";
+import createUpdateHasSeenLatestMessage from './messagesStorage/updateHasSeenLatestMessage';
+import createClearMessageStorage from "./messagesStorage/clearMessageStorage";
+import createUpdateMessagesStorageWhenReceiverSeenAllMessages from "./messagesStorage/updateMessagesStorageWhenReceiverSeenAllMessages";
+import createUpdateMoreMessages from "./messagesStorage/updateMoreMessages"
+import createSetCurrentChat from "./chat/setCurrentChat";
+import createUpdateMessagesStorageToReceivedWhenUserOnline from "./messagesStorage/updateMessagesStorageToReceivedWhenUserOnline"
+import createAddNewConversationToMessagesStorage from "./messagesStorage/addNewConversationToMessagesStorage";
+//Chat
+import createSetNumberOfConversations from "./chat/setNumberOfConversations";
+import createUpdateUserOnlineOffline from "./chat/updateUserOnlineOffline"
+import createUpdateUserOnlineOfflineMessagesStorage from "./chat/updateUserOnlineOfflineMessagesStorage"
+
+
 import {
   toggleButtonMenuVar,
   setPostStatusVar,
@@ -48,10 +57,18 @@ import {
 } from "../../../cache";
 
 const mutations = {
+  //Controls
   toggleButtonMenu: createToggleButtonMenu(toggleButtonMenuVar),
+  //Post
   setPostStatus: createSetPostStatus(setPostStatusVar),
-  setCurrentUser: createSetCurrentUser(setUserVar),
   setPosts: createSetPosts(setPostsVar),
+  setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
+  //User
+  setCurrentUser: createSetCurrentUser(setUserVar),
+  setCurrentPersonalUser: createSetCurrentPersonalUser(
+    setCurrentPersonalUserVar
+  ),
+  //Notifications
   setNotifications: createSetNotifications(setNotificationsVar),
   setCountNumberNotificationsUnseen: createSetCountNumberNotificationsUnseen(
     setCountNumberNotificationsUnseenVar
@@ -60,10 +77,7 @@ const mutations = {
   setOpenPopupNotification: createSetOpenPopupNotification(
     setOpenPopupNotificationVar
   ),
-  setCurrentPersonalUser: createSetCurrentPersonalUser(
-    setCurrentPersonalUserVar
-  ),
-  setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
+  //Friends
   setOpenFriendsList: createSetOpenFriendsList(setOpenFriendsListVar),
   setFriends: createSetFriends(setFriendsVar),
   setSentRequestsToAddFriend: createSetSentRequestsToAddFriend(
@@ -72,25 +86,37 @@ const mutations = {
   setReceivedRequestsToAddFriend: createSetReceivedRequestsToAddFriend(
     setReceivedRequestsToAddFriendVar
   ),
+  setMoreFriends: createSetMoreFriends(setFriendsVar),
+  //Messages Storage
   setInitialMessagesStorage: createSetInitialMessagesStorage(
     setMessagesStorageVar
   ),
   setMessagesStorage: createSetMessagesStorage(setMessagesStorageVar),
   updateMessagesStorage: createUpdateMessagesStorage(setMessagesStorageVar),
-  updateHasSeenLatestMessage : createUpdateHasSeenLatestMessage(setMessagesStorageVar),
-  setCurrentChat: createSetCurrentChat(setCurrentChatVar),
-  clearCurrentChat : createClearCurrentChat(setCurrentChatVar),
-  updateMessagesStorageWhenReceiverSeenAllMessages: createUpdateMessagesStorageWhenReceiverSeenAllMessages(
+  updateHasSeenLatestMessage: createUpdateHasSeenLatestMessage(
     setMessagesStorageVar
   ),
   clearMessageStorage: createClearMessageStorage(setMessagesStorageVar),
-  setNumberOfConversations : createSetNumberOfConversations(setNumberOfConversationsVar),
-  updateMoreMessages : createUpdateMoreMessages(setMessagesStorageVar),
-  updateUserOnlineOffline : createUpdateUserOnlineOffline(setFriendsVar),
-  setMoreFriends : createSetMoreFriends(setFriendsVar),
-  updateUserOnlineOfflineMessagesStorage : createUpdateUserOnlineOfflineMessagesStorage(setMessagesStorageVar),
-  updateMessagesStorageToReceivedWhenUserOnline : createUpdateMessagesStorageToReceivedWhenUserOnline(setMessagesStorageVar),
-  addNewConversationToMessagesStorage : createAddNewConversationToMessagesStorage(setMessagesStorageVar)
+  updateMessagesStorageWhenReceiverSeenAllMessages: createUpdateMessagesStorageWhenReceiverSeenAllMessages(
+    setMessagesStorageVar
+  ),
+  updateMoreMessages: createUpdateMoreMessages(setMessagesStorageVar),
+  updateMessagesStorageToReceivedWhenUserOnline: createUpdateMessagesStorageToReceivedWhenUserOnline(
+    setMessagesStorageVar
+  ),
+  addNewConversationToMessagesStorage: createAddNewConversationToMessagesStorage(
+    setMessagesStorageVar
+  ),
+  //Chat
+  setCurrentChat: createSetCurrentChat(setCurrentChatVar),
+  clearCurrentChat: createClearCurrentChat(setCurrentChatVar),
+  setNumberOfConversations: createSetNumberOfConversations(
+    setNumberOfConversationsVar
+  ),
+  updateUserOnlineOffline: createUpdateUserOnlineOffline(setFriendsVar),
+  updateUserOnlineOfflineMessagesStorage: createUpdateUserOnlineOfflineMessagesStorage(
+    setMessagesStorageVar
+  ),
 };
 
 export { mutations as cacheMutations };
