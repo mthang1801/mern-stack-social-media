@@ -262,6 +262,8 @@ export const chatControllers = {
           slug: 1,
           avatar: 1,
           conversations: 1,
+          isOnline : 1,
+          offlinedAt : 1
         });
 
         if (!currentUser) {
@@ -405,7 +407,7 @@ export const chatControllers = {
           _id: receiverId,
           blocks: { $ne: currentUserId },
         },
-        { name: 1, slug: 1, avatar: 1, conversations: 1 }
+        { name: 1, slug: 1, avatar: 1, conversations: 1, isOnline : 1, offlinedAt : 1 }
       );
       if (!receiver) {
         return {

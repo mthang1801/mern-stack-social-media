@@ -144,6 +144,7 @@ const ChatBoardFooter = () => {
         .then(({ data }) => {
           const { message, scope } = data.sendMessageChatText;
           const { receiver } = message;
+          console.log(receiver)
           //always set hasSeenLatestMessage is true  because  this user is sender
           setMessagesStorage(receiver, message, scope, true);
           setEditorState(EditorState.createEmpty());

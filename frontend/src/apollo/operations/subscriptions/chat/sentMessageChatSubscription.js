@@ -12,12 +12,16 @@ export const SENT_MESSAGE_CHAT_SUBSCRIPTION = gql`
           name
           slug
           avatar
+          isOnline
+          offlinedAt
         }
         receiver {
           _id
           name
           slug
           avatar
+          isOnline
+          offlinedAt
         }
         messageType
         receiverStatus

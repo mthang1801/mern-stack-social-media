@@ -46,7 +46,7 @@ const MessageItem = ({
     }).then((res) => {
       updateHasSeenLatestMessage(conversation._id);
     });
-  };
+  };  
   return (
     <ConversationItemWrapper
       theme={colorMode}
