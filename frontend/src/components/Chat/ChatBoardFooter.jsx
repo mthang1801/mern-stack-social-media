@@ -32,9 +32,7 @@ import {
   SEND_MESSAGE_CHAT_FILE,
 } from "../../apollo/operations/mutations/chat";
 import { cacheMutations } from "../../apollo/operations/mutations/";
-import {
-  GET_CURRENT_CHAT,
-  GET_CURRENT_USER,
+import {GET_CHAT_CACHE_DATA
 } from "../../apollo/operations/queries/cache";
 import { useMutation, useQuery } from "@apollo/client";
 import generateBase64Image from "../../utils/generateBase64Image";
@@ -49,11 +47,8 @@ const ChatBoardFooter = () => {
   const [open, setOpen] = useState(true);
   //useQuery
   const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
-  const {
-    data: { currentChat },
-  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-and-network" });
+    data: { user, currentChat },
+  } = useQuery(GET_CHAT_CACHE_DATA, { fetchPolicy: "cache-and-network" });
   //useMutation
   const [sendMessageChatText] = useMutation(SEND_MESSAGE_CHAT_TEXT);
   const [sendMessageChatFile] = useMutation(SEND_MESSAGE_CHAT_FILE);

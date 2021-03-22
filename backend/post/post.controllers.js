@@ -19,8 +19,8 @@ export const postControllers = {
           },
         ],
       })
-        .populate("mentions")
-        .populate("author")
+        .populate({path : "mentions", select : "name avatar slug"})
+        .populate({path : "author", select : "name avatar slug isOnline offlinedAt"})
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);       

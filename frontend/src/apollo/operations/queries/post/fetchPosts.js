@@ -9,12 +9,16 @@ export const FETCH_POSTS = gql`
         _id
         name
         email
+        slug
       }      
       author {
         _id
         name
         email
         avatar
+        slug
+        isOnline
+        offlinedAt
       }
       files{
         filename

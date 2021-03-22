@@ -15,6 +15,16 @@ import { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND } from "./friends/getReceivedReques
 import { GET_CURRENT_CHAT } from "./chat/getCurrentChat";
 import { GET_MESSAGES_STORAGE } from "./messagesStorage/getMessagesStorage";
 import { GET_NUMBER_OF_CONVERSATIONS } from "./chat/getNumberOfConversations";
+import { GET_HOME_PAGE_CACHE_DATA } from "./pages/getHomePage";
+import { GET_NOTIFICATIONS_PAGE_CACHE_DATA } from "./pages/getNotificationsPage";
+import { GET_CONTACT_PAGE_CACHE_DATA } from "./pages/getContactPage";
+import { GET_PERSONAL_PAGE_CACHE_DATA } from "./pages/getPersonalPage";
+import { GET_CHAT_PAGE_CACHE_DATA } from "./pages/getChatPage";
+import { GET_LIST_CONVERSATIONS_CACHE_DATA } from "./components/getListConversations"
+import { GET_CONTACT_CACHE_DATA } from "./components/getContact"
+import { GET_CHAT_CACHE_DATA } from "./components/getChat"
+import { GET_NOTIFICATIONS_CACHE_DATA } from "./components/getNotifications"
+
 
 export { GET_TOGGLE_BUTTON_MENU };
 export { GET_POST_STATUS };
@@ -33,6 +43,16 @@ export { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND };
 export { GET_CURRENT_CHAT };
 export { GET_MESSAGES_STORAGE };
 export { GET_NUMBER_OF_CONVERSATIONS };
+export { GET_HOME_PAGE_CACHE_DATA };
+export { GET_NOTIFICATIONS_PAGE_CACHE_DATA };
+export { GET_CONTACT_PAGE_CACHE_DATA };
+export { GET_PERSONAL_PAGE_CACHE_DATA };
+export { GET_CHAT_PAGE_CACHE_DATA };
+export { GET_LIST_CONVERSATIONS_CACHE_DATA };
+export { GET_CONTACT_CACHE_DATA };
+export { GET_CHAT_CACHE_DATA };
+export { GET_NOTIFICATIONS_CACHE_DATA };
+
 
 export const cacheQueries = {
   GET_TOGGLE_BUTTON_MENU,
@@ -50,6 +70,15 @@ export const cacheQueries = {
   GET_SENT_REQUESTS_TO_ADD_FRIEND,
   GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
   GET_CURRENT_CHAT,
-  GET_MESSAGES_STORAGE,  
-  GET_NUMBER_OF_CONVERSATIONS
+  GET_MESSAGES_STORAGE,
+  GET_NUMBER_OF_CONVERSATIONS,
+  GET_HOME_PAGE_CACHE_DATA,
+  GET_NOTIFICATIONS_PAGE_CACHE_DATA,
+  GET_CONTACT_PAGE_CACHE_DATA,
+  GET_PERSONAL_PAGE_CACHE_DATA,
+  GET_CHAT_PAGE_CACHE_DATA,
+  GET_LIST_CONVERSATIONS_CACHE_DATA,
+  GET_CONTACT_CACHE_DATA,
+  GET_CHAT_CACHE_DATA,
+  GET_NOTIFICATIONS_CACHE_DATA
 };

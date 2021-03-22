@@ -29,7 +29,7 @@ const MessageItem = ({
   const [updateHaveSeenAllMessages] = useMutation(
     UPDATE_HAVE_SEEN_ALL_MESSAGES
   );
-
+  console.log("render")
   const onClickThreeDots = (e) => {
     e.preventDefault();
     setShowPopup(true);

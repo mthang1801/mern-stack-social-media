@@ -14,12 +14,7 @@ import { useThemeUI } from "theme-ui";
 import ChatBoard from "./ChatBoard";
 
 export const MessagesContext = createContext({});
-const Conversations = () => {
-  //query
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
-
+const Conversations = ({user}) => {  
   //state
   const [showPopup, setShowPopup] = useState(false);
   const [search, setSearch] = useState("");

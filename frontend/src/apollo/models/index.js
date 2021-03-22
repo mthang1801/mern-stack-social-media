@@ -1,9 +1,9 @@
 //User
 export { User } from "./User/UserAuth";
 export { CurrentPersonalUser } from "./User/CurrentPersonalUser";
-export { Friends } from "./User/Friends";
-export { SentRequestsToAddFriends } from "./User/SentRequestsToAddFriend";
-export { ReceivedRequestsToAddFriend } from "./User/ReceivedRequestsToAddFriend";
+export { Friends } from "./friends/Friends";
+export { SentRequestsToAddFriends } from "./friends/SentRequestsToAddFriend";
+export { ReceivedRequestsToAddFriend } from "./friends/ReceivedRequestsToAddFriend";
 //Post
 export { PostStatus } from "./Post/PostStatus";
 export { Posts } from "./Post/Posts";

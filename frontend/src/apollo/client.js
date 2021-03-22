@@ -48,12 +48,11 @@ const link = split(
 
 const client = new ApolloClient({
   link ,
-  cache
+  cache,
+  connectToDevTools : true
 })
 
-const restartWebsocketConnection = () => {  
-  // wsLink.subscriptionClient.close();
-  // wsLink.subscriptionClient.connect();
+const restartWebsocketConnection = () => {    
   wsLink.subscriptionClient.tryReconnect();
 }
 const closeWebsocketConnection = () => {

@@ -1,8 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  GET_CURRENT_USER,
-  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
-} from "../../apollo/operations/queries/cache";
+import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache";
 import {
   FETCH_USERS_RECEIVED_REQUESTS_TO_ADD_FRIEND,
   FETCH_CURRENT_USER,
@@ -14,14 +11,11 @@ import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import useLanguage from "../Global/useLanguage";
 import ContactItem from "./ContactItem";
 import subscriptions from "../../apollo/operations/subscriptions";
-import _ from "lodash"
+import _ from "lodash";
 const SentRequestsToAddFriend = () => {
   const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { receivedRequestsToAddFriend },
-  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
+    data: { user, receivedRequestsToAddFriend },
+  } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, {
     fetchPolicy: "cache-first",
   });
   const { refetch: fetchUsersReceivedRequestToAddFriend } = useQuery(
@@ -31,6 +25,10 @@ const SentRequestsToAddFriend = () => {
       skip: true,
     }
   );
+
+  const { setReceivedRequestsToAddFriend } = cacheMutations;
+  const { colorMode } = useThemeUI();
+  const { i18n, lang } = useLanguage();
   const {
     refetch: fetchCurrentUser,
     subscribeToMore: subscribeUser,
@@ -43,9 +41,8 @@ const SentRequestsToAddFriend = () => {
   //subscribe user
   useEffect(() => {
     let unsubscribeUser;
-   
+
     if (subscribeUser && user) {
-      console.log("ok");
       unsubscribeUser = subscribeUser({
         document:
           subscriptions.userSubscription
@@ -56,10 +53,10 @@ const SentRequestsToAddFriend = () => {
             sender,
             receiver,
           } = subscriptionData.data.cancelRequestToAddFriendSubscription;
-          console.log(sender)          
+          console.log(sender);
           const filterSenders = receivedRequestsToAddFriend.filter(
             (senderRequest) => senderRequest._id !== sender._id
-          );          
+          );
           setReceivedRequestsToAddFriend([...filterSenders]);
         },
       });
@@ -71,9 +68,6 @@ const SentRequestsToAddFriend = () => {
     }
   }, [subscribeUser, user, receivedRequestsToAddFriend]);
 
-  const { setReceivedRequestsToAddFriend } = cacheMutations;
-  const { colorMode } = useThemeUI();
-  const { i18n, lang } = useLanguage();
 
   const getMoreUsersReceivedRequestToAddFriend = () => {
     const skip = receivedRequestsToAddFriend.length;
@@ -81,9 +75,12 @@ const SentRequestsToAddFriend = () => {
     if (fetchUsersReceivedRequestToAddFriend) {
       fetchUsersReceivedRequestToAddFriend({ skip, limit }).then(({ data }) => {
         if (data?.fetchUsersReceivedRequestToAddFriend?.length) {
-          const resultData = [...receivedRequestsToAddFriend, ...data.fetchUsersReceivedRequestToAddFriend]
-          const uniqueResultData = _.uniqBy(resultData, "_id")
-          
+          const resultData = [
+            ...receivedRequestsToAddFriend,
+            ...data.fetchUsersReceivedRequestToAddFriend,
+          ];
+          const uniqueResultData = _.uniqBy(resultData, "_id");
+
           setReceivedRequestsToAddFriend([...uniqueResultData]);
         }
       });

@@ -1,4 +1,5 @@
 import React, { useState, useContext, useRef } from "react";
+import {useContactStates} from "./hook/useContactHook"
 import {
   ContactItemWrapper,
   Avatar,
@@ -10,15 +11,12 @@ import { useThemeUI } from "theme-ui";
 import { usePopupContactActions } from "./hook/usePopupActions";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
 import { cacheMutations } from "../../apollo/operations/mutations";
-import { GET_MESSAGES_STORAGE } from "../../apollo/operations/queries/cache";
 import { FETCH_SINGLE_CHAT_CONVERSATION } from "../../apollo/operations/queries/chat/fetchSingleChatConversation";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client"
 
 const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
-  const {
-    data: { messagesStorage },
-  } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-only" });
+  const {messagesStorage} = useContactStates();  
   const { setPopupPosition, setShowPopup } = usePopupContactActions();
   const { colorMode } = useThemeUI();
   const {
@@ -41,7 +39,7 @@ const ContactItem = ({ friend }) => {
         : e.pageY;
     setPopupPosition({ left: e.pageX, top: positionY });
   };
-
+  
   const onSetCurrentChat = async (e) => {
     if (!messagesStorage[friend._id]) {
       const { data } = await fetchSingleChatConversation({

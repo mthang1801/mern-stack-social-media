@@ -3,10 +3,7 @@ import { Wrapper } from "./styles/ChatBoardBody.styles";
 import Bubble from "./Bubble";
 import { useThemeUI } from "theme-ui";
 import { useQuery } from "@apollo/client";
-import {
-  GET_CURRENT_CHAT,
-  GET_MESSAGES_STORAGE,
-  GET_CURRENT_USER,
+import {GET_CHAT_CACHE_DATA
 } from "../../apollo/operations/queries/cache";
 import { FETCH_MESSAGES } from "../../apollo/operations/queries/chat";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
@@ -16,14 +13,9 @@ const ChatBoardBody = () => {
   const [loadMoreMessages, setLoadMoreMessages] = useState(false);
   //useQuery
   const {
-    data: { currentChat },
-  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-first" });
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { messagesStorage },
-  } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-first" });
+    data: { user, currentChat, messagesStorage },
+  } = useQuery(GET_CHAT_CACHE_DATA, { fetchPolicy: "cache-first" });
+  console.log("render")
   const { refetch: fetchMoreMessages } = useQuery(FETCH_MESSAGES, {
     fetchPolicy: "cache-and-network",
     skip: true,
@@ -46,7 +38,7 @@ const ChatBoardBody = () => {
 
   useEffect(() => {
     let timer;
-    if(messagesStorage[currentChat?._id]?.latestMessage.sender._id === user._id ){
+    if(messagesStorage[currentChat?._id]?.latestMessage.sender._id === user._id   ){
       timer = setTimeout(() => {
         if (chatBoardBodyRef.current) {
           chatBoardBodyRef.current.scrollIntoView({

@@ -12,8 +12,6 @@ const works = [
   {job_name : "Junior Developer", company_name : "Freelance", company_location : "HCM city", company_coordinates_href: "https://www.latlong.net/c/?lat=12.554564&long=107.080476", company_href : "http://google.com", }
 ]
 
-
-
 const IntroductionBox = () => {
   const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"})
   const {data : {currentPersonalUser}} = useQuery(GET_CURRENT_PERSONAL_USER, {fetchPolicy : "cache-first"})

@@ -14,6 +14,8 @@ query FetchPersonalUser($slug : String!){
     followed
     sentRequestToAddFriend 
     receivedRequestToAddFriend 
+    isOnline
+    offlinedAt
     posts{
       _id
       text

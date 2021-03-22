@@ -10,7 +10,7 @@ import {
   GET_CURRENT_USER,
   GET_NEW_NOTIFICATIONS,
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-  GET_CURRENT_PERSONAL_USER,  
+  GET_CURRENT_PERSONAL_USER,
 } from "../../apollo/operations/queries/cache";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -23,29 +23,19 @@ import {
 } from "../../utils/notificationContent";
 
 import { useThemeUI } from "theme-ui";
-const NotificationItem = ({ notification, notifications }) => {
-  //Query
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
-  const {
-    data: { newNotifications },
-  } = useQuery(GET_NEW_NOTIFICATIONS, { fetchPolicy: "cache-first" });  
-  const {
-    data: { currentPersonalUser },
-  } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { countNumberNotificationsUnseen },
-  } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
-    fetchPolicy: "cache-first",
-  });
-  //Mutations
-  const {
-    setNotifications,
-    setCountNumberNotificationsUnseen,
-    setCurrentUser,    
-    setCurrentPersonalUser,
-  } = cacheMutations;
+const NotificationItem = ({
+  notification,
+  notifications,
+  user,
+  newNotifications,
+  currentPersonalUser,
+  countNumberNotificationsUnseen,
+  setNotifications,
+  setCountNumberNotificationsUnseen,
+  setCurrentUser,    
+  setCurrentPersonalUser,
+}) => {
+  
   const [updateToHasSeen] = useMutation(
     notificationMutations.UPDATE_USER_HAS_SEEN_NOTIFICATION
   );
@@ -54,7 +44,7 @@ const NotificationItem = ({ notification, notifications }) => {
   );
   const [rejectRequestToAddFriend] = useMutation(
     userMutations.REJECT_REQUEST_TO_ADD_FRIEND
-  )
+  );
   const { lang } = useLanguage();
   const handleUserClickHasSeen = (notification) => {
     if (!notification.hasSeen.includes(user._id)) {
@@ -86,7 +76,7 @@ const NotificationItem = ({ notification, notifications }) => {
       followed: [...sender.followed],
       sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
       receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
-    });    
+    });
     if (
       currentPersonalUser &&
       currentPersonalUser._id === notification.creator._id
@@ -113,12 +103,12 @@ const NotificationItem = ({ notification, notifications }) => {
 
   const onRejectRequestToAddFriend = () => {
     rejectRequestToAddFriend({
-      variables : {senderId : notification.creator._id }
-    }).then(({data}) => {
+      variables: { senderId: notification.creator._id },
+    }).then(({ data }) => {
       const { sender, receiver } = data.rejectRequestToAddFriend;
-        updateMutationOnChange(sender, receiver);        
-    })
-  }
+      updateMutationOnChange(sender, receiver);
+    });
+  };
   const { colorMode } = useThemeUI();
   if (!user) return null;
   return (
@@ -169,7 +159,9 @@ const NotificationItem = ({ notification, notifications }) => {
             <ButtonAccept onClick={onAcceptRequestToAddFriend}>
               Accept
             </ButtonAccept>
-            <ButtonDecline onClick={onRejectRequestToAddFriend}>Decline</ButtonDecline>
+            <ButtonDecline onClick={onRejectRequestToAddFriend}>
+              Decline
+            </ButtonDecline>
           </ButtonsGroup>
         )}
       </div>

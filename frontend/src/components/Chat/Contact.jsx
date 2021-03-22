@@ -5,11 +5,8 @@ import {
   RightSide,
   PopupSettings,
 } from "./styles/Chat.styles";
-import {
-  GET_CURRENT_USER,
-  GET_FRIENDS,
-} from "../../apollo/operations/queries/cache";
-import { FETCH_FRIENDS } from "../../apollo/operations/queries/user";
+import { GET_CONTACT_CACHE_DATA } from "../../apollo/operations/queries/cache";
+
 import { useQuery } from "@apollo/client";
 import Search from "./Search";
 import { useThemeUI } from "theme-ui";
@@ -21,14 +18,9 @@ export const ContactContext = createContext({});
 const Contact = () => {
   //useQuery
   const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+    data: { user, friends, messagesStorage },
+  } = useQuery(GET_CONTACT_CACHE_DATA, { fetchPolicy: "cache-only" });
   const { setCurrentChat } = cacheMutations;
-
-  const {
-    data: { friends },
-  } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-only" });
-  
   //useState
   const [search, setSearch] = useState("");
   const [contactData, setContactData] = useState([]);
@@ -54,14 +46,14 @@ const Contact = () => {
     }
   }, [search, friends]);
 
-  useEffect(() => {    
+  useEffect(() => {
     setContactData([...friends]);
-    setOriginData([...friends]);    
+    setOriginData([...friends]);
   }, [friends]);
 
   useEffect(() => {
     setCurrentChat(null);
-  },[])
+  }, []);
 
   useEffect(() => {
     function handleClickDotsSetting(e) {
@@ -93,15 +85,17 @@ const Contact = () => {
 
   const onChangeSearch = React.useCallback((e) => {
     setSearch(e.target.value);
-  },[])
+  }, []);
+  const actions = {setShowPopup, setPopupPosition}
+  const states = {messagesStorage}
   if (!user) return null;
   return (
-    <ContactContext.Provider value={{ setShowPopup, setPopupPosition }}>
+    <ContactContext.Provider value={{ actions, states }}>
       <PopupSettings
         ref={popupRef}
         show={showPopup}
         left={popupPosition.left}
-        top={popupPosition.top+50}
+        top={popupPosition.top + 50}
       >
         <span>Mark as favorite</span>
         <hr />

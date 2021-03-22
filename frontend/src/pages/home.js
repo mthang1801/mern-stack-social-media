@@ -2,13 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Layout from "../containers/Layout";
 import Posts from "../components/Post/Posts";
 import { useQuery } from "@apollo/client";
-import {
-  GET_CURRENT_USER,
-  GET_POSTS,
-  GET_OPEN_FRIENDS_LIST,
-  GET_FRIENDS,
-} from "../apollo/operations/queries/cache";
-import { FETCH_FRIENDS } from "../apollo/operations/queries/user";
+import {GET_HOME_PAGE_CACHE_DATA} from "../apollo/operations/queries/cache/pages/getHomePage";
 import { FETCH_POSTS } from "../apollo/operations/queries/post";
 import { cacheMutations } from "../apollo/operations/mutations";
 import HomeSidebar from "../components/Sidebar/HomeSidebar";
@@ -21,31 +15,14 @@ import {
   MainContentRightSide,
 } from "./styles/pages.styles.js";
 const Home = () => {
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, {
-    fetchPolicy: "cache-first",
-  });
-  const {
-    data: { posts },
-  } = useQuery(GET_POSTS, { fetchPolicy: "cache-and-network" });
+  const {data : {user, posts, openFriendsList }} = useQuery(GET_HOME_PAGE_CACHE_DATA)
   const { refetch: fetchPosts } = useQuery(FETCH_POSTS, {
     skip: true,
     fetchPolicy: "cache-and-network",
   });
-  const {
-    data: { friends },
-  } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-first" });
-  const { refetch: fetchFriends } = useQuery(FETCH_FRIENDS, {
-    fetchPolicy: "network-only",
-    skip: true,
-  });
   const [loadingMore, setLoadingMore] = useState(false);
-  const { setPosts, setOpenFriendsList, setFriends } = cacheMutations;
-  const {
-    data: { openFriendsList },
-  } = useQuery(GET_OPEN_FRIENDS_LIST, { fetchPolicy: "cache-first" });
-
+  const { setPosts, setOpenFriendsList } = cacheMutations;
+  
   useEffect(() => {
     let _mounted = true;
     if (!posts.length && user) {
@@ -84,19 +61,8 @@ const Home = () => {
       });
   }, []);
 
-  const handleOpenFriendsList = useCallback(async () => {    
-    // if (friends.length < +process.env.REACT_APP_FRIENDS_PER_LOAD && user) {
-    //   const skip = friends.length;
-    //   const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD;
-    //   fetchFriends({ skip, limit }).then(({ data }) => {
-    //     if (data?.fetchFriends) {
-    //       setFriends([...friends, ...data.fetchFriends]);
-    //       setOpenFriendsList();
-    //     }
-    //   });
-    // } else {
-      setOpenFriendsList();
-    // }
+  const handleOpenFriendsList = useCallback(async () => {        
+      setOpenFriendsList();  
   });
   return (
     <Layout>

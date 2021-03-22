@@ -31,11 +31,11 @@ const PostCard = ({ post }) => {
   return (
     <PostCardWrapper theme={colorMode}>
       <div className="card-header">
-        <Link to={`/user/${post.author._id}`} className="card-header__avatar">
+        <Link to={`${post.author.slug}`} className="card-header__avatar">
           <img src={`${post.author.avatar}`} alt="avatar"/>
         </Link>
         <div className="card-header__center">
-          <Link to={`/user/${post.author._id}`} className="card-header__center-author">{post.author.name}</Link>
+          <Link to={`${post.author.slug}`} className="card-header__center-author">{post.author.name}</Link>
           <div className="card-header__center-date">
             {Date.now() - +post.createdAt > 3600000 ? (
               <Moment date={new Date(+post.createdAt)} format="DD/MM/YYYY hh:mm" />

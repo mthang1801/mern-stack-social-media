@@ -4,8 +4,7 @@ import styled from "styled-components";
 import Notifications from "../components/Notification/Notifications";
 import { useQuery } from "@apollo/client";
 import {
-  GET_CURRENT_USER,
-  GET_NOTIFICATIONS,
+  GET_NOTIFICATIONS_PAGE_CACHE_DATA
 } from "../apollo/operations/queries/cache";
 import CardRequestAuth from "../components/Card/CardRequestAuth";
 import { cacheMutations } from "../apollo/operations/mutations";
@@ -13,16 +12,12 @@ import MainBody from "../components/Body/MainBody";
 import { FETCH_NOTIFICATIONS } from "../apollo/operations/queries/notification";
 
 const NotificationsPage = () => {
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
+  const {data : {user, notifications}} = useQuery(GET_NOTIFICATIONS_PAGE_CACHE_DATA, {fetchPolicy : "cache-only"})
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
     skip: true,
   });
-  const {
-    data: { notifications },
-  } = useQuery(GET_NOTIFICATIONS, { fetchPolicy: "cache-first" });
+ 
   const { setNotifications } = cacheMutations;
   const [fetchNotificationsMore, setFetchNotificationsMore] = useState(false);
   useEffect(() => {
@@ -75,7 +70,7 @@ const NotificationsPage = () => {
       window.removeEventListener("scroll", () => {
         setLoadmoreOnScroll();
       });
-  }, []);
+  }, []);  
 
   return (
     <Layout>

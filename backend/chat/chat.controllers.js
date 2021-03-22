@@ -10,12 +10,13 @@ export const chatControllers = {
   fetchChatConversations: async (req, except,skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
     try {
-      console.time("fetchChatConversations");
+      console.time("fetchChatConversations");      
       //convert except to Object
       const _exceptToObject = {}; 
       for(let item of except){
         _exceptToObject[item] = true ; 
       }      
+     
       const currentUserId = getAuthUser(req);
       const user = await User.findById(currentUserId);
       const { conversations } = user;
@@ -24,6 +25,7 @@ export const chatControllers = {
           conversations,
           (o) => -o.latestMessage
         ).slice(skip, limit + skip);
+        
         let conversationsResult = [];
         for (let conversation of sortedConversations) {
           const { isGroup, conversationId } = conversation;
@@ -55,8 +57,8 @@ export const chatControllers = {
                 select: "name slug avatar isOnline offlinedAt",
               })
               .sort({ createdAt: -1 })
-              .skip(+skip)
-              .limit(+limit);
+              .skip(0)
+              .limit(+process.env.NUMBER_OF_MESSAGES_PER_LOAD);
             getConversations = getConversations.map((conversation) => {
               const _messages = conversation._doc;
               if (
@@ -103,7 +105,7 @@ export const chatControllers = {
             ];
           }          
         }
-        console.timeEnd("fetchChatConversations");        
+        console.timeEnd("fetchChatConversations");             
         return {
           conversations: conversationsResult,
           numberOfConversations: conversations.length,
