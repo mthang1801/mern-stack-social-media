@@ -1,0 +1,2 @@
+const Posts = [];
+export {Posts}

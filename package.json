@@ -1,0 +1,38 @@
+{
+  "name": "mern-stack-social-media",
+  "version": "1.0.0",
+  "description": "Social Media using MERN stack",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm install --prefix frontend && npm install",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
+    "start": "node -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run client\" \"npm run server\" "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/react-hooks": "^4.0.0",
+    "apollo-link-ws": "^1.0.20",
+    "apollo-server": "^2.19.2",
+    "apollo-server-express": "^2.19.2",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql": "^15.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^5.11.13",
+    "socket.io": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11"
+  }
+}
