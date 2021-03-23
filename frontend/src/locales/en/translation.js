@@ -3,7 +3,7 @@ import {
   FaHome,
   FaUserFriends,
   FaShopify,
-  FaGlobeAmericas,
+  FaGlobeAmericas,  
 } from "react-icons/fa";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { ImNewspaper } from "react-icons/im";
@@ -19,6 +19,7 @@ import { CgMoreO } from "react-icons/cg";
 import { MdCardMembership, MdInsertEmoticon } from "react-icons/md";
 import { BsChatDots } from "react-icons/bs";
 import { RiContactsBook2Line } from "react-icons/ri";
+import { BiLockAlt } from "react-icons/bi";
 
 export const en = {
   translation: {
@@ -143,14 +144,19 @@ export const en = {
         icon: () => <RiContactsBook2Line />,
       },
     ],
-    status: [
+    listPostStatus: [
       {
         name: "public",
         icon: () => <FaGlobeAmericas />,
       },
+     
+      {
+        name : "friends",
+        icon : () => <FaUserFriends/>
+      },
       {
         name: "private",
-        icon: () => <FaUserFriends />,
+        icon: () => <BiLockAlt />,
       },
     ],
     statusFooter: [

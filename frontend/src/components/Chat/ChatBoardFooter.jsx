@@ -15,9 +15,9 @@ import {
 } from "./styles/ChatBoardFooter.styles";
 import "emoji-mart/css/emoji-mart.css";
 import { FiSend } from "react-icons/fi";
-import { EditorState, convertToRaw } from "draft-js";
 import { IoMdAttach } from "react-icons/io";
 import { HiOutlinePhotograph } from "react-icons/hi";
+import { EditorState, convertToRaw } from "draft-js";
 import Editor from "@draft-js-plugins/editor";
 import createMentionPlugin, {
   defaultSuggestionsFilter,

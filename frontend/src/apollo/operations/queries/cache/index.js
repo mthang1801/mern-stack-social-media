@@ -15,6 +15,8 @@ import { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND } from "./friends/getReceivedReques
 import { GET_CURRENT_CHAT } from "./chat/getCurrentChat";
 import { GET_MESSAGES_STORAGE } from "./messagesStorage/getMessagesStorage";
 import { GET_NUMBER_OF_CONVERSATIONS } from "./chat/getNumberOfConversations";
+import { GET_CONTACT_CACHE_DATA } from "./contact/getContact"
+import { GET_HOME_CACHE_DATA } from "./pages/getHome"
 
 export { GET_TOGGLE_BUTTON_MENU };
 export { GET_POST_STATUS };
@@ -33,6 +35,8 @@ export { GET_RECEIVED_REQUESTS_TO_ADD_FRIEND };
 export { GET_CURRENT_CHAT };
 export { GET_MESSAGES_STORAGE };
 export { GET_NUMBER_OF_CONVERSATIONS };
+export { GET_CONTACT_CACHE_DATA };
+export { GET_HOME_CACHE_DATA };
 
 export const cacheQueries = {
   GET_TOGGLE_BUTTON_MENU,
@@ -51,5 +55,7 @@ export const cacheQueries = {
   GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
   GET_CURRENT_CHAT,
   GET_MESSAGES_STORAGE,  
-  GET_NUMBER_OF_CONVERSATIONS
+  GET_NUMBER_OF_CONVERSATIONS,
+  GET_CONTACT_CACHE_DATA,
+  GET_HOME_CACHE_DATA
 };

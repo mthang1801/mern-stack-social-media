@@ -64,16 +64,14 @@ export default createGlobalStyle`
   --transition-delay : 0.5s;
   --blue: #0d6efd;
   --dark-blue: #003e9a;
-  --indigo: #6610f2;
-  --purple: #6f42c1;
-  --pink: #d63384;
-  --red: #dc3545;
-  --orange: #fd7e14;
-  --yellow: #ffc107;
-  --green: #198754;  
-  --teal: #20c997;
-  --cyan: #0dcaf0;
+  --indigo-1: #3949ab;
+  --indigo-2 : #283593;   
+  --red: #dc3545;  
+  --green-1: #43a047;  
+  --green-2 : #2e7d32;   
   --white: #fff;
+  --gray-light-1: #bdbdbd ;
+  --gray-light-2: #9e9e9e;
   --gray: #6c757d;
   --gray-dark: #343a40;
   --primary: #0d6efd;
@@ -87,7 +85,8 @@ export default createGlobalStyle`
   --blue-1 :#1e88e5 ;
   --blue-2 : #1976d2 ;
   --blue-3 : #0d47a1;
-
+  --cyan-1 : #00acc1; 
+  --cyan-2 : #00838f;
   --color-background-default: #f0f0f0;
   --color-background-default-secondary : #b4b4b4;
   --color-text-default : #000;  

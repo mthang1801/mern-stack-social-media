@@ -31,45 +31,6 @@ const SentRequestsToAddFriend = () => {
       skip: true,
     }
   );
-  const {
-    refetch: fetchCurrentUser,
-    subscribeToMore: subscribeUser,
-  } = useQuery(FETCH_CURRENT_USER, { skip: true });
-
-  useEffect(() => {
-    fetchCurrentUser();
-    return () => fetchCurrentUser();
-  }, [fetchCurrentUser]);
-  //subscribe user
-  useEffect(() => {
-    let unsubscribeUser;
-   
-    if (subscribeUser && user) {
-      console.log("ok");
-      unsubscribeUser = subscribeUser({
-        document:
-          subscriptions.userSubscription
-            .CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-        variables: { userId: user._id },
-        updateQuery: (_, { subscriptionData }) => {
-          const {
-            sender,
-            receiver,
-          } = subscriptionData.data.cancelRequestToAddFriendSubscription;
-          console.log(sender)          
-          const filterSenders = receivedRequestsToAddFriend.filter(
-            (senderRequest) => senderRequest._id !== sender._id
-          );          
-          setReceivedRequestsToAddFriend([...filterSenders]);
-        },
-      });
-      return () => {
-        if (unsubscribeUser) {
-          unsubscribeUser();
-        }
-      };
-    }
-  }, [subscribeUser, user, receivedRequestsToAddFriend]);
 
   const { setReceivedRequestsToAddFriend } = cacheMutations;
   const { colorMode } = useThemeUI();

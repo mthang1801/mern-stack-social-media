@@ -9,6 +9,7 @@ import { useQuery } from "@apollo/client";
 import ErrorBoundary from "../containers/ErrorBoundary";
 import Explores from "../pages/explores";
 import useUserStatusSubscriptions from "../components/Global/useUserStatusSubscriptions"
+import useContactSubscription from "../components/Global/useContactSubscription"
 const HomePage = lazy(() => import("../pages/home"));
 const AuthPage = lazy(() => import("../pages/auth"));
 const NotificationsPage = lazy(() => import("../pages/notifications"));
@@ -56,6 +57,7 @@ function App() {
   },[isAuth])
  
   useUserStatusSubscriptions()
+  useContactSubscription()  
   
   if (!fetched) return null;
   return (

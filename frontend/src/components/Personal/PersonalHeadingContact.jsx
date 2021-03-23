@@ -10,7 +10,6 @@ import { CgRemoveR } from "react-icons/cg";
 
 import { RiUserFollowLine, RiUserUnfollowLine } from "react-icons/ri";
 import { userMutations } from "../../apollo/operations/mutations";
-import subscriptions from "../../apollo/operations/subscriptions";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import Button from "../Controls/ButtonDefaultCircle";
 import { useQuery, useMutation } from "@apollo/client";
@@ -19,7 +18,6 @@ import {
   GET_CURRENT_USER,  
   GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
 } from "../../apollo/operations/queries/cache";
-import { FETCH_CURRENT_USER } from "../../apollo/operations/queries/user";
 import { useThemeUI } from "theme-ui";
 import {
   PersonalContactContainer,
@@ -48,7 +46,6 @@ const PersonalContact = () => {
   const {
     setCurrentUser,    
     setCurrentPersonalUser,
-    setReceivedRequestsToAddFriend,
   } = cacheMutations;
   //user Query
   const {
@@ -63,109 +60,11 @@ const PersonalContact = () => {
   } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
     fetchPolicy: "cache-first",
   });
-  const {
-    refetch: fetchCurrentUser,
-    subscribeToMore: subscribeUser,
-  } = useQuery(FETCH_CURRENT_USER, { skip: true });
 
   //color theme
   const { colorMode } = useThemeUI();
   //useRef
   const responseRef = useRef(false);
-
-  //function to handle when subscription called
-  const updateSubscriptionOnChange = (sender, receiver) => {
-    setCurrentUser({
-      ...user,
-      friends: [...receiver.friends],
-      following: [...receiver.following],
-      followed: [...receiver.followed],
-      sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-      receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-    });    
-    if (
-      currentPersonalUser &&
-      currentPersonalUser._id.toString() === receiver._id.toString()
-    ) {
-      setCurrentPersonalUser({
-        ...currentPersonalUser,
-        friends: [...sender.friends],
-        following: [...sender.following],
-        followed: [...sender.followed],
-        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-        receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
-      });
-    }
-  };
-  useEffect(() => {
-    fetchCurrentUser();
-    return () => fetchCurrentUser();
-  }, [fetchCurrentUser]);
-  useEffect(() => {
-    let unsubscribeRejectRquestToAddFriend,
-      unsubscribeCancelRequestToAddFriend,
-      unsubscribeRemoveFriend;
-    if (subscribeUser && user) {
-      unsubscribeRejectRquestToAddFriend = subscribeUser({
-        document:
-          subscriptions.userSubscription
-            .REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-        variables: { userId: user._id },
-        updateQuery: (_, { subscriptionData }) => {
-          const {
-            sender,
-            receiver,
-          } = subscriptionData.data.rejectRequestToAddFriendSubscription;
-          updateSubscriptionOnChange(sender, receiver);
-        },
-      });
-
-      unsubscribeCancelRequestToAddFriend = subscribeUser({
-        document:
-          subscriptions.userSubscription
-            .CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-        variables: { userId: user._id },
-        updateQuery: (_, { subscriptionData }) => {
-          const {
-            sender,
-            receiver,
-          } = subscriptionData.data.cancelRequestToAddFriendSubscription;
-          
-          // remove sender from received requests
-          setReceivedRequestsToAddFriend(
-            receivedRequestsToAddFriend.filter(
-              (senderRequest) => senderRequest._id !== sender._id
-            )
-          );
-          updateSubscriptionOnChange(sender, receiver);
-        },
-      });
-
-      unsubscribeRemoveFriend = subscribeUser({
-        document: subscriptions.userSubscription.REMOVE_FRIEND,
-        variables: { userId: user._id },
-        updateQuery: (_, { subscriptionData }) => {
-          const {
-            sender,
-            receiver,
-          } = subscriptionData.data.removeFriendSubscription;
-          updateSubscriptionOnChange(sender, receiver);
-        },
-      });
-    }
-
-    return () => {
-      if (unsubscribeCancelRequestToAddFriend) {
-        unsubscribeCancelRequestToAddFriend();
-      }
-      if (unsubscribeRejectRquestToAddFriend) {
-        unsubscribeRejectRquestToAddFriend();
-      }
-      if (unsubscribeRemoveFriend) {
-        unsubscribeRemoveFriend();
-      }
-    };
-  }, [subscribeUser, user]);
 
   //function to handle when user click button request
   const updateMutationOnChange = (sender, receiver) => {

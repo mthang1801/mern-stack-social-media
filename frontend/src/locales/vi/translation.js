@@ -19,6 +19,7 @@ import { CgMoreO } from "react-icons/cg";
 import { MdCardMembership, MdInsertEmoticon } from "react-icons/md";
 import { BsChatDots } from "react-icons/bs";
 import { RiContactsBook2Line } from "react-icons/ri";
+import { BiLockAlt } from "react-icons/bi";
 
 export const vi = {
   translation: {
@@ -143,14 +144,18 @@ export const vi = {
         icon: () => <IoMdTrendingUp />,
       },
     ],
-    status: [
+    listPostStatus: [
       {
         name: "Công khai",
         icon: () => <FaGlobeAmericas />,
       },
       {
-        name: "Riêng tư",
+        name: "Bạn bè",
         icon: () => <FaUserFriends />,
+      },
+      {
+        name: "Cá nhân",
+        icon: () => <BiLockAlt />,
       },
     ],
     statusFooter: [
