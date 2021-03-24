@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
-
   .e17si09n {
     position: absolute;
     right: 0;
@@ -98,7 +97,7 @@ export const Wrapper = styled.div`
   }
   .e183m4hm {
     display: inline-block;
-    position: relative;    
+    position: relative;
   }
   .e8k2yoa {
     width: unset;
@@ -370,40 +369,43 @@ export const Wrapper = styled.div`
   height: 24px;
   border-radius: 12px;
 } */
+  .mnw6qvm {
+    max-height: 15rem;
+    overflow: auto;
+  }
 `;
 
-
 export const DraftEditor = styled.div`
-  cursor : text !important;  
-  .DraftEditor-root{
-    width : 100% !important;    
-    max-height : 8rem;
+  cursor: text !important;
+  .DraftEditor-root {
+    width: 100% !important;
+    max-height: 8rem;
     min-height: 4rem;
-    padding : 0.5rem 1rem;
+    padding: 0.5rem 1rem;
   }
-`
+`;
 
 export const Toolbar = styled.div`
-  display : flex;
-  padding : 0.5rem 0.75rem;
-`
+  display: flex;
+  padding: 0.5rem 0.75rem;
+`;
 
 export const Label = styled.label`
-  font-size : 1.4rem;  
-  display : flex;
-  align-items : center;
-  color : ${({name}) => name=== "post-images" ? "var(--cyan-1)" : "orange"};
-  &:hover{
-    color : ${({name}) => name=== "post-images" ? "var(--cyan-2)" : "orange"};
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  color: ${({ name }) => (name === "post-images" ? "var(--cyan-1)" : "orange")};
+  &:hover {
+    color: ${({ name }) =>
+      name === "post-images" ? "var(--cyan-2)" : "orange"};
   }
   input {
-    display : none ; 
+    display: none;
   }
-  margin : 0 0.5rem;
-  cursor : pointer;
-`
+  margin: 0 0.5rem;
+  cursor: pointer;
+`;
 
 export const CardPreview = styled.div`
-  margin : 1rem auto;
-`
-
+  margin: 1rem auto;
+`;

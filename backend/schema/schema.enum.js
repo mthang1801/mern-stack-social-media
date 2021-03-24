@@ -1,9 +1,13 @@
 import {gql} from "apollo-server-express";
 
 export const schemaEnum = gql`
-  enum PostStatus{
+  enum PostStatusEnum{
     public
     private
+    friends
+    PUBLIC
+    PRIVATE
+    FRIENDS
   }
   enum ActionEnum{
     CREATED

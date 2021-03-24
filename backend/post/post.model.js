@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-export const statusEnum = ["public", "private", "friends"]
+export const statusEnum = ["public", "private", "friends", "PUBLIC", "PRIVATE", "FRIENDS"]
 const PostSchema = new mongoose.Schema(
   {
     text: {
@@ -22,9 +22,9 @@ const PostSchema = new mongoose.Schema(
         mimetype : {
           type : String ,
           required : true 
-        },
-        encoding : {
-          type : String,
+        },     
+        data : {
+          type : Buffer, 
           required : true 
         }
       }
@@ -37,14 +37,14 @@ const PostSchema = new mongoose.Schema(
       },
     ],
     author : {
-      type : String, 
+      type : mongoose.Schema.Types.ObjectId, 
       ref : "users",
       required : true 
     },
     status: {
       type: String,
       enum: statusEnum,
-      default: "public",
+      default: "PUBLIC",
     },
   },
   { timestamps: true }

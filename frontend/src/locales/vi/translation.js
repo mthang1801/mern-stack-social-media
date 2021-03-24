@@ -202,5 +202,8 @@ export const vi = {
       rejectRequest: "Từ chối",
       getMore: "Lấy thêm",
     },
+    post : {
+      post : "Đăng bài viết"
+    }
   },
 };

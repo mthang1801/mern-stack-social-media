@@ -487,5 +487,14 @@ export const userController = {
       throw new ApolloError(error.message);
     }
   },
+  searchFriends : async (req, search) => {
+    try {
+      const currentUserId = getAuthUser(req);
+      const currentUser = await User.findById(currentUserId).populate({path : "friends", match : {name : new RegExp(search, "gi")},select : "name avatar" });
+      return currentUser.friends
+    } catch (error) {
+      throw new ApolloError(error.message);
+    }
+  },
   hidePassword: () => "***",
 };

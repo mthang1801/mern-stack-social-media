@@ -1,21 +1,17 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_POST = gql`
-  mutation CreatePost(
-    $text: String!
-    $mentions: [String!]!
-    $fileNames: [String!]
-    $fileMimetype: [String!]
-    $fileEncoding: [String!]
-    $status : String
-  ) {
+  mutation ($text : String, $mentions : [ID!], $fileNames : [String!],
+    $fileMimetype : [String!],
+    $fileEncodings : [String!], 
+    $status: String!) {
     createPost(
-      data: {
-        text: $text
-        mentions: $mentions
-        fileNames: $fileNames
-        fileMimetype: $fileMimetype
-        fileEncoding: $fileEncoding
+      data : {
+        text : $text
+        mentions : $mentions
+        fileNames : $fileNames
+        fileMimetype : $fileMimetype
+        fileEncodings : $fileEncodings
         status : $status
       }
     ) {
@@ -23,8 +19,17 @@ export const CREATE_POST = gql`
       text
       mentions {
         _id
+        name        
+        slug
+        avatar
+        isOnline
+        offlinedAt
+      }
+      author{
+        _id
         name
-        email
+        slug
+        avatar        
       }
       status
       createdAt

@@ -205,5 +205,8 @@ export const en = {
       rejectRequest: "Reject",
       getMore: "Get More",
     },
+    post : {
+      post : "Post"
+    }
   },
 };

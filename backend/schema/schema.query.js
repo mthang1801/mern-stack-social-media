@@ -16,5 +16,6 @@ export const schemaQuery = gql`
     loginUser (data : LoginUserInput!) : UserAuthPayload!
     fetchNotifications(skip: Int, limit: Int) : [Notification!]
     countNotificationsUnseen : Int!
+    searchFriends(search: String!) : [User!]
   }
 `
