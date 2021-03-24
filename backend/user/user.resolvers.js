@@ -42,6 +42,7 @@ export const userResolvers = {
         args.limit || +process.env.CONTACT_USERS_PER_PAGE
       );
     },
+    searchFriends : (_, args, {req}, info) => userController.searchFriends(req, args.search)
   },
   Mutation: {
     createUser: (_, args, ctx, info) => {

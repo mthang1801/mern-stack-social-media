@@ -5,17 +5,21 @@ import { Notification } from "../notification/notification.model";
 import mongoose from "mongoose";
 import { statusEnum } from "./post.model";
 import { UserInputError, AuthenticationError } from "apollo-server-express";
-import {actions, fields} from "../fields-actions"
+import { actions, fields } from "../fields-actions";
+import  decodeBase64 from "../utils/decodeBase64"
 export const postControllers = {
   fetchPosts: async (req, limit, skip, userId) => {
-    const myUserId = getAuthUser(req, false);    
+    const myUserId = getAuthUser(req, false);
     const user = await User.findById(myUserId);
     if (userId) {
       const Posts = await Post.find({
         $and: [
           { author: userId },
           {
-            $or: [{ status: "friends", friends: myUserId }, { status: "public" }],
+            $or: [
+              { status: "friends", friends: myUserId },
+              { status: "public" },
+            ],
           },
         ],
       })
@@ -23,7 +27,7 @@ export const postControllers = {
         .populate("author")
         .sort({ createdAt: -1 })
         .skip(+skip)
-        .limit(+limit);       
+        .limit(+limit);
       return Posts;
     }
     if (user) {
@@ -41,106 +45,45 @@ export const postControllers = {
     }
     return [];
   },
-  createPost: async (req, data, pubsub, notifyCreatedPost) => {
-    const {
-      text,
-      mentions,
-      fileNames,
-      fileMimetype,
-      fileEncoding,
-      status,
-    } = data;
-    const userId = getAuthUser(req);
-    const user = await User.findById(userId);
+  createPost: async (req, data) => {
+    const { text, mentions, fileNames, fileMimetype, fileEncodings, status } = data;
+    const currentUserId = getAuthUser(req);    
+    const user = await User.findById(currentUserId, {name : 1, avatar : 1, slug : 1 , isOnline : 1});
     if (!user) {
       throw new AuthenticationError("User not found");
     }
-    const postData = {
-      text,
-    };
-
-    if (mentions && mentions.length) {
-      // Check mention item has match with user's friends
-      const friends = user.friends.map((friend) => friend.toString());
-
-      const setFriends = new Set(friends);
-      let checkMentionsIsMatchUserFriend = true;
-      mentions.forEach((userId) => {
-        checkMentionsIsMatchUserFriend =
-          setFriends.has(userId.toString()) && checkMentionsIsMatchUserFriend;
-      });
-
-      if (!checkMentionsIsMatchUserFriend) {
-        throw new UserInputError(
-          "Mentions has item not match with User's friends"
-        );
-      }
-      postData.mentions = mentions;
+    if (mentions.length) {
+      //pubsub notification      
     }
-    if (status && status in statusEnum) {
-      postData.status = status;
+    if (!status || !statusEnum.includes(status)) {
+      throw new UserInputError(
+        "Mentions has item not match with User's friends"
+      );
     }
-    if (
-      fileNames &&
-      fileNames.length &&
-      fileEncoding &&
-      fileEncoding.length &&
-      fileMimetype &&
-      fileMimetype.length &&
-      fileNames.length === fileEncoding.length &&
-      fileNames.length === fileMimetype.length
-    ) {
-      let files = [];
-      for (let i = 0; i < fileNames.length; i++) {
-        files.push({
-          filename: fileNames[i],
-          mimetype: fileMimetype[i],
-          encoding: fileEncoding[i],
-        });
-      }
-      postData.files = files;
-    }
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    //convert base 64 images to buffer
+    const decodeBase64FileData = fileEncodings.map(encoding=> {
+      const {data} = decodeBase64(encoding);
+      return data ; 
+    })
+    
+    let fileData = []
+    if(fileNames.length !== fileMimetype.length && fileNames.length !== fileEncodings.length){
+      throw new UserInputError("Length of file not correct");
+    }    
 
+    for(let i = 0; i < fileNames.length; i++){
+      fileData.push({data : decodeBase64FileData[i], mimetype : fileMimetype[i], filename : fileNames[i]});
+    }
     const newPost = new Post({
-      ...postData,
-      author: userId,
-    });
-
-    const newNotification = new Notification({
-      field: fields.post,
-      action: actions.CREATED,
-      creator: userId,
-      receivers: user.friends,
-      href: `/${userId}/posts/${newPost._id}`,
-    });
-    user.posts.push(newPost._id);
-    for (let friendId of user.friends) {
-      const friend = await User.findById(friendId);
-      if (friend) {
-        friend.notifications.push(newNotification._id);
-        await friend.save();
-      }
-    }
-    await user.save();
-    await (await newPost.save())
-      .populate("author")
-      .populate("mentions")
-      .execPopulate();
-    await (await newNotification.save()).populate("creator").execPopulate();
-    pubsub.publish(notifyCreatedPost, {
-      notifyCreatedPost: {
-        field: fields.post,
-        action: actions.CREATED,
-        sender : user,
-        receivers: user.friends,
-        notification: newNotification,
-      },
-    });
-    await session.commitTransaction();
-    session.endSession();
-    return newPost;
+      text, 
+      mentions,
+      files : fileData, 
+      author : currentUserId,
+      status 
+    })    
+    await (await newPost.save()).populate({path : "mentions", select : "name avatar slug isOnline offlinedAt"}).execPopulate();
+    console.log({...newPost._doc, author : {...user._doc} })
+    return {...newPost._doc, author : {...user._doc} }
   },
   updatePost: async (req, postId, data, pubsub, postActions) => {
     const { text, mentions, tags, images, status } = data;

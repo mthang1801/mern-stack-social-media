@@ -12,12 +12,12 @@ export const schemaInput = gql`
   }
   
   input PostInput{
-    text : String !
-    mentions : [String!]!
+    text : String
+    mentions : [ID!]
     fileNames : [String!]
     fileMimetype : [String!]
-    fileEncoding : [String!]
-    status : String
+    fileEncodings : [String!]
+    status : String!
   }
   
   input CommentInput{

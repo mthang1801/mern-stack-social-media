@@ -23,11 +23,11 @@ const PersonalPosts = () => {
     data: { personalPosts },
   } = useQuery(GET_PERSONAL_POSTS, { fetchPolicy: "cache-first" });
 
-  const { refetch: fetchMorePosts } = useQuery(FETCH_POSTS, {
-    skip: true,
-    fetchPolicy: "cache-and-network",
-  });
-  const { setPersonalPosts } = cacheMutations;
+  // const { refetch: fetchMorePosts } = useQuery(FETCH_POSTS, {
+  //   skip: true,
+  //   fetchPolicy: "cache-and-network",
+  // });
+  // const { setPersonalPosts } = cacheMutations;
   useEffect(() => {
     window.addEventListener("scroll", () => {
       const docEl = document.documentElement;
@@ -45,34 +45,34 @@ const PersonalPosts = () => {
     };
   }, []);
 
-  useEffect(() => {
-    let _mounted = true;
-    if (
-      loadingMore &&
-      currentPersonalUser &&
-      personalPosts[currentPersonalUser.slug] &&
-      fetchMorePosts
-    ) {
-      const skip = personalPosts[currentPersonalUser.slug].length;
-      const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
-      const userId = currentPersonalUser._id;
-      fetchMorePosts({ skip, limit, userId }).then(
-        ({ data: { fetchPosts } }) => {
-          if (_mounted) {
-            setPersonalPosts({
-              ...personalPosts,
-              [currentPersonalUser.slug]: [
-                ...personalPosts[currentPersonalUser.slug],
-                ...fetchPosts,
-              ],
-            });
-            setLoadingMore(false);
-          }
-        }
-      );
-    }
-    return () => (_mounted = false);
-  }, [loadingMore, currentPersonalUser, personalPosts, fetchMorePosts]);
+  // useEffect(() => {
+  //   let _mounted = true;
+  //   if (
+  //     loadingMore &&
+  //     currentPersonalUser &&
+  //     personalPosts[currentPersonalUser.slug] &&
+  //     fetchMorePosts
+  //   ) {
+  //     const skip = personalPosts[currentPersonalUser.slug].length;
+  //     const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
+  //     const userId = currentPersonalUser._id;
+  //     fetchMorePosts({ skip, limit, userId }).then(
+  //       ({ data: { fetchPosts } }) => {
+  //         if (_mounted) {
+  //           setPersonalPosts({
+  //             ...personalPosts,
+  //             [currentPersonalUser.slug]: [
+  //               ...personalPosts[currentPersonalUser.slug],
+  //               ...fetchPosts,
+  //             ],
+  //           });
+  //           setLoadingMore(false);
+  //         }
+  //       }
+  //     );
+  //   }
+  //   return () => (_mounted = false);
+  // }, [loadingMore, currentPersonalUser, personalPosts, fetchMorePosts]);
   return (
     <Wrapper>
       <LeftSide>

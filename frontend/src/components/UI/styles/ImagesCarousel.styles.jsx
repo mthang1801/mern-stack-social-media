@@ -10,14 +10,18 @@ export const ImageContainer = styled.div`
 `
 
 export const NextArrow = styled.div`
-  right : -1.5rem;
+  right : 1rem;
+  z-index: 1;
   &::before{
-    color : var(--gray-dark);
+    color : var(--gray-light-2);
   }
+  
 `
 export const PrevArrow = styled.div`
-  left : -1.5rem;
+  left : 1rem;
+  z-index: 1 ;
   &::before{
-    color : var(--gray-dark);
+    color : var(--gray-light-2);
   }
+
 `

@@ -12,13 +12,9 @@ import {
   Label,
   CardPreview,
 } from "./styles/PostEditorBody.styles";
-import { EditorState, convertToRaw } from "draft-js";
-import { draftToHtml } from "draftjs-to-html";
 import { ReactTinyLink } from "react-tiny-link";
 import Editor from "@draft-js-plugins/editor";
-import createMentionPlugin, {
-  defaultSuggestionsFilter,
-} from "@draft-js-plugins/mention";
+import createMentionPlugin from "@draft-js-plugins/mention";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import createHashTagPlugin from "@draft-js-plugins/hashtag";
@@ -27,18 +23,14 @@ import "@draft-js-plugins/hashtag/lib/plugin.css";
 import { IoIosImage } from "react-icons/io";
 import generateBase64Image from "../../../utils/generateBase64Image";
 import ImagesCarousel from "../../UI/ImagesCarousel"
-
-const PostEditorBody = () => {
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  );
+import {useQuery} from "@apollo/client";
+import {SEARCH_FRIENDS} from "../../../apollo/operations/queries/user"
+const PostEditorBody = ({editorState, setEditorState,images, setImages}) => {  
   const [urlPreview, setUrlPreview] = useState(null);
-  const editorRef = useRef(null);
-  const [images, setImages] = useState([]);
-  const [suggestions, setSuggestions] = useState(mentions);
+  const editorRef = useRef(null);  
+  const [suggestions, setSuggestions] = useState([]);
   const [openMention, setOpenMention] = useState(true);
-  
- 
+  const {refetch : searchFriends, loading : searchFriendsLoading} = useQuery(SEARCH_FRIENDS, {fetchPolicy : "network-only", skip: true})
   // useMemo plugins
   const {
     plugins,
@@ -72,15 +64,7 @@ const PostEditorBody = () => {
         );
       },
     });
-    const hashTagPlugin = createHashTagPlugin({
-      hashtagComponent(props) {
-        return (
-          <a href={`/${props.decoratedText.replace("#", "")}`}>
-            {props.children}
-          </a>
-        );
-      },
-    });
+    const hashTagPlugin = createHashTagPlugin();
     const { MentionSuggestions } = mentionPlugin;
     // hashTag
 
@@ -91,9 +75,16 @@ const PostEditorBody = () => {
 
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const onSearchChange = useCallback(({ value }) => {
-    setSuggestions(defaultSuggestionsFilter(value, mentions));
+    if(value){
+      searchFriends({search : value}).then(({data}) => {
+        const {searchFriends} = data; 
+        setSuggestions([...searchFriends])
+      })
+    }else{
+      setSuggestions([]);
+    }
   }, []);
-
+  console.log(suggestions)
   useEffect(() => {
     const urlLength = document
       .getElementById("post-editor")
@@ -134,8 +125,7 @@ const PostEditorBody = () => {
   };
 
   return (
-    <Wrapper>
-     
+    <Wrapper>     
       <DraftEditor onClick={() => editorRef.current?.focus()} id="post-editor">
         <Editor
           editorState={editorState}
@@ -184,74 +174,5 @@ const PostEditorBody = () => {
   );
 };
 
-const mentions = [
-  {
-    id: 1,
-    name: "Matthewwqeeqs Russell",
-    email: "matthew.russell@google.com",
-    slug: "matthew",
-    avatar:
-      "https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg",
-  },
-  {
-    id: 1230,
-    name: "Juliasadaw Krispel-Samsel",
-    slug: "juliansadaw",
-    email: "julian.krispel@google.com",
-    avatar: "https://avatars2.githubusercontent.com/u/1188186?v=3&s=400",
-  },
-  {
-    id: 66,
-    name: "Jyotiewq Puri",
-    slug: "jyoti",
-    email: "jyoti@yahoo.com",
-    avatar: "https://avatars0.githubusercontent.com/u/2182307?v=3&s=400",
-  },
-  {
-    id: 905,
-    name: "Maxcxzc Stoiber",
-    slug: "stoiber",
-    email: "max.stoiber@university.edu",
-    avatar:
-      "https://pbs.twimg.com/profile_images/763033229993574400/6frGyDyA_400x400.jpg",
-  },
-  {
-    id: 54111,
-    name: "Nikeq Graf",
-    slug: "graf",
-    email: "info@nik-graf.com",
-    avatar: "https://avatars0.githubusercontent.com/u/223045?v=3&s=400",
-  },
-  {
-    id: 22,
-    name: "Pascalewq Brandt",
-    slug: "brandt",
-    email: "pascalbrandt@fastmail.com",
-    avatar:
-      "https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png",
-  },
-  {
-    id: 3216361,
-    name: "Matthewewqeq Russell",
-    slug: "russell",
-    email: "matthew.russell@google.com",
-    avatar:
-      "https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg",
-  },
-  {
-    id: 192365,
-    name: "Julianewqeq Krispel-Samsel",
-    slug: "julianewqeq",
-    email: "julian.krispel@google.com",
-    avatar: "https://avatars2.githubusercontent.com/u/1188186?v=3&s=400",
-  },
-  {
-    id: 23648,
-    name: "Jyotiewqeqw Puri",
-    slug: "puti",
-    email: "jyoti@yahoo.com",
-    avatar: "https://avatars0.githubusercontent.com/u/2182307?v=3&s=400",
-  },
-];
 
 export default PostEditorBody;

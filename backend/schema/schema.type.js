@@ -26,7 +26,7 @@ export const schemaType = gql`
     _id : ID! 
     text : String!   
     mentions : [User!]
-    status : PostStatus!
+    status : PostStatusEnum!
     files : [File!]
     author : User! 
     comments : [Comment]
