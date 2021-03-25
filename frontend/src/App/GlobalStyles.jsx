@@ -63,6 +63,9 @@ export default createGlobalStyle`
   --secondTransition : 0.6s all;
   --transition-delay : 0.5s;
   --blue: #0d6efd;
+  --blue-1:#1e88e5 ;
+  --blue-2:#1565c0 ;
+  --blue-3:#0d47a1  ;
   --dark-blue: #003e9a;
   --indigo-1: #3949ab;
   --indigo-2 : #283593;   
@@ -100,8 +103,8 @@ export default createGlobalStyle`
   --color-card-default : #fff;
   --color-hover-default : var(--light);
   
-  --color-border-dark : #0e0f10; 
-  --color-border-default : #e8e8e8;
+  --color-border-dark : #616161;   
+  --color-border-default : #e0e0e0;
 
   --fontFamily-sans: Montserrat, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+
 export const Wrapper = styled.div`
   .e17si09n {
     position: absolute;
@@ -385,31 +385,6 @@ export const DraftEditor = styled.div`
   }
 `;
 
-export const Toolbar = styled.div`
-  display: flex;
-  padding: 0.5rem 0.75rem;
-`;
-
-export const Label = styled.label`
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  color: ${({ name }) => (name === "post-images" ? "var(--cyan-1)" : "orange")};
-  &:hover {
-    color: ${({ name }) =>
-      name === "post-images" ? "var(--cyan-2)" : "orange"};
-  }
-  input {
-    display: none;
-  }
-  margin: 0 0.5rem;
-  cursor: pointer;
-`;
-
-export const CardPreview = styled.div`
-  margin: 1rem auto;
-`;
-
 export const HashtagLink = styled.span`
   color: #575f67;
   cursor: pointer;
@@ -419,4 +394,8 @@ export const HashtagLink = styled.span`
   padding-right: 2px;
   border-radius: 2px;
   text-decoration: none;
+`;
+
+export const CardPreview = styled.div`
+  margin: 1rem auto;
 `;

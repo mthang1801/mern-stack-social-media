@@ -10,7 +10,7 @@ import useLanguage from "../../Global/useLanguage";
 import _ from "lodash";
 import { useMutation } from "@apollo/client";
 import { CREATE_POST } from "../../../apollo/operations/mutations/post/createPost";
-
+import {cacheMutations} from "../../../apollo/operations/mutations/cache"
 const PostEditor = ({ user }) => {
   const [postStatus, setPostStatus] = useState("PUBLIC");
   const [editorState, setEditorState] = useState(() =>
@@ -22,6 +22,7 @@ const PostEditor = ({ user }) => {
   const { i18n, lang } = useLanguage();
   const { post } = i18n.store.data[lang].translation;
   const [createPost, { loading: createPostLoading }] = useMutation(CREATE_POST);
+  const {setNewPost} = cacheMutations
   const handleSetPostStatus = useCallback((status) => {
     setPostStatus(status);
   }, []);
@@ -86,13 +87,15 @@ const PostEditor = ({ user }) => {
       fileEncodings,
       status: postStatus
     }})
-      .then((res) => {
-        console.log(res);
+      .then(({data}) => {
+        const {createPost} = data ;        
+        setNewPost(createPost)
       })
       .catch((err) => {
         console.log(err.message);
       });
   };
+
   if (createPostLoading) return <div>Loading...</div>;
   return (
     <EditorWrapper theme={colorMode}>

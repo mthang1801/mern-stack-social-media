@@ -1,13 +1,17 @@
-import React from 'react'
+import React from "react";
 import PostCard from "./PostCard";
-const Posts = ({posts}) => {    
+import LazyLoad from "react-lazyload";
+const Posts = ({ posts }) => {
+  console.log(posts);
   return (
-    <div>
-      {posts.map(post => (
-        <PostCard key={`post-${post._id}`} post={post}/>
+    <section>
+      {posts.map((post) => (
+        <LazyLoad placeholder="<div>Loading...</div>">
+          <PostCard key={`post-${post._id}`} post={post} />
+        </LazyLoad>
       ))}
-    </div>
-  )
-}
+    </section>
+  );
+};
 
-export default Posts
+export default Posts;

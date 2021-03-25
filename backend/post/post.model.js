@@ -2,10 +2,14 @@ import mongoose from "mongoose";
 export const statusEnum = ["public", "private", "friends", "PUBLIC", "PRIVATE", "FRIENDS"]
 const PostSchema = new mongoose.Schema(
   {
+    // if personal post, group is null
+    // group : {
+      
+    // },
     text: {
       type: String,
       required: true,
-    },   
+    },           
     mentions: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -27,6 +31,13 @@ const PostSchema = new mongoose.Schema(
           type : Buffer, 
           required : true 
         }
+      }
+    ],
+    likes : [
+      {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "users",
+        required: true
       }
     ],
     comments: [

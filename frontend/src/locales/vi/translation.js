@@ -3,7 +3,7 @@ import {
   FaHome,
   FaUserFriends,
   FaShopify,
-  FaGlobeAmericas,
+  FaGlobeAmericas,  
 } from "react-icons/fa";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { ImNewspaper } from "react-icons/im";
@@ -19,7 +19,8 @@ import { CgMoreO } from "react-icons/cg";
 import { MdCardMembership, MdInsertEmoticon } from "react-icons/md";
 import { BsChatDots } from "react-icons/bs";
 import { RiContactsBook2Line } from "react-icons/ri";
-import { BiLockAlt } from "react-icons/bi";
+import { BiLockAlt,BiLike, BiCommentDetail,BiShareAlt } from "react-icons/bi";
+
 
 export const vi = {
   translation: {
@@ -143,21 +144,7 @@ export const vi = {
         name: "Trends",
         icon: () => <IoMdTrendingUp />,
       },
-    ],
-    listPostStatus: [
-      {
-        name: "Công khai",
-        icon: () => <FaGlobeAmericas />,
-      },
-      {
-        name: "Bạn bè",
-        icon: () => <FaUserFriends />,
-      },
-      {
-        name: "Cá nhân",
-        icon: () => <BiLockAlt />,
-      },
-    ],
+    ],    
     statusFooter: [
       {
         name: "Hình ảnh/ Videos",
@@ -203,7 +190,36 @@ export const vi = {
       getMore: "Lấy thêm",
     },
     post : {
-      post : "Đăng bài viết"
+      post : "Đăng bài viết",
+      commentPlaceholder : "Để lại bình luận của bạn",
+      status :  [
+        {
+          name: "Công khai",
+          icon: () => <FaGlobeAmericas />,
+        },
+        {
+          name: "Bạn bè",
+          icon: () => <FaUserFriends />,
+        },
+        {
+          name: "Cá nhân",
+          icon: () => <BiLockAlt />,
+        },
+      ],
+      controls: [
+        {
+          name : "Thích",
+          icon : () => <BiLike/>
+        },
+        {
+          name : "Bình luận",
+          icon : () => <BiCommentDetail/>
+        },
+        {
+          name : "Chia sẻ",
+          icon : () => <BiShareAlt/>
+        }
+      ]
     }
   },
 };

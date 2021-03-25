@@ -490,7 +490,7 @@ export const userController = {
   searchFriends : async (req, search) => {
     try {
       const currentUserId = getAuthUser(req);
-      const currentUser = await User.findById(currentUserId).populate({path : "friends", match : {name : new RegExp(search, "gi")},select : "name avatar" });
+      const currentUser = await User.findById(currentUserId).populate({path : "friends", match : {name : new RegExp(search, "gi")},select : "name avatar slug" });
       return currentUser.friends
     } catch (error) {
       throw new ApolloError(error.message);
