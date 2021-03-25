@@ -7,9 +7,9 @@ import {MdZoomOutMap} from "react-icons/md"
 import {useThemeUI} from "theme-ui"
 const PostEditorHeader = ({user, postStatus, setPostStatus}) => {
   const {i18n , lang} =useLanguage()
-  const { listPostStatus} = i18n.store.data[lang].translation; 
+  const { status} = i18n.store.data[lang].translation.post; 
   const {colorMode} = useThemeUI()
-  const currentStatus = listPostStatus?.find(status => status.name.toLowerCase() === postStatus.toLowerCase()); 
+  const currentStatus = status?.find(status => status.name.toLowerCase() === postStatus.toLowerCase()); 
   const [openDropdown, setOpenDropdown] = useState(false);
   const dropdownRef = useRef(null)
 
@@ -39,7 +39,7 @@ const PostEditorHeader = ({user, postStatus, setPostStatus}) => {
               <span>{currentStatus.name}</span>
             </Selected>
             <DropdownStatus theme={colorMode}  open={openDropdown} >
-              {listPostStatus && listPostStatus.filter(status => status.name.toLowerCase() !== postStatus.toLowerCase()).map(({name, icon}) => (
+              {status && status.filter(status => status.name.toLowerCase() !== postStatus.toLowerCase()).map(({name, icon}) => (
                 <StatusItem theme={colorMode} key={name} status={name.toLowerCase()} onClick={() => setPostStatus(name.toUpperCase())}>
                   <span>{icon()}</span>
                   <span>{name}</span>

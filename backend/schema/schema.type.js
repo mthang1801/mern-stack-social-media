@@ -29,6 +29,7 @@ export const schemaType = gql`
     status : PostStatusEnum!
     files : [File!]
     author : User! 
+    likes : [ID!]    
     comments : [Comment]
     createdAt : String!
     updatedAt : String!

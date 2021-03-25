@@ -7,9 +7,10 @@ export const postResolvers = {
     fetchPosts: (_, args, { req }, info) => {
       return postControllers.fetchPosts(
         req,
+        args.userId || null,
+        args.skip || 0,   
         args.limit || +process.env.POSTS_PER_PAGE,
-        args.skip || 0,
-        args.userId || null
+            
       );
     },
   },

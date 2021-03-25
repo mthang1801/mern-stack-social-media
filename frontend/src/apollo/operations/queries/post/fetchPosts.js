@@ -1,26 +1,29 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_POSTS = gql`
-  query ($limit : Int, $skip: Int, $userId : ID){
-    fetchPosts(limit : $limit, skip: $skip, userId : $userId) {
+  query ($userId : ID, $skip: Int, $limit : Int ){
+    fetchPosts(userId : $userId, skip: $skip, limit : $limit) {
       _id
       text
       mentions {
         _id
         name
-        email
+        avatar
+        slug
+        isOnline
       }      
       author {
         _id
         name
-        email
+        slug
         avatar
       }
       files{
         filename
         mimetype
-        encoding
+        data
       }
+      likes      
       status
       createdAt
     }

@@ -31,6 +31,7 @@ export const CREATE_POST = gql`
         slug
         avatar        
       }
+      likes
       status
       createdAt
     }

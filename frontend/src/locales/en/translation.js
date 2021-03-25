@@ -19,7 +19,7 @@ import { CgMoreO } from "react-icons/cg";
 import { MdCardMembership, MdInsertEmoticon } from "react-icons/md";
 import { BsChatDots } from "react-icons/bs";
 import { RiContactsBook2Line } from "react-icons/ri";
-import { BiLockAlt } from "react-icons/bi";
+import { BiLockAlt,BiLike, BiCommentDetail,BiShareAlt } from "react-icons/bi";
 
 export const en = {
   translation: {
@@ -143,22 +143,7 @@ export const en = {
         name: "Contacts",
         icon: () => <RiContactsBook2Line />,
       },
-    ],
-    listPostStatus: [
-      {
-        name: "public",
-        icon: () => <FaGlobeAmericas />,
-      },
-     
-      {
-        name : "friends",
-        icon : () => <FaUserFriends/>
-      },
-      {
-        name: "private",
-        icon: () => <BiLockAlt />,
-      },
-    ],
+    ],   
     statusFooter: [
       {
         name: "Photos/Videos",
@@ -206,7 +191,37 @@ export const en = {
       getMore: "Get More",
     },
     post : {
-      post : "Post"
+      post : "Post", 
+      commentPlaceholder : "Enter your comment here",
+      status : [
+        {
+          name: "public",
+          icon: () => <FaGlobeAmericas />,
+        },
+       
+        {
+          name : "friends",
+          icon : () => <FaUserFriends/>
+        },
+        {
+          name: "private",
+          icon: () => <BiLockAlt />,
+        },
+      ],
+      controls: [
+        {
+          name : "Like",
+          icon : () => <BiLike/>
+        },
+        {
+          name : "Comment",
+          icon : () => <BiCommentDetail/>
+        },
+        {
+          name : "Share",
+          icon : () => <BiShareAlt/>
+        }
+      ]
     }
   },
 };

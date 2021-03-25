@@ -11,6 +11,7 @@ import {
   Toolbar,
   Label,
   CardPreview,
+  HashtagLink
 } from "./styles/PostEditorBody.styles";
 import { ReactTinyLink } from "react-tiny-link";
 import Editor from "@draft-js-plugins/editor";
@@ -25,12 +26,15 @@ import generateBase64Image from "../../../utils/generateBase64Image";
 import ImagesCarousel from "../../UI/ImagesCarousel"
 import {useQuery} from "@apollo/client";
 import {SEARCH_FRIENDS} from "../../../apollo/operations/queries/user"
+import {useHistory} from "react-router-dom"
 const PostEditorBody = ({editorState, setEditorState,images, setImages}) => {  
   const [urlPreview, setUrlPreview] = useState(null);
   const editorRef = useRef(null);  
   const [suggestions, setSuggestions] = useState([]);
   const [openMention, setOpenMention] = useState(true);
   const {refetch : searchFriends, loading : searchFriendsLoading} = useQuery(SEARCH_FRIENDS, {fetchPolicy : "network-only", skip: true})
+  const {push} = useHistory();  
+  
   // useMemo plugins
   const {
     plugins,
@@ -53,18 +57,22 @@ const PostEditorBody = ({editorState, setEditorState,images, setImages}) => {
     });
     // Mention
     const mentionPlugin = createMentionPlugin({
-      mentionComponent(mentionProps) {
+      mentionComponent(mentionProps) {        
         return (
           <span
-            className={mentionProps.className}
-            onClick={() => alert("CLick mentions")}
-          >
+            className={mentionProps.className}           
+            onClick={() => push(`/${mentionProps.mention.slug}`)}
+          >            
             {mentionProps.children}
           </span>
         );
       },
     });
-    const hashTagPlugin = createHashTagPlugin();
+    const hashTagPlugin = createHashTagPlugin({
+      hashtagComponent(props){
+        return <HashtagLink onClick={() => push(`/search?q=${props.decoratedText.replace(/#/g,"")}`)}>{props.children}</HashtagLink>
+      }
+    });
     const { MentionSuggestions } = mentionPlugin;
     // hashTag
 
@@ -84,7 +92,7 @@ const PostEditorBody = ({editorState, setEditorState,images, setImages}) => {
       setSuggestions([]);
     }
   }, []);
-  console.log(suggestions)
+  
   useEffect(() => {
     const urlLength = document
       .getElementById("post-editor")

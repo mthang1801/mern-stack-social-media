@@ -6,6 +6,7 @@ export const SEARCH_FRIENDS = gql`
       _id
       name
       avatar
+      slug
     }
   }
 `;

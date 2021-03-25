@@ -4,6 +4,7 @@ import createToggleButtonMenu from "./controls/toggleButtonMenu";
 import createSetPostStatus from "./post/setPostStatus";
 import createSetPosts from "./post/setPosts";
 import createSetPersonalPosts from "./post/setPersonalPosts";
+import createSetNewPost from "./post/setNewPost"
 //User
 import createSetCurrentUser from "./user/setCurrentUser";
 import createSetCurrentPersonalUser from "./user/setCurrentPersonalUser";
@@ -63,6 +64,7 @@ const mutations = {
   setPostStatus: createSetPostStatus(setPostStatusVar),
   setPosts: createSetPosts(setPostsVar),
   setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
+  setNewPost : createSetNewPost(setPostsVar),
   //User
   setCurrentUser: createSetCurrentUser(setUserVar),
   setCurrentPersonalUser: createSetCurrentPersonalUser(
