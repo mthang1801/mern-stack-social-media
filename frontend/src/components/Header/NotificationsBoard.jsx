@@ -4,7 +4,7 @@ import Button from "../Controls/ButtonDefaultCircle";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { useThemeUI } from "theme-ui";
 import Notifications from "../Notification/Notifications"
-const NotificationsBoard = () => {
+const NotificationsBoard = () => {  
   const { colorMode } = useThemeUI(); 
   return (
     <Wrapper theme={colorMode}>

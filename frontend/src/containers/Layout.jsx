@@ -7,6 +7,7 @@ import {useQuery} from "@apollo/client"
 import {GET_TOGGLE_BUTTON_MENU} from "../apollo/operations/queries/cache"
 import useMenuList from "../components/Menu/useMenuList"
 import {useThemeUI} from "theme-ui"
+
 const Layout = ({children, className, ...props}) => {
   const getToggleButtonMenu = useQuery(GET_TOGGLE_BUTTON_MENU);   
   const {toggleButtonMenu} = getToggleButtonMenu.data;
@@ -14,7 +15,7 @@ const Layout = ({children, className, ...props}) => {
   const {colorMode} = useThemeUI()
   return (
     <div className={className} theme={colorMode} {...props}>
-      <Header/>
+      <Header/>     
       <div className={classNames("small-viewport-menu-list", {"hide-small-viewport-list" : toggleButtonMenu})}>
         <MenuList list={menu} title="Menu"/>  
         <MenuList list={explores} title="Explores"/>

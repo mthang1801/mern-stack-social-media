@@ -41,15 +41,15 @@ const Home = () => {
 
   useEffect(() => {
     let _mounted = true;
-    if (user && loadingMore) {      
+    if (user && loadingMore) {
       const skip = posts.length;
       const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
       fetchPosts({ skip, limit }).then(({ data: { fetchPosts } }) => {
         if (_mounted) {
-          console.log(fetchPosts)
-          if(fetchPosts){
+          console.log(fetchPosts);
+          if (fetchPosts) {
             setPosts([...posts, ...fetchPosts]);
-          }          
+          }
           setLoadingMore(false);
         }
       });
@@ -59,43 +59,51 @@ const Home = () => {
 
   useEffect(() => {
     let isScrolling;
-    function onTrackUserScrolled(e){
+    function onTrackUserScrolled(e) {
       clearTimeout(isScrolling);
-      isScrolling = setTimeout(()=>{
-        const {clientHeight, scrollTop, scrollHeight} = document.documentElement;
-        if(clientHeight + scrollTop > scrollHeight * 0.8){
+      isScrolling = setTimeout(() => {
+        const {
+          clientHeight,
+          scrollTop,
+          scrollHeight,
+        } = document.documentElement;
+        if (clientHeight + scrollTop > scrollHeight * 0.8) {
           setLoadingMore(true);
         }
-      },66)
+      }, 66);
     }
     window.addEventListener("scroll", onTrackUserScrolled);
-    return () =>{
-      clearTimeout(isScrolling)
+    return () => {
+      clearTimeout(isScrolling);
       window.removeEventListener("scroll", onTrackUserScrolled);
-    }
-      
+    };
   });
   const handleOpenFriendsList = useCallback(() => {
     setOpenFriendsList();
   }, []);
-  
+
   return (
     <Layout>
       <MainBody>
         <MainContent>
           <MainContentLeftSide>
-            {user && <PostEditor user={user}/>}
+            {user && <PostEditor user={user} />}
             {posts.length ? <Posts posts={posts} /> : null}
           </MainContentLeftSide>
           <MainContentRightSide>
             <HomeSidebar user={user} />
           </MainContentRightSide>
         </MainContent>
-        <FriendsBoard />
-        <ButtonToggleFriendsList
-          hide={openFriendsList}
-          onClick={handleOpenFriendsList}
-        />
+        {user && (
+          <>
+            {" "}
+            <FriendsBoard />
+            <ButtonToggleFriendsList
+              hide={openFriendsList}
+              onClick={handleOpenFriendsList}
+            />
+          </>
+        )}
       </MainBody>
     </Layout>
   );
