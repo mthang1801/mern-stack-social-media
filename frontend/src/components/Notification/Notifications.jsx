@@ -2,14 +2,7 @@ import React, { useEffect } from "react";
 import NotificationItem from "./NotificationItem";
 import styled from "styled-components";
 import { useQuery } from "@apollo/client";
-import {
-  GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-  GET_NOTIFICATIONS,
-  GET_CURRENT_USER,
-  GET_OPEN_POPUP_NOTIFICATION,
-  GET_CURRENT_PERSONAL_USER,
-  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
-} from "../../apollo/operations/queries/cache";
+import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache";
 import {
   FETCH_NOTIFICATIONS,
   FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
@@ -26,11 +19,6 @@ const Notifications = () => {
       skip: true,
     }
   );
-  const {
-    data: { countNumberNotificationsUnseen },
-  } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
-    fetchPolicy: "cache-first",
-  });
   const { subscribeToMore: subscribeToMoreNotifications } = useQuery(
     FETCH_NOTIFICATIONS,
     {
@@ -39,20 +27,14 @@ const Notifications = () => {
     }
   );
   const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { notifications },
-  } = useQuery(GET_NOTIFICATIONS, { fetchPolicy: "cache-only" });
-  const {
-    data: { openPopupNotification },
-  } = useQuery(GET_OPEN_POPUP_NOTIFICATION, { fetchPolicy: "cache-first" });
-  const {
-    data: { currentPersonalUser },
-  } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { receivedRequestsToAddFriend },
-  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
+    data: {
+      countNumberNotificationsUnseen,
+      user,
+      notifications,      
+      currentPersonalUser,
+      receivedRequestsToAddFriend,
+    },
+  } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, {
     fetchPolicy: "cache-first",
   });
   //mutations
@@ -65,7 +47,7 @@ const Notifications = () => {
     setCurrentPersonalUser,
     setReceivedRequestsToAddFriend,
   } = cacheMutations;
-
+  
   useEffect(() => {
     let _isMounted = true;
     if (countNumberNotificationsUnseen === null) {
@@ -94,22 +76,24 @@ const Notifications = () => {
     setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);
     if (sender && receiver) {
       setCurrentUser({
-        ...user,
-        friends: [...receiver.friends],
-        following: [...receiver.following],
-        followed: [...receiver.followed],
-        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
+        // ...user,
+        // friends: [...receiver.friends],
+        // following: [...receiver.following],
+        // followed: [...receiver.followed],
+        // sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
+        // receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
+        ...receiver
       });
 
       if (currentPersonalUser && currentPersonalUser._id === sender._id) {
         setCurrentPersonalUser({
-          ...currentPersonalUser,
-          friends: [...sender.friends],
-          following: [...sender.following],
-          followed: [...sender.followed],
-          sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-          receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
+          // ...currentPersonalUser,
+          // friends: [...sender.friends],
+          // following: [...sender.following],
+          // followed: [...sender.followed],
+          // sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
+          // receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
+          ...sender
         });
       }
     }
@@ -122,18 +106,18 @@ const Notifications = () => {
       unsubscribeRequestAddFriend,
       unsubscribeAcceptRequestAddFriend;
     if (subscribeToMoreNotifications && user) {
-      unsubscribePostCreated = subscribeToMoreNotifications({
-        document:
-          subscriptions.notificationSubscription.POST_CREATED_SUBSCRIPTIONS,
-        variables: { userId: user._id },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-          const {
-            notification: newNotification,
-          } = subscriptionData.data.notifyCreatedPost;
-          updatedNotifications(newNotification);
-        },
-      });
+      // unsubscribePostCreated = subscribeToMoreNotifications({
+      //   document:
+      //     subscriptions.notificationSubscription.POST_CREATED_SUBSCRIPTIONS,
+      //   variables: { userId: user._id },
+      //   updateQuery: (prev, { subscriptionData }) => {
+      //     if (!subscriptionData.data) return prev;
+      //     const {
+      //       notification: newNotification,
+      //     } = subscriptionData.data.notifyCreatedPost;
+      //     updatedNotifications(newNotification);
+      //   },
+      // });
       unsubscribeRequestAddFriend = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription
@@ -155,21 +139,21 @@ const Notifications = () => {
           updatedNotifications(newNotification, sender, receiver);
         },
       });
-      unsubscribeAcceptRequestAddFriend = subscribeToMoreNotifications({
-        document:
-          subscriptions.notificationSubscription
-            .NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND,
-        variables: { userId: user._id },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData) return prev;
-          const {
-            notification: newNotification,
-            sender,
-            receiver,
-          } = subscriptionData.data.notifyAcceptRequestToAddFriend;
-          updatedNotifications(newNotification, sender, receiver);
-        },
-      });
+      // unsubscribeAcceptRequestAddFriend = subscribeToMoreNotifications({
+      //   document:
+      //     subscriptions.notificationSubscription
+      //       .NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND,
+      //   variables: { userId: user._id },
+      //   updateQuery: (prev, { subscriptionData }) => {
+      //     if (!subscriptionData) return prev;
+      //     const {
+      //       notification: newNotification,
+      //       sender,
+      //       receiver,
+      //     } = subscriptionData.data.notifyAcceptRequestToAddFriend;
+      //     updatedNotifications(newNotification, sender, receiver);
+      //   },
+      // });
     }
 
     return () => {
@@ -191,13 +175,13 @@ const Notifications = () => {
     user,
   ]);
 
-  useEffect(() => {
-    let timer = 0;
-    timer = setTimeout(() => {
-      setOpenPopupNotification(false);
-    }, 7000);
-    return () => clearTimeout(timer);
-  }, [openPopupNotification]);
+  // useEffect(() => {
+  //   let timer = 0;
+  //   timer = setTimeout(() => {
+  //     setOpenPopupNotification(false);
+  //   }, 7000);
+  //   return () => clearTimeout(timer);
+  // }, [openPopupNotification]);
   if (!notifications.length)
     return <NoNotifications>No notifications</NoNotifications>;
   return (

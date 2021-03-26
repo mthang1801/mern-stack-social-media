@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useRef, memo, useCallback } from "react";
-import styled from "styled-components";
-import { TiMessages } from "react-icons/ti";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+
+import {
+  Wrapper,
+  Notification,
+  UnseenNotification,
+  NotificationBoard,
+} from "./styles/Header.styles";
 import { IoMdNotifications } from "react-icons/io";
 import Button from "../Controls/ButtonDefaultCircle";
 import NotificationsBoard from "./NotificationsBoard";
-import classNames from "classnames";
+
 import { useQuery } from "@apollo/client";
-import {  
-  GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-  GET_OPEN_POPUP_NOTIFICATION,
-  GET_NOTIFICATIONS,
-  GET_CURRENT_USER,
-} from "../../apollo/operations/queries/cache";
+import { GET_HEADER_CACHE_DATA } from "../../apollo/operations/queries/cache";
 import { FETCH_NOTIFICATIONS } from "../../apollo/operations/queries/notification";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import { Scrollbars } from "react-custom-scrollbars";
-import FlashPopUpNotification from "./FlashPopUpNotification";
+import FlashPopUpNotification from "../Notification/FlashPopUpNotification";
 
 const Control = () => {
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
@@ -24,48 +24,32 @@ const Control = () => {
   );
   const notificationRef = useRef(false);
   const { setOpenPopupNotification, setNotifications } = cacheMutations;
-  const {
-    data: { countNumberNotificationsUnseen },
-  } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
-    fetchPolicy: "cache-first",
-  });
 
-  const {
-    data: { notifications },
-  } = useQuery(GET_NOTIFICATIONS, {
-    fetchPolicy: "cache-first",
-  });
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
     skip: true,
   });
   const {
-    data: { openPopupNotification },
-  } = useQuery(GET_OPEN_POPUP_NOTIFICATION, { fetchPolicy: "cache-first" });
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
+    data: { user, notifications, countNumberNotificationsUnseen },
+  } = useQuery(GET_HEADER_CACHE_DATA, { fetchPolicy: "cache-and-network" });
   useEffect(() => {
     function handleClickOutsideNotificationBoard(e) {
       if (
         notificationRef.current &&
-        !notificationRef.current.contains(e.target)
+        !notificationRef.current.contains(e.target) &&
+        openNotificationBoard
       ) {
         setOpenNotificationBoard(false);
       }
     }
-    window.addEventListener("click", (e) => {
-      handleClickOutsideNotificationBoard(e);
-    });
+    window.addEventListener("click", handleClickOutsideNotificationBoard);
     return () =>
-      window.removeEventListener("click", (e) => {
-        handleClickOutsideNotificationBoard(e);
-      });
-  }, []);
+      window.removeEventListener("click", handleClickOutsideNotificationBoard);
+  }, [notificationRef.current , openNotificationBoard]);
 
-  const handleClickNotification = useCallback(async () => {    
-    // if (notifications.length <  +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE) {  
-    //   console.log("fetch notifications")           
+  const handleClickNotification = useCallback(async () => {
+    // if (notifications.length <  +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE) {
+    //   console.log("fetch notifications")
     //   const skip = notifications.length;
     //   const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
     //   fetchNotifications({ skip, limit }).then(
@@ -74,15 +58,15 @@ const Control = () => {
     //       setLoadingNotificationsMore(false);
     //     }
     //   );
-    // }    
+    // }
     setLoadingNotificationsMore(false);
     setOpenNotificationBoard((prevStatus) => !prevStatus);
   });
-  
-  const handleClickFlashPopupNotification =  () => {       
+
+  const handleClickFlashPopupNotification = useCallback(() => {
     handleClickNotification();
     setOpenPopupNotification(false);
-  };
+  }, []);
 
   const getMoreNotifications = (e) => {
     const { target } = e;
@@ -91,49 +75,40 @@ const Control = () => {
     }
   };
   useEffect(() => {
-    let _isMounted = true; 
+    let _isMounted = true;
     if (loadingNotificationsMore && fetchNotifications) {
       const skip = notifications.length;
       const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
       fetchNotifications({ skip, limit }).then(
         ({ data: { fetchNotifications } }) => {
-          if(_isMounted){
+          if (_isMounted) {
             setNotifications([...notifications, ...fetchNotifications]);
             setLoadingNotificationsMore(false);
-          }          
+          }
         }
       );
     }
-    return () => _isMounted = false;
+    return () => (_isMounted = false);
   }, [loadingNotificationsMore]);
+
+  const onOpenNotificationBoard = useCallback(() => {
+    setOpenNotificationBoard(true);
+  },[]);
+
   return (
     <Wrapper>
-      <Button>
-        <TiMessages />
-      </Button>
-      <div className="notification" ref={notificationRef}>
+      <FlashPopUpNotification onClick={onOpenNotificationBoard} />
+      <Notification ref={notificationRef}>
         <Button onClick={handleClickNotification}>
           <IoMdNotifications />
           {countNumberNotificationsUnseen ? (
-            <div className="unseen-noti">{countNumberNotificationsUnseen}</div>
+            <UnseenNotification>
+              {countNumberNotificationsUnseen}
+            </UnseenNotification>
           ) : null}
         </Button>
-
-        <div
-          className={classNames("flash-popup", {
-            "open-flash-popup": openPopupNotification,
-          })}
-          onClick={handleClickFlashPopupNotification}
-        >
-          <FlashPopUpNotification />
-        </div>
-
         {user && (
-          <div
-            className={classNames("notification-board", {
-              "open-board": openNotificationBoard,
-            })}
-          >
+          <NotificationBoard open={openNotificationBoard}>
             <Scrollbars
               autoHide
               autoHideTimeout={1000}
@@ -144,63 +119,11 @@ const Control = () => {
             >
               <NotificationsBoard />
             </Scrollbars>
-          </div>
+          </NotificationBoard>
         )}
-      </div>
+      </Notification>
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
-  font-size: 1.2rem;
-  display: flex;
-  button:not(:last-child) {
-    margin-right: 0.5rem;
-  }
-  .notification {
-    position: relative;
-  }
-  .unseen-noti {
-    position: absolute;
-    top: -20%;
-    right: -15%;
-    background-color: var(--red);
-    padding: 0.15rem 0.4rem;
-    color: white;
-    font-size: 0.8rem;
-    border-radius: 0.25rem;
-    font-weight: bolder;
-  }
-  .notification-board {
-    position: absolute;
-    top: 125%;
-    right: -100%;
-    z-index: 1;
-    transition: var(--mainTransition);
-    width: 350px;
-    height: 0;
-    overflow-y: auto;
-    visibility: hidden;
-    opacity: 0;
-  }
-  .open-board {
-    height: 70vh;
-    visibility: visible;
-    opacity: 1;
-  }
-  .flash-popup {
-    position: fixed;
-    bottom: 5%;
-    right: 5%;
-    z-index: 1;    
-    cursor: pointer;  
-    transform: translateX(200%);
-    transition: 0.5s all;
-  }
-  .open-flash-popup {
-    transform: translateX(0);
-    transition: 0.5s all;   
-  }
-`;
-
-export default memo(Control);
+export default Control;
