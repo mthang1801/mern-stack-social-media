@@ -11,7 +11,6 @@ import {
   ChatActions,
   Label,
   SendMessage,
-  PlaceHolder,
 } from "./styles/ChatBoardFooter.styles";
 import "emoji-mart/css/emoji-mart.css";
 import { FiSend } from "react-icons/fi";
@@ -38,15 +37,17 @@ import {
 } from "../../apollo/operations/queries/cache";
 import { useMutation, useQuery } from "@apollo/client";
 import generateBase64Image from "../../utils/generateBase64Image";
+import useLanguage from "../Global/useLanguage"
 const ChatBoardFooter = () => {
   //useState
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
-  );
-  const [showPlaceholder, setShowPlaceholder] = useState(true);
+  );  
   const { colorMode } = useThemeUI();
   const [suggestions, setSuggestions] = useState(mentions);
   const [open, setOpen] = useState(true);
+  const {i18n, lang} = useLanguage();
+  const {chatInputPlaceholder} = i18n.store.data[lang].translation.chat;
   //useQuery
   const {
     data: { user },
@@ -109,9 +110,6 @@ const ChatBoardFooter = () => {
     setSuggestions(defaultSuggestionsFilter(value, mentions));
   }, []);
 
-  useEffect(() => {
-    setShowPlaceholder(!editorState.getCurrentContent().hasText());
-  }, [editorState]);
 
   useEffect(() => {
     function focusEditorWhenTypingTabButton(e) {
@@ -260,14 +258,14 @@ const ChatBoardFooter = () => {
           plugins={plugins}
           ref={editorRef}
           tabIndex="0"          
+          placeholder={`${chatInputPlaceholder} ${currentChat?.name}`}
         />
         <MentionSuggestions
           open={open}
           onOpenChange={onOpenChange}
           onSearchChange={onSearchChange}
           suggestions={suggestions}
-        />
-        <PlaceHolder show={showPlaceholder}>Enter something</PlaceHolder>
+        />       
         <SendMessage onClick={onSendMessage}>
           <FiSend />
         </SendMessage>

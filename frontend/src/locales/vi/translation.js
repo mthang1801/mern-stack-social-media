@@ -192,6 +192,7 @@ export const vi = {
     },
     post : {
       post : "Đăng bài viết",
+      postPlaceholder : "Chia sẻ cảm nghĩ của bạn",
       commentPlaceholder : "Để lại bình luận của bạn",
       status :  [
         {
@@ -220,7 +221,11 @@ export const vi = {
           name : "Chia sẻ",
           icon : () => <BiShareAlt/>
         }
-      ]
+      ],
+      commentInputPlaceholder : "Để lại bình luận của bạn tại đây"
+    },
+    chat : {
+      chatInputPlaceholder :`Gửi tin nhắn tới`
     }
   },
 };

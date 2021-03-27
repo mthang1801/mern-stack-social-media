@@ -28,6 +28,7 @@ import ImagesCarousel from "../../UI/ImagesCarousel"
 import {useQuery} from "@apollo/client";
 import {SEARCH_FRIENDS} from "../../../apollo/operations/queries/user"
 import {useHistory} from "react-router-dom"
+import useLanguage from "../../Global/useLanguage"
 const PostEditorBody = ({editorState, setEditorState,images, setImages}) => {  
   const [urlPreview, setUrlPreview] = useState(null);
   const editorRef = useRef(null);  
@@ -35,7 +36,8 @@ const PostEditorBody = ({editorState, setEditorState,images, setImages}) => {
   const [openMention, setOpenMention] = useState(true);
   const {refetch : searchFriends, loading : searchFriendsLoading} = useQuery(SEARCH_FRIENDS, {fetchPolicy : "network-only", skip: true})
   const {push} = useHistory();  
-  
+  const {i18n, lang} = useLanguage()
+  const {postPlaceholder} = i18n.store.data[lang].translation.post;
   // useMemo plugins
   const {
     plugins,
@@ -142,6 +144,7 @@ const PostEditorBody = ({editorState, setEditorState,images, setImages}) => {
           plugins={plugins}
           ref={editorRef}
           tabIndex={0}
+          placeholder={postPlaceholder}
         />
         <MentionSuggestions
           open={openMention}

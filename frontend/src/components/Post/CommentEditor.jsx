@@ -23,6 +23,7 @@ import {
 import { useHistory } from "react-router-dom";
 import { CommentInput, CommentControls } from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";
+import useLanguage from "../Global/useLanguage"
 const CommentEditor = () => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
@@ -39,6 +40,8 @@ const CommentEditor = () => {
   const [showControls, setShowControls] = useState(false);
   const controlsRef = useRef(null);
   const commentRef = useRef(null);
+  const {i18n, lang} = useLanguage();
+  const {commentInputPlaceholder} = i18n.store.data[lang].translation.post;
   const onSearchChange = useCallback(({ value }) => {
     if (value) {
       searchFriends({ search: value }).then(({ data }) => {
@@ -126,6 +129,7 @@ const CommentEditor = () => {
           editorState={editorState}
           onChange={setEditorState}
           plugins={plugins}
+          placeholder={commentInputPlaceholder}
         />
         <MentionSuggestions
           open={openMention}

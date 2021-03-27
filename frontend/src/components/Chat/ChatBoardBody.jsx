@@ -40,7 +40,7 @@ const ChatBoardBody = () => {
           behavior: "auto",
         });
       }
-    }, 10);
+    }, 50);
     return () => clearTimeout(timer);
   }, []);
 

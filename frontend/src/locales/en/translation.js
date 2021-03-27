@@ -193,6 +193,7 @@ export const en = {
     },
     post : {
       post : "Post", 
+      postPlaceholder : "What's on your mind?",
       commentPlaceholder : "Enter your comment here",
       status : [
         {
@@ -222,7 +223,11 @@ export const en = {
           name : "Share",
           icon : () => <BiShareAlt/>
         }
-      ]
+      ],
+      commentInputPlaceholder : "Comment here..."
+    },
+    chat : {
+      chatInputPlaceholder : `Send message to`
     }
   },
 };

@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 export const Wrapper = styled.div`
+  .public-DraftEditorPlaceholder-root{
+    position : absolute;
+    opacity: 0.3 ;
+  }
   .e17si09n {
     position: absolute;
     right: 0;
@@ -98,6 +102,8 @@ export const Wrapper = styled.div`
   .e183m4hm {
     display: inline-block;
     position: relative;
+    bottom : unset; 
+    right : unset; 
   }
   .e8k2yoa {
     width: unset;

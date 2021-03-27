@@ -2,22 +2,22 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   width: 100%;
-  height: auto; 
+  height: auto;
   display: flex;
   flex-direction: column;
-  border-radius: 0.4rem 0.4rem 0 0 ;
-  position : relative;  
-  background-color : var(--gray-light);
+  border-radius: 0.4rem 0.4rem 0 0;
+  position: relative;
+  background-color: var(--gray-light);
 `;
 
 export const ChatInput = styled.div`
-  flex: 1;  
-  position : relative;  
-  display : flex;
-  flex-direction : column;  
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 
   ===============================================Draft-js==================================================
-  pre {
+    pre {
     overflow: auto;
     background-color: black;
     color: orange;
@@ -26,12 +26,16 @@ export const ChatInput = styled.div`
     font-weight: 600;
     max-width: 100%;
   }
-  
+  .public-DraftEditorPlaceholder-root {
+    position: absolute;
+    opacity: 0.3;
+  }
+
   .Draftail-ToolbarButton {
     box-shadow: 0 0 0 0 orange inset;
     transition: box-shadow 0.5s ease;
   }
-  
+
   .Draftail-ToolbarButton--active {
     background-color: transparent;
     border-width: 0 0 0 0;
@@ -40,7 +44,7 @@ export const ChatInput = styled.div`
     color: black;
     border-radius: 0px;
   }
-  
+
   /* MENTIONS-STYLES*/
   .draftJsMentionPlugin__mention__29BEd,
   .draftJsMentionPlugin__mention__29BEd:visited {
@@ -114,7 +118,7 @@ export const ChatInput = styled.div`
     -webkit-transform: scale(0);
     transform: scale(0);
   }
-  
+
   /* EMIJI STYLES */
   .emoji {
     color: transparent;
@@ -372,7 +376,7 @@ export const ChatInput = styled.div`
     -webkit-transform: scale(0);
     transform: scale(0);
   }
-  
+
   /* STICKER-PLUGIN-STYLES */
   .draftJsStickerPlugin__selectSticker__3VCSX {
     border: 0;
@@ -513,23 +517,29 @@ export const ChatInput = styled.div`
     box-shadow: inset 0px 1px 8px -3px #ababab;
     background: #fefefe;
   }
-  
+
   .editor :global(.public-DraftEditor-content) {
     min-height: 140px;
   }
-  
+
   .options {
     margin-bottom: 20px;
   }
-  
+
   .DraftEditor-root {
-    padding : 1rem;
-    flex:1;  
+    padding: 1rem;
+    flex: 1;
     max-height: 5rem;
-    overflow : auto;
-    width : unset !important; 
-    margin-right : 5rem;       
-    cursor: auto;     
+    overflow: auto;
+    width: unset !important;
+    margin-right: 5rem;
+    cursor: auto;
+    overflow: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
   .DraftEditor-root a {
     color: blue;
@@ -540,7 +550,7 @@ export const ChatInput = styled.div`
     color: red;
     text-decoration: none;
   }
-  
+
   .mentionSuggestions {
     border-top: 1px solid #eee;
     background: black;
@@ -559,60 +569,49 @@ export const ChatInput = styled.div`
 
 export const ChatActions = styled.div`
   background-color: ;
-  display : flex;
-  align-items:center;
-  padding: 0.5rem ;
-  border-bottom : 1px solid var(--gray-deep);
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--gray-deep);
 `;
 
 export const Label = styled.label`
   display: inline-flex;
   cursor: pointer;
   font-size: 1.6rem;
-  margin-right: 0.5rem;  
-  position : relative;      
-  & input{
-    display : none ; 
-  }  
-  
+  margin-right: 0.5rem;
+  position: relative;
+  & input {
+    display: none;
+  }
 `;
 
-export const EmojiComponent = styled.div`  
+export const EmojiComponent = styled.div`
   display: ${({ show }) => (show ? "block" : "none")};
   position: absolute;
   bottom: 100%;
-  left:  -1rem;
-  & button{
+  left: -1rem;
+  & button {
     & > span {
-      cursor:pointer !important;
+      cursor: pointer !important;
     }
-    outline : none;
-    border:none;
+    outline: none;
+    border: none;
   }
 `;
 
 export const SendMessage = styled.button`
-  display : inline-block;
-  position : absolute;
-  border:  none ; 
-  outline: none  ;
-  font-size : 1.5rem;
-  background-color: transparent ; 
-  cursor : pointer;
-  color:  #3949ab;
-  right:  1rem;
+  display: inline-block;
+  position: absolute;
+  border: none;
+  outline: none;
+  font-size: 1.5rem;
+  background-color: transparent;
+  cursor: pointer;
+  color: #3949ab;
+  right: 1rem;
   bottom: 0.2rem;
-  &:hover{
+  &:hover {
     color: #1a237e;
   }
-
-`
-
-export const PlaceHolder = styled.div`
-  position : absolute;
-  left: 1rem;
-  top : 25%;
-  color : var(--gray-deep);
-  cursor: auto;
-  display : ${({show}) => show ? "block" : "none"};
-`
+`;
