@@ -23,7 +23,7 @@ const Control = () => {
     false
   );
   const notificationRef = useRef(false);
-  const { setOpenPopupNotification, setNotifications } = cacheMutations;
+  const { setLatestNotification, setNotifications } = cacheMutations;
 
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
@@ -63,10 +63,6 @@ const Control = () => {
     setOpenNotificationBoard((prevStatus) => !prevStatus);
   });
 
-  const handleClickFlashPopupNotification = useCallback(() => {
-    handleClickNotification();
-    setOpenPopupNotification(false);
-  }, []);
 
   const getMoreNotifications = (e) => {
     const { target } = e;
@@ -96,9 +92,9 @@ const Control = () => {
   },[]);
 
   return (
-    <Wrapper>
-      <FlashPopUpNotification onClick={onOpenNotificationBoard} />
+    <Wrapper>     
       <Notification ref={notificationRef}>
+        <FlashPopUpNotification onClick={onOpenNotificationBoard} />
         <Button onClick={handleClickNotification}>
           <IoMdNotifications />
           {countNumberNotificationsUnseen ? (

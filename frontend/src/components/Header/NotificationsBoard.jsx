@@ -18,7 +18,7 @@ const NotificationsBoard = () => {
         <Notifications/>
       </div>
     </Wrapper>
-  );
+  )
 };
 
 const Wrapper = styled.div`

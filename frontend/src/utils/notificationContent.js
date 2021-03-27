@@ -1,17 +1,22 @@
 import i18n from "../i18n"
 
 const notificationContent = (field, action, lang) => {
-  const {translation} = i18n.store.data[lang];
+  const {notifications} = i18n.store.data[lang].translation;
   field = field.toLowerCase();
-  action = action.toUpperCase();
-  if (field === "post" && action === "CREATED") {
-    return translation.notifications.postCreated;
-  }
-  if(field === "user" && action === "ADDED"){
-    return translation.notifications.sentRequestToAddFriend
-  }
-  if(field === "user" && action === "ACCEPTED"){
-    return translation.notifications.acceptRequestToAddFriend
+  action = action.toUpperCase();  
+
+  switch(field){
+    case "post" : 
+      switch(action){        
+        case "MENTION" : {          
+          return notifications.postMention; 
+        }
+      }
+    case "user" : 
+      switch(action){
+        case "ADDED" : return  notifications.sentRequestToAddFriend;
+        case "ACCEPTED" : return notifications.acceptRequestToAddFriend
+      }
   }
 }
 

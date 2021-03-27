@@ -8,15 +8,19 @@ export const postResolvers = {
       return postControllers.fetchPosts(
         req,
         args.userId || null,
-        args.skip || 0,   
-        args.limit || +process.env.POSTS_PER_PAGE,
-            
+        args.skip || 0,
+        args.limit || +process.env.POSTS_PER_PAGE
       );
     },
   },
   Mutation: {
     createPost: (_, args, { req }, info) =>
-      postControllers.createPost(req, args.data),
+      postControllers.createPost(
+        req,
+        args.data,
+        pubsub,
+        subscriptionActions.NOTIFY_MENTION_USERS_IN_POST
+      ),
   },
   Subscription: {
     notifyCreatedPost: {
@@ -26,6 +30,17 @@ export const postResolvers = {
           return userId
             ? payload.notifyCreatedPost.receivers.includes(userId.toString())
             : false;
+        }
+      ),
+    },
+    notifyMentionUsersInPost: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.NOTIFY_MENTION_USERS_IN_POST
+          ),
+        (payload, { userId }) => {          
+          return payload.notifyMentionUsersInPost.receivers.includes( userId.toString());
         }
       ),
     },

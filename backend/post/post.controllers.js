@@ -61,16 +61,13 @@ export const postControllers = {
     }
     return [];
   },
-  createPost: async (req, data) => {
-    const { text, mentions, fileNames, fileMimetype, fileEncodings, status } = data;
+  createPost: async (req, data, pubsub, notifyMentionUsersInPost) => {
+    const { text, mentions, fileNames, fileMimetype, fileEncodings, status } = data;      
     const currentUserId = getAuthUser(req);    
     const currentUser = await User.findById(currentUserId, {name : 1, avatar : 1, slug : 1 , isOnline : 1,posts : 1});
     if (!currentUser) {
       throw new AuthenticationError("User not found");
-    }
-    if (mentions.length) {
-      //pubsub notification      
-    }
+    }   
     if (!status || !statusEnum.includes(status)) {
       throw new UserInputError(
         "Mentions has item not match with User's friends"
@@ -90,21 +87,37 @@ export const postControllers = {
     for(let i = 0; i < fileNames.length; i++){
       fileData.push({data : decodeBase64FileData[i], mimetype : fileMimetype[i], filename : fileNames[i]});
     }
-   
+    let newNotification ;    
     const session = await mongoose.startSession();
-    session.startTransaction();
+    session.startTransaction();    
     const newPost = new Post({
       text, 
       mentions,
       files : fileData, 
       author : currentUserId,
       status 
-    })                       
+    })                 
+    //if has mentions, create notification to mentioner
+    if(mentions.length){
+      newNotification = new Notification({
+        field : fields.post, 
+        action : actions.MENTION,
+        creator : currentUser._id, 
+        receivers : mentions,
+        href : `/posts/${newPost._id}`,
+      })
+      for(let mentionId of mentions){
+        const mentioner = await User.findById(mentionId);
+        mentioner.notifications.push(newNotification._id);
+        await mentioner.save();
+      }      
+      await (await newNotification.save()).populate("creator").execPopulate();
+      pubsub.publish(notifyMentionUsersInPost, {notifyMentionUsersInPost: {...newNotification._doc}})
+    }
     await currentUser.save();
     await (await newPost.save()).populate({path : "mentions", select : "name avatar slug isOnline offlinedAt"}).execPopulate();
     await session.commitTransaction();
-    session.endSession();
-    console.log(currentUser._doc);
+    session.endSession();    
     return {...newPost._doc, author : {...currentUser._doc} }
   },
   updatePost: async (req, postId, data, pubsub, postActions) => {

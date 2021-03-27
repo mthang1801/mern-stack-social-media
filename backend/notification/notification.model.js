@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
-
+import {fields, actions} from "../fields-actions"
 const NotificationSchema = new mongoose.Schema(
   {
     field: {
       type: String,
       required: true,
+      enum : Object.values(fields)
     },
     action: {
       type: String,
       required: true,
+      enum : Object.values(actions)
     },
     creator: {
       type: mongoose.Schema.Types.ObjectId,

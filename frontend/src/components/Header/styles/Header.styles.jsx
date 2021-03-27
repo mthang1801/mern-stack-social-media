@@ -9,22 +9,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Notification = styled.div`
-  position: relative;
-  
-
-  .flash-popup {
-    position: fixed;
-    bottom: 5%;
-    right: 5%;
-    z-index: 1;
-    cursor: pointer;
-    transform: translateX(200%);
-    transition: 0.5s all;
-  }
-  .open-flash-popup {
-    transform: translateX(0);
-    transition: 0.5s all;
-  }
+  position: relative;  
 `;
 
 export const UnseenNotification = styled.div`

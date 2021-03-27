@@ -5,7 +5,7 @@ import { GET_CURRENT_USER } from "./user/getCurrentUser";
 import { GET_NOTIFICATIONS } from "./notifications/getNotifications";
 import { GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN } from "./notifications/getCountNumberNotificationsUnseen";
 import { GET_NEW_NOTIFICATIONS } from "./notifications/getNewNotifications";
-import { GET_OPEN_POPUP_NOTIFICATION } from "./notifications/getOpenPopupNotification";
+import { GET_LATEST_NOTIFICATION } from "./notifications/getLatestNotification";
 import { GET_CURRENT_PERSONAL_USER } from "./user/getCurrentPersonalUser";
 import { GET_PERSONAL_POSTS } from "./post/getPersonalPosts";
 import { GET_OPEN_FRIENDS_LIST } from "./friends/getOpenFriendsList";
@@ -27,7 +27,7 @@ export { GET_CURRENT_USER };
 export { GET_NOTIFICATIONS };
 export { GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN };
 export { GET_NEW_NOTIFICATIONS };
-export { GET_OPEN_POPUP_NOTIFICATION };
+export { GET_LATEST_NOTIFICATION };
 export { GET_CURRENT_PERSONAL_USER };
 export { GET_PERSONAL_POSTS };
 export { GET_OPEN_FRIENDS_LIST };
@@ -50,7 +50,7 @@ export const cacheQueries = {
   GET_NOTIFICATIONS,
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_NEW_NOTIFICATIONS,
-  GET_OPEN_POPUP_NOTIFICATION,
+  GET_LATEST_NOTIFICATION,
   GET_CURRENT_PERSONAL_USER,
   GET_PERSONAL_POSTS,
   GET_OPEN_FRIENDS_LIST,

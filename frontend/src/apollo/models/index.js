@@ -12,9 +12,9 @@ export { PersonalPosts } from "./Post/PersonalPosts";
 export { Notifications } from "./Notification/Notifications";
 export { CountNumberNotificationsUnseen } from "./Notification/CountNumbeNotificationUnseen";
 export { NewNotifications } from "./Notification/NewNotifications";
+export { LatestNotification } from "./cache/LatestNotification";
 //cache
 export { ToggleButtonMenu } from "./cache/ToggleButtonMenu";
-export { OpenPopupNotification } from "./cache/OpenPopupNotification";
 export { LoadingNotificationMore } from "./cache/LoadingNotificationsMore";
 export { OpenFriendsList } from "./cache/OpenFriendsList";
 //Chat

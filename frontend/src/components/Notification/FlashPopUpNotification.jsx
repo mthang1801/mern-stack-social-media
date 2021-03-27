@@ -1,39 +1,70 @@
 import React, { useState, useEffect } from "react";
-import { PopupWrapper } from "./styles/FlashPopUpNotification.styles";
+import {
+  PopupWrapper,
+  Wrapper,
+  SenderAvatar,
+  NotificationContent,
+  SenderName,
+} from "./styles/FlashPopUpNotification.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
-import { GET_OPEN_POPUP_NOTIFICATION } from "../../apollo/operations/queries/cache";
+import { GET_LATEST_NOTIFICATION } from "../../apollo/operations/queries/cache";
 import { useQuery } from "@apollo/client";
-import {cacheMutations} from "../../apollo/operations/mutations/cache"
+import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
-const FlashPopUpNotification = ({onClick}) => {  
-  const {setOpenPopupNotification} = cacheMutations
+import { notificationContent } from "../../utils/notificationContent";
+const FlashPopUpNotification = ({ onClick }) => {
+  const { setLatestNotification } = cacheMutations;
   const {
-    data: { openPopupNotification },
-  } = useQuery(GET_OPEN_POPUP_NOTIFICATION, { fetchPolicy: "cache-only" });
+    data: { latestNotification },
+  } = useQuery(GET_LATEST_NOTIFICATION, { fetchPolicy: "cache-only" });
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
 
-  const {message} = i18n.store.data[lang].translation.notifications;
+  const { message } = i18n.store.data[lang].translation.notifications;
   useEffect(() => {
-    let timer ;
-    if(openPopupNotification){
+    let timer;
+    if (latestNotification) {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        setOpenPopupNotification(false);
-      },6000)
+        setLatestNotification(null);
+      }, 6000);
     }
     return () => clearTimeout(timer);
-  },[openPopupNotification])
-  console.log("sa")
+  }, [latestNotification]);
+
   const onClickPopup = () => {
     onClick();
-    setOpenPopupNotification(false);
-  }
+    setLatestNotification(null);
+  };
+  console.log(latestNotification);
   return (
-    <PopupWrapper show={openPopupNotification} theme={colorMode}  onClick={onClickPopup}>
-      {message}
-    </PopupWrapper>
+    // <PopupWrapper show={latestNotification} theme={colorMode}  onClick={onClickPopup}>
+    //   {message}
+    // </PopupWrapper>
+    <Wrapper show={latestNotification} theme={colorMode}  onClick={onClickPopup}>
+      {latestNotification ? (
+        <>
+          <SenderAvatar>
+            <LazyLoadImage
+              src={latestNotification.creator.avatar}
+              effect="blur"
+            ></LazyLoadImage>
+          </SenderAvatar>
+          <NotificationContent>
+            <SenderName>{latestNotification.creator.name}</SenderName>
+            <span>
+              {notificationContent(
+                latestNotification.field,
+                latestNotification.action,
+                lang
+              )}
+            </span>
+          </NotificationContent>
+        </>
+      ) : null}
+    </Wrapper>
   );
 };
 

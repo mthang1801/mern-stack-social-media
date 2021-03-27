@@ -13,7 +13,7 @@ import createClearCurrentChat from "./user/clearCurrentChat";
 import createSetNotifications from "./notifications/setNotifications";
 import createSetCountNumberNotificationsUnseen from "./notifications/setCountNumberNotificationsUnseen";
 import createSetNewNotifications from "./notifications/setNewNotifications";
-import createSetOpenPopupNotification from "./notifications/setOpenPopupNotification";
+import createSetLatestNotification from "./notifications/setLatestNotification";
 //Friends
 import createSetOpenFriendsList from "./friends/setOpenFriendsList";
 import createSetFriends from "./friends/setFriends";
@@ -45,7 +45,7 @@ import {
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
   setNewNotificationsVar,
-  setOpenPopupNotificationVar,
+  setLatestNotificationVar,
   setCurrentPersonalUserVar,
   setPersonalPostsVar,
   setOpenFriendsListVar,
@@ -76,8 +76,8 @@ const mutations = {
     setCountNumberNotificationsUnseenVar
   ),
   setNewNotifications: createSetNewNotifications(setNewNotificationsVar),
-  setOpenPopupNotification: createSetOpenPopupNotification(
-    setOpenPopupNotificationVar
+  setLatestNotification: createSetLatestNotification(
+    setLatestNotificationVar
   ),
   //Friends
   setOpenFriendsList: createSetOpenFriendsList(setOpenFriendsListVar),

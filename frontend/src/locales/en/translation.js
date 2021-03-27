@@ -168,6 +168,7 @@ export const en = {
       postCreated: "has just posted a new status.",
       sentRequestToAddFriend: "send you a request to add friend",
       acceptRequestToAddFriend: "has accepted your request to add friend.",
+      postMention : "mentions you in his post"
     },
     greeting: {
       welcome: "Welcome to Pul.com",

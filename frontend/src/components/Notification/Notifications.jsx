@@ -42,7 +42,7 @@ const Notifications = () => {
     setCountNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,
-    setOpenPopupNotification,
+    setLatestNotification,
     setCurrentUser,
     setCurrentPersonalUser,
     setReceivedRequestsToAddFriend,
@@ -66,14 +66,15 @@ const Notifications = () => {
     setCountNumberNotificationsUnseen,
   ]);
 
+  //sender and receiver only use in field 'user'
   const updatedNotifications = (
     newNotification,
     sender = null,
     receiver = null
   ) => {
-    setOpenPopupNotification(true);
+    setLatestNotification(newNotification);
     setNewNotifications(newNotification._id);
-    setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);
+    setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);        
     if (sender && receiver) {
       setCurrentUser({
         // ...user,
@@ -102,22 +103,21 @@ const Notifications = () => {
   };
 
   useEffect(() => {
-    let unsubscribePostCreated,
+    let unsubscribeMentionUsersInPost,
       unsubscribeRequestAddFriend,
       unsubscribeAcceptRequestAddFriend;
     if (subscribeToMoreNotifications && user) {
-      // unsubscribePostCreated = subscribeToMoreNotifications({
-      //   document:
-      //     subscriptions.notificationSubscription.POST_CREATED_SUBSCRIPTIONS,
-      //   variables: { userId: user._id },
-      //   updateQuery: (prev, { subscriptionData }) => {
-      //     if (!subscriptionData.data) return prev;
-      //     const {
-      //       notification: newNotification,
-      //     } = subscriptionData.data.notifyCreatedPost;
-      //     updatedNotifications(newNotification);
-      //   },
-      // });
+      unsubscribeMentionUsersInPost = subscribeToMoreNotifications({
+        document:
+          subscriptions.notificationSubscription.NOTIFY_MENTION_USERS_IN_POST,
+        variables: { userId: user._id },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData.data) return prev;
+          const {notifyMentionUsersInPost : newNotification} = subscriptionData.data;
+          console.log(newNotification)
+          updatedNotifications(newNotification);
+        },
+      });
       unsubscribeRequestAddFriend = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription
@@ -139,26 +139,26 @@ const Notifications = () => {
           updatedNotifications(newNotification, sender, receiver);
         },
       });
-      // unsubscribeAcceptRequestAddFriend = subscribeToMoreNotifications({
-      //   document:
-      //     subscriptions.notificationSubscription
-      //       .NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND,
-      //   variables: { userId: user._id },
-      //   updateQuery: (prev, { subscriptionData }) => {
-      //     if (!subscriptionData) return prev;
-      //     const {
-      //       notification: newNotification,
-      //       sender,
-      //       receiver,
-      //     } = subscriptionData.data.notifyAcceptRequestToAddFriend;
-      //     updatedNotifications(newNotification, sender, receiver);
-      //   },
-      // });
+      unsubscribeAcceptRequestAddFriend = subscribeToMoreNotifications({
+        document:
+          subscriptions.notificationSubscription
+            .NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND,
+        variables: { userId: user._id },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) return prev;
+          const {
+            notification: newNotification,
+            sender,
+            receiver,
+          } = subscriptionData.data.notifyAcceptRequestToAddFriend;
+          updatedNotifications(newNotification, sender, receiver);
+        },
+      });
     }
 
     return () => {
-      if (unsubscribePostCreated) {
-        unsubscribePostCreated();
+      if (unsubscribeMentionUsersInPost) {
+        unsubscribeMentionUsersInPost();
       }
       if (unsubscribeRequestAddFriend) {
         unsubscribeRequestAddFriend();
@@ -174,14 +174,6 @@ const Notifications = () => {
     notifications,
     user,
   ]);
-
-  // useEffect(() => {
-  //   let timer = 0;
-  //   timer = setTimeout(() => {
-  //     setOpenPopupNotification(false);
-  //   }, 7000);
-  //   return () => clearTimeout(timer);
-  // }, [openPopupNotification]);
   if (!notifications.length)
     return <NoNotifications>No notifications</NoNotifications>;
   return (
@@ -192,8 +184,7 @@ const Notifications = () => {
           notifications={notifications}
           notification={notification}
         />
-      ))}
-      ;
+      ))}      
     </LazyLoad>
   );
 };
