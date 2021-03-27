@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+ 
   .e17si09n {
     position: absolute;
     right: 0;
@@ -382,6 +383,14 @@ export const DraftEditor = styled.div`
     max-height: 8rem;
     min-height: 4rem;
     padding: 0.5rem 1rem;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+    &::-webkit-scrollbar{
+      display : none;
+    }
+    a {
+      color : blue;
+    }
   }
 `;
 

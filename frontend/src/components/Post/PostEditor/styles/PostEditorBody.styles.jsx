@@ -382,6 +382,12 @@ export const DraftEditor = styled.div`
     max-height: 8rem;
     min-height: 4rem;
     padding: 0.5rem 1rem;
+    overflow : auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+    &::-webkit-scrollbar{
+      display : none;
+    }
   }
 `;
 
@@ -420,3 +426,10 @@ export const HashtagLink = styled.span`
   border-radius: 2px;
   text-decoration: none;
 `;
+
+export const LinkAnchor = styled.a`
+  color : var(--blue-1);
+  &:hover{
+    color : var(--blue-3);
+  }
+`

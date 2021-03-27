@@ -11,7 +11,8 @@ import {
   Toolbar,
   Label,
   CardPreview,
-  HashtagLink
+  HashtagLink,
+  LinkAnchor
 } from "./styles/PostEditorBody.styles";
 import { ReactTinyLink } from "react-tiny-link";
 import Editor from "@draft-js-plugins/editor";
@@ -50,9 +51,9 @@ const PostEditorBody = ({editorState, setEditorState,images, setImages}) => {
     // Linkify
     const linkifyPlugin = createLinkifyPlugin({
       target: "_blank",
-      rel: "noopener noreferrer",
+      rel: "noopener noreferrer",      
       component(props) {
-        return <a {...props} onClick={() => alert("Clicked on Link!")} />;
+        return <LinkAnchor {...props} onClick={() => alert("Clicked on Link!")} />;
       },
     });
     // Mention
@@ -134,7 +135,7 @@ const PostEditorBody = ({editorState, setEditorState,images, setImages}) => {
 
   return (
     <Wrapper>     
-      <DraftEditor onClick={() => editorRef.current?.focus()} id="post-editor">
+      <DraftEditor onClick={() => editorRef.current?.focus()} id="post-editor" style={{alignItems:"flex-start"}}>
         <Editor
           editorState={editorState}
           onChange={setEditorState}

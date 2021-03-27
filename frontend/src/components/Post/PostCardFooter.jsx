@@ -16,6 +16,7 @@ import { useThemeUI } from "theme-ui";
 import {useQuery} from "@apollo/client"
 import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
 import LazyLoad from "react-lazyload";
+import CommentEditor from "./CommentEditor"
 const PostCardFooter = ({ post }) => {
   const { i18n, lang } = useLanguage();
   const { controls, commentPlaceholder } = i18n.store.data[lang].translation.post;
@@ -47,7 +48,7 @@ const PostCardFooter = ({ post }) => {
             </LazyLoad>
           </AvatarContainer>
           <FormComment theme={colorMode}>
-            
+            <CommentEditor/>
           </FormComment>
         </UserComment>
       </Comments>
