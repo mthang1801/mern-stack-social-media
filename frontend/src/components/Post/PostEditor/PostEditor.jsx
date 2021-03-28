@@ -127,4 +127,4 @@ const PostEditor = ({ user }) => {
   );
 };
 
-export default PostEditor;
+export default React.memo(PostEditor);

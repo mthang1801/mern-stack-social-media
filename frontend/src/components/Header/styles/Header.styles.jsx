@@ -33,7 +33,8 @@ export const NotificationBoard = styled.div`
   transition: var(--mainTransition);
   width: 350px;
   height: ${({open}) => open ? "30rem" : 0};
-  overflow-y: auto;
+  max-height : 30rem;
+  overflow: auto;
   visibility: ${({open}) => open ? "visible" : "hidden"};
   opacity: ${({open}) => open ? 1 : 0};
   border-radius : 1rem;  

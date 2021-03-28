@@ -21,8 +21,14 @@ export const Wrapper = styled.div`
   position : absolute;    
   background-color: ${({ theme }) =>
     theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
-  transform : ${({show}) => show ? "translateX(0)" : "translateX(25rem)"};
-  
+  // transform : ${({show}) => show ? "translateX(0)" : "translateX(25rem)"};
+  ${({show}) => show ? `
+    visibility : visible;
+    opacity : 1;
+  ` : `
+    visibility : hidden; 
+    opacity : 0;
+  `}
   transition-delay : 1s;
   display : flex;
   justify-content : space-between;
@@ -36,7 +42,16 @@ export const Wrapper = styled.div`
   width : 20rem;
   top : 120%;
   transition : ${({show}) => show ? "all 1s linear": "unset"};
-  z-index : 11;
+  z-index : ${({show}) => show ? 11 : -1};
+  &::after{    
+    position: absolute;
+    content: ""; /* this is important */
+    border:  10px solid blue;
+    border-color :    transparent transparent ${({ theme }) =>
+    theme === "dark" ? "var(--color-card-dark)" : "var(--white)"} transparent ;
+    top : -1rem;
+    right : 4rem;
+  }
 `
 
 export const SenderAvatar = styled.div`

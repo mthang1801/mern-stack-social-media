@@ -35,8 +35,6 @@ const Control = () => {
   useEffect(() => {
     function handleClickOutsideNotificationBoard(e) {
       if (
-        notificationRef.current &&
-        !notificationRef.current.contains(e.target) &&
         openNotificationBoard
       ) {
         setOpenNotificationBoard(false);

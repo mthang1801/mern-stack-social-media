@@ -13,4 +13,4 @@ const Posts = ({ posts }) => {
   );
 };
 
-export default Posts;
+export default React.memo(Posts);
