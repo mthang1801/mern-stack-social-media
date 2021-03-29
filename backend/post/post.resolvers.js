@@ -21,6 +21,15 @@ export const postResolvers = {
         pubsub,
         subscriptionActions.NOTIFY_MENTION_USERS_IN_POST
       ),
+    likePost: (_, args, { req }, info) =>
+      postControllers.likePost(
+        req,
+        args.postId,
+        pubsub,
+        subscriptionActions.NOTIFY_USER_ACTIONS_IN_POST
+      ),
+    unlikePost: (_, args, { req }, info) =>
+      postControllers.unlikePost(req, args.postId),
   },
   Subscription: {
     notifyCreatedPost: {
@@ -39,8 +48,21 @@ export const postResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.NOTIFY_MENTION_USERS_IN_POST
           ),
-        (payload, { userId }) => {          
-          return payload.notifyMentionUsersInPost.receivers.includes( userId.toString());
+        (payload, { userId }) => {
+          return payload.notifyMentionUsersInPost.receivers.includes(
+            userId.toString()
+          );
+        }
+      ),
+    },
+    notifyUserLikePost: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(subscriptionActions.NOTIFY_USER_ACTIONS_IN_POST),
+        (payload, { userId }) => {        
+          return payload.notifyUserLikePost.notification.receivers.includes(
+            userId
+          );
         }
       ),
     },

@@ -63,7 +63,7 @@ export const schemaType = gql`
     creator : User!
     href : String!
     hasSeen : [ID!]! 
-    receivers : [ID!]!
+    receivers : [ID!]!    
     acceptInvite : Boolean!
     createdAt : String!     
   }
@@ -156,6 +156,11 @@ export const schemaType = gql`
   type ListSendersConversationsPayload{
     senders : [ID!]!
     receiver : ID!
+  }
+
+  type PostSupscriptionPayload{
+    post : Post!
+    notification : Notification!
   }
 
   type MessagesResult{

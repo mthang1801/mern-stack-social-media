@@ -4,11 +4,16 @@ import { Post } from "../post/post.model";
 import { Notification } from "../notification/notification.model";
 import mongoose from "mongoose";
 import { statusEnum } from "./post.model";
-import { UserInputError, AuthenticationError } from "apollo-server-express";
+import {
+  UserInputError,
+  AuthenticationError,
+  ApolloError,
+} from "apollo-server-express";
 import { actions, fields } from "../fields-actions";
-import  decodeBase64 from "../utils/decodeBase64"
+import decodeBase64 from "../utils/decodeBase64";
+import { pubsub } from "../pubsub";
 export const postControllers = {
-  fetchPosts: async (req,userId,skip, limit )=> {
+  fetchPosts: async (req, userId, skip, limit) => {
     const currentUserId = getAuthUser(req, false);
     const currentUser = await User.findById(currentUserId);
     if (userId) {
@@ -23,102 +28,179 @@ export const postControllers = {
           },
         ],
       })
-        .populate({path : "mentions", select : "name avatar slug isOnline offlinedAt"})
-        .populate({path : "author", select : "name avatar slug isOnline offlinedAt"})
+        .populate({
+          path: "mentions",
+          select: "name avatar slug isOnline offlinedAt",
+        })
+        .populate({
+          path: "author",
+          select: "name avatar slug isOnline offlinedAt",
+        })
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);
       return Posts;
     }
     if (currentUser) {
-      
       const friendsID = currentUser.friends;
       const posts = await Post.find({
         author: { $in: friendsID },
         status: { $in: ["PUBLIC", "FRIENDS"] },
       })
-        .populate({path : "author", select : "name avatar slug isOnline offlinedAt"})
-        .populate({path : "mentions", select : "name avatar slug isOnline offlinedAt"})
+        .populate({
+          path: "author",
+          select: "name avatar slug isOnline offlinedAt",
+        })
+        .populate({
+          path: "mentions",
+          select: "name avatar slug isOnline offlinedAt",
+        })
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);
-      const standardizedPosts = posts.map(post => {
+      const standardizedPosts = posts.map((post) => {
         const _post = post._doc;
-        if(_post.files){
-          let files = _post.files.map(file => {
-            let _file =  file._doc;             
-            _file.data = `data:${
-              file.mimetype
-            };base64,${file.data.toString("base64")}`;
-            return {..._file};
-          })
-          _post.files = files; 
+        if (_post.files) {
+          let files = _post.files.map((file) => {
+            let _file = file._doc;
+            _file.data = `data:${file.mimetype};base64,${file.data.toString(
+              "base64"
+            )}`;
+            return { ..._file };
+          });
+          _post.files = files;
         }
-        return {..._post} ;
-      })
-      
+        return { ..._post };
+      });
+
       return standardizedPosts;
     }
     return [];
   },
   createPost: async (req, data, pubsub, notifyMentionUsersInPost) => {
-    const { text, mentions, fileNames, fileMimetype, fileEncodings, status } = data;      
-    const currentUserId = getAuthUser(req);    
-    const currentUser = await User.findById(currentUserId, {name : 1, avatar : 1, slug : 1 , isOnline : 1,posts : 1});
+    const {
+      text,
+      mentions,
+      fileNames,
+      fileMimetype,
+      fileEncodings,
+      status,
+    } = data;
+    const currentUserId = getAuthUser(req);
+    const currentUser = await User.findById(currentUserId, {
+      name: 1,
+      avatar: 1,
+      slug: 1,
+      isOnline: 1,
+      posts: 1,
+    });
     if (!currentUser) {
       throw new AuthenticationError("User not found");
-    }   
+    }
     if (!status || !statusEnum.includes(status)) {
       throw new UserInputError(
         "Mentions has item not match with User's friends"
       );
     }
     //convert base 64 images to buffer
-    const decodeBase64FileData = fileEncodings.map(encoding=> {
-      const {data} = decodeBase64(encoding);
-      return data ; 
-    })
-    
-    let fileData = []
-    if(fileNames.length !== fileMimetype.length && fileNames.length !== fileEncodings.length){
-      throw new UserInputError("Length of file not correct");
-    }    
+    const decodeBase64FileData = fileEncodings.map((encoding) => {
+      const { data } = decodeBase64(encoding);
+      return data;
+    });
 
-    for(let i = 0; i < fileNames.length; i++){
-      fileData.push({data : decodeBase64FileData[i], mimetype : fileMimetype[i], filename : fileNames[i]});
+    let fileData = [];
+    if (
+      fileNames.length !== fileMimetype.length &&
+      fileNames.length !== fileEncodings.length
+    ) {
+      throw new UserInputError("Length of file not correct");
     }
-    let newNotification ;    
+
+    for (let i = 0; i < fileNames.length; i++) {
+      fileData.push({
+        data: decodeBase64FileData[i],
+        mimetype: fileMimetype[i],
+        filename: fileNames[i],
+      });
+    }
+    let newNotification;
     const session = await mongoose.startSession();
-    session.startTransaction();    
+    session.startTransaction();
     const newPost = new Post({
-      text, 
+      text,
       mentions,
-      files : fileData, 
-      author : currentUserId,
-      status 
-    })                 
+      files: fileData,
+      author: currentUserId,
+      status,
+    });
     //if has mentions, create notification to mentioner
-    if(mentions.length){
+    if (mentions.length) {
       newNotification = new Notification({
-        field : fields.post, 
-        action : actions.MENTION,
-        creator : currentUser._id, 
-        receivers : mentions,
-        href : `/posts/${newPost._id}`,
-      })
-      for(let mentionId of mentions){
+        field: fields.post,
+        action: actions.MENTION,
+        creator: currentUser._id,
+        receivers: mentions,
+        href: `/posts/${newPost._id}`,
+      });
+      for (let mentionId of mentions) {
         const mentioner = await User.findById(mentionId);
         mentioner.notifications.push(newNotification._id);
         await mentioner.save();
-      }      
+      }
       await (await newNotification.save()).populate("creator").execPopulate();
-      pubsub.publish(notifyMentionUsersInPost, {notifyMentionUsersInPost: {...newNotification._doc}})
+      pubsub.publish(notifyMentionUsersInPost, {
+        notifyMentionUsersInPost: { ...newNotification._doc },
+      });
     }
     await currentUser.save();
-    await (await newPost.save()).populate({path : "mentions", select : "name avatar slug isOnline offlinedAt"}).execPopulate();
+    await (await newPost.save())
+      .populate({
+        path: "mentions",
+        select: "name avatar slug isOnline offlinedAt",
+      })
+      .execPopulate();
     await session.commitTransaction();
-    session.endSession();    
-    return {...newPost._doc, author : {...currentUser._doc} }
+    session.endSession();
+    return { ...newPost._doc, author: { ...currentUser._doc } };
+  },
+  likePost: async (req, postId, pubsub, notifyUserLikePost) => {
+    try {
+      const currentUserId = getAuthUser(req);
+      const post = await Post.findByIdAndUpdate(
+        postId,
+        { $addToSet: { likes: currentUserId } },
+        { new: true }
+      );
+      if (post) {
+        const newNotification = new Notification({
+          action: actions.LIKE,
+          field: fields.post,
+          creator: currentUserId,
+          receivers: [post.author],
+          href: `/posts/${post._id}`,
+        });
+        await (await newNotification.save()).populate("creator").execPopulate();
+        pubsub.publish(notifyUserLikePost, {
+          notifyUserLikePost: {
+            post,
+            notification: newNotification,
+          },
+        });
+      }
+
+      return !!post;
+    } catch (error) {
+      throw new ApolloError(error.message);
+    }
+  },
+  unlikePost: async (req, postId) => {
+    const currentUserId = getAuthUser(req);
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { likes: currentUserId } },
+      { new: true }
+    );
+    return !!post;
   },
   updatePost: async (req, postId, data, pubsub, postActions) => {
     const { text, mentions, tags, images, status } = data;

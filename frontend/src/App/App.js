@@ -57,7 +57,7 @@ function App() {
   },[isAuth])
  
   useUserStatusSubscriptions()
-  useContactSubscription()  
+  useContactSubscription()    
   
   if (!fetched) return null;
   return (

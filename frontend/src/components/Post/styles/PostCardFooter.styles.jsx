@@ -18,7 +18,7 @@ export const Button = styled.button`
   justify-content : center;
   align-items: center;
   padding : 0.6rem 1rem;
-  border: none ; 
+  border: 1px solid transparent ; 
   background-color :transparent ;   
   font-size  : 0.95rem;
   cursor : pointer;    
@@ -35,6 +35,13 @@ export const Button = styled.button`
   & svg{
     font-size : 1.1rem;
   }
+
+  ${({liked}) => liked && `
+    color : var(--blue-1);
+    border: 1px solid var(--blue-1);
+    border-radius : 0.5rem;
+    font-weight :bold;
+  `}
 `
 
 export const Counter = styled.div`

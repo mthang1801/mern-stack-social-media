@@ -33,6 +33,7 @@ const Notifications = () => {
       notifications,      
       currentPersonalUser,
       receivedRequestsToAddFriend,
+      personalPosts
     },
   } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, {
     fetchPolicy: "cache-first",
@@ -40,12 +41,14 @@ const Notifications = () => {
   //mutations
   const {
     setCountNumberNotificationsUnseen,
+    increaseNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,
     setLatestNotification,
     setCurrentUser,
     setCurrentPersonalUser,
-    setReceivedRequestsToAddFriend,
+    setReceivedRequestsToAddFriend, 
+    setPersonalPosts
   } = cacheMutations;
   
   useEffect(() => {
@@ -74,7 +77,7 @@ const Notifications = () => {
   ) => {
     setLatestNotification(newNotification);
     setNewNotifications(newNotification._id);
-    setCountNumberNotificationsUnseen(countNumberNotificationsUnseen + 1);        
+    increaseNumberNotificationsUnseen()   ; 
     if (sender && receiver) {
       setCurrentUser({
         // ...user,
@@ -105,7 +108,8 @@ const Notifications = () => {
   useEffect(() => {
     let unsubscribeMentionUsersInPost,
       unsubscribeRequestAddFriend,
-      unsubscribeAcceptRequestAddFriend;
+      unsubscribeAcceptRequestAddFriend,
+      unsubscribeUserLikePost;
     if (subscribeToMoreNotifications && user) {
       unsubscribeMentionUsersInPost = subscribeToMoreNotifications({
         document:
@@ -113,11 +117,31 @@ const Notifications = () => {
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
-          const {notifyMentionUsersInPost : newNotification} = subscriptionData.data;
-          console.log(newNotification)
+          const {notifyMentionUsersInPost : newNotification} = subscriptionData.data;          
           updatedNotifications(newNotification);
         },
       });
+      unsubscribeUserLikePost = subscribeToMoreNotifications({
+        document : subscriptions.notificationSubscription.NOTIFY_USER_LIKE_POST_SUBSCRIPTION, 
+        variables : {userId : user._id},
+        updateQuery : (_, {subscriptionData}) => {
+          if(subscriptionData){
+            const {notification : newNotification, post} = subscriptionData.data.notifyUserLikePost;
+            updatedNotifications(newNotification)
+            if(personalPosts[user._id]){
+              const personalPostsByUserId = personalPosts[user._id].map(_post => {
+                if(_post._id === post._id ){
+                  let _p = {..._post};
+                  _p.likes = [..._p.likes, newNotification.creator._id];
+                  return _p;
+                }
+                return {..._post};
+              })
+              setPersonalPosts(personalPostsByUserId) ;        
+            }
+          }
+        } 
+      })
       unsubscribeRequestAddFriend = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription
@@ -159,6 +183,9 @@ const Notifications = () => {
     return () => {
       if (unsubscribeMentionUsersInPost) {
         unsubscribeMentionUsersInPost();
+      }
+      if(unsubscribeUserLikePost){
+        unsubscribeUserLikePost();
       }
       if (unsubscribeRequestAddFriend) {
         unsubscribeRequestAddFriend();

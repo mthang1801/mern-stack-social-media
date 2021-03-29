@@ -11,9 +11,13 @@ export const MENTION_USERS_IN_POST_SUBSCRIPTION = gql`
         isOnline
       }
       notification {
+        _id
+        receivers
         action
         field
-        href
+        href     
+        hasSeen
+        createdAt
       }
     }
   }

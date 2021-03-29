@@ -167,7 +167,8 @@ export const vi = {
       postCreated: "vừa đăng một trạng thái mới.",
       sentRequestToAddFriend: "gửi cho bạn một lời mời kết bạn.",
       acceptRequestToAddFriend: "đã chấp nhận lời mời kết bạn của bạn.",
-      postMention : "Nhắc đến bạn trong bài viết của anh ấy"
+      postMention : "Nhắc đến bạn trong bài viết của anh ấy",
+      likePost: "đã thích bài viết của bạn"
     },
     greeting: {
       welcome: "Chào mừng bạn đã đến với Pul.com",

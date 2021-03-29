@@ -42,7 +42,7 @@ const NotificationItem = ({ notification, notifications }) => {
   //Mutations
   const {
     setNotifications,
-    setCountNumberNotificationsUnseen,
+    decreaseNumberNotificationsUnseen,
     setCurrentUser,    
     setCurrentPersonalUser,
   } = cacheMutations;
@@ -72,7 +72,7 @@ const NotificationItem = ({ notification, notifications }) => {
             )
           );
           //count number notification unseen again
-          setCountNumberNotificationsUnseen(countNumberNotificationsUnseen - 1);
+          decreaseNumberNotificationsUnseen();
         }
       );
     }

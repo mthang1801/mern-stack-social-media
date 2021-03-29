@@ -45,20 +45,10 @@ const Control = () => {
       window.removeEventListener("click", handleClickOutsideNotificationBoard);
   }, [notificationRef.current , openNotificationBoard]);
 
-  const handleClickNotification = useCallback(async () => {
-    // if (notifications.length <  +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE) {
-    //   console.log("fetch notifications")
-    //   const skip = notifications.length;
-    //   const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
-    //   fetchNotifications({ skip, limit }).then(
-    //     ({ data: { fetchNotifications } }) => {
-    //       setNotifications([...notifications, ...fetchNotifications]);
-    //       setLoadingNotificationsMore(false);
-    //     }
-    //   );
-    // }
+  const handleClickNotification = useCallback(async () => { 
     setLoadingNotificationsMore(false);
     setOpenNotificationBoard((prevStatus) => !prevStatus);
+    setLatestNotification(null);
   });
 
 

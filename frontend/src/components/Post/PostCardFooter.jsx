@@ -13,8 +13,10 @@ import {
 import useLanguage from "../Global/useLanguage";
 import { BiLike } from "react-icons/bi";
 import { useThemeUI } from "theme-ui";
-import {useQuery} from "@apollo/client"
+import {useQuery, useMutation} from "@apollo/client"
 import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
+import {LIKE_POST, UNLIKE_POST} from "../../apollo/operations/mutations/post"
+import {cacheMutations} from "../../apollo/operations/mutations"
 import LazyLoad from "react-lazyload";
 import CommentEditor from "./CommentEditor"
 const PostCardFooter = ({ post }) => {
@@ -22,22 +24,53 @@ const PostCardFooter = ({ post }) => {
   const { controls, commentPlaceholder } = i18n.store.data[lang].translation.post;
   const { colorMode } = useThemeUI();
   const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"})
+  const [likePost] = useMutation(LIKE_POST);
+  const [unlikePost] = useMutation(UNLIKE_POST);
+  const {updateLikePost, updateUnlikePost} =cacheMutations
+  const onLikePost = () => {
+    likePost({variables : {postId : post._id}}).then(({data}) => {
+      if(data.likePost){
+        updateLikePost(post._id, user._id );
+      }      
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
+  const onUnlikePost = () => {
+    unlikePost({variables: {postId : post._id}}).then(({data}) => {
+      if(data.unlikePost){
+        updateUnlikePost(post._id, user._id);
+      }
+    })
+  }
   return (
     <Wrapper>
       <Controls theme={colorMode}>
-        {controls.map(({ name, icon }) => (
-          <Button key={name} theme={colorMode}>
-            <span>{icon()}</span>
-            <span>{name}</span>
-          </Button>
-        ))}
+        {/* Like */}
+        
+        <Button theme={colorMode} liked={post.likes.includes(user._id)} onClick={post.likes.includes(user._id) ? onUnlikePost : onLikePost}>
+          <span>{controls.like.icon()}</span>
+          <span>{controls.like.name}</span>
+        </Button>
+        {/* Comment */}
+        <Button theme={colorMode} >
+          <span>{controls.comment.icon()}</span>
+          <span>{controls.comment.name}</span>
+        </Button>
+        {/* Share */}
+        <Button theme={colorMode} >
+          <span>{controls.share.icon()}</span>
+          <span>{controls.share.name}</span>
+        </Button>
+        
       </Controls>
-      {!post.likes.length ? (
+      {post.likes.length ? (
         <Counter>
           <LikeButton>
             <BiLike />
           </LikeButton>
-          <span>50</span>
+          <span>{post.likes.length}</span>
         </Counter>
       ) : null}
       <Comments>

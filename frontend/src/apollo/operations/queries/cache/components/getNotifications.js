@@ -7,5 +7,6 @@ export const GET_NOTIFICATIONS_CACHE_DATA = gql`
     countNumberNotificationsUnseen @client    
     currentPersonalUser @client
     receivedRequestsToAddFriend @client
+    personalPosts @client
   }
 `

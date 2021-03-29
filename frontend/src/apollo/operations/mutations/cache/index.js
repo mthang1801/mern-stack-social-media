@@ -5,6 +5,8 @@ import createSetPostStatus from "./post/setPostStatus";
 import createSetPosts from "./post/setPosts";
 import createSetPersonalPosts from "./post/setPersonalPosts";
 import createSetNewPost from "./post/setNewPost"
+import createUpdateLikePost from "./post/updateLikePost"
+import createUpdateUnlikePost from "./post/updateUnlikePost";
 //User
 import createSetCurrentUser from "./user/setCurrentUser";
 import createSetCurrentPersonalUser from "./user/setCurrentPersonalUser";
@@ -14,6 +16,9 @@ import createSetNotifications from "./notifications/setNotifications";
 import createSetCountNumberNotificationsUnseen from "./notifications/setCountNumberNotificationsUnseen";
 import createSetNewNotifications from "./notifications/setNewNotifications";
 import createSetLatestNotification from "./notifications/setLatestNotification";
+import createAddNewNotification from "./notifications/addNewNotification";
+import createIncreaseCountNumberNotificationsUnseen from "./notifications/increaseCountNumberNotificationsUnseen";
+import createDecreaseCountNumberNotificationsUnseen from "./notifications/decreaseCountNumberNotificationsUnseen";
 //Friends
 import createSetOpenFriendsList from "./friends/setOpenFriendsList";
 import createSetFriends from "./friends/setFriends";
@@ -65,6 +70,8 @@ const mutations = {
   setPosts: createSetPosts(setPostsVar),
   setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
   setNewPost : createSetNewPost(setPostsVar),
+  updateLikePost : createUpdateLikePost(setPostsVar),
+  updateUnlikePost : createUpdateUnlikePost(setPostsVar),
   //User
   setCurrentUser: createSetCurrentUser(setUserVar),
   setCurrentPersonalUser: createSetCurrentPersonalUser(
@@ -72,13 +79,17 @@ const mutations = {
   ),
   //Notifications
   setNotifications: createSetNotifications(setNotificationsVar),
-  setCountNumberNotificationsUnseen: createSetCountNumberNotificationsUnseen(
-    setCountNumberNotificationsUnseenVar
-  ),
+ 
   setNewNotifications: createSetNewNotifications(setNewNotificationsVar),
   setLatestNotification: createSetLatestNotification(
     setLatestNotificationVar
   ),
+  addNewNotification : createAddNewNotification(setNotificationsVar),
+  setCountNumberNotificationsUnseen: createSetCountNumberNotificationsUnseen(
+    setCountNumberNotificationsUnseenVar
+  ),
+  increaseNumberNotificationsUnseen : createIncreaseCountNumberNotificationsUnseen(setCountNumberNotificationsUnseenVar),
+  decreaseNumberNotificationsUnseen : createDecreaseCountNumberNotificationsUnseen(setCountNumberNotificationsUnseenVar),
   //Friends
   setOpenFriendsList: createSetOpenFriendsList(setOpenFriendsListVar),
   setFriends: createSetFriends(setFriendsVar),

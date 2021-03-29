@@ -10,6 +10,9 @@ const notificationContent = (field, action, lang) => {
       switch(action){        
         case "MENTION" : {          
           return notifications.postMention; 
+        };
+        case "LIKE" : {
+          return notifications.likePost;
         }
       }
     case "user" : 

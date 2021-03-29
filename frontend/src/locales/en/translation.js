@@ -168,7 +168,8 @@ export const en = {
       postCreated: "has just posted a new status.",
       sentRequestToAddFriend: "send you a request to add friend",
       acceptRequestToAddFriend: "has accepted your request to add friend.",
-      postMention : "mentions you in his post"
+      postMention : "mentions you in his post",
+      likePost : "Liked your post"
     },
     greeting: {
       welcome: "Welcome to Pul.com",
@@ -210,20 +211,20 @@ export const en = {
           icon: () => <BiLockAlt />,
         },
       ],
-      controls: [
-        {
+      controls: {
+        like : {
           name : "Like",
           icon : () => <BiLike/>
-        },
-        {
+        },       
+        comment: {
           name : "Comment",
           icon : () => <BiCommentDetail/>
         },
-        {
+        share : {
           name : "Share",
           icon : () => <BiShareAlt/>
         }
-      ],
+      },
       commentInputPlaceholder : "Comment here..."
     },
     chat : {

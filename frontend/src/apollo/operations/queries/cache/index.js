@@ -19,6 +19,7 @@ import { GET_CONTACT_CACHE_DATA } from "./contact/getContact";
 import { GET_HOME_CACHE_DATA } from "./pages/getHome";
 import { GET_NOTIFICATIONS_CACHE_DATA } from "./components/getNotifications";
 import { GET_HEADER_CACHE_DATA } from "./components/getHeader";
+import { GET_USE_POST_SUBSCRIPTION_CACHE_DATA } from "./components/getUsePostsSubscription";
 
 export { GET_TOGGLE_BUTTON_MENU };
 export { GET_POST_STATUS };
@@ -41,6 +42,7 @@ export { GET_CONTACT_CACHE_DATA };
 export { GET_HOME_CACHE_DATA };
 export { GET_NOTIFICATIONS_CACHE_DATA };
 export { GET_HEADER_CACHE_DATA };
+export { GET_USE_POST_SUBSCRIPTION_CACHE_DATA };
 
 export const cacheQueries = {
   GET_TOGGLE_BUTTON_MENU,
@@ -64,4 +66,5 @@ export const cacheQueries = {
   GET_HOME_CACHE_DATA,
   GET_NOTIFICATIONS_CACHE_DATA,
   GET_HEADER_CACHE_DATA,
+  GET_USE_POST_SUBSCRIPTION_CACHE_DATA
 };

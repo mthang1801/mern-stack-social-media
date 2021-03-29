@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  PopupWrapper,
   Wrapper,
   SenderAvatar,
   NotificationContent,
@@ -40,10 +39,7 @@ const FlashPopUpNotification = ({ onClick }) => {
   };
   console.log(latestNotification);
   return (
-    // <PopupWrapper show={latestNotification} theme={colorMode}  onClick={onClickPopup}>
-    //   {message}
-    // </PopupWrapper>
-    <Wrapper show={latestNotification} theme={colorMode}  onClick={onClickPopup}>
+    <Wrapper show={latestNotification} theme={colorMode} onClick={onClickPopup}>
       {latestNotification ? (
         <>
           <SenderAvatar>
