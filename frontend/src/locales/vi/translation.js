@@ -168,7 +168,9 @@ export const vi = {
       sentRequestToAddFriend: "gửi cho bạn một lời mời kết bạn.",
       acceptRequestToAddFriend: "đã chấp nhận lời mời kết bạn của bạn.",
       postMention : "Nhắc đến bạn trong bài viết của anh ấy",
-      likePost: "đã thích bài viết của bạn"
+      likePost: "đã thích bài viết của bạn",
+      commentMention : "Đã nhắc đến bạn trong bình luận của anh ấy",
+      commentCreated : "Đã viết bình luận trong bài viết của bạn"
     },
     greeting: {
       welcome: "Chào mừng bạn đã đến với Pul.com",
@@ -209,20 +211,24 @@ export const vi = {
           icon: () => <BiLockAlt />,
         },
       ],
-      controls: [
-        {
+      controls: {
+        like : {
           name : "Thích",
           icon : () => <BiLike/>
         },
-        {
+        liked : {
+          name : "Đã Thích",
+          icon : () => <BiLike/>
+        },
+        comment : {
           name : "Bình luận",
           icon : () => <BiCommentDetail/>
         },
-        {
+        share :{
           name : "Chia sẻ",
           icon : () => <BiShareAlt/>
         }
-      ],
+      },
       commentInputPlaceholder : "Để lại bình luận của bạn tại đây"
     },
     chat : {

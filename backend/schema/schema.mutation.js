@@ -6,9 +6,7 @@ export const schemaMutation = gql`
     createPost(data : PostInput!): Post!    
     likePost(postId : ID!) : Boolean!
     unlikePost(postId: ID!) : Boolean!
-    createComment(postId: ID!, data: CommentInput!): Comment!
-    updateComment(commentId: ID!, data: CommentInput!): Comment!
-    deleteComment(commentId: ID!): Comment!
+    createComment(postId: ID!, data: CommentInput!): Comment!   
     updateUserHasSeenNotification(notificationId: ID!): Notification!
     addContact(receiverId: ID!, message: String!): Boolean!
     acceptContact(senderId: ID!): Boolean!    

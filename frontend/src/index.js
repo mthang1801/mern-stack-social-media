@@ -6,7 +6,8 @@ import theme from "./theme";
 import reportWebVitals from "./reportWebVitals";
 import { client } from "./apollo/client";
 import { ApolloProvider } from "@apollo/client";
-import "react-image-gallery/styles/css/image-gallery.css";
+import "@draft-js-plugins/mention/lib/plugin.css";
+import "@draft-js-plugins/hashtag/lib/plugin.css";
 import "./i18n";
 ReactDOM.render(  
   <ThemeProvider theme={theme}>

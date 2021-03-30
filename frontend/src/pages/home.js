@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback , lazy, Suspense} from "react";
 import Layout from "../containers/Layout";
 import PostEditor from "../components/Post/PostEditor/PostEditor";
-import Posts from "../components/Post/Posts";
 import { useQuery } from "@apollo/client";
 import { GET_HOME_CACHE_DATA } from "../apollo/operations/queries/cache";
 import { FETCH_POSTS } from "../apollo/operations/queries/post";
@@ -15,6 +14,7 @@ import {
   MainContentLeftSide,
   MainContentRightSide,
 } from "./styles/pages.styles.js";
+const Posts = lazy(() => import("../components/Post/Posts"));
 const Home = () => {
   const {
     data: { user, openFriendsList, posts },
@@ -23,6 +23,7 @@ const Home = () => {
     skip: true,
     fetchPolicy: "cache-and-network",
   });
+  
   const [fetched, setFetched] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const { setPosts, setOpenFriendsList, setNewPost } = cacheMutations;
@@ -80,15 +81,16 @@ const Home = () => {
   });
   const handleOpenFriendsList = useCallback(() => {
     setOpenFriendsList();
-  }, []);
-
+  }, []);  
   return (
     <Layout>
       <MainBody>
         <MainContent>
           <MainContentLeftSide>
             {user && <PostEditor user={user} />}
+            <Suspense fallback={<div>Loading posts...</div>}>
             {posts.length ? <Posts posts={posts} /> : null}
+            </Suspense>
           </MainContentLeftSide>
           <MainContentRightSide>
             <HomeSidebar user={user} />

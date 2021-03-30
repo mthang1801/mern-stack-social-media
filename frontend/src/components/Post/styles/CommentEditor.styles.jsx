@@ -18,7 +18,9 @@ export const CommentInput = styled.div`
 `
 
 export const CommentControls = styled.div`
-  display : ${({show}) => show ? "block" : "none"};
+  display : ${({show}) => show ? "flex" : "none"};
+  align-items: center;
+  
   .e8k2yoa, .e13wqaj6{    
     color : inherit;  
     transform: scale(1.5);
@@ -27,4 +29,17 @@ export const CommentControls = styled.div`
       color : inherit; 
     }
   }
+`
+export const InputImage = styled.label`
+  display : flex;
+  
+  input{
+    display : none ; 
+  }
+  font-size : 1.3rem;
+  margin-top : 0.1rem;
+  background-color : transparent;        
+  display : flex;
+  cursor: pointer;
+
 `

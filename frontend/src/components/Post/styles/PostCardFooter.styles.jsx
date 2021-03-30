@@ -6,10 +6,13 @@ export const Wrapper = styled.div`
 `
 
 export const Controls = styled.div`
+  width : 95%;
+  margin: auto;
   display : grid;
-  grid-template-columns: repeat(3,1fr);
-  border: 1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};
-  border-radius : 0.5rem;
+  grid-template-columns: repeat(3,1fr);  
+  border: 1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};  
+  border-left : none; 
+  border-right: none ; 
 `
 
 export const Button = styled.button`
@@ -69,7 +72,7 @@ export const LikeButton = styled.button`
 `
 
 export const Comments = styled.section`
-  
+  margin : 1rem 0;
 `
 
 
@@ -77,11 +80,11 @@ export const UserComment  = styled.div`
   width : 100%; 
   padding :0.5rem 1rem;
   display : flex;
-  align-items : flex-start;
+  align-items : flex-start;  
 `
 export const AvatarContainer = styled.div`
-  width : 2.5rem ; 
-  height : 2.5rem;
+  width : 2rem ; 
+  height : 2rem;
   img{
     width : 100%; 
     border-radius : 50%;

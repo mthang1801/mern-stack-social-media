@@ -5,15 +5,14 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { EditorState } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
 import Editor from "@draft-js-plugins/editor";
 import createMentionPlugin from "@draft-js-plugins/mention";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import createHashTagPlugin from "@draft-js-plugins/hashtag";
-import "@draft-js-plugins/mention/lib/plugin.css";
-import "@draft-js-plugins/hashtag/lib/plugin.css";
-import { useQuery } from "@apollo/client";
+import _ from "lodash";
+import { useQuery, useMutation } from "@apollo/client";
 import { SEARCH_FRIENDS } from "../../apollo/operations/queries/user";
 import {
   HashtagLink,
@@ -21,10 +20,17 @@ import {
   LinkAnchor,
 } from "./PostEditor/styles/PostEditorBody.styles";
 import { useHistory } from "react-router-dom";
-import { CommentInput, CommentControls } from "./styles/CommentEditor.styles";
+import {
+  CommentInput,
+  CommentControls,
+  InputImage,
+} from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
-const CommentEditor = () => {
+import { CREATE_COMMENT } from "../../apollo/operations/mutations/post/createComment";
+import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import { Link } from "react-router-dom";
+const CommentEditor = ({ post }) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
@@ -34,6 +40,8 @@ const CommentEditor = () => {
     refetch: searchFriends,
     loading: searchFriendsLoading,
   } = useQuery(SEARCH_FRIENDS, { fetchPolicy: "network-only", skip: true });
+  const [createComment] = useMutation(CREATE_COMMENT);
+  const { addCommentToPost } = cacheMutations;
   const { push } = useHistory();
   const { colorMode } = useThemeUI();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
@@ -70,19 +78,20 @@ const CommentEditor = () => {
       target: "_blank",
       rel: "noopener noreferrer",
       component(props) {
-        return <LinkAnchor {...props} />;
+        return <LinkAnchor {...props} aria-label="link" />;
       },
     });
     // Mention
     const mentionPlugin = createMentionPlugin({
       mentionComponent(mentionProps) {
         return (
-          <span
+          <a
             className={mentionProps.className}
-            onClick={() => push(`/${mentionProps.mention.slug}`)}
+            href={`${window.location.href}${mentionProps.mention.slug}`}
+            aria-label="mention"
           >
             {mentionProps.children}
-          </span>
+          </a>
         );
       },
     });
@@ -90,9 +99,11 @@ const CommentEditor = () => {
       hashtagComponent(props) {
         return (
           <HashtagLink
-            onClick={() =>
-              push(`/search?q=${props.decoratedText.replace(/#/g, "")}`)
-            }
+            to={`${window.location.href}search?q=${props.decoratedText.replace(
+              /#/g,
+              ""
+            )}`}
+            aria-label="hashtag"
           >
             {props.children}
           </HashtagLink>
@@ -121,8 +132,53 @@ const CommentEditor = () => {
 
     return () =>
       window.removeEventListener("click", trackUserClickCommentControls);
-  }, [commentRef,showControls]);
+  }, [commentRef, showControls]);
 
+  const onSubmitComment = (e) => {
+    if (e.which === 13 && editorState.getCurrentContent().hasText()) {
+      const rawEditorState = convertToRaw(editorState.getCurrentContent());
+      document
+        .querySelector(`[data-target=comment-input-${post._id}]`)
+        .querySelector("[contenteditable=true]")
+        ?.setAttribute("contenteditable", false);
+      const textData = document.querySelector(
+        `[data-target=comment-input-${post._id}]`
+      ).innerHTML;
+      let mentions = [];
+      if (rawEditorState.entityMap) {
+        Object.values(rawEditorState.entityMap).map(({ data }) => {
+          if (data.mention) {
+            mentions.push({ ...data.mention });
+          }
+        });
+      }
+      mentions = _.unionBy(mentions, "_id").map((mention) =>
+        mention._id.toString()
+      );
+      if (textData) {
+        setEditorState(EditorState.createEmpty());
+        createComment({
+          variables: { postId: post._id, text: textData, mentions: mentions },
+        })
+          .then(({ data }) => {
+            document
+              .querySelector(`[data-target=comment-input-${post._id}]`)
+              .querySelector("[contenteditable=false]")
+              ?.setAttribute("contenteditable", true);
+              
+            const {createComment} = data;
+            addCommentToPost(post._id, createComment);
+          })
+          .catch((err) => {
+            console.log(err.message);
+            document
+              .querySelector(`[data-target=comment-input-${post._id}]`)
+              .querySelector("[contenteditable=true]")
+              ?.setAttribute("contenteditable", true);
+          });
+      }
+    }
+  };
   return (
     <Wrapper ref={commentRef}>
       <CommentInput
@@ -131,6 +187,8 @@ const CommentEditor = () => {
           editorRef.current?.focus();
           setShowControls(true);
         }}
+        onKeyDown={onSubmitComment}
+        data-target={`comment-input-${post._id}`}
       >
         <Editor
           editorState={editorState}
@@ -155,6 +213,10 @@ const CommentEditor = () => {
         onClick={() => setShowControls(true)}
       >
         <EmojiSelect />
+        {/* <InputImage htmlFor={`comment-image-${post._id}`}>
+          <input type="file" name="comment-image" id={`comment-image-${post._id}`}/>  
+          <BiImageAlt/>
+        </InputImage>         */}
       </CommentControls>
     </Wrapper>
   );

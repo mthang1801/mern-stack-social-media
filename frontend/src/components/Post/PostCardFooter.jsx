@@ -51,7 +51,7 @@ const PostCardFooter = ({ post }) => {
         
         <Button theme={colorMode} liked={post.likes.includes(user._id)} onClick={post.likes.includes(user._id) ? onUnlikePost : onLikePost}>
           <span>{controls.like.icon()}</span>
-          <span>{controls.like.name}</span>
+          <span>{post.likes.includes(user._id) ? controls.liked.name : controls.like.name}</span>
         </Button>
         {/* Comment */}
         <Button theme={colorMode} >
@@ -81,7 +81,7 @@ const PostCardFooter = ({ post }) => {
             </LazyLoad>
           </AvatarContainer>
           <FormComment theme={colorMode}>
-            <CommentEditor/>
+            <CommentEditor post={post}/>
           </FormComment>
         </UserComment>
       </Comments>

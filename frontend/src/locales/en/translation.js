@@ -168,8 +168,10 @@ export const en = {
       postCreated: "has just posted a new status.",
       sentRequestToAddFriend: "send you a request to add friend",
       acceptRequestToAddFriend: "has accepted your request to add friend.",
-      postMention : "mentions you in his post",
-      likePost : "Liked your post"
+      postMention : "has mentioned you in his post",
+      likePost : "Liked your post",
+      commentMention : "has mentioned you in his comment",
+      commentCreated : "has commented in your post"
     },
     greeting: {
       welcome: "Welcome to Pul.com",
@@ -215,7 +217,11 @@ export const en = {
         like : {
           name : "Like",
           icon : () => <BiLike/>
-        },       
+        }, 
+        liked : {
+          name : "Liked",
+          icon : () => <BiLike/>
+        } ,
         comment: {
           name : "Comment",
           icon : () => <BiCommentDetail/>

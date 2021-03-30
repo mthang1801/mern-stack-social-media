@@ -14,6 +14,7 @@ import decodeBase64 from "../utils/decodeBase64";
 import { pubsub } from "../pubsub";
 export const postControllers = {
   fetchPosts: async (req, userId, skip, limit) => {
+    console.time("fetch Posts");
     const currentUserId = getAuthUser(req, false);
     const currentUser = await User.findById(currentUserId);
     if (userId) {
@@ -36,6 +37,13 @@ export const postControllers = {
           path: "author",
           select: "name avatar slug isOnline offlinedAt",
         })
+        .populate({
+          path: "comments",
+          populate: [
+            { path: "author", select: "name avatar name slug isOnline" },           
+          ],
+          options : {skip : 0, limit : 10, sort: {createdAt : -1}}
+        })
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);
@@ -55,6 +63,13 @@ export const postControllers = {
           path: "mentions",
           select: "name avatar slug isOnline offlinedAt",
         })
+        .populate({
+          path: "comments",
+          populate: [
+            { path: "author", select: "name avatar name slug isOnline" },            
+          ],
+          options : {skip : 0, limit : 10, sort: {createdAt : -1}}
+        })
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);
@@ -72,7 +87,7 @@ export const postControllers = {
         }
         return { ..._post };
       });
-
+      console.timeEnd("fetch Posts");
       return standardizedPosts;
     }
     return [];

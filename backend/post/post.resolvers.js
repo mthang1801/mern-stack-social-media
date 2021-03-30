@@ -59,7 +59,7 @@ export const postResolvers = {
       subscribe: withFilter(
         () =>
           pubsub.asyncIterator(subscriptionActions.NOTIFY_USER_ACTIONS_IN_POST),
-        (payload, { userId }) => {        
+        (payload, { userId }) => {           
           return payload.notifyUserLikePost.notification.receivers.includes(
             userId
           );

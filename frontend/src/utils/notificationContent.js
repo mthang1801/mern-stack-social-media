@@ -20,6 +20,11 @@ const notificationContent = (field, action, lang) => {
         case "ADDED" : return  notifications.sentRequestToAddFriend;
         case "ACCEPTED" : return notifications.acceptRequestToAddFriend
       }
+    case "comment" : 
+      switch(action){
+        case "MENTION" : return notifications.commentMention; 
+        case "CREATED" : return notifications.commentCreated;
+      }
   }
 }
 

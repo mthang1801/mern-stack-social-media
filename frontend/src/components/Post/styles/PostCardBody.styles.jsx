@@ -379,9 +379,7 @@ export const Wrapper = styled.div`
 export const DraftEditor = styled.div`
   cursor: text !important;
   .DraftEditor-root {
-    width: 100% !important;
-    max-height: 8rem;
-    min-height: 4rem;
+    width: 100% !important;   
     padding: 0.5rem 1rem;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;

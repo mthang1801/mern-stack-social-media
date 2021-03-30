@@ -5,8 +5,6 @@ import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import createMentionPlugin, {
   defaultSuggestionsFilter,
 } from "@draft-js-plugins/mention";
-import "@draft-js-plugins/mention/lib/plugin.css";
-// import "@draft-js-plugins/emoji/lib/plugin.css";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
 const emojiPlugin = createEmojiPlugin();
 const { EmojiSelect, EmojiSuggestions } = emojiPlugin;

@@ -422,7 +422,7 @@ export const CardPreview = styled.div`
   margin: 1rem auto;
 `;
 
-export const HashtagLink = styled.span`
+export const HashtagLink = styled.a`
   color: #575f67;
   cursor: pointer;
   display: inline-block;

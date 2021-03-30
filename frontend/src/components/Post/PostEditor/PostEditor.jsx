@@ -5,7 +5,6 @@ import { EditorWrapper } from "./styles/PostEditor.styles";
 import { useThemeUI } from "theme-ui";
 import { EditorState, convertToRaw } from "draft-js";
 import Button from "@material-ui/core/Button";
-import LazyLoad from "react-lazyload";
 import useLanguage from "../../Global/useLanguage";
 import _ from "lodash";
 import { useMutation } from "@apollo/client";
@@ -48,7 +47,9 @@ const PostEditor = ({ user }) => {
 
   const onSubmitPostStatus = () => {
     const rawEditorState = convertToRaw(editorState.getCurrentContent());
-    const text = JSON.stringify(rawEditorState)
+    document.getElementById("post-editor").querySelector("[contenteditable=true]").setAttribute("contenteditable", false);
+    const text = document.getElementById("post-editor").innerHTML;
+    
     let mentions = [];    
     let fileNames = [];
     let fileMimetype = [];
@@ -71,14 +72,6 @@ const PostEditor = ({ user }) => {
       fileEncodings = images.map((image) => image.src);
     }
 
-    console.log({
-      text,
-      mentions,
-      fileNames,
-      fileMimetype,
-      fileEncodings,
-      status: postStatus,
-    });
     createPost({variables : {
       text,
       mentions,
@@ -90,9 +83,13 @@ const PostEditor = ({ user }) => {
       .then(({data}) => {
         const {createPost} = data ;        
         setNewPost(createPost)
+        document.getElementById("post-editor").querySelector("[contenteditable=true]").setAttribute("contenteditable", true);
+        setEditorState(EditorState.createEmpty());
+        setImages([]);
       })
       .catch((err) => {
         console.log(err.message);
+        document.getElementById("post-editor").querySelector("[contenteditable=true]").setAttribute("contenteditable", true);
       });
   };
 
@@ -104,14 +101,15 @@ const PostEditor = ({ user }) => {
         postStatus={postStatus}
         setPostStatus={handleSetPostStatus}
       />
-      <LazyLoad>
+      
         <PostEditorBody
           editorState={editorState}
           setEditorState={setEditorState}
           images={images}
           setImages={setImages}
+          id="post-editor"
         />
-      </LazyLoad>
+      
       {!disabledSubmit && (
         <Button
           variant="contained"

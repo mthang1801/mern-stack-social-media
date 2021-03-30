@@ -1,19 +1,48 @@
-import {commentControllers} from "./comment.controllers"
-import {pubsub} from "../pubsub";
-import {subscriptionActions} from "../schema"
-import {withFilter} from "apollo-server-express"
+import { commentControllers } from "./comment.controllers";
+import { pubsub } from "../pubsub";
+import { subscriptionActions } from "../schema";
+import { withFilter } from "apollo-server-express";
 export const commentResolvers = {
-  Mutation : {
-    createComment : (_, args, {req}, info) => commentControllers.createComment(req, args.postId, args.data, pubsub, subscriptionActions.COMMENT_ACTIONS),
-    updateComment : (_, args, {req}, info) => commentControllers.updateComment(req, args.commentId, args.data,  pubsub, subscriptionActions.COMMENT_ACTIONS),
-    deleteComment : (_, args, {req}, info) => commentControllers.deleteComment(req, args.commentId, pubsub, subscriptionActions.COMMENT_ACTIONS)
+  Mutation: {
+    createComment: (_, args, { req }, info) =>
+      commentControllers.createComment(
+        req,
+        args.postId,
+        args.data,
+        pubsub,
+        subscriptionActions.NOTIFY_MENTIONS_USERS_IN_COMMENT,
+        subscriptionActions.NOTIFY_OWNER_POST_USER_COMMENT
+      ),
   },
-  Subscription : {
-    commentActions : {
-      subscribe : withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.COMMENT_ACTIONS),
-        (payload, {postId}) => payload.commentActions.node.post._id.toString() === postId.toString()
-      )
-    }
-  }
-}
+  Subscription: {
+    notifyMentionUsersInComment: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.NOTIFY_MENTIONS_USERS_IN_COMMENT
+          ),
+        (payload, { userId }) => {
+          console.log(payload);
+          return payload.notifyMentionUsersInComment.receivers.includes(
+            userId.toString()
+          );
+        }
+      ),
+    },
+    notifyOwnerPostUserComment: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.NOTIFY_OWNER_POST_USER_COMMENT
+          ),
+        (payload, { userId }) => {
+          console.log("owner", payload);
+          return (           
+            payload.notifyOwnerPostUserComment.notification.receivers[0].toString() ===
+            userId.toString()
+          );
+        }
+      ),
+    },
+  },
+};

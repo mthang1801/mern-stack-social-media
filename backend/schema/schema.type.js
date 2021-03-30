@@ -30,7 +30,7 @@ export const schemaType = gql`
     files : [File!]
     author : User! 
     likes : [ID!]    
-    comments : [Comment]
+    comments : [Comment!]
     createdAt : String!
     updatedAt : String!
   }
@@ -42,9 +42,12 @@ export const schemaType = gql`
   }
   type Comment {
     _id : ID! 
-    content : String!
+    text : String!
+    mentions : [ID!]
     author : User! 
-    post : Post!
+    post : ID!
+    likes : [ID!]
+    subComments : [Comment]
     createdAt : String 
     updatedAt : String
   }
@@ -96,10 +99,6 @@ export const schemaType = gql`
     receivers : [ID!]!
     notification : Notification!
   }
-  type CommentSubscriptionPayload{
-    action : ActionEnum!
-    node : Comment
-  }  
  
   type ContactSubscriptionPayload{
     action : ContactEnum!
@@ -161,6 +160,11 @@ export const schemaType = gql`
   type PostSupscriptionPayload{
     post : Post!
     notification : Notification!
+  }
+
+  type CommentSubscriptionPayload{
+    comment : Comment!
+    notification : Notification!    
   }
 
   type MessagesResult{

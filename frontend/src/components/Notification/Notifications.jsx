@@ -48,7 +48,8 @@ const Notifications = () => {
     setCurrentUser,
     setCurrentPersonalUser,
     setReceivedRequestsToAddFriend, 
-    setPersonalPosts
+    setPersonalPosts,
+    addCommentToOwnerPost
   } = cacheMutations;
   
   useEffect(() => {
@@ -109,7 +110,10 @@ const Notifications = () => {
     let unsubscribeMentionUsersInPost,
       unsubscribeRequestAddFriend,
       unsubscribeAcceptRequestAddFriend,
-      unsubscribeUserLikePost;
+      unsubscribeUserLikePost,
+      unsubscribeOwnerPostReceivedUserComment,
+      unsubscribeMentionUsersInComment
+      ;
     if (subscribeToMoreNotifications && user) {
       unsubscribeMentionUsersInPost = subscribeToMoreNotifications({
         document:
@@ -178,6 +182,27 @@ const Notifications = () => {
           updatedNotifications(newNotification, sender, receiver);
         },
       });
+      unsubscribeOwnerPostReceivedUserComment = subscribeToMoreNotifications({
+        document : subscriptions.notificationSubscription.NOTIFY_OWNER_POST_USER_COMMENT_SUBSCRIPTION,
+        variables : {userId : user._id} , 
+        updateQuery : (_, {subscriptionData}) => {
+          if(subscriptionData){
+            const {comment, notification} = subscriptionData.data.notifyOwnerPostUserComment;
+            updatedNotifications(notification);           
+            addCommentToOwnerPost(user._id, comment);
+          }
+        }
+      }); 
+      unsubscribeMentionUsersInComment = subscribeToMoreNotifications({
+        document : subscriptions.notificationSubscription.NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION,
+        variables : {userId : user._id}, 
+        updateQuery : (_, {subscriptionData }) => {
+          if(subscriptionData){
+            const {notifyMentionUsersInComment} = subscriptionData.data;
+            updatedNotifications(notifyMentionUsersInComment)
+          }
+        }
+      })
     }
 
     return () => {
@@ -192,6 +217,12 @@ const Notifications = () => {
       }
       if (unsubscribeAcceptRequestAddFriend) {
         unsubscribeAcceptRequestAddFriend();
+      }
+      if(unsubscribeOwnerPostReceivedUserComment){
+        unsubscribeOwnerPostReceivedUserComment();
+      }
+      if(unsubscribeMentionUsersInComment){
+        unsubscribeMentionUsersInComment();
       }
     };
   }, [

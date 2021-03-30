@@ -21,7 +21,8 @@ export const schemaInput = gql`
   }
   
   input CommentInput{
-    content : String!
+    text : String
+    mentions : [ID!]
   }
 
   input MessageInput{
