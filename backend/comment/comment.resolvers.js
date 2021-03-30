@@ -21,8 +21,7 @@ export const commentResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.NOTIFY_MENTIONS_USERS_IN_COMMENT
           ),
-        (payload, { userId }) => {
-          console.log(payload);
+        (payload, { userId }) => {          
           return payload.notifyMentionUsersInComment.receivers.includes(
             userId.toString()
           );
@@ -35,8 +34,7 @@ export const commentResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.NOTIFY_OWNER_POST_USER_COMMENT
           ),
-        (payload, { userId }) => {
-          console.log("owner", payload);
+        (payload, { userId }) => {         
           return (           
             payload.notifyOwnerPostUserComment.notification.receivers[0].toString() ===
             userId.toString()
