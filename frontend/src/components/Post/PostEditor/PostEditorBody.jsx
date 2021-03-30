@@ -149,7 +149,7 @@ const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
   };
 
   return (
-    <Wrapper>
+    <>
       <DraftEditor
         onClick={() => editorRef.current?.focus()}
         id="post-editor"
@@ -197,7 +197,7 @@ const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
           />
         </Label>
       </Toolbar>
-    </Wrapper>
+    </>
   );
 };
 

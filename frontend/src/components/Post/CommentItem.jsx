@@ -1,18 +1,26 @@
-import React, { useState, useEffect, useMemo } from "react";
-import {  
-  Wrapper,
-} from "./PostEditor/styles/PostEditorBody.styles";
+import React, { useState, lazy } from "react";
+import { Wrapper } from "./PostEditor/styles/PostEditorBody.styles";
 import {
   CommentContainer,
   UserAvatar,
+  CommentContent,
   CommentText,
   UserName,
+  CommentControls,
+  ControlItem,
 } from "./styles/CommentItem.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import {useThemeUI} from "theme-ui"
-const CommentItem = ({ comment }) => {
-  const {colorMode} = useThemeUI()
-  
+import { useThemeUI } from "theme-ui";
+import useLanguage from "../Global/useLanguage";
+import Moment from "react-moment";
+import { Response } from "./styles/CommentItem.styles";
+const ResponseEditor = lazy(() => import("./ResponseEditor"));
+
+const CommentItem = ({ comment, user }) => {
+  const { colorMode } = useThemeUI();
+  const { i18n, lang } = useLanguage();
+  const [showResponse, setShowResponse] = useState(false);
+  const { controls } = i18n.store.data[lang].translation.comment;
   return (
     <Wrapper>
       <CommentContainer>
@@ -23,15 +31,35 @@ const CommentItem = ({ comment }) => {
             alt={comment.author.avatar}
           />
         </UserAvatar>
-        <CommentText theme={colorMode}>
-          <UserName to={`/${comment.author.slug}`}>
-            {comment.author.name.toLowerCase()}
-          </UserName>
-          <div
-            data-target={`comment-item-${comment._id}`}
-            dangerouslySetInnerHTML={{ __html: comment.text }}
-          ></div>
-        </CommentText>
+        <CommentContent>
+          <CommentText theme={colorMode}>
+            <UserName to={`/${comment.author.slug}`}>
+              {comment.author.name.toLowerCase()}
+            </UserName>
+            <div
+              data-target={`comment-item-${comment._id}`}
+              dangerouslySetInnerHTML={{ __html: comment.text }}
+            ></div>
+          </CommentText>
+          <CommentControls>
+            {comment.likes.includes(user._id) ? (
+              <ControlItem active>{controls.liked}</ControlItem>
+            ) : (
+              <ControlItem>{controls.like}</ControlItem>
+            )}
+            <ControlItem
+              onClick={() => setShowResponse((prevState) => !prevState)}
+            >
+              {controls.response}
+            </ControlItem>
+            <ControlItem>
+              <Moment fromNow>{+comment.createdAt}</Moment>
+            </ControlItem>
+          </CommentControls>
+          <Response showResponse={showResponse}>
+            <ResponseEditor comment={comment} />
+          </Response>
+        </CommentContent>
       </CommentContainer>
     </Wrapper>
   );

@@ -30,24 +30,24 @@ import useLanguage from "../Global/useLanguage";
 import { CREATE_COMMENT } from "../../apollo/operations/mutations/post/createComment";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import { Link } from "react-router-dom";
-const CommentEditor = ({ post }) => {
+
+
+const CommentEditor = ({ comment }) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
   const [openMention, setOpenMention] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
   const {
-    refetch: searchFriends,
-    loading: searchFriendsLoading,
+    refetch: searchFriends,    
   } = useQuery(SEARCH_FRIENDS, { fetchPolicy: "network-only", skip: true });
   const [createComment] = useMutation(CREATE_COMMENT);
-  const { addCommentToPost } = cacheMutations;
-  const { push } = useHistory();
+  const { addCommentToPost } = cacheMutations;  
   const { colorMode } = useThemeUI();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const [showControls, setShowControls] = useState(false);
   const controlsRef = useRef(null);
-  const commentRef = useRef(null);
+  const responseRef = useRef(null);
   const editorRef = useRef(null);
   const { i18n, lang } = useLanguage();
   const { commentInputPlaceholder } = i18n.store.data[lang].translation.comment;
@@ -121,8 +121,8 @@ const CommentEditor = ({ post }) => {
   useEffect(() => {
     function trackUserClickCommentControls(e) {
       if (
-        commentRef.current &&
-        !commentRef.current.contains(e.target) &&
+        responseRef.current &&
+        !responseRef.current.contains(e.target) &&
         showControls
       ) {
         setShowControls(false);
@@ -132,55 +132,55 @@ const CommentEditor = ({ post }) => {
 
     return () =>
       window.removeEventListener("click", trackUserClickCommentControls);
-  }, [commentRef, showControls]);
+  }, [responseRef, showControls]);
 
   const onSubmitComment = (e) => {
     if (e.which === 13 && editorState.getCurrentContent().hasText()) {
-      const rawEditorState = convertToRaw(editorState.getCurrentContent());
-      document
-        .querySelector(`[data-target=comment-input-${post._id}]`)
-        .querySelector("[contenteditable=true]")
-        ?.setAttribute("contenteditable", false);
-      const textData = document.querySelector(
-        `[data-target=comment-input-${post._id}]`
-      ).innerHTML;
-      let mentions = [];
-      if (rawEditorState.entityMap) {
-        Object.values(rawEditorState.entityMap).map(({ data }) => {
-          if (data.mention) {
-            mentions.push({ ...data.mention });
-          }
-        });
-      }
-      mentions = _.unionBy(mentions, "_id").map((mention) =>
-        mention._id.toString()
-      );
-      if (textData) {
-        setEditorState(EditorState.createEmpty());
-        createComment({
-          variables: { postId: post._id, text: textData, mentions: mentions },
-        })
-          .then(({ data }) => {
-            document
-              .querySelector(`[data-target=comment-input-${post._id}]`)
-              .querySelector("[contenteditable=false]")
-              ?.setAttribute("contenteditable", true);
+      // const rawEditorState = convertToRaw(editorState.getCurrentContent());
+      // document
+      //   .querySelector(`[data-target=comment-input-${post._id}]`)
+      //   .querySelector("[contenteditable=true]")
+      //   ?.setAttribute("contenteditable", false);
+      // const textData = document.querySelector(
+      //   `[data-target=comment-input-${post._id}]`
+      // ).innerHTML;
+      // let mentions = [];
+      // if (rawEditorState.entityMap) {
+      //   Object.values(rawEditorState.entityMap).map(({ data }) => {
+      //     if (data.mention) {
+      //       mentions.push({ ...data.mention });
+      //     }
+      //   });
+      // }
+      // mentions = _.unionBy(mentions, "_id").map((mention) =>
+      //   mention._id.toString()
+      // );
+      // if (textData) {
+      //   setEditorState(EditorState.createEmpty());
+        // createComment({
+        //   variables: { postId: post._id, text: textData, mentions: mentions },
+        // })
+        //   .then(({ data }) => {
+        //     document
+        //       .querySelector(`[data-target=comment-input-${comment._id}]`)
+        //       .querySelector("[contenteditable=false]")
+        //       ?.setAttribute("contenteditable", true);
               
-            const {createComment} = data;
-            addCommentToPost(post._id, createComment);
-          })
-          .catch((err) => {
-            console.log(err.message);
-            document
-              .querySelector(`[data-target=comment-input-${post._id}]`)
-              .querySelector("[contenteditable=true]")
-              ?.setAttribute("contenteditable", true);
-          });
-      }
+        //     const {createComment} = data;
+        //     addCommentToPost(comment._id, createComment);
+        //   })
+        //   .catch((err) => {
+        //     console.log(err.message);
+        //     document
+        //       .querySelector(`[data-target=comment-input-${comment._id}]`)
+        //       .querySelector("[contenteditable=true]")
+        //       ?.setAttribute("contenteditable", true);
+        //   });
+      // }
     }
   };
   return (
-    <Wrapper ref={commentRef}>
+    <Wrapper ref={responseRef}>
       <CommentInput
         theme={colorMode}
         onClick={() => {
@@ -188,7 +188,7 @@ const CommentEditor = ({ post }) => {
           setShowControls(true);
         }}
         onKeyDown={onSubmitComment}
-        data-target={`comment-input-${post._id}`}
+        data-target={`reponse-input-${comment._id}`}
       >
         <Editor
           editorState={editorState}
@@ -212,11 +212,7 @@ const CommentEditor = ({ post }) => {
         show={showControls}
         onClick={() => setShowControls(true)}
       >
-        <EmojiSelect />
-        {/* <InputImage htmlFor={`comment-image-${post._id}`}>
-          <input type="file" name="comment-image" id={`comment-image-${post._id}`}/>  
-          <BiImageAlt/>
-        </InputImage>         */}
+        <EmojiSelect />     
       </CommentControls>
     </Wrapper>
   );

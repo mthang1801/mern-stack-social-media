@@ -29,7 +29,7 @@ const PostCardBody = ({ post }) => {
   }, [])
   
   return (
-    <Wrapper>
+    <>
       <DraftEditor data-target={`post-${post._id}`} dangerouslySetInnerHTML={{__html : post.text}}>
         
       </DraftEditor>
@@ -50,7 +50,7 @@ const PostCardBody = ({ post }) => {
           <ImagesCarousel images={images} />
         </LazyLoad>
       ) : null}
-    </Wrapper>
+    </>
   );
 };
 

@@ -195,8 +195,7 @@ export const vi = {
     },
     post : {
       post : "Đăng bài viết",
-      postPlaceholder : "Chia sẻ cảm nghĩ của bạn",
-      commentPlaceholder : "Để lại bình luận của bạn",
+      postPlaceholder : "Chia sẻ cảm nghĩ của bạn",      
       status :  [
         {
           name: "Công khai",
@@ -229,6 +228,15 @@ export const vi = {
           icon : () => <BiShareAlt/>
         }
       },
+      
+    },
+    comment : {
+      controls: {
+        like : "Thích",
+        liked : "Đã thích", 
+        response : "Trả lời"
+      },
+      commentPlaceholder : "Để lại bình luận của bạn",
       commentInputPlaceholder : "Để lại bình luận của bạn tại đây"
     },
     chat : {

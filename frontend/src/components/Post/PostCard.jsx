@@ -6,7 +6,7 @@ import PostCardBody from "./PostCardBody";
 import PostCardFooter from "./PostCardFooter"
 import Comments from "./Comments"
 const PostCard = ({post}) => {
-  const {colorMode} = useThemeUI()  
+  const {colorMode} = useThemeUI()    
   return (
     <Wrapper theme={colorMode}>
       <PostCardHeader post={post}/>

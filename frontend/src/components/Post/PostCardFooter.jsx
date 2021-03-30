@@ -21,7 +21,7 @@ import LazyLoad from "react-lazyload";
 import CommentEditor from "./CommentEditor"
 const PostCardFooter = ({ post }) => {
   const { i18n, lang } = useLanguage();
-  const { controls, commentPlaceholder } = i18n.store.data[lang].translation.post;
+  const { controls } = i18n.store.data[lang].translation.post;  
   const { colorMode } = useThemeUI();
   const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"})
   const [likePost] = useMutation(LIKE_POST);
