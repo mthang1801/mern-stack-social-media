@@ -34,7 +34,8 @@ export const commentResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.NOTIFY_OWNER_POST_USER_COMMENT
           ),
-        (payload, { userId }) => {         
+        (payload, { userId }) => {     
+          console.log(payload)    
           return (           
             payload.notifyOwnerPostUserComment.notification.receivers[0].toString() ===
             userId.toString()

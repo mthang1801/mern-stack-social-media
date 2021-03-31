@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Wrapper,
   Controls,
@@ -18,7 +18,7 @@ import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
 import {LIKE_POST, UNLIKE_POST} from "../../apollo/operations/mutations/post"
 import {cacheMutations} from "../../apollo/operations/mutations"
 import LazyLoad from "react-lazyload";
-import CommentEditor from "./CommentEditor"
+import  CommentEditor from "./CommentEditor";
 const PostCardFooter = ({ post }) => {
   const { i18n, lang } = useLanguage();
   const { controls } = i18n.store.data[lang].translation.post;  
@@ -26,6 +26,7 @@ const PostCardFooter = ({ post }) => {
   const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-only"})
   const [likePost] = useMutation(LIKE_POST);
   const [unlikePost] = useMutation(UNLIKE_POST);
+  const [showCommentEditor, setShowCommentEditor] = useState(false);
   const {updateLikePost, updateUnlikePost} =cacheMutations
   const onLikePost = () => {
     likePost({variables : {postId : post._id}}).then(({data}) => {
@@ -54,7 +55,7 @@ const PostCardFooter = ({ post }) => {
           <span>{post.likes.includes(user._id) ? controls.liked.name : controls.like.name}</span>
         </Button>
         {/* Comment */}
-        <Button theme={colorMode} >
+        <Button theme={colorMode} onClick={() => setShowCommentEditor(prevState => !prevState)}>
           <span>{controls.comment.icon()}</span>
           <span>{controls.comment.name}</span>
         </Button>
@@ -73,8 +74,8 @@ const PostCardFooter = ({ post }) => {
           <span>{post.likes.length}</span>
         </Counter>
       ) : null}
-      <Comments>
-        <UserComment>          
+      {showCommentEditor && <Comments>
+      <UserComment>          
           <AvatarContainer>            
             <LazyLoad>
               <img src={user.avatar} alt={user.avatar}/>
@@ -84,9 +85,9 @@ const PostCardFooter = ({ post }) => {
             <CommentEditor post={post}/>
           </FormComment>
         </UserComment>
-      </Comments>
+      </Comments>}
     </Wrapper>
   );
 };
 
-export default PostCardFooter;
+export default React.memo(PostCardFooter);

@@ -58,31 +58,7 @@ export const commentControllers = {
             notifyMentionUsersInComment: { ...newNotification._doc },
           });
         }
-        //create notification to notify owner post realize user has commented
-        const ownerNotification = new Notification({
-          field: fields.comment,
-          action: actions.CREATED,
-          creator: currentUserId,
-          receivers: [post.author],
-          href: `/posts/${post._id}`,
-        });
-        //push comment to post
-        post.comments.push(newComment._id);
-        await post.save();
-        //push comment to user
-        await User.findByIdAndUpdate(currentUserId, {
-          $push: { comments: newComment._id },
-        });
-        //push notification to owner Post
-        await User.findByIdAndUpdate(
-          post.author,
-          { $push: { notifications: ownerNotification._id } },
-          { new: true }
-        );
-        //save notification owner Post
-        await (await ownerNotification.save())
-          .populate("creator")
-          .execPopulate();
+
         //save new comment
         await (await newComment.save())
           .populate({
@@ -90,12 +66,46 @@ export const commentControllers = {
             select: "name avatar slug isOnline offlinedAt",
           })
           .execPopulate();
-        await pubsub.publish(notifyOwnerPostUserComment, {
-          notifyOwnerPostUserComment: {
-            comment: newComment,
-            notification: ownerNotification,
-          },
+
+        //push comment to post
+        post.comments.push(newComment._id);
+        
+        //create notification to notify owner post realize user has commented and push usersComment to post
+        if (!post.usersComment.includes(currentUserId)) {
+          const ownerNotification = new Notification({
+            field: fields.comment,
+            action: actions.CREATED,
+            creator: currentUserId,
+            receivers: [post.author],
+            href: `/posts/${post._id}`,
+          });
+          //push notification to owner Post
+          await User.findByIdAndUpdate(
+            post.author,
+            { $push: { notifications: ownerNotification._id } },
+            { new: true }
+          );
+
+          //save notification owner Post
+          await (await ownerNotification.save())
+            .populate("creator")
+            .execPopulate();
+          await pubsub.publish(notifyOwnerPostUserComment, {
+            notifyOwnerPostUserComment: {
+              comment: newComment,
+              notification: ownerNotification,
+            },
+          });
+
+          post.usersComment.push(currentUserId);
+        }
+
+        await post.save();
+        //push comment to user
+        await User.findByIdAndUpdate(currentUserId, {
+          $push: { comments: newComment._id },
         });
+
         await session.commitTransaction();
         session.endSession();
         return newComment;

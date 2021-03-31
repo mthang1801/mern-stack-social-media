@@ -17,4 +17,4 @@ const FriendsBoard = () => {
   )
 }
 
-export default FriendsBoard
+export default React.memo(FriendsBoard)

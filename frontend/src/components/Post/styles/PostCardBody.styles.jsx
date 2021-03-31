@@ -14,7 +14,12 @@ export const DraftEditor = styled.div`
       display : none;
     }
     a {
-      color : blue;
+      color : var(--blue-1);
+    }
+    a[aria-label="hashtag"]{
+      color : inherit ; 
+      background : linear-gradient(to bottom, #90caf9   40%,#64b5f6 60%, #42a5f5 100% );
+      padding: 0.1rem;
     }
   }
 `;

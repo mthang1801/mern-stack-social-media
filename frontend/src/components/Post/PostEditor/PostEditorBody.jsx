@@ -68,7 +68,7 @@ const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
           <a
             className={mentionProps.className}
             href={`${window.location.href}${mentionProps.mention.slug}`}
-            arial-label="mention"
+            aria-label="mention"
           >
             {mentionProps.children}
           </a>
@@ -82,7 +82,7 @@ const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
             href={`${
               window.location.href
             }search?q=${props.decoratedText.replace(/#/g, "")}`}
-            arial-label="hashtag"
+            aria-label="hashtag"
           >
             {props.children}
           </HashtagLink>

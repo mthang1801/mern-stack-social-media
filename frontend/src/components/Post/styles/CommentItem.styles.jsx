@@ -49,8 +49,13 @@ export const ControlItem = styled.span`
   ${({active}) => active && "color: var(--blue-1)"};  
 `
 
-export const Response = styled.div`
+export const ResponseComponent = styled.div`
   width : 95%;
   margin: 0.5rem 0 0.5rem auto;
-  display : ${({showResponse}) => showResponse ? "block" : "none"};
+  display :flex;
+`
+
+export const Response = styled.div`
+  flex : 1 ;
+  margin-left : 0.5rem;
 `

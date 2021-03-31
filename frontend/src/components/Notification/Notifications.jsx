@@ -187,7 +187,7 @@ const Notifications = () => {
         variables : {userId : user._id} , 
         updateQuery : (_, {subscriptionData}) => {
           if(subscriptionData){
-            const {comment, notification} = subscriptionData.data.notifyOwnerPostUserComment;
+            const {comment, notification} = subscriptionData.data.notifyOwnerPostUserComment;            
             updatedNotifications(notification);           
             addCommentToOwnerPost(user._id, comment);
           }

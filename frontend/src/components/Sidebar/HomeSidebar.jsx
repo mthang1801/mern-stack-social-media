@@ -20,4 +20,4 @@ const HomeSidebar = ({user}) => {
   )
 }
 
-export default HomeSidebar
+export default React.memo(HomeSidebar)

@@ -40,9 +40,9 @@ export const postControllers = {
         .populate({
           path: "comments",
           populate: [
-            { path: "author", select: "name avatar name slug isOnline" },           
+            { path: "author", select: "name avatar name slug isOnline" },
           ],
-          options : {skip : 0, limit : 10, sort: {createdAt : -1}}
+          options: { skip: 0, limit: 10, sort: { createdAt: -1 } },
         })
         .sort({ createdAt: -1 })
         .skip(+skip)
@@ -66,9 +66,9 @@ export const postControllers = {
         .populate({
           path: "comments",
           populate: [
-            { path: "author", select: "name avatar name slug isOnline" },            
+            { path: "author", select: "name avatar name slug isOnline" },
           ],
-          options : {skip : 0, limit : 10, sort: {createdAt : -1}}
+          options: { skip: 0, limit: 10, sort: { createdAt: -1 } },
         })
         .sort({ createdAt: -1 })
         .skip(+skip)
@@ -186,7 +186,7 @@ export const postControllers = {
         { $addToSet: { likes: currentUserId } },
         { new: true }
       );
-      if (post) {
+      if (post && !post.usersLike.includes(currentUserId)) {
         const newNotification = new Notification({
           action: actions.LIKE,
           field: fields.post,
@@ -195,12 +195,15 @@ export const postControllers = {
           href: `/posts/${post._id}`,
         });
         await (await newNotification.save()).populate("creator").execPopulate();
-        pubsub.publish(notifyUserLikePost, {
+        await pubsub.publish(notifyUserLikePost, {
           notifyUserLikePost: {
             post,
             notification: newNotification,
           },
         });
+        //push currentUserId to usersLike of post
+        post.usersLike.push(currentUserId);
+        await post.save();
       }
 
       return !!post;

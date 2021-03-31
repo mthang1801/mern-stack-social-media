@@ -33,6 +33,20 @@ const PostSchema = new mongoose.Schema(
         }
       }
     ],
+    usersComment : [
+      {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "users",
+        required: true
+      }
+    ],
+    usersLike : [
+      {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "users", 
+        required :true
+      }
+    ],
     likes : [
       {
         type : mongoose.Schema.Types.ObjectId,

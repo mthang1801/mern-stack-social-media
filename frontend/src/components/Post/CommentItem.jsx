@@ -7,6 +7,7 @@ import {
   CommentText,
   UserName,
   CommentControls,
+  ResponseComponent,
   ControlItem,
 } from "./styles/CommentItem.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -14,7 +15,7 @@ import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
 import Moment from "react-moment";
 import { Response } from "./styles/CommentItem.styles";
-const ResponseEditor = lazy(() => import("./ResponseEditor"));
+import ResponseEditor from "./ResponseEditor";
 
 const CommentItem = ({ comment, user }) => {
   const { colorMode } = useThemeUI();
@@ -56,9 +57,21 @@ const CommentItem = ({ comment, user }) => {
               <Moment fromNow>{+comment.createdAt}</Moment>
             </ControlItem>
           </CommentControls>
-          <Response showResponse={showResponse}>
-            <ResponseEditor comment={comment} />
-          </Response>
+          {showResponse && (
+            <ResponseComponent>
+              <UserAvatar>
+                <LazyLoadImage
+                  effect="blur"
+                  src={comment.author.avatar}
+                  alt={comment.author.avatar}
+                />
+              </UserAvatar>
+              <Response>
+                <ResponseEditor comment={comment} />
+              </Response>
+              
+            </ResponseComponent>
+          )}
         </CommentContent>
       </CommentContainer>
     </Wrapper>
