@@ -57,8 +57,7 @@ const PostCardFooter = ({ post, fetchComments }) => {
     setShowCommentEditor(true);
     }
     
-  };
-  console.log(post)
+};
   return (
     <Wrapper>
       <Controls theme={colorMode}>

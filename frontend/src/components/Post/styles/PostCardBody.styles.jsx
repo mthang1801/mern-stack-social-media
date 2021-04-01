@@ -18,6 +18,7 @@ export const DraftEditor = styled.div`
     }
     a[aria-label="hashtag"]{
       color : inherit ; 
+      opacity : 0.8;
       background : linear-gradient(to bottom, #90caf9   40%,#64b5f6 60%, #42a5f5 100% );
       padding: 0.1rem;
     }

@@ -10,3 +10,14 @@ export const Wrapper = styled.article`
   border-radius: 0.5rem;
   padding-bottom: 0.25rem;
 `;
+
+export const FetchMoreLink = styled.span`
+  display : block;
+  color : var(--blue-2);
+  padding : 0rem 1rem 1.2rem 1rem; 
+  font-size : 0.9rem; 
+  cursor : pointer;
+  &:hover{
+    color : var(--blue-3);
+  }
+`

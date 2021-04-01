@@ -23,6 +23,7 @@ export const commentResolvers = {
         subscriptionActions.NOTIFY_MENTIONS_USERS_IN_COMMENT,
         subscriptionActions.NOTIFY_OWNER_POST_USER_COMMENT
       ),
+    removeComment : (_, args, {req}, info) => commentControllers.removeComment(req, args.commentId)
   },
   Subscription: {
     notifyMentionUsersInComment: {

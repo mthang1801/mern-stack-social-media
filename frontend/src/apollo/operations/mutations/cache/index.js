@@ -1,5 +1,7 @@
 //Controls
 import createToggleButtonMenu from "./controls/toggleButtonMenu";
+import createSetDialog from "./controls/setDialog";
+import createClearDialog from "./controls/clearDialog";
 //Post
 import createSetPostStatus from "./post/setPostStatus";
 import createSetPosts from "./post/setPosts";
@@ -11,6 +13,7 @@ import createUpdateUnlikePost from "./post/updateUnlikePost";
 import createAddCommentToPost from "./post/addCommentToPost";
 import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost"
 import createAddCommentsToPost from "./post/addCommentsToPost"
+import createRemoveComment from "./post/removeComment";
 //Response
 import createAddResponseToComment from "./post/addNewResponseToComment"
 //User
@@ -50,6 +53,7 @@ import createUpdateUserOnlineOfflineMessagesStorage from "./chat/updateUserOnlin
 
 import {
   toggleButtonMenuVar,
+  setDialogVar,
   setPostStatusVar,
   setUserVar,
   setPostsVar,
@@ -71,6 +75,8 @@ import {
 const mutations = {
   //Controls
   toggleButtonMenu: createToggleButtonMenu(toggleButtonMenuVar),
+  setDialog : createSetDialog(setDialogVar), 
+  clearDialog : createClearDialog(setDialogVar),
   //Post
   setPostStatus: createSetPostStatus(setPostStatusVar),
   setPosts: createSetPosts(setPostsVar),
@@ -78,6 +84,7 @@ const mutations = {
   setNewPost : createSetNewPost(setPostsVar),
   updateLikePost : createUpdateLikePost(setPostsVar),
   updateUnlikePost : createUpdateUnlikePost(setPostsVar),  
+  removeComment : createRemoveComment(setPostsVar) ,
   //Comment
   addCommentToPost : createAddCommentToPost(setPostsVar),
   addCommentToOwnerPost : createAddCommentToOwnerPost(setPersonalPostsVar),

@@ -235,13 +235,23 @@ export const vi = {
       controls: {
         like : "Thích",
         liked : "Đã thích", 
-        response : "Trả lời"
+        response : "Trả lời",
+        remove : "Xóa"
       },
       commentPlaceholder : "Để lại bình luận của bạn",
-      commentInputPlaceholder : "Để lại bình luận của bạn tại đây"
+      commentInputPlaceholder : "Để lại bình luận của bạn tại đây",
+      fetchMoreComments : "Xem thêm bình luận" 
     },
     chat : {
       chatInputPlaceholder :`Gửi tin nhắn tới`
+    },
+    dialog: {
+      agree: "Đồng ý", 
+      disagree : "Hủy bỏ",
+      removeComment : {
+        title : "Cảnh báo", 
+        content : "Bạn có muốn xóa bình luận không?",
+      }
     }
   },
 };

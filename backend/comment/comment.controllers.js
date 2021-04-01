@@ -1,6 +1,7 @@
 import getAuthUser from "../utils/getAuthUser";
 import {
   ApolloError,
+  ValidationError,
   CheckResultAndHandleErrors,
   UserInputError,
 } from "apollo-server-express";
@@ -9,10 +10,11 @@ import { Post } from "../post/post.model";
 import { Comment } from "./comment.model";
 import { User } from "../user/user.model";
 import { Notification } from "../notification/notification.model";
+import { Response } from "../response/response.model";
 import { fields, actions } from "../fields-actions";
 export const commentControllers = {
   fetchComments: async (req, postId, except, skip, limit) => {
-    try {
+    try {     
       if(!except){
         except = [];
       }
@@ -22,7 +24,7 @@ export const commentControllers = {
         match: { _id: { $nin: except } },
         options: { sort: { createdAt: -1 }, skip, limit },
       });
-      console.log(post)
+      
       return post.comments;
     } catch (error) {
       throw new ApolloError(error.message);
@@ -133,4 +135,29 @@ export const commentControllers = {
       throw new ApolloError(error.message);
     }
   },
+  removeComment : async (req, commentId) => {
+    try {
+      const currentUserId = getAuthUser(req);
+      const comment = await Comment.findOne({_id : commentId, author : currentUserId});
+      if(!comment){
+        return false ;
+      }
+      
+      const session = await mongoose.startSession();
+      session.startTransaction();
+      //remove comment in post 
+      await Post.findByIdAndUpdate(comment.post, {$pull : {comments : commentId, responses : {$in : comment.responses}}});
+      //remove comment in author
+      await User.findByIdAndUpdate(currentUserId, {$pull : {comments: commentId, responses : {$in : comment.responses}}}) ;
+      //remove all responses of comment
+      for(let responseId of comment.responses){
+        await Response.findByIdAndDelete(responseId);
+      }
+      //remove comment
+      await Comment.findByIdAndDelete(commentId);
+      return true;  
+    } catch (error) {
+      throw new ApolloError(error.message);
+    }
+  }
 };
