@@ -14,10 +14,7 @@ export const NOTIFY_OWNER_POST_USER_COMMENT_SUBSCRIPTION = gql`
         }
         post
         likes
-        subComments {
-          _id
-          text
-        }
+        responses 
         createdAt
       }
       notification {

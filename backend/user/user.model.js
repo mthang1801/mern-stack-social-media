@@ -88,6 +88,13 @@ const UserSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  responses : [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "responses",
+      required: true 
+    }
+  ],
   blocks : [
     {
       type : mongoose.Schema.Types.ObjectId,

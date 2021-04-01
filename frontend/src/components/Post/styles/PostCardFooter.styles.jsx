@@ -72,7 +72,7 @@ export const LikeButton = styled.button`
 `
 
 export const Comments = styled.section`
-  margin : 1rem 0;
+  margin-top : 1rem;
 `
 
 
@@ -94,5 +94,10 @@ export const AvatarContainer = styled.div`
 export const FormComment = styled.div`
   flex: 1 ; 
   margin-left : 0.5rem;
-  
+`
+
+export const CommentCounter = styled.div`
+  text-align :right;
+  margin : 0.5rem 1rem 0 1rem;
+  font-size : 0.9rem;
 `
