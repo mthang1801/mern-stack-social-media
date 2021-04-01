@@ -21,7 +21,7 @@ const CommentItem = ({ comment, user }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const [showResponse, setShowResponse] = useState(false);
-  const { controls } = i18n.store.data[lang].translation.comment;
+  const { controls } = i18n.store.data[lang].translation.comment;  
   return (
     <Wrapper>
       <CommentContainer>
@@ -35,7 +35,7 @@ const CommentItem = ({ comment, user }) => {
         <CommentContent>
           <CommentText theme={colorMode}>
             <UserName to={`/${comment.author.slug}`}>
-              {comment.author.name.toLowerCase()}
+              {comment.author.name}
             </UserName>
             <div
               data-target={`comment-item-${comment._id}`}
@@ -67,9 +67,8 @@ const CommentItem = ({ comment, user }) => {
                 />
               </UserAvatar>
               <Response>
-                <ResponseEditor comment={comment} />
+                <ResponseEditor comment={comment} user={user} />
               </Response>
-              
             </ResponseComponent>
           )}
         </CommentContent>

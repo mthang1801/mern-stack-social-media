@@ -11,7 +11,8 @@ export const schemaType = gql`
     friends : [String!]!
     posts : [Post!]!
     avatar: String
-    comments : [Comment!]!    
+    comments : [Comment!]!  
+    responses : [Response!]  
     notifications : [Notification!]!
     following : [ID!]!
     followed : [ID!]!
@@ -30,7 +31,8 @@ export const schemaType = gql`
     files : [File!]
     author : User! 
     likes : [ID!]    
-    comments : [Comment!]
+    comments : [ID!]    
+    responses : [ID!]
     createdAt : String!
     updatedAt : String!
   }
@@ -42,12 +44,22 @@ export const schemaType = gql`
   }
   type Comment {
     _id : ID! 
-    text : String!
+    text : String
     mentions : [ID!]
     author : User! 
     post : ID!
     likes : [ID!]
-    subComments : [Comment]
+    responses : [ID!]
+    createdAt : String 
+    updatedAt : String
+  }
+  type Response {
+    _id : ID! 
+    text : String
+    mentions : [ID!]
+    author : User! 
+    comment : ID!
+    likes : [ID!]    
     createdAt : String 
     updatedAt : String
   }
@@ -58,7 +70,6 @@ export const schemaType = gql`
     createdAt : String!
     updatedAt : String!
   } 
-
   type Notification{
     _id : ID!
     field : String! 
@@ -70,7 +81,6 @@ export const schemaType = gql`
     acceptInvite : Boolean!
     createdAt : String!     
   }
-
   type PersonalChat{
     _id : ID!
     sender : User!
@@ -170,7 +180,6 @@ export const schemaType = gql`
   type MessagesResult{
     messages : [PersonalChat!]    
   }
-
 
   type Error{
     message : String!

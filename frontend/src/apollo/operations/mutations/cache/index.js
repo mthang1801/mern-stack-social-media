@@ -10,6 +10,9 @@ import createUpdateUnlikePost from "./post/updateUnlikePost";
 //Comment
 import createAddCommentToPost from "./post/addCommentToPost";
 import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost"
+import createAddCommentsToPost from "./post/addCommentsToPost"
+//Response
+import createAddResponseToComment from "./post/addNewResponseToComment"
 //User
 import createSetCurrentUser from "./user/setCurrentUser";
 import createSetCurrentPersonalUser from "./user/setCurrentPersonalUser";
@@ -74,10 +77,13 @@ const mutations = {
   setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
   setNewPost : createSetNewPost(setPostsVar),
   updateLikePost : createUpdateLikePost(setPostsVar),
-  updateUnlikePost : createUpdateUnlikePost(setPostsVar),
+  updateUnlikePost : createUpdateUnlikePost(setPostsVar),  
   //Comment
   addCommentToPost : createAddCommentToPost(setPostsVar),
   addCommentToOwnerPost : createAddCommentToOwnerPost(setPersonalPostsVar),
+  addCommentsToPost : createAddCommentsToPost(setPostsVar),
+  //Response
+  addResponseToComment : createAddResponseToComment(setPostsVar),
   //User
   setCurrentUser: createSetCurrentUser(setUserVar),
   setCurrentPersonalUser: createSetCurrentPersonalUser(

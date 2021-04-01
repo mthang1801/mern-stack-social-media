@@ -1,5 +1,6 @@
 import getAuthUser from "../utils/getAuthUser";
 import {
+  ApolloError,
   CheckResultAndHandleErrors,
   UserInputError,
 } from "apollo-server-express";
@@ -10,6 +11,23 @@ import { User } from "../user/user.model";
 import { Notification } from "../notification/notification.model";
 import { fields, actions } from "../fields-actions";
 export const commentControllers = {
+  fetchComments: async (req, postId, except, skip, limit) => {
+    try {
+      if(!except){
+        except = [];
+      }
+      const post = await Post.findById(postId).populate({
+        path: "comments",
+        populate : {path : "author", select : "name avatar slug isOnline offlinedAt"},
+        match: { _id: { $nin: except } },
+        options: { sort: { createdAt: -1 }, skip, limit },
+      });
+      console.log(post)
+      return post.comments;
+    } catch (error) {
+      throw new ApolloError(error.message);
+    }
+  },
   createComment: async (
     req,
     postId,
@@ -69,7 +87,7 @@ export const commentControllers = {
 
         //push comment to post
         post.comments.push(newComment._id);
-        
+
         //create notification to notify owner post realize user has commented and push usersComment to post
         if (!post.usersComment.includes(currentUserId)) {
           const ownerNotification = new Notification({

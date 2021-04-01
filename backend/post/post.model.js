@@ -1,11 +1,7 @@
 import mongoose from "mongoose";
 export const statusEnum = ["public", "private", "friends", "PUBLIC", "PRIVATE", "FRIENDS"]
 const PostSchema = new mongoose.Schema(
-  {
-    // if personal post, group is null
-    // group : {
-      
-    // },
+  {   
     text: {
       type: String,
       required: true,
@@ -60,6 +56,13 @@ const PostSchema = new mongoose.Schema(
         ref: "comments",
         required: true,
       },
+    ],
+    responses : [
+      {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "responses", 
+        required : true 
+      }
     ],
     author : {
       type : mongoose.Schema.Types.ObjectId, 

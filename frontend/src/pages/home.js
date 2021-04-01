@@ -32,6 +32,7 @@ const Home = () => {
     if (!posts.length && user && !fetched) {
       fetchPosts().then(({ data: { fetchPosts } }) => {
         if (_mounted && fetchPosts) {
+          console.log(fetchPosts)
           setPosts([...fetchPosts]);
           setFetched(true);
         }
@@ -48,7 +49,7 @@ const Home = () => {
       fetchPosts({ skip, limit }).then(({ data: { fetchPosts } }) => {
         if (_mounted) {
           console.log(fetchPosts);
-          if (fetchPosts) {
+          if (fetchPosts) {            
             setPosts([...posts, ...fetchPosts]);
           }
           setLoadingMore(false);
@@ -89,7 +90,6 @@ const Home = () => {
         <MainContent>
           <MainContentLeftSide>
             {user && <PostEditor user={user} />}
-
             {posts.length ? <Posts posts={posts} /> : null}
           </MainContentLeftSide>
           <MainContentRightSide>

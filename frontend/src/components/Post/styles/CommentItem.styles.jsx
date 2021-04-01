@@ -31,8 +31,7 @@ export const CommentText = styled.div`
 
 export const UserName = styled(Link)`
   font-size : 0.95rem ; 
-  font-weight : bold;
-  text-transform : capitalize; 
+  font-weight : bold;  
   opacity : 1 
   &:hover{
     opacity : 1 ;

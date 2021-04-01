@@ -5,7 +5,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import Editor from "@draft-js-plugins/editor";
 import createMentionPlugin from "@draft-js-plugins/mention";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
@@ -27,22 +27,21 @@ import {
 } from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
-import { CREATE_COMMENT } from "../../apollo/operations/mutations/post/createComment";
+import { CREATE_RESPONSE } from "../../apollo/operations/mutations/post/createResponse";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import { Link } from "react-router-dom";
-
-
-const CommentEditor = ({ comment }) => {
+import shortid  from 'shortid';
+const CommentEditor = ({ comment, user }) => {  
+  const data = `{"blocks":[{"key":"${shortid.generate()}","text":"${comment.author.name} ","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":${comment.author.name.length},"key":0}],"data":{}},{"key":"2haps","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{"0":{"type":"mention","mutability":"SEGMENTED","data":{"mention":{"__typename":"User","_id":"${comment._id}","name":"${comment.author.name}","avatar":"${comment.author.avatar}","slug":"${comment.author.slug}"}}}}}`
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
+    comment.author._id === user._id ? EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse((data))))
   );
   const [openMention, setOpenMention] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
   const {
     refetch: searchFriends,    
   } = useQuery(SEARCH_FRIENDS, { fetchPolicy: "network-only", skip: true });
-  const [createComment] = useMutation(CREATE_COMMENT);
-  const { addCommentToPost } = cacheMutations;  
+  const [createResponse] = useMutation(CREATE_RESPONSE);
+  const { addResponseToComment } = cacheMutations;  
   const { colorMode } = useThemeUI();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const [showControls, setShowControls] = useState(false);
@@ -51,8 +50,8 @@ const CommentEditor = ({ comment }) => {
   const editorRef = useRef(null);
   const { i18n, lang } = useLanguage();
   const { commentInputPlaceholder } = i18n.store.data[lang].translation.comment;
-  const onSearchChange = useCallback(({ value }) => {
-    if (value) {
+  const onSearchChange = useCallback(({ value }) => {    
+    if (value) {      
       searchFriends({ search: value }).then(({ data }) => {
         const { searchFriends } = data;
         setSuggestions([...searchFriends]);
@@ -80,7 +79,7 @@ const CommentEditor = ({ comment }) => {
       component(props) {
         return <LinkAnchor {...props} aria-label="link" />;
       },
-    });
+    });   
     // Mention
     const mentionPlugin = createMentionPlugin({
       mentionComponent(mentionProps) {
@@ -118,6 +117,7 @@ const CommentEditor = ({ comment }) => {
     return { plugins, EmojiSelect, EmojiSuggestions, MentionSuggestions };
   }, []);
 
+ 
   useEffect(() => {
     function trackUserClickCommentControls(e) {
       if (
@@ -136,47 +136,47 @@ const CommentEditor = ({ comment }) => {
 
   const onSubmitComment = (e) => {
     if (e.which === 13 && editorState.getCurrentContent().hasText()) {
-      // const rawEditorState = convertToRaw(editorState.getCurrentContent());
-      // document
-      //   .querySelector(`[data-target=comment-input-${post._id}]`)
-      //   .querySelector("[contenteditable=true]")
-      //   ?.setAttribute("contenteditable", false);
-      // const textData = document.querySelector(
-      //   `[data-target=comment-input-${post._id}]`
-      // ).innerHTML;
-      // let mentions = [];
-      // if (rawEditorState.entityMap) {
-      //   Object.values(rawEditorState.entityMap).map(({ data }) => {
-      //     if (data.mention) {
-      //       mentions.push({ ...data.mention });
-      //     }
-      //   });
-      // }
-      // mentions = _.unionBy(mentions, "_id").map((mention) =>
-      //   mention._id.toString()
-      // );
-      // if (textData) {
-      //   setEditorState(EditorState.createEmpty());
-        // createComment({
-        //   variables: { postId: post._id, text: textData, mentions: mentions },
-        // })
-        //   .then(({ data }) => {
-        //     document
-        //       .querySelector(`[data-target=comment-input-${comment._id}]`)
-        //       .querySelector("[contenteditable=false]")
-        //       ?.setAttribute("contenteditable", true);
+     
+      const rawEditorState = convertToRaw(editorState.getCurrentContent());
+      document
+        .querySelector(`[data-target=response-input-${comment._id}]`)
+        .querySelector("[contenteditable=true]")
+        ?.setAttribute("contenteditable", false);
+      const textData = document.querySelector(
+        `[data-target=response-input-${comment._id}]`
+      ).innerHTML;
+      let mentions = [];
+      if (rawEditorState.entityMap) {
+        Object.values(rawEditorState.entityMap).map(({ data }) => {
+          if (data.mention) {
+            mentions.push({ ...data.mention });
+          }
+        });
+      }
+      mentions = _.unionBy(mentions, "_id").map((mention) =>
+        mention._id.toString()
+      );
+      if (textData) {
+        setEditorState(EditorState.createEmpty());              
+        createResponse({variables : {
+          commentId : comment._id , text : textData, mentions
+        }})
+          .then(({ data }) => {
+            document
+              .querySelector(`[data-target=response-input-${comment._id}]`)
+              .querySelector("[contenteditable=false]")
+              ?.setAttribute("contenteditable", true);
               
-        //     const {createComment} = data;
-        //     addCommentToPost(comment._id, createComment);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err.message);
-        //     document
-        //       .querySelector(`[data-target=comment-input-${comment._id}]`)
-        //       .querySelector("[contenteditable=true]")
-        //       ?.setAttribute("contenteditable", true);
-        //   });
-      // }
+            const {createResponse} = data;            
+            addResponseToComment(comment.post, comment._id, createResponse)
+          })
+          .catch((err) => {            
+            document
+              .querySelector(`[data-target=response-input-${comment._id}]`)
+              .querySelector("[contenteditable=true]")
+              ?.setAttribute("contenteditable", true);
+          });
+      }
     }
   };
   return (
@@ -188,7 +188,7 @@ const CommentEditor = ({ comment }) => {
           setShowControls(true);
         }}
         onKeyDown={onSubmitComment}
-        data-target={`reponse-input-${comment._id}`}
+        data-target={`response-input-${comment._id}`}
       >
         <Editor
           editorState={editorState}
@@ -201,9 +201,8 @@ const CommentEditor = ({ comment }) => {
           open={openMention}
           onOpenChange={onOpenChange}
           onSearchChange={onSearchChange}
-          suggestions={suggestions}
-        />
-        <EmojiSuggestions />
+          suggestions={suggestions}          
+        />        
         <EmojiSuggestions />
       </CommentInput>
       <CommentControls
@@ -218,4 +217,4 @@ const CommentEditor = ({ comment }) => {
   );
 };
 
-export default React.memo(CommentEditor);
+export default CommentEditor;

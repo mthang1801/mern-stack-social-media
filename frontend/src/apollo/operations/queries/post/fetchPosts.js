@@ -23,30 +23,8 @@ export const FETCH_POSTS = gql`
         mimetype
         data
       }
-      comments{
-        _id 
-        text
-        post
-        author{
-          _id
-          name
-          avatar
-          slug
-        }
-        likes
-        subComments{
-          _id 
-          text
-          post
-          author{
-            _id
-            name
-            avatar
-            slug
-          }
-        }
-        createdAt
-      }
+      comments       
+      responses     
       likes      
       status
       createdAt

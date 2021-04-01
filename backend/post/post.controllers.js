@@ -11,7 +11,7 @@ import {
 } from "apollo-server-express";
 import { actions, fields } from "../fields-actions";
 import decodeBase64 from "../utils/decodeBase64";
-import { pubsub } from "../pubsub";
+
 export const postControllers = {
   fetchPosts: async (req, userId, skip, limit) => {
     console.time("fetch Posts");
@@ -37,13 +37,6 @@ export const postControllers = {
           path: "author",
           select: "name avatar slug isOnline offlinedAt",
         })
-        .populate({
-          path: "comments",
-          populate: [
-            { path: "author", select: "name avatar name slug isOnline" },
-          ],
-          options: { skip: 0, limit: 10, sort: { createdAt: -1 } },
-        })
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);
@@ -62,14 +55,7 @@ export const postControllers = {
         .populate({
           path: "mentions",
           select: "name avatar slug isOnline offlinedAt",
-        })
-        .populate({
-          path: "comments",
-          populate: [
-            { path: "author", select: "name avatar name slug isOnline" },
-          ],
-          options: { skip: 0, limit: 10, sort: { createdAt: -1 } },
-        })
+        })        
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);
@@ -149,7 +135,7 @@ export const postControllers = {
       status,
     });
     //if has mentions, create notification to mentioner
-    if (mentions.length) {
+    if (mentions.length && status.toUpperCase() !== "PRIVATE") {
       newNotification = new Notification({
         field: fields.post,
         action: actions.MENTION,

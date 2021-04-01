@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 const CommentSchema = new mongoose.Schema(
   {
     text: {
-      type: String,
-      required: true,
+      type: String,      
     },
     mentions : [
       {
@@ -33,13 +32,13 @@ const CommentSchema = new mongoose.Schema(
       ref: "users",
       required: true,
     }],
-    subComments: [
+    responses: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "comments",
+        ref: "responses",
         required: true,
       },
-    ],
+    ],    
   },
   { timestamps: true }
 );

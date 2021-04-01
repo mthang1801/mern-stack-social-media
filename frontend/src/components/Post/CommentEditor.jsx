@@ -203,8 +203,7 @@ const CommentEditor = ({ post }) => {
           onSearchChange={onSearchChange}
           suggestions={suggestions}
         />
-        <EmojiSuggestions />
-        <EmojiSuggestions />
+        <EmojiSuggestions />       
       </CommentInput>
       <CommentControls
         ref={controlsRef}

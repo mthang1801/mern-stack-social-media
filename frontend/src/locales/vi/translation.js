@@ -226,7 +226,8 @@ export const vi = {
         share :{
           name : "Chia sẻ",
           icon : () => <BiShareAlt/>
-        }
+        },
+        countComments: (count) => `Bài viết có ${count} bình luận`
       },
       
     },
