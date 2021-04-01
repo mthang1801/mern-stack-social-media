@@ -16,9 +16,12 @@ import {
   ReceivedRequestsToAddFriend,
   MessagesStorage,  
   CurrentChat,
-  NumberOfConversations
+  NumberOfConversations,
+  Dialog
 } from "./models";
+//Cache
 const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
+const setDialogVar = makeVar(Dialog);
 //Post
 const setPostStatusVar = makeVar(PostStatus);
 const setPostsVar = makeVar(Posts);
@@ -60,9 +63,12 @@ const cache = new InMemoryCache({
         currentPersonalUser: {
           read: () => setCurrentPersonalUserVar(),
         },      
-        //UI
+        //cache
         toggleButtonMenu: {
           read: () => toggleButtonMenuVar(),
+        },
+        dialog : {
+          read : () => setDialogVar()
         },
         //post
         postStatus: {
@@ -128,5 +134,6 @@ export {
   setReceivedRequestsToAddFriendVar,
   setMessagesStorageVar,  
   setCurrentChatVar,  
-  setNumberOfConversationsVar
+  setNumberOfConversationsVar,
+  setDialogVar
 };

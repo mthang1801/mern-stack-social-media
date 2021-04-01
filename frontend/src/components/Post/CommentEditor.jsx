@@ -34,7 +34,7 @@ const CommentEditor = ({ post }) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
-  const [openMention, setOpenMention] = useState(true);
+  const [openMention, setOpenMention] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const {
     refetch: searchFriends,
@@ -135,7 +135,7 @@ const CommentEditor = ({ post }) => {
   }, [commentRef, showControls]);
 
   const onSubmitComment = (e) => {
-    if (e.which === 13 && editorState.getCurrentContent().hasText()) {
+    if (e.which === 13 && editorState.getCurrentContent().hasText() && !openMention) {
       const rawEditorState = convertToRaw(editorState.getCurrentContent());
       document
         .querySelector(`[data-target=comment-input-${post._id}]`)
@@ -169,8 +169,7 @@ const CommentEditor = ({ post }) => {
             const {createComment} = data;
             addCommentToPost(post._id, createComment);
           })
-          .catch((err) => {
-            console.log(err.message);
+          .catch((err) => {          
             document
               .querySelector(`[data-target=comment-input-${post._id}]`)
               .querySelector("[contenteditable=true]")
@@ -179,6 +178,14 @@ const CommentEditor = ({ post }) => {
       }
     }
   };
+
+  useEffect(() => {
+    let timer ;
+    timer = setTimeout(() => {
+      editorRef.current?.focus();
+    },100)
+    return () => clearTimeout(timer);
+  },[])
   return (
     <Wrapper ref={commentRef}>
       <CommentInput

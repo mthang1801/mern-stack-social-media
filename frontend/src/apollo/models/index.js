@@ -17,6 +17,7 @@ export { LatestNotification } from "./cache/LatestNotification";
 export { ToggleButtonMenu } from "./cache/ToggleButtonMenu";
 export { LoadingNotificationMore } from "./cache/LoadingNotificationsMore";
 export { OpenFriendsList } from "./cache/OpenFriendsList";
+export { Dialog } from "./cache/Dialog";
 //Chat
 export { MessagesStorage } from "./chat/MessagesStorage";
 export { CurrentChat } from "./chat/CurrentChat";

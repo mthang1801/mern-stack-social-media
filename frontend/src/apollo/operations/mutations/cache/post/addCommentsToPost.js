@@ -4,7 +4,7 @@ const addCommentsToPost = setPostsVar => (postId, newComments) => {
   if(post){  
     const updatedPosts = posts.map(post => {
       let _post = {...post}; 
-      if(_post._id === postId){
+      if(_post._id === postId){        
         _post.commentsData =  _post.commentsData ? [..._post.commentsData, ...newComments] : [...newComments];
       }
       return {..._post}; 

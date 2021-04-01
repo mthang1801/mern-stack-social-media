@@ -1,4 +1,5 @@
 import { GET_TOGGLE_BUTTON_MENU } from "./controls/getToggleButtonMenu";
+import {GET_DIALOG} from "./controls/getDialog"
 import { GET_POST_STATUS } from "./post/getPostStatus";
 import { GET_POSTS } from "./post/getPosts";
 import { GET_CURRENT_USER } from "./user/getCurrentUser";
@@ -22,6 +23,7 @@ import { GET_HEADER_CACHE_DATA } from "./components/getHeader";
 import { GET_USE_POST_SUBSCRIPTION_CACHE_DATA } from "./components/getUsePostsSubscription";
 
 export { GET_TOGGLE_BUTTON_MENU };
+export { GET_DIALOG };
 export { GET_POST_STATUS };
 export { GET_POSTS };
 export { GET_CURRENT_USER };
@@ -46,6 +48,7 @@ export { GET_USE_POST_SUBSCRIPTION_CACHE_DATA };
 
 export const cacheQueries = {
   GET_TOGGLE_BUTTON_MENU,
+  GET_DIALOG,
   GET_POST_STATUS,
   GET_POSTS,
   GET_CURRENT_USER,

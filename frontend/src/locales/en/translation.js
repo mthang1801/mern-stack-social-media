@@ -196,7 +196,7 @@ export const en = {
     },
     post : {
       post : "Post", 
-      postPlaceholder : "What's on your mind?",      
+      postPlaceholder : "What's on your mind?",            
       status : [
         {
           name: "public",
@@ -237,13 +237,23 @@ export const en = {
       controls: {
         like : "Like",
         liked : "Liked", 
-        response : "Response"
+        response : "Response",
+        remove : "Remove"
       },
       commentInputPlaceholder : "Comment here...",
       commentPlaceholder : "Enter your comment here",
+      fetchMoreComments : "Get more comments",      
     },
     chat : {
       chatInputPlaceholder : `Send message to`
+    },
+    dialog: {
+      agree: "Agree", 
+      disagree : "Cancel",
+      removeComment : {
+        title : "Warning", 
+        content : "Do you want to remove this comment?",
+      }
     }
   },
 };
