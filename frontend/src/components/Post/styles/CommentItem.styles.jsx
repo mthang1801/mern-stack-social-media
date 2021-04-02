@@ -45,7 +45,13 @@ export const ControlItem = styled.span`
   margin : 0 0.4rem;
   cursor : pointer;
   opacity : 0.7;
-  ${({active}) => active && "color: var(--blue-1)"};  
+  ${({active}) => active && `
+    color: var(--blue-1); 
+    opacity : 1;
+  `}; 
+  &:hover{
+    opacity : 1 ;
+  } 
 `
 
 export const ResponseComponent = styled.div`

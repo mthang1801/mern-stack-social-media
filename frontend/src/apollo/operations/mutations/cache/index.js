@@ -14,6 +14,8 @@ import createAddCommentToPost from "./post/addCommentToPost";
 import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost"
 import createAddCommentsToPost from "./post/addCommentsToPost"
 import createRemoveComment from "./post/removeComment";
+import createAddLikeComment from "./post/addLikeComment";
+import createRemoveLikeComment from "./post/removeLikeComment";
 //Response
 import createAddResponseToComment from "./post/addNewResponseToComment"
 //User
@@ -89,6 +91,8 @@ const mutations = {
   addCommentToPost : createAddCommentToPost(setPostsVar),
   addCommentToOwnerPost : createAddCommentToOwnerPost(setPersonalPostsVar),
   addCommentsToPost : createAddCommentsToPost(setPostsVar),
+  addLikeComment : createAddLikeComment(setPostsVar),
+  removeLikeComment : createRemoveLikeComment(setPostsVar),
   //Response
   addResponseToComment : createAddResponseToComment(setPostsVar),
   //User
