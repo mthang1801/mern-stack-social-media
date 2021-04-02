@@ -159,5 +159,25 @@ export const commentControllers = {
     } catch (error) {
       throw new ApolloError(error.message);
     }
+  },
+  likeComment : async (req, commentId, pubsub, notifyOwnerCommentUserLike) => {    
+    const currentUserId = getAuthUser(req);
+    const comment = await Comment.findById(commentId);
+    if(!comment || comment.likes.includes(currentUserId.toString())){
+      return false ; 
+    }
+    comment.likes.push(currentUserId);    
+    await comment.save();
+    return true ; 
+  },
+  removeLikeComment : async (req, commentId) => {
+    const currentUserId = getAuthUser(req);
+    const comment = await Comment.findById(commentId);   
+    if(!comment || !comment.likes.includes(currentUserId)){
+      return false ; 
+    }
+    comment.likes.pull(currentUserId);
+    await comment.save();
+    return true ; 
   }
 };

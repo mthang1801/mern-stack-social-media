@@ -23,7 +23,16 @@ export const commentResolvers = {
         subscriptionActions.NOTIFY_MENTIONS_USERS_IN_COMMENT,
         subscriptionActions.NOTIFY_OWNER_POST_USER_COMMENT
       ),
-    removeComment : (_, args, {req}, info) => commentControllers.removeComment(req, args.commentId)
+    removeComment: (_, args, { req }, info) =>
+      commentControllers.removeComment(req, args.commentId),
+    likeComment: (_, args, { req }, info) =>
+      commentControllers.likeComment(
+        req,
+        args.commentId,
+        pubsub,
+        subscriptionActions.NOTIFY_OWNER_COMMENT_USER_LIKE
+      ),
+      removeLikeComment : (_, args, {req}) => commentControllers.removeLikeComment(req, args.commentId)
   },
   Subscription: {
     notifyMentionUsersInComment: {
@@ -49,6 +58,20 @@ export const commentResolvers = {
           console.log(payload);
           return (
             payload.notifyOwnerPostUserComment.notification.receivers[0].toString() ===
+            userId.toString()
+          );
+        }
+      ),
+    },
+    notifyOwnerCommentUserLike: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.NOTIFY_OWNER_COMMENT_USER_LIKE
+          ),
+        (payload, { userId }) => {
+          return (
+            payload.notifyOwnerCommentUserLike.author.toString() ===
             userId.toString()
           );
         }

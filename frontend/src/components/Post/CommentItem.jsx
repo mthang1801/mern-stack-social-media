@@ -19,7 +19,7 @@ import ResponseEditor from "./ResponseEditor";
 import {useQuery, useMutation} from "@apollo/client";
 import {cacheMutations} from "../../apollo/operations/mutations/cache";
 import {GET_DIALOG} from "../../apollo/operations/queries/cache";
-import {REMOVE_COMMENT} from "../../apollo/operations/mutations/post/removeComment";
+import {REMOVE_COMMENT, LIKE_COMMENT, REMOVE_LIKE_COMMENT} from "../../apollo/operations/mutations/post";
 
 const CommentItem = ({ comment, user }) => {
   const { colorMode } = useThemeUI();
@@ -27,8 +27,10 @@ const CommentItem = ({ comment, user }) => {
   const [showResponse, setShowResponse] = useState(false);
   const { controls } = i18n.store.data[lang].translation.comment;  
   const {dialog : dialogAlert} = i18n.store.data[lang].translation;
-  const {setDialog, removeComment : removeCommentFromPostCache} = cacheMutations;
+  const {setDialog, removeComment : removeCommentFromPostCache, addLikeComment, removeLikeComment } = cacheMutations;
   const {data : {dialog}} = useQuery(GET_DIALOG)
+  const [likeComment] = useMutation(LIKE_COMMENT);
+  const [RemoveLikeComment] = useMutation(REMOVE_LIKE_COMMENT);
   const onClickRemoveComment = () => {    
     setDialog({agree : false , title : dialogAlert.removeComment.title, content : dialogAlert.removeComment.content, data : {commentId : comment._id}})
   }
@@ -41,7 +43,23 @@ const CommentItem = ({ comment, user }) => {
       })
     }
   },[dialog])
- 
+  const onLikeComent = () => {
+    likeComment({variables : {commentId: comment._id}}).then(({data}) => {      
+      console.log(data);
+      if(data.likeComment){
+        addLikeComment(comment.post, comment._id, user._id);
+      }
+      
+    }).catch(err => console.log(err));
+  }
+  const onRemoveLikeComment = () => {
+    RemoveLikeComment({variables : {commentId : comment._id}}).then(({data}) => {
+      console.log(data);
+      if(data.removeLikeComment){
+        removeLikeComment(comment.post, comment._id, user._id);
+      }      
+    }).catch(err => console.log(err));
+  }
   return (
     <Wrapper>
       <CommentContainer>
@@ -64,9 +82,9 @@ const CommentItem = ({ comment, user }) => {
           </CommentText>
           <CommentControls>
             {comment.likes.includes(user._id) ? (
-              <ControlItem active>{controls.liked}</ControlItem>
+              <ControlItem active onClick={onRemoveLikeComment}>{controls.liked}</ControlItem>
             ) : (
-              <ControlItem>{controls.like}</ControlItem>
+              <ControlItem onClick={onLikeComent}>{controls.like}</ControlItem>
             )}
             <ControlItem
               onClick={() => setShowResponse((prevState) => !prevState)}
@@ -79,12 +97,7 @@ const CommentItem = ({ comment, user }) => {
               >
                 {controls.remove}
               </ControlItem>
-            }
-            <ControlItem
-              onClick={() => setShowResponse((prevState) => !prevState)}
-            >
-              {controls.response}
-            </ControlItem>
+            }       
             <ControlItem>
               <Moment fromNow>{+comment.createdAt}</Moment>
             </ControlItem>

@@ -7,6 +7,7 @@ export const schemaSubscription = gql`
     notifyUserLikePost(userId: ID!) : PostSupscriptionPayload!
     notifyMentionUsersInComment(userId : ID!) : Notification!
     notifyOwnerPostUserComment(userId: ID!): CommentSubscriptionPayload!
+    notifyOwnerCommentUserLike(userId : ID!) : Notification!
     notifyReceivedRequestToAddFriend(
       userId: ID!
     ): SubscriptionNotificationPayload!
@@ -52,5 +53,6 @@ export const subscriptionActions = {
   NOTIFY_MENTION_USERS_IN_POST : "NOTIFY_MENTION_USERS_IN_POST",
   NOTIFY_USER_ACTIONS_IN_POST : "NOTIFY_USER_ACTIONS_IN_POST",
   NOTIFY_MENTIONS_USERS_IN_COMMENT : "NOTIFY_MENTIONS_USERS_IN_COMMENT",
-  NOTIFY_OWNER_POST_USER_COMMENT : "NOTIFY_OWNER_POST_USER_COMMENT"
+  NOTIFY_OWNER_POST_USER_COMMENT : "NOTIFY_OWNER_POST_USER_COMMENT",
+  NOTIFY_OWNER_COMMENT_USER_LIKE : "NOTIFY_OWNER_COMMENT_USER_LIKE"
 };
