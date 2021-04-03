@@ -236,7 +236,8 @@ export const vi = {
         like : "Thích",
         liked : "Đã thích", 
         response : "Trả lời",
-        remove : "Xóa"
+        remove : "Xóa",
+        loadMoreResponses : "Tải thêm bình luận"
       },
       commentPlaceholder : "Để lại bình luận của bạn",
       commentInputPlaceholder : "Để lại bình luận của bạn tại đây",

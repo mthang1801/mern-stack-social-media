@@ -238,7 +238,8 @@ export const en = {
         like : "Like",
         liked : "Liked", 
         response : "Response",
-        remove : "Remove"
+        remove : "Remove",
+        loadMoreResponses : "Load More Responses"
       },
       commentInputPlaceholder : "Comment here...",
       commentPlaceholder : "Enter your comment here",

@@ -30,6 +30,7 @@ export const commentControllers = {
       throw new ApolloError(error.message);
     }
   },
+  
   createComment: async (
     req,
     postId,
@@ -151,7 +152,7 @@ export const commentControllers = {
       await User.findByIdAndUpdate(currentUserId, {$pull : {comments: commentId, responses : {$in : comment.responses}}}) ;
       //remove all responses of comment
       for(let responseId of comment.responses){
-        await Response.findByIdAndDelete(responseId);
+        await Response.findByIdAndDelete(responseId);        
       }
       //remove comment
       await Comment.findByIdAndDelete(commentId);

@@ -59,6 +59,7 @@ export const schemaType = gql`
     mentions : [ID!]
     author : User! 
     comment : ID!
+    post : ID!
     likes : [ID!]    
     createdAt : String 
     updatedAt : String

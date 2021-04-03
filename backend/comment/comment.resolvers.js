@@ -12,6 +12,7 @@ export const commentResolvers = {
         args.skip || 0,
         args.limit || +process.env.COMMENTS_PER_POST
       ),
+   
   },
   Mutation: {
     createComment: (_, args, { req }, info) =>
@@ -32,7 +33,8 @@ export const commentResolvers = {
         pubsub,
         subscriptionActions.NOTIFY_OWNER_COMMENT_USER_LIKE
       ),
-      removeLikeComment : (_, args, {req}) => commentControllers.removeLikeComment(req, args.commentId)
+    removeLikeComment: (_, args, { req }) =>
+      commentControllers.removeLikeComment(req, args.commentId),
   },
   Subscription: {
     notifyMentionUsersInComment: {

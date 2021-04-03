@@ -5,6 +5,7 @@ import {useQuery} from "@apollo/client";
 import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
 const Comments = ({comments}) => {
   const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"})  
+  console.log(comments)
   return (
     <Wrapper>
       {comments.length ? comments.map(comment => (

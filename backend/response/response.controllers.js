@@ -4,10 +4,20 @@ import { User } from "../user/user.model";
 import {Comment} from "../comment/comment.model"
 import {Post} from "../post/post.model"
 import {Notification} from "../notification/notification.model"
-import {AuthenticationError, ValidationError} from "apollo-server-express"
+import {ApolloError, AuthenticationError, ValidationError} from "apollo-server-express"
 import {fields, actions} from "../fields-actions"
 import mongoose from "mongoose"
 export const responseControllers = {
+  fetchResponses : async (commentId, skip, limit) => {
+    try {
+      console.log(commentId, skip, limit)
+      const comment = await Comment.findById(commentId).populate({path : "responses", populate : {path : "author", select : "name avatar slug"}, options : {sort : {createdAt : -1}, skip,limit}});
+    return comment.responses
+    } catch (error) {
+      console.log(error)
+      throw new ApolloError(error.message);
+    }
+  },
   createResponse : async (req, commentId, data) => {
     try {
       const {text, mentions} =data ; 

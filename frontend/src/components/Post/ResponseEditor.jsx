@@ -30,10 +30,9 @@ import useLanguage from "../Global/useLanguage";
 import { CREATE_RESPONSE } from "../../apollo/operations/mutations/post/createResponse";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import shortid  from 'shortid';
-const CommentEditor = ({ comment, user }) => {  
-  const data = `{"blocks":[{"key":"${shortid.generate()}","text":"${comment.author.name} ","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":${comment.author.name.length},"key":0}],"data":{}},{"key":"2haps","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{"0":{"type":"mention","mutability":"SEGMENTED","data":{"mention":{"__typename":"User","_id":"${comment._id}","name":"${comment.author.name}","avatar":"${comment.author.avatar}","slug":"${comment.author.slug}"}}}}}`
+const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {    
   const [editorState, setEditorState] = useState(() =>
-    comment.author._id === user._id ? EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse((data))))
+    comment.author._id === user._id || !dataResponse ? EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse((dataResponse))))
   );
   const [openMention, setOpenMention] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
@@ -41,7 +40,7 @@ const CommentEditor = ({ comment, user }) => {
     refetch: searchFriends,    
   } = useQuery(SEARCH_FRIENDS, { fetchPolicy: "network-only", skip: true });
   const [createResponse] = useMutation(CREATE_RESPONSE);
-  const { addResponseToComment } = cacheMutations;  
+  const { addNewResponseToComment } = cacheMutations;  
   const { colorMode } = useThemeUI();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const [showControls, setShowControls] = useState(false);
@@ -117,6 +116,20 @@ const CommentEditor = ({ comment, user }) => {
     return { plugins, EmojiSelect, EmojiSuggestions, MentionSuggestions };
   }, []);
 
+  useEffect(( ) => {
+    let timer ; 
+    console.log(focus)
+    if(focus){
+      if(timer){
+        clearTimeout(timer);
+      }
+      timer = setTimeout(()=>{
+        editorRef.current.focus();
+        removeFocus();
+      },66)
+    }
+    return () =>  clearTimeout(timer)
+  }, [focus])
  
   useEffect(() => {
     function trackUserClickCommentControls(e) {
@@ -167,8 +180,8 @@ const CommentEditor = ({ comment, user }) => {
               .querySelector("[contenteditable=false]")
               ?.setAttribute("contenteditable", true);
               
-            const {createResponse} = data;            
-            addResponseToComment(comment.post, comment._id, createResponse)
+            const {createResponse} = data;                       
+            addNewResponseToComment(comment.post, comment._id, createResponse)
           })
           .catch((err) => {            
             document

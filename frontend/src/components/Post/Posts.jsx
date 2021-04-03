@@ -2,6 +2,7 @@ import React from "react";
 import PostCard from "./PostCard";
 import LazyLoad from "react-lazyload";
 const Posts = ({ posts }) => {   
+  console.log(posts)
   return (
     <section>
       {posts.map((post) => (
