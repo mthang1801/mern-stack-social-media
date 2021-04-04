@@ -29,6 +29,7 @@ export const CommentText = styled.div`
   border-radius:  0.5rem;
   padding: 0.25rem 0.7rem;  
   opacity : 0.8;
+  position : relative;
 `
 
 export const UserName = styled(Link)`
@@ -54,4 +55,34 @@ export const ControlItem = styled.span`
   &:hover{
     opacity : 1 ;
   } 
+`
+
+export const LikeButton = styled.div`
+width : 1.25rem;
+height: 1.25rem;
+border-radius : 50%; 
+display : flex;
+justify-content : center;
+align-items: center;
+background : linear-gradient(to right bottom, var(--blue-1) 35%, var(--blue-2) 70%, var(--blue-3) 100%);
+outline : none ; 
+border: none ; 
+color : white;
+font-size : 1rem;
+margin-right : 0.25rem;
+`
+
+export const LikeCounters =styled.div`
+position: absolute;
+bottom: -0.7rem;
+right: 0.5rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-radius: 1rem;
+background: ${({theme}) => theme==="dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
+padding: 0 0.3rem 0 0 ;
+box-shadow: var(--lightShadow);
+border : 1px solid var(--light-gray-1);
+
 `

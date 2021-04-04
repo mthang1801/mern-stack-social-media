@@ -1,14 +1,32 @@
 import React from "react";
-import {CommentContainer, UserAvatar, CommentContent,UserName, CommentText, CommentControls,ControlItem } from "./styles/CommentCard.styles"
-import {LazyLoadImage} from "react-lazy-load-image-component"
+import {
+  CommentContainer,
+  UserAvatar,
+  CommentContent,
+  UserName,
+  CommentText,
+  CommentControls,
+  ControlItem,
+  LikeButton,
+  LikeCounters,
+} from "./styles/CommentCard.styles";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import Moment from "react-moment";
-import {useThemeUI} from "theme-ui";
-import useLanguage from "../Global/useLanguage"
-
-const CommentCard = ({comment, user, onRemoveLike, onLike, onClickResponse, onClickRemoveComment}) => {
-  const {colorMode} = useThemeUI()
+import { useThemeUI } from "theme-ui";
+import useLanguage from "../Global/useLanguage";
+import { BiLike } from "react-icons/bi";
+const CommentCard = ({
+  comment,
+  user,
+  onRemoveLike,
+  onLike,
+  onClickResponse,
+  onClickRemoveComment,
+}) => {
+  const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const { controls } = i18n.store.data[lang].translation.comment;
+  
   return (
     <CommentContainer>
       <UserAvatar>
@@ -27,21 +45,31 @@ const CommentCard = ({comment, user, onRemoveLike, onLike, onClickResponse, onCl
             data-target={`comment-item-${comment._id}`}
             dangerouslySetInnerHTML={{ __html: comment.text }}
           ></div>
+          {comment.likes.length ? (
+            <LikeCounters theme={colorMode}>
+              <LikeButton>
+                <BiLike />
+              </LikeButton>
+              <span>{comment.likes.length}</span>
+            </LikeCounters>
+          ) : null}
         </CommentText>
         <CommentControls>
           {comment.likes.includes(user._id) ? (
-            <ControlItem active onClick={onRemoveLike}>
+            <ControlItem active onClick={() => onRemoveLike(comment)}>
               {controls.liked}
             </ControlItem>
           ) : (
-            <ControlItem onClick={onLike}>{controls.like}</ControlItem>
+            <ControlItem onClick={() => onLike(comment)}>
+              {controls.like}
+            </ControlItem>
           )}
-          <ControlItem onClick={onClickResponse}>
+          <ControlItem onClick={() => onClickResponse(comment)}>
             {controls.response}
           </ControlItem>
           {user._id === comment.author._id}
           {
-            <ControlItem onClick={onClickRemoveComment}>
+            <ControlItem onClick={() => onClickRemoveComment(comment)}>
               {controls.remove}
             </ControlItem>
           }
@@ -54,4 +82,4 @@ const CommentCard = ({comment, user, onRemoveLike, onLike, onClickResponse, onCl
   );
 };
 
-export default CommentCard;
+export default React.memo(CommentCard);

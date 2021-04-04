@@ -15,5 +15,11 @@ export const responseResolvers = {
   Mutation: {
     createResponse: (_, args, { req }, info) =>
       responseControllers.createResponse(req, args.commentId, args.data),
+    likeResponse: (_, args, { req }, info) =>
+      responseControllers.likeResponse(req, args.responseId),
+    removeLikeResponse: (_, args, { req }, info) =>
+      responseControllers.removeLikeResponse(req, args.responseId),
+    removeResponse: (_, args, { req }) =>
+      responseControllers.removeResponse(req, args.responseId),
   },
 };

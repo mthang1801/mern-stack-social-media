@@ -81,5 +81,50 @@ export const responseControllers = {
     } catch (error) {
       console.log(error);
     }
+  },
+  likeResponse : async (req, responseId) => {
+    const currentUserId = getAuthUser(req);
+    const response = await Response.findById(responseId);
+    if(!response || response.likes.includes(currentUserId.toString())){
+      return false ; 
+    }
+    response.likes.push(currentUserId);
+    await response.save();
+    return true ; 
+  },
+  removeLikeResponse : async (req, responseId) => {    
+    const currentUserId = getAuthUser(req);
+    const response = await Response.findById(responseId);
+    if(!response || !response.likes.includes(currentUserId.toString())){
+      return false ; 
+    }
+    response.likes.pull(currentUserId);
+    await response.save();
+    return true; 
+  },
+  removeResponse : async (req, responseId) => {
+    try {
+      const currentUserId = getAuthUser(req);
+      const response = await Response.findOne({_id : responseId, author : currentUserId});
+      if(!response){
+        return false ; 
+      }
+      const session = await mongoose.startSession();
+      session.startTransaction();
+
+       //remove response in post 
+       await Post.findByIdAndUpdate(response.post, {$pull : {responses : responseId}});
+       //remove response in comment 
+       await Comment.findByIdAndUpdate(response.comment, {$pull : {responses : responseId}});
+       //remove response in author
+       await User.findByIdAndUpdate(currentUserId, {$pull : {responses: responseId}}) ;       
+       //remove response
+       await Response.findByIdAndDelete(responseId);
+       return true;  
+
+    } catch (error) {
+      console.log(error);
+      throw new ApolloError(error.message);
+    }
   }
 }

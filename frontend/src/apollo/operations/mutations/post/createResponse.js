@@ -13,7 +13,7 @@ mutation CreateResponse($commentId: ID!, $text : String, $mentions : [ID!]){
     }
     comment
     likes 
-    
+    post
     createdAt    
   }
 }

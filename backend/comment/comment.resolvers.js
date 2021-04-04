@@ -11,8 +11,7 @@ export const commentResolvers = {
         args.except,
         args.skip || 0,
         args.limit || +process.env.COMMENTS_PER_POST
-      ),
-   
+      ),   
   },
   Mutation: {
     createComment: (_, args, { req }, info) =>

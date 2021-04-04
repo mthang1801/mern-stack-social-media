@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Wrapper } from "./PostEditor/styles/PostEditorBody.styles";
 import {
   UserAvatar,
@@ -21,7 +21,9 @@ import {
   REMOVE_COMMENT,
   LIKE_COMMENT,
   REMOVE_LIKE_COMMENT,
+  REMOVE_RESPONSE
 } from "../../apollo/operations/mutations/post";
+
 import { FETCH_RESPONSES } from "../../apollo/operations/queries/post/fetchResponses";
 import Responses from "./Responses";
 import shortid from "shortid";
@@ -33,38 +35,48 @@ const CommentItem = ({ comment, user }) => {
   const [dataResponse, setDataResponse] = useState("");
   const { controls } = i18n.store.data[lang].translation.comment;
   const { dialog: dialogAlert } = i18n.store.data[lang].translation;
-  const [focusResponseEditor, setFocusResponseEditor] = useState(false)
+  const [focusResponseEditor, setFocusResponseEditor] = useState(false);
   const {
     setDialog,
     removeComment: removeCommentFromPostCache,
     addLikeComment,
     removeLikeComment,
     addResponsesToComment,
+    removeResponse : removeResponseInCache
   } = cacheMutations;
   const {
     data: { dialog },
   } = useQuery(GET_DIALOG);
   const [likeComment] = useMutation(LIKE_COMMENT);
   const [RemoveLikeComment] = useMutation(REMOVE_LIKE_COMMENT);
+  const [removeResponse] = useMutation(REMOVE_RESPONSE)
   const { refetch: fetchResponses } = useQuery(FETCH_RESPONSES, { skip: true });
-
+  
   const onClickRemoveComment = () => {
     setDialog({
       agree: false,
       title: dialogAlert.removeComment.title,
       content: dialogAlert.removeComment.content,
-      data: { commentId: comment._id },
+      data: { commentId: comment._id, role : "comment" },
     });
   };
   const [removeComment] = useMutation(REMOVE_COMMENT);
 
   useEffect(() => {
-    if (dialog.data?.commentId === comment._id && dialog.agree) {
+    if (dialog.data?.commentId === comment._id && dialog.agree && dialog.data?.role === "comment") {
       removeComment({ variables: { commentId: comment._id } }).then(
         ({ data }) => {
           removeCommentFromPostCache(comment.post, comment._id);
         }
       );
+    }
+    else if(dialog.data?.role === "response" && dialog.data?.response && dialog.agree){
+      removeResponse({variables : {responseId : dialog.data.response._id}}).then(({data})=> {
+        if(data.removeResponse){
+          const {post, comment, _id} = dialog.data.response
+          removeResponseInCache(post, comment, _id);
+        }
+      })
     }
   }, [dialog]);
   const onLikeComent = () => {
@@ -85,27 +97,28 @@ const CommentItem = ({ comment, user }) => {
       })
       .catch((err) => console.log(err));
   };
-  const onClickResponseComment = async () => {
-    setDataResponse(
-      `{"blocks":[{"key":"${shortid.generate()}","text":"${
-        comment.author.name
-      } ","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":${
-        comment.author.name.length
-      },"key":0}],"data":{}},{"key":"2haps","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{"0":{"type":"mention","mutability":"SEGMENTED","data":{"mention":{"__typename":"User","_id":"${
-        comment._id
-      }","name":"${comment.author.name}","avatar":"${
-        comment.author.avatar
-      }","slug":"${comment.author.slug}"}}}}}`
-    );    
-    if(!showResponse){
-     await onLoadResponses();
-    }else{
+  const onClickResponseComment = useCallback(async (data) => {
+    if(data){
+      setDataResponse(
+        `{"blocks":[{"key":"${shortid.generate()}","text":"${
+          data.author.name
+        } ","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":${
+          data.author.name.length
+        },"key":0}],"data":{}},{"key":"2haps","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{"0":{"type":"mention","mutability":"SEGMENTED","data":{"mention":{"__typename":"User","_id":"${
+          data._id
+        }","name":"${data.author.name}","avatar":"${
+          data.author.avatar
+        }","slug":"${data.author.slug}"}}}}}`
+      );
+    }
+    
+    if (comment.responses.length && !comment.responsesData?.length) {
+      await onLoadResponses();
+    } else {
       setShowResponse(true);
       setFocusResponseEditor(true);
     }
-    
-    
-  };
+  }, [comment.responsesData]);
 
   const onLoadResponses = () => {
     fetchResponses({ commentId: comment._id, skip: 0, limit: 3 }).then(
@@ -148,7 +161,11 @@ const CommentItem = ({ comment, user }) => {
       <CommentResponse>
         {comment.responsesData && (
           <ResponsesComponent>
-            <Responses responses={comment.responsesData} user={user} />
+            <Responses
+              responses={comment.responsesData}
+              user={user}
+              onClickResponse={onClickResponseComment}
+            />
           </ResponsesComponent>
         )}
 

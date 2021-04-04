@@ -83,7 +83,6 @@ const Home = () => {
   const handleOpenFriendsList = useCallback(() => {
     setOpenFriendsList();
   }, []);
-  console.log("render")
   return (
     <Layout>
       <MainBody>
