@@ -229,7 +229,7 @@ export const en = {
           name : "Share",
           icon : () => <BiShareAlt/>
         },
-        countComments: (count) => `This post has ${count} comments`
+        countComments: (count) => `${count} comments`
       },
       
     },

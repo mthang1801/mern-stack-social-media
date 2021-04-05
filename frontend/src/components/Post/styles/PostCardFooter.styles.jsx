@@ -47,19 +47,10 @@ export const Button = styled.button`
   `}
 `
 
-export const Counter = styled.div`
-  padding : 0.5rem;
-  display : flex;
-  align-items: center;
-  & > *:not(:first-child){
-    margin-left : 0.2rem;
-  }
-  font-size : 0.95rem;
-`
 
 export const LikeButton = styled.button`
-  width : 1.5rem;
-  height: 1.5rem;
+  width : 1.25rem;
+  height: 1.25rem;
   border-radius : 50%; 
   display : flex;
   justify-content : center;
@@ -68,11 +59,11 @@ export const LikeButton = styled.button`
   outline : none ; 
   border: none ; 
   color : white;
-  font-size : 1rem;
+  font-size : 0.9rem;
 `
 
 export const Comments = styled.section`
-  margin-top : 1rem;
+  margin-top : 0.5rem;
 `
 
 
@@ -96,8 +87,32 @@ export const FormComment = styled.div`
   margin-left : 0.5rem;
 `
 
+
+
+export const PostInfo = styled.div`
+  width : 100%; 
+  padding : 0.5rem 1.5rem;
+  display : flex;
+  justify-content : space-between;
+  align-items: center;
+  font-size :
+`
+
+export const CounterLike = styled.div`  
+  display : flex;
+  align-items: center;
+  & > *:not(:first-child){
+    margin-left : 0.2rem;
+  }
+  font-size : 0.95rem;
+`
+
 export const CommentCounter = styled.div`
-  text-align :right;
-  margin : 0.5rem 1rem 0 1rem;
+  text-align :right;  
   font-size : 0.9rem;
+  margin-left: auto;
+  cursor : pointer;
+  &:hover{
+    text-decoration : underline;
+  }
 `

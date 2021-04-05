@@ -3,12 +3,13 @@ import {
   Wrapper,
   Controls,
   Button,
-  Counter,
+  CounterLike,
   LikeButton,
   Comments,
   UserComment,
   AvatarContainer,
   FormComment,
+  PostInfo,
   CommentCounter
 } from "./styles/PostCardFooter.styles";
 import useLanguage from "../Global/useLanguage";
@@ -86,14 +87,18 @@ const PostCardFooter = ({ post, fetchComments }) => {
           <span>{controls.share.name}</span>
         </Button>
       </Controls>
+      <PostInfo>
       {post.likes.length ? (
-        <Counter>
+        <CounterLike>
           <LikeButton>
             <BiLike />
           </LikeButton>
           <span>{post.likes.length}</span>
-        </Counter>
+        </CounterLike>
       ) : null}
+        {post.comments.length + post.responses.length > 0 ? <CommentCounter onClick={onClickComment}>{controls.countComments(post.comments.length + post.responses.length)}</CommentCounter> : null}
+      </PostInfo>
+      
       {showCommentEditor && (
         <>
         <Comments>
@@ -108,7 +113,7 @@ const PostCardFooter = ({ post, fetchComments }) => {
             </FormComment>
           </UserComment>
         </Comments>
-        {post.comments.length + post.responses.length > 0 ? (<CommentCounter>{controls.countComments(post.comments.length + post.responses.length)}</CommentCounter>) : null} 
+       
         </>
       )}
     </Wrapper>

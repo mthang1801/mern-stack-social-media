@@ -44,4 +44,5 @@ export const CommentResponse = styled.div`
   width: 90% ; 
   margin-left:auto;
   margin-right: 1rem;
+  padding : 0 1rem;
 `
