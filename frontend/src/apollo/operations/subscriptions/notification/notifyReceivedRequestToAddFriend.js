@@ -41,6 +41,7 @@ subscription ($userId : ID!){
       url
       isQuestion
       createdAt  
+      updatedAt
     }
   }
 }

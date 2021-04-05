@@ -62,7 +62,7 @@ export const postResolvers = {
             subscriptionActions.LIKE_POST_SUBSCRIPTION
           ),
         (payload, { userId }) => {
-          return payload.likePostSubscription.receivers.includes(userId);
+          return payload.likePostSubscription.receiver.toString() === userId.toString();
         }
       ),
     },
@@ -70,7 +70,7 @@ export const postResolvers = {
       subscribe : withFilter(
         () => pubsub.asyncIterator(subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION),
         (payload, {userId}) => {
-          return payload.removeLikePostSubscription.receivers.includes(userId)
+          return payload.removeLikePostSubscription.receiver.toString() === userId.toString()
         }
       )
     }

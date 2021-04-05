@@ -40,8 +40,8 @@ export const notificationControllers = {
   countNotificationsUnseen: async (req) => {
     const userId = await getAuthUser(req);
     const countNotification = await Notification.countDocuments({
-      receivers: userId,
-      hasSeen: { $ne: userId },
+      receiver: userId,
+      hasSeen: false,
     });
     return countNotification;
   },

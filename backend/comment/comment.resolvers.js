@@ -11,7 +11,7 @@ export const commentResolvers = {
         args.except,
         args.skip || 0,
         args.limit || +process.env.COMMENTS_PER_POST
-      ),   
+      ),
   },
   Mutation: {
     createComment: (_, args, { req }, info) =>
@@ -20,8 +20,8 @@ export const commentResolvers = {
         args.postId,
         args.data,
         pubsub,
-        subscriptionActions.NOTIFY_MENTIONS_USERS_IN_COMMENT,
-        subscriptionActions.NOTIFY_OWNER_POST_USER_COMMENT
+        subscriptionActions.NOTIFY_MENTIONED_USERS_IN_COMMENT,
+        subscriptionActions.NOTIFY_USER_COMMENT_POST_SUBSCRIPTION
       ),
     removeComment: (_, args, { req }, info) =>
       commentControllers.removeComment(req, args.commentId),
@@ -40,25 +40,26 @@ export const commentResolvers = {
       subscribe: withFilter(
         () =>
           pubsub.asyncIterator(
-            subscriptionActions.NOTIFY_MENTIONS_USERS_IN_COMMENT
+            subscriptionActions.NOTIFY_MENTIONED_USERS_IN_COMMENT
           ),
         (payload, { userId }) => {
-          return payload.notifyMentionUsersInComment.receivers.includes(
+          console.log(payload, userId)
+          return (
+            payload.notifyMentionUsersInComment.receiver.toString() ===
             userId.toString()
           );
         }
       ),
     },
-    notifyOwnerPostUserComment: {
+    notifyUserCommentPostSubscription: {
       subscribe: withFilter(
         () =>
           pubsub.asyncIterator(
-            subscriptionActions.NOTIFY_OWNER_POST_USER_COMMENT
+            subscriptionActions.NOTIFY_USER_COMMENT_POST_SUBSCRIPTION
           ),
-        (payload, { userId }) => {
-          console.log(payload);
+        (payload, { userId }) => {         
           return (
-            payload.notifyOwnerPostUserComment.notification.receivers[0].toString() ===
+            payload.notifyUserCommentPostSubscription.notification.receiver.toString() ===
             userId.toString()
           );
         }

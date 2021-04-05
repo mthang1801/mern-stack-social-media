@@ -39,6 +39,7 @@ export const NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
         url
         isQuestion
         createdAt
+        updatedAt
       }
     }
   }

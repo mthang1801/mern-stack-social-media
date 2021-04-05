@@ -19,10 +19,11 @@ export const REMOVE_LIKE_POST_SUBSCRIPTION = gql`
         }
       }
       url
-      hasSeen
-      receivers
+      hasSeen      
+      receiver
       isQuestion
       createdAt
+      updatedAt
     }
   }
 `;

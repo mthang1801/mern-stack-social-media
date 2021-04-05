@@ -57,25 +57,7 @@ const NotificationItem = ({ notification, notifications }) => {
   );
   const { lang } = useLanguage();
   const handleUserClickHasSeen = (notification) => {
-    if (!notification.hasSeen.includes(user._id)) {
-      updateToHasSeen({ variables: { notificationId: notification._id } }).then(
-        (res) => {
-          //set Notification again
-          setNotifications(
-            notifications.map((notificationItem) =>
-              notificationItem._id.toString() === notification._id.toString()
-                ? {
-                    ...notificationItem,
-                    hasSeen: [...notificationItem.hasSeen, user._id],
-                  }
-                : { ...notificationItem }
-            )
-          );
-          //count number notification unseen again
-          decreaseNumberNotificationsUnseen();
-        }
-      );
-    }
+    
   };
 
   const updateMutationOnChange = (sender, receiver) => {
@@ -125,14 +107,14 @@ const NotificationItem = ({ notification, notifications }) => {
     <Wrapper theme={colorMode}>
       <div
         className={classNames("notification-item-container", {
-          unseen: !notification.hasSeen.includes(user._id),
+          unseen: !notification.hasSeen,
         })}
       >
         <Link
           to={notification.url}
           key={notification._id}
           className={classNames("notification-link", {
-            unseen: !notification.hasSeen.includes(user._id),
+            unseen: !notification.hasSeen,
           })}
           onClick={() => handleUserClickHasSeen(notification)}
         >
@@ -145,8 +127,7 @@ const NotificationItem = ({ notification, notifications }) => {
               height="40px"
             />
           </div>
-          <div className="notification-content">
-            {/* <span className="creator-name">{notification.creator.name} </span> */}
+          <div className="notification-content">            
             <span
               dangerouslySetInnerHTML={{
                 __html: notificationContent(notification, lang),
@@ -157,7 +138,7 @@ const NotificationItem = ({ notification, notifications }) => {
                 fromNow
                 className={newNotifications.has(notification._id) ? "new" : ""}
               >
-                {new Date(+notification.createdAt)}
+                {new Date(+notification.updatedAt)}
               </Moment>
             </div>
           </div>

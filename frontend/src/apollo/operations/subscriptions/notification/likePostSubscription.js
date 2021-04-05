@@ -19,10 +19,11 @@ subscription($userId : ID!){
       }
     }
     url
-    hasSeen
-    receivers
+    hasSeen    
+    receiver
     isQuestion
     createdAt
+    updatedAt
   }
 }
 `;

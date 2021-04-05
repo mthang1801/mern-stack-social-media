@@ -5,7 +5,7 @@ const notificationContent = (notification, lang) => {
   let { field, content} = notification;
   field = field.toUpperCase();
   content = content.toUpperCase();    
-  console.log(notification)
+  
   switch(field){
     case "POST" : 
       switch(content){        
@@ -23,8 +23,8 @@ const notificationContent = (notification, lang) => {
       }
     case "COMMENT" : 
       switch(content){
-        case "MENTION" : return notifications.commentMention; 
-        case "CREATED" : return notifications.commentCreated;
+        case "MENTIONED" : return notifications.commentMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText); 
+        case "CREATED" : return notifications.commentCreated(notification.creator?.name, notification.fieldIdentity?.post?.shortenText);
       }
   }
 }

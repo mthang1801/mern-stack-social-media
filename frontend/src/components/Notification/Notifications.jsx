@@ -43,8 +43,7 @@ const Notifications = () => {
   const {
     setCountNumberNotificationsUnseen,
     increaseNumberNotificationsUnseen,
-    decreaseNumberNotificationsUnseen,
-    setNotifications,
+    decreaseNumberNotificationsUnseen,    
     setNewNotifications,
     setLatestNotification,
     setCurrentUser,
@@ -54,7 +53,8 @@ const Notifications = () => {
     addCommentToOwnerPost,
     removeNewNotification,  
     addNotificationItemToNotificationsList,
-    removeNotificationItemFromNotificationsList  
+    removeNotificationItemFromNotificationsList ,
+    updateNotificationItemInNotificationsList
   } = cacheMutations;
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const Notifications = () => {
   ) => {
     setLatestNotification(newNotification);
     setNewNotifications(newNotification._id);
-    increaseNumberNotificationsUnseen();
+    
     if (sender && receiver) {
       setCurrentUser({
         ...receiver,
@@ -95,8 +95,16 @@ const Notifications = () => {
         });
       }
     }
-    addNotificationItemToNotificationsList(newNotification);
+    if(notifications.find(notification => notification._id === newNotification._id)){
+      updateNotificationItemInNotificationsList(newNotification);
+    }else{
+      increaseNumberNotificationsUnseen();
+      addNotificationItemToNotificationsList(newNotification);
+    }
+    
   };
+
+  
 
   const updatedRemoveNotification = (
     removedNotification,     
@@ -124,11 +132,13 @@ const Notifications = () => {
           subscriptions.notificationSubscription.NOTIFY_MENTION_USERS_IN_POST,
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-          const {
-            notifyMentionUsersInPost: newNotification,
-          } = subscriptionData.data;
-          updatedAddNotification(newNotification);
+          if (subscriptionData){            
+            const {
+              notifyMentionUsersInPost: newNotification,
+            } = subscriptionData.data;
+            updatedAddNotification(newNotification);
+          }
+          
         },
       });
       unsubscribeUserLikePost = subscribeToMoreNotifications({
@@ -208,15 +218,15 @@ const Notifications = () => {
       unsubscribeOwnerPostReceivedUserComment = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription
-            .NOTIFY_OWNER_POST_USER_COMMENT_SUBSCRIPTION,
+            .NOTIFFY_USER_COMMENT_POST_SUBSCRIPTION,
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
-          if (subscriptionData) {
+          if (subscriptionData) {                      
             const {
               comment,
               notification,
-            } = subscriptionData.data.notifyOwnerPostUserComment;
-            updatedAddNotification(notification);
+            } = subscriptionData.data.notifyUserCommentPostSubscription;
+            updatedAddNotification(notification);            
             addCommentToOwnerPost(user._id, comment);
           }
         },
@@ -227,7 +237,7 @@ const Notifications = () => {
             .NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION,
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
-          if (subscriptionData) {
+          if (subscriptionData) {            
             const { notifyMentionUsersInComment } = subscriptionData.data;
             updatedAddNotification(notifyMentionUsersInComment);
           }

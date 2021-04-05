@@ -169,9 +169,9 @@ export const en = {
       sentRequestToAddFriend: "send you a request to add friend",
       acceptRequestToAddFriend: "has accepted your request to add friend.",
       postMention : "has mentioned you in his post",      
-      commentMention : "has mentioned you in his comment",
-      commentCreated : "has commented in your post",
-      likePost : (creatorName, shortenText) => `${creatorName} Liked your post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
+      commentMentioned : (creatorName, shortenText) => `<strong>${creatorName}</strong> has mentioned you in his comment`,
+      commentCreated :  (creatorName, shortenText) => `<strong>${creatorName}</strong> has commented in your post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
+      likePost : (creatorName, shortenText) => `<strong>${creatorName}</strong> Liked your post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
     },
     greeting: {
       welcome: "Welcome to Pul.com",

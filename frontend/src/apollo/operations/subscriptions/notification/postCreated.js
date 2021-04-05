@@ -29,6 +29,7 @@ subscription NotifyCreatedPost($userId : ID!){
       url
       isQuestion
       createdAt 
+      updatedAt
     }
   }
 }

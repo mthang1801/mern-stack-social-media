@@ -35,7 +35,11 @@ const NotificationSchema = new mongoose.Schema(
         ref: "responses",
       },
     },
-
+    receiver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
     receivers: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -47,13 +51,11 @@ const NotificationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    hasSeen: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-        required: true,
-      },
-    ],
+    hasSeen: {
+      type: Boolean,
+      default: false,
+    },
+
     isQuestion: {
       type: Boolean,
       default: false,

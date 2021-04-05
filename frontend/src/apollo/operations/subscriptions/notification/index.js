@@ -6,7 +6,7 @@ import { NOTIFY_MENTION_USERS_IN_POST } from "./notifyMentionUsersInPost";
 import { LIKE_POST_SUBSCRIPTION } from "./likePostSubscription";
 import { REMOVE_LIKE_POST_SUBSCRIPTION } from "./removeLikePostSubscription";
 import { NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION } from "./notifyMentionUsersInComment";
-import { NOTIFY_OWNER_POST_USER_COMMENT_SUBSCRIPTION } from "./notifyOwnerPostUserComment";
+import { NOTIFFY_USER_COMMENT_POST_SUBSCRIPTION } from "./notifyUserCommentPostSubscription";
 const notificationSubscription = {
   POST_CREATED_SUBSCRIPTIONS,
   UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN_SUBSCRIPTION,
@@ -16,7 +16,7 @@ const notificationSubscription = {
   LIKE_POST_SUBSCRIPTION,
   REMOVE_LIKE_POST_SUBSCRIPTION,
   NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION,
-  NOTIFY_OWNER_POST_USER_COMMENT_SUBSCRIPTION,
+  NOTIFFY_USER_COMMENT_POST_SUBSCRIPTION,
 };
 
 export default notificationSubscription;

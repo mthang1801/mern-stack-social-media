@@ -15,6 +15,7 @@ export const NOTIFY_MENTION_USERS_IN_POST = gql`
       url
       isQuestion
       createdAt
+      updatedAt
     }
   }
 `;

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const NOTIFY_OWNER_POST_USER_COMMENT_SUBSCRIPTION = gql`
+export const NOTIFFY_USER_COMMENT_POST_SUBSCRIPTION = gql`
   subscription($userId: ID!) {
-    notifyOwnerPostUserComment(userId: $userId) {
+    notifyUserCommentPostSubscription(userId: $userId) {
       comment {
         _id
         text
@@ -27,9 +27,16 @@ export const NOTIFY_OWNER_POST_USER_COMMENT_SUBSCRIPTION = gql`
           name
           avatar
         }
+        fieldIdentity{
+          post {
+            _id
+            shortenText
+          }
+        }
         url
         isQuestion
         createdAt
+        updatedAt
       }
     }
   }

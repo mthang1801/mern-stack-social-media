@@ -81,10 +81,12 @@ export const schemaType = gql`
     creator: User!
     fieldIdentity: NotificationFieldIdentity
     url: String!
-    hasSeen: [ID!]!
+    hasSeen: Boolean!
     receivers: [ID!]!
+    receiver : ID! 
     isQuestion: Boolean!
     createdAt: String!
+    updatedAt : String!
   }
 
   type NotificationFieldIdentity {

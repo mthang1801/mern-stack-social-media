@@ -184,7 +184,7 @@ export const postControllers = {
           fieldIdentity : {
             post : post._id        
           },
-          receivers : [post.author._id],
+          receiver : post.author._id,
           url : `/${post.author.slug}/posts/${post._id}`,          
         })
         //save notification into user model
@@ -211,10 +211,9 @@ export const postControllers = {
     //find notification user liked post and remove it
     const notification = await Notification.findOneAndDelete({field : fields.POST, "fieldIdentity.post" : postId, creator : currentUserId}).populate({path : "fieldIdentity.post", select:  "shrotenText"}).populate({path : "creator", select : "name avatar slug"});
     if(notification){      
-      await User.findByIdAndUpdate(notification.receivers[0],{$pull : {notifications : notification._id}});
+      await User.findByIdAndUpdate(notification.receiver,{$pull : {notifications : notification._id}});
       await pubsub.publish(removeLikePostSubscription, {removeLikePostSubscription : notification._doc})
-    }
-    
+    }    
     return !!post;
   },
   updatePost: async (req, postId, data, pubsub, postActions) => {

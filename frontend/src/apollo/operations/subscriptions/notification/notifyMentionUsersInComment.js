@@ -15,7 +15,14 @@ export const NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION = gql`
         avatar
         slug
       }
+      fieldIdentity{
+        post {
+          _id
+          shortenText
+        }
+      }
       createdAt
+      updatedAt
     }
   }
 `

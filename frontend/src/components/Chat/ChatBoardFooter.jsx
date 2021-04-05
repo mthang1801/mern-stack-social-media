@@ -23,7 +23,6 @@ import createMentionPlugin, {
 } from "@draft-js-plugins/mention";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
-import "./styles/editor.css";
 import { useThemeUI } from "theme-ui";
 import {
   SEND_MESSAGE_CHAT_TEXT,

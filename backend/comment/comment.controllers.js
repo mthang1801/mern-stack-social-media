@@ -11,35 +11,42 @@ import { Comment } from "./comment.model";
 import { User } from "../user/user.model";
 import { Notification } from "../notification/notification.model";
 import { Response } from "../response/response.model";
-import { fields, actions } from "../fields-actions";
+import { contents, fields } from "../notification";
 export const commentControllers = {
   fetchComments: async (req, postId, except, skip, limit) => {
-    try {     
-      if(!except){
+    try {
+      if (!except) {
         except = [];
       }
       const post = await Post.findById(postId).populate({
         path: "comments",
-        populate : {path : "author", select : "name avatar slug isOnline offlinedAt"},
+        populate: {
+          path: "author",
+          select: "name avatar slug isOnline offlinedAt",
+        },
         match: { _id: { $nin: except } },
         options: { sort: { createdAt: -1 }, skip, limit },
       });
-      
+
       return post.comments;
     } catch (error) {
       throw new ApolloError(error.message);
     }
   },
-  
+
   createComment: async (
     req,
     postId,
-    data,    
+    data,
+    pubsub,
+    notifyMentionUsersInComment,
+    notifyUserCommentPostSubscription
   ) => {
     try {
       const { text, mentions } = data;
 
       const currentUserId = getAuthUser(req);
+      const currentUser = await User.findById(currentUserId);
       if (text) {
         const post = await Post.findById(postId);
 
@@ -52,29 +59,46 @@ export const commentControllers = {
           author: currentUserId,
           post: postId,
         });
-
         const session = await mongoose.startSession();
         session.startTransaction();
         if (mentions.length) {
-          //create notification to mentions in comment
-          // const newNotification = new Notification({
-          //   field: fields.comment,
-          //   action: actions.MENTION,
-          //   creator: currentUserId,
-          //   receivers: mentions,
-          //   href: `/posts/${post._id}`,
-          // });
-          // for (let mentionId of mentions) {
-          //   const mentioner = await User.findById(mentionId);
-          //   mentioner.notifications.push(newNotification._id);
-          //   await mentioner.save();
-          // }
-          // await (await newNotification.save())
-          //   .populate("creator")
-          //   .execPopulate();
-          // await pubsub.publish(notifyMentionUsersInComment, {
-          //   notifyMentionUsersInComment: { ...newNotification._doc },
-          // });
+          //loop and create notification to mentions in comment
+          for (let mentionId of mentions) {
+            let notification = await Notification.findOneAndUpdate(
+              {
+                field: fields.COMMENT,
+                content: contents.MENTIONED,
+                "fieldIdentity.post": postId,
+                creator: currentUserId,
+                receiver: mentionId,
+              },
+              { updatedAt: Date.now() },
+              { new: true }
+            ).populate({ path: "creator", select: "slug name avatar" }).populate({path : "fieldIdentity.post" , select : "shortenText"});
+            if (!notification) {
+              notification = new Notification({
+                field: fields.COMMENT,
+                content: contents.MENTIONED,
+                fieldIdentity: {
+                  post: postId,
+                },
+                creator: currentUserId,
+                receiver: mentionId,
+                url: `/${currentUser.slug}/posts/${post._id}`,
+              });            
+              const mentioner = await User.findById(mentionId);
+              mentioner.notifications.push(notification._id);
+              await mentioner.save();
+              await (await notification.save())
+                .populate({ path: "creator", select: "name slug avatar" })
+                .populate({path : "fieldIdentity.post" , select : "shortenText"})
+                .execPopulate();
+            }
+
+            await pubsub.publish(notifyMentionUsersInComment, {
+              notifyMentionUsersInComment: notification._doc,
+            });
+          }
         }
 
         //save new comment
@@ -89,33 +113,42 @@ export const commentControllers = {
         post.comments.push(newComment._id);
 
         //create notification to notify owner post realize user has commented and push usersComment to post
-        if (!post.usersComment.includes(currentUserId)) {
-          // const ownerNotification = new Notification({
-          //   field: fields.comment,
-          //   action: actions.CREATED,
-          //   creator: currentUserId,
-          //   receivers: [post.author],
-          //   href: `/posts/${post._id}`,
-          // });
-          // //push notification to owner Post
-          // await User.findByIdAndUpdate(
-          //   post.author,
-          //   { $push: { notifications: ownerNotification._id } },
-          //   { new: true }
-          // );
+        let notificationForOwnerPost = await Notification.findOneAndUpdate(
+          {
+            field: fields.COMMENT,
+            content: contents.CREATED,
+            "fieldIdentity.post": postId,
+            creator: currentUserId,
+            receiver: post.author,
+          },
+          { updatedAt: Date.now() },
+          { new: true }
+        )
+          .populate({ path: "creator", select: "name slug avatar" })
+          .populate({ path: "fieldIdentity.post", select: "shortenText" });
+        if (!notificationForOwnerPost) {
+          notificationForOwnerPost = new Notification({
+            field: fields.COMMENT,
+            content: contents.CREATED,
+            fieldIdentity: {
+              post: postId,
+            },
+            creator: currentUserId,
+            receiver: post.author,
+            url: `/${currentUser.slug}/posts/${post._id}`,
+          });
+          //push notification to owner Post
+          await User.findByIdAndUpdate(
+            post.author,
+            { $push: { notifications: notificationForOwnerPost._id } },
+            { new: true }
+          );
 
-          // //save notification owner Post
-          // await (await ownerNotification.save())
-          //   .populate("creator")
-          //   .execPopulate();
-          // await pubsub.publish(notifyOwnerPostUserComment, {
-          //   notifyOwnerPostUserComment: {
-          //     comment: newComment,
-          //     notification: ownerNotification,
-          //   },
-          // });
-
-          post.usersComment.push(currentUserId);
+          //save notification owner Post
+          await (await notificationForOwnerPost.save())
+            .populate("creator")
+            .populate({ path: "fieldIdentity.post", select: "shortenText" })
+            .execPopulate();
         }
 
         await post.save();
@@ -123,7 +156,13 @@ export const commentControllers = {
         await User.findByIdAndUpdate(currentUserId, {
           $push: { comments: newComment._id },
         });
-
+        
+        await pubsub.publish(notifyUserCommentPostSubscription, {
+          notifyUserCommentPostSubscription: {
+            comment: newComment,
+            notification: notificationForOwnerPost,
+          },
+        });
         await session.commitTransaction();
         session.endSession();
         return newComment;
@@ -133,49 +172,56 @@ export const commentControllers = {
       throw new ApolloError(error.message);
     }
   },
-  removeComment : async (req, commentId) => {
+  removeComment: async (req, commentId) => {
     try {
       const currentUserId = getAuthUser(req);
-      const comment = await Comment.findOne({_id : commentId, author : currentUserId});
-      if(!comment){
-        return false ;
+      const comment = await Comment.findOne({
+        _id: commentId,
+        author: currentUserId,
+      });
+      if (!comment) {
+        return false;
       }
-      
+
       const session = await mongoose.startSession();
       session.startTransaction();
-      //remove comment in post 
-      await Post.findByIdAndUpdate(comment.post, {$pull : {comments : commentId, responses : {$in : comment.responses}}});
+      //remove comment in post
+      await Post.findByIdAndUpdate(comment.post, {
+        $pull: { comments: commentId, responses: { $in: comment.responses } },
+      });
       //remove comment in author
-      await User.findByIdAndUpdate(currentUserId, {$pull : {comments: commentId, responses : {$in : comment.responses}}}) ;
+      await User.findByIdAndUpdate(currentUserId, {
+        $pull: { comments: commentId, responses: { $in: comment.responses } },
+      });
       //remove all responses of comment
-      for(let responseId of comment.responses){
-        await Response.findByIdAndDelete(responseId);        
+      for (let responseId of comment.responses) {
+        await Response.findByIdAndDelete(responseId);
       }
       //remove comment
       await Comment.findByIdAndDelete(commentId);
-      return true;  
+      return true;
     } catch (error) {
       throw new ApolloError(error.message);
     }
   },
-  likeComment : async (req, commentId, pubsub, notifyOwnerCommentUserLike) => {    
+  likeComment: async (req, commentId, pubsub, notifyOwnerCommentUserLike) => {
     const currentUserId = getAuthUser(req);
     const comment = await Comment.findById(commentId);
-    if(!comment || comment.likes.includes(currentUserId.toString())){
-      return false ; 
+    if (!comment || comment.likes.includes(currentUserId.toString())) {
+      return false;
     }
-    comment.likes.push(currentUserId);    
+    comment.likes.push(currentUserId);
     await comment.save();
-    return true ; 
+    return true;
   },
-  removeLikeComment : async (req, commentId) => {
+  removeLikeComment: async (req, commentId) => {
     const currentUserId = getAuthUser(req);
-    const comment = await Comment.findById(commentId);   
-    if(!comment || !comment.likes.includes(currentUserId)){
-      return false ; 
+    const comment = await Comment.findById(commentId);
+    if (!comment || !comment.likes.includes(currentUserId)) {
+      return false;
     }
     comment.likes.pull(currentUserId);
     await comment.save();
-    return true ; 
-  }
+    return true;
+  },
 };

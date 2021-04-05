@@ -48,8 +48,7 @@ const FlashPopUpNotification = ({ onClick }) => {
               effect="blur"
             ></LazyLoadImage>
           </SenderAvatar>
-          <NotificationContent>
-            <SenderName>{latestNotification.creator.name}</SenderName>
+          <NotificationContent>            
             <span
               dangerouslySetInnerHTML={{
                 __html: notificationContent(latestNotification, lang),
