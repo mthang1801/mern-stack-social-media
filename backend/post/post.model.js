@@ -3,9 +3,11 @@ export const statusEnum = ["public", "private", "friends", "PUBLIC", "PRIVATE", 
 const PostSchema = new mongoose.Schema(
   {   
     text: {
-      type: String,
-      required: true,
+      type: String,      
     },           
+    shortenText : {
+      type : String,       
+    },
     mentions: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -34,13 +36,6 @@ const PostSchema = new mongoose.Schema(
         type : mongoose.Schema.Types.ObjectId,
         ref : "users",
         required: true
-      }
-    ],
-    usersLike : [
-      {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "users", 
-        required :true
       }
     ],
     likes : [

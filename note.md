@@ -1,1 +1,1 @@
-# TERMINOLOGY
+postUserUrl : "/[userSlug]/posts/[postId]"

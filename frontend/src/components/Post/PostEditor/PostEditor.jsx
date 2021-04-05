@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import PostEditorHeader from "./PostEditorHeader";
 import PostEditorBody from "./PostEditorBody";
 import { EditorWrapper } from "./styles/PostEditor.styles";
+import draftToHtml from 'draftjs-to-html';
 import { useThemeUI } from "theme-ui";
 import { EditorState, convertToRaw } from "draft-js";
 import Button from "@material-ui/core/Button";
@@ -47,9 +48,10 @@ const PostEditor = ({ user }) => {
 
   const onSubmitPostStatus = () => {
     const rawEditorState = convertToRaw(editorState.getCurrentContent());
+    const shortenText = draftToHtml(rawEditorState).split("</p>")[0].replace(/<p>|&nbsp;/g, "");    
     document.getElementById("post-editor").querySelector("[contenteditable=true]").setAttribute("contenteditable", false);
     const text = document.getElementById("post-editor").innerHTML;
-    
+    console.log(shortenText)
     let mentions = [];    
     let fileNames = [];
     let fileMimetype = [];
@@ -74,10 +76,11 @@ const PostEditor = ({ user }) => {
 
     createPost({variables : {
       text,
+      shortenText,
       mentions,
       fileNames,
       fileMimetype,
-      fileEncodings,
+      fileEncodings,      
       status: postStatus
     }})
       .then(({data}) => {

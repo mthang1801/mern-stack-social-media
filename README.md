@@ -15,7 +15,7 @@
 
 - scope: "GROUP" or "PERSONAL"
 
-## Note 
+## Note
 
 ### Resetting auth token in connectionParams
 

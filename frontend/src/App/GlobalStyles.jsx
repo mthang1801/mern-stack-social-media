@@ -681,8 +681,25 @@ export default createGlobalStyle`
   height: 24px;
   border-radius: 12px;
 } */
+
+
   .mnw6qvm {
     max-height: 15rem;
     overflow: auto;
+    & > *{
+      background-color : ${({ theme }) =>
+      theme === "dark"
+        ? "var(--color-card-dark)"
+        : "var(--color-card-default)"};
+      
+      color : ${({ theme }) =>
+      theme === "dark"
+        ? "var(--color-text-dark)"
+        : "var(--color-text-default)"};
+      &:hover{
+        color : var(--color-text-default);
+      }
+      
+    }
   }
 `;

@@ -34,10 +34,7 @@ export const commentControllers = {
   createComment: async (
     req,
     postId,
-    data,
-    pubsub,
-    notifyMentionUsersInComment,
-    notifyOwnerPostUserComment
+    data,    
   ) => {
     try {
       const { text, mentions } = data;

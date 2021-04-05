@@ -26,7 +26,7 @@ export const postResolvers = {
         req,
         args.postId,
         pubsub,
-        subscriptionActions.NOTIFY_USER_ACTIONS_IN_POST
+        subscriptionActions.NOTIFY_OWNER_POST_USER_LIKE_POST
       ),
     unlikePost: (_, args, { req }, info) =>
       postControllers.unlikePost(req, args.postId),
@@ -58,11 +58,11 @@ export const postResolvers = {
     notifyUserLikePost: {
       subscribe: withFilter(
         () =>
-          pubsub.asyncIterator(subscriptionActions.NOTIFY_USER_ACTIONS_IN_POST),
-        (payload, { userId }) => {           
-          return payload.notifyUserLikePost.notification.receivers.includes(
-            userId
-          );
+          pubsub.asyncIterator(
+            subscriptionActions.NOTIFY_OWNER_POST_USER_LIKE_POST
+          ),
+        (payload, { userId }) => {
+          return payload.notifyUserLikePost.receivers.includes(userId);
         }
       ),
     },

@@ -9,7 +9,7 @@ import {
   AuthenticationError,
   ApolloError,
 } from "apollo-server-express";
-import { actions, fields } from "../fields-actions";
+import {fields, contents} from "../notification"
 import decodeBase64 from "../utils/decodeBase64";
 
 export const postControllers = {
@@ -81,12 +81,13 @@ export const postControllers = {
   createPost: async (req, data, pubsub, notifyMentionUsersInPost) => {
     const {
       text,
+      shortenText,
       mentions,
       fileNames,
       fileMimetype,
       fileEncodings,
       status,
-    } = data;
+    } = data;   
     const currentUserId = getAuthUser(req);
     const currentUser = await User.findById(currentUserId, {
       name: 1,
@@ -129,6 +130,7 @@ export const postControllers = {
     session.startTransaction();
     const newPost = new Post({
       text,
+      shortenText,
       mentions,
       files: fileData,
       author: currentUserId,
@@ -136,22 +138,22 @@ export const postControllers = {
     });
     //if has mentions, create notification to mentioner
     if (mentions.length && status.toUpperCase() !== "PRIVATE") {
-      newNotification = new Notification({
-        field: fields.post,
-        action: actions.MENTION,
-        creator: currentUser._id,
-        receivers: mentions,
-        href: `/posts/${newPost._id}`,
-      });
-      for (let mentionId of mentions) {
-        const mentioner = await User.findById(mentionId);
-        mentioner.notifications.push(newNotification._id);
-        await mentioner.save();
-      }
-      await (await newNotification.save()).populate("creator").execPopulate();
-      pubsub.publish(notifyMentionUsersInPost, {
-        notifyMentionUsersInPost: { ...newNotification._doc },
-      });
+      // newNotification = new Notification({
+      //   field: fields.post,
+      //   action: actions.MENTION,
+      //   creator: currentUser._id,
+      //   receivers: mentions,
+      //   href: `/posts/${newPost._id}`,
+      // });
+      // for (let mentionId of mentions) {
+      //   const mentioner = await User.findById(mentionId);
+      //   mentioner.notifications.push(newNotification._id);
+      //   await mentioner.save();
+      // }
+      // await (await newNotification.save()).populate("creator").execPopulate();
+      // pubsub.publish(notifyMentionUsersInPost, {
+      //   notifyMentionUsersInPost: { ...newNotification._doc },
+      // });
     }
     await currentUser.save();
     await (await newPost.save())
@@ -167,32 +169,34 @@ export const postControllers = {
   likePost: async (req, postId, pubsub, notifyUserLikePost) => {
     try {
       const currentUserId = getAuthUser(req);
-      const post = await Post.findByIdAndUpdate(
-        postId,
-        { $addToSet: { likes: currentUserId } },
-        { new: true }
-      );
-      if (post && !post.usersLike.includes(currentUserId)) {
-        const newNotification = new Notification({
-          action: actions.LIKE,
-          field: fields.post,
-          creator: currentUserId,
-          receivers: [post.author],
-          href: `/posts/${post._id}`,
-        });
-        await (await newNotification.save()).populate("creator").execPopulate();
-        await pubsub.publish(notifyUserLikePost, {
-          notifyUserLikePost: {
-            post,
-            notification: newNotification,
-          },
-        });
-        //push currentUserId to usersLike of post
-        post.usersLike.push(currentUserId);
-        await post.save();
+      const post = await Post.findById(postId).populate({path : "author", select : "slug"});
+      if(!post || post.likes.includes(currentUserId)){
+        return false ; 
       }
-
-      return !!post;
+      //create notification to notify user like post author
+      //Firstly, check notification has existed
+      const checkNotificationExisted = await Notification.findOne({"fieldIdentity.post": postId, content : contents.LIKED, creator: currentUserId});
+      if(!checkNotificationExisted){
+        const newNotification = new Notification({
+          field : fields.POST,
+          content : contents.LIKED,
+          creator : currentUserId,
+          fieldIdentity : {
+            post : post._id        
+          },
+          receivers : [post.author._id],
+          url : `/${post.author.slug}/posts/${post._id}`,          
+        })
+        //save notification into user model
+        await User.findByIdAndUpdate(post.author._id, {$push : {notifications : newNotification._id}}); 
+        //save notification
+        await (await newNotification.save()).populate({path : "creator", select : "name avatar slug"}).execPopulate();
+        
+        await pubsub.publish(notifyUserLikePost, {notifyUserLikePost : newNotification._doc})
+      }
+      post.likes.push(currentUserId);
+      await  post.save();
+      return true; 
     } catch (error) {
       throw new ApolloError(error.message);
     }

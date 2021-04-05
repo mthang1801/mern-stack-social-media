@@ -3,5 +3,6 @@ export const actions = {
   ADDED : "ADDED",
   ACCEPTED : "ACCEPTED",
   MENTION : "MENTION",
-  LIKE : "LIKE"
+  LIKE : "LIKE",
+  COMMENT : "COMMENT"
 }

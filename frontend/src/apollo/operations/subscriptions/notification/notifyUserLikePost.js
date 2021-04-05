@@ -1,27 +1,25 @@
-import {gql} from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const NOTIFY_USER_LIKE_POST_SUBSCRIPTION = gql`
 subscription($userId : ID!){
   notifyUserLikePost(userId : $userId){
-    post{
-      _id      
-    }
-    notification{
+    _id
+    field
+    content
+    creator{
       _id
-      receivers
-      action
-      field
-      href
-      creator {
-        _id
-        name
-        avatar
-        slug
-        isOnline
-      }
-      hasSeen
-      createdAt
+      name 
+      avatar
+      slug
     }
+    fieldIdentity{
+      post
+    }
+    url
+    hasSeen
+    receivers
+    isQuestion
+    createdAt
   }
 }
-`
+`;

@@ -13,6 +13,7 @@ export const schemaInput = gql`
   
   input PostInput{
     text : String
+    shortenText : String
     mentions : [ID!]
     fileNames : [String!]
     fileMimetype : [String!]

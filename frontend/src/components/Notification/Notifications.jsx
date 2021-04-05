@@ -130,19 +130,20 @@ const Notifications = () => {
         variables : {userId : user._id},
         updateQuery : (_, {subscriptionData}) => {
           if(subscriptionData){
-            const {notification : newNotification, post} = subscriptionData.data.notifyUserLikePost;
-            updatedNotifications(newNotification)
-            if(personalPosts[user._id]){
-              const personalPostsByUserId = personalPosts[user._id].map(_post => {
-                if(_post._id === post._id ){
-                  let _p = {..._post};
-                  _p.likes = [..._p.likes, newNotification.creator._id];
-                  return _p;
-                }
-                return {..._post};
-              })
-              setPersonalPosts(personalPostsByUserId) ;        
-            }
+            const {notifyUserLikePost} = subscriptionData.data;
+            console.log(notifyUserLikePost)
+            // updatedNotifications(newNotification)
+            // if(personalPosts[user._id]){
+            //   const personalPostsByUserId = personalPosts[user._id].map(_post => {
+            //     if(_post._id === post._id ){
+            //       let _p = {..._post};
+            //       _p.likes = [..._p.likes, newNotification.creator._id];
+            //       return _p;
+            //     }
+            //     return {..._post};
+            //   })
+            //   setPersonalPosts(personalPostsByUserId) ;        
+            // }
           }
         } 
       })
