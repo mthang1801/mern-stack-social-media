@@ -72,7 +72,7 @@ export const commentControllers = {
                 creator: currentUserId,
                 receiver: mentionId,
               },
-              { updatedAt: Date.now() },
+              { updatedAt: Date.now(), hasSeen : false },
               { new: true }
             ).populate({ path: "creator", select: "slug name avatar" }).populate({path : "fieldIdentity.post" , select : "shortenText"});
             if (!notification) {
@@ -121,7 +121,7 @@ export const commentControllers = {
             creator: currentUserId,
             receiver: post.author,
           },
-          { updatedAt: Date.now() },
+          { updatedAt: Date.now(), hasSeen : false },
           { new: true }
         )
           .populate({ path: "creator", select: "name slug avatar" })

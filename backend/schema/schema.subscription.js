@@ -17,7 +17,6 @@ export const schemaSubscription = gql`
       userId: ID!
     ): SubscriptionNotificationPayload!
 
-    updateCountNotificationsWhenSeen(userId: ID!): ID!
     commentActions(postId: ID!): CommentSubscriptionPayload
     contactActions(userId: ID!): ContactSubscriptionPayload!
 

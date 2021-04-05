@@ -6,42 +6,24 @@ import {
   userMutations,
   cacheMutations,
 } from "../../apollo/operations/mutations";
-import {
-  GET_CURRENT_USER,
-  GET_NEW_NOTIFICATIONS,
-  GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-  GET_CURRENT_PERSONAL_USER,
-} from "../../apollo/operations/queries/cache";
 import classNames from "classnames";
 import styled from "styled-components";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import useLanguage from "../Global/useLanguage";
 import Moment from "react-moment";
+import "moment/locale/vi"
 import {
   notificationContent,
   showResponseButtons,
 } from "../../utils/notificationContent";
-
+import {GET_NOTIFICATIONS_CACHE_DATA} from "../../apollo/operations/queries/cache/components/getNotifications"
 import { useThemeUI } from "theme-ui";
-const NotificationItem = ({ notification, notifications }) => {
+const NotificationItem = ({ notification }) => {
   //Query
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
-  const {
-    data: { newNotifications },
-  } = useQuery(GET_NEW_NOTIFICATIONS, { fetchPolicy: "cache-first" });
-  const {
-    data: { currentPersonalUser },
-  } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { countNumberNotificationsUnseen },
-  } = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
-    fetchPolicy: "cache-first",
-  });
+  const {data : {user, newNotifications, currentPersonalUser, countNumberNotificationsUnseen, notifications}} = useQuery(GET_NOTIFICATIONS_CACHE_DATA, {fetchPolicy : "cache-first"})  
   //Mutations
   const {
-    setNotifications,
+    updateNotificationHasSeen,
     decreaseNumberNotificationsUnseen,
     setCurrentUser,
     setCurrentPersonalUser,
@@ -54,10 +36,15 @@ const NotificationItem = ({ notification, notifications }) => {
   );
   const [rejectRequestToAddFriend] = useMutation(
     userMutations.REJECT_REQUEST_TO_ADD_FRIEND
-  );
+  );  
   const { lang } = useLanguage();
   const handleUserClickHasSeen = (notification) => {
-    
+    updateToHasSeen({variables : {notificationId : notification._id}}).then(({data}) => {
+      if(data.updateUserHasSeenNotification){
+        decreaseNumberNotificationsUnseen();        
+        updateNotificationHasSeen(notification._id)
+      }
+    })
   };
 
   const updateMutationOnChange = (sender, receiver) => {
@@ -136,7 +123,8 @@ const NotificationItem = ({ notification, notifications }) => {
             <div className="notification-datetime">
               <Moment
                 fromNow
-                className={newNotifications.has(notification._id) ? "new" : ""}
+                className={newNotifications?.has(notification._id) ? "new" : ""}
+                locale={lang}
               >
                 {new Date(+notification.updatedAt)}
               </Moment>

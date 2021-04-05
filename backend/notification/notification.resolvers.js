@@ -16,19 +16,7 @@ export const notificationResolvers = {
     updateUserHasSeenNotification: (_, args, { req }, info) =>
       notificationControllers.updateUserHasSeenNotification(
         req,
-        args.notificationId,
-        pubsub,
-        subscriptionActions.UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN
+        args.notificationId,        
       ),
-  },
-  Subscription:  {
-    updateCountNotificationsWhenSeen : {
-      subscribe : withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN),
-        (payload, {userId}) => {          
-          return payload.updateCountNotificationsWhenSeen.toString() === userId.toString()
-        }
-      )
-    }
-  }
+  },  
 };

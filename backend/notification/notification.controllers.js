@@ -18,24 +18,14 @@ export const notificationControllers = {
   },
   updateUserHasSeenNotification: async (
     req,
-    notificationId,
-    pubsub,
-    updateCountNotificationsWhenSeen
+    notificationId,   
   ) => {
-    const userId = await getAuthUser(req);
-    const notification = await Notification.findOne({
-      _id: notificationId,
-      receivers: userId,
-    }).populate("creator");
-    if (!notification) {
-      throw new AuthenticationError("You are not allowed to update");
+    const currentUserId = getAuthUser(req);
+    const notification = await Notification.findByIdAndUpdate({_id : notificationId, receiver : currentUserId}, {hasSeen : true}, {new : true});
+    if(!notification){
+      return false ; 
     }
-    notification.hasSeen.push(userId);
-    await notification.save();
-    pubsub.publish(updateCountNotificationsWhenSeen, {
-      updateCountNotificationsWhenSeen: userId,
-    });
-    return notification;
+    return true ; 
   },
   countNotificationsUnseen: async (req) => {
     const userId = await getAuthUser(req);

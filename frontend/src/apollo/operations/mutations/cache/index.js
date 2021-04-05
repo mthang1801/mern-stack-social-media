@@ -37,6 +37,7 @@ import createRemoveNotificationItemFromNotificationsList from "./notifications/r
 import createIncreaseCountNumberNotificationsUnseen from "./notifications/increaseCountNumberNotificationsUnseen";
 import createDecreaseCountNumberNotificationsUnseen from "./notifications/decreaseCountNumberNotificationsUnseen";
 import createUpdateNotificationItemInNotificationsList from "./notifications/updateNotificationItemInNotificationsList"
+import createUpdateNotificationHasSeen from "./notifications/updateNotificationHasSeen";
 //Friends
 import createSetOpenFriendsList from "./friends/setOpenFriendsList";
 import createSetFriends from "./friends/setFriends";
@@ -114,14 +115,14 @@ const mutations = {
   //Notifications
   setNotifications: createSetNotifications(setNotificationsVar),
   addNotificationItemToNotificationsList : createAddNotificationItemToNotificationsList(setNotificationsVar),
-  updateNotificationItemInNotificationsList : createUpdateNotificationItemInNotificationsList(setNotificationsVar),
+  updateNotificationItemInNotificationsList : createUpdateNotificationItemInNotificationsList(setNotificationsVar),  
   removeNotificationItemFromNotificationsList : createRemoveNotificationItemFromNotificationsList(setNotificationsVar),
+  updateNotificationHasSeen : createUpdateNotificationHasSeen(setNotificationsVar),
   setNewNotifications: createSetNewNotifications(setNewNotificationsVar),
   removeNewNotification : createRemoveNewNotification(setNewNotificationsVar),
   setLatestNotification: createSetLatestNotification(
     setLatestNotificationVar
-  ),
-  
+  ),  
   setCountNumberNotificationsUnseen: createSetCountNumberNotificationsUnseen(
     setCountNumberNotificationsUnseenVar
   ),

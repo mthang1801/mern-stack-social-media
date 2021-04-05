@@ -14,7 +14,7 @@ export const schemaMutation = gql`
     removeLikeComment(commentId: ID!): Boolean!
     removeLikeResponse(responseId: ID!): Boolean!
     createResponse(commentId: ID!, data: CommentInput!): Response!
-    updateUserHasSeenNotification(notificationId: ID!): Notification!
+    updateUserHasSeenNotification(notificationId: ID!): Boolean!
     addContact(receiverId: ID!, message: String!): Boolean!
     acceptContact(senderId: ID!): Boolean!
 
