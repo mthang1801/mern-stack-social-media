@@ -10,7 +10,7 @@ import {
   GET_CURRENT_USER,
   GET_NEW_NOTIFICATIONS,
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-  GET_CURRENT_PERSONAL_USER,  
+  GET_CURRENT_PERSONAL_USER,
 } from "../../apollo/operations/queries/cache";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -30,7 +30,7 @@ const NotificationItem = ({ notification, notifications }) => {
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
   const {
     data: { newNotifications },
-  } = useQuery(GET_NEW_NOTIFICATIONS, { fetchPolicy: "cache-first" });  
+  } = useQuery(GET_NEW_NOTIFICATIONS, { fetchPolicy: "cache-first" });
   const {
     data: { currentPersonalUser },
   } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
@@ -43,7 +43,7 @@ const NotificationItem = ({ notification, notifications }) => {
   const {
     setNotifications,
     decreaseNumberNotificationsUnseen,
-    setCurrentUser,    
+    setCurrentUser,
     setCurrentPersonalUser,
   } = cacheMutations;
   const [updateToHasSeen] = useMutation(
@@ -54,7 +54,7 @@ const NotificationItem = ({ notification, notifications }) => {
   );
   const [rejectRequestToAddFriend] = useMutation(
     userMutations.REJECT_REQUEST_TO_ADD_FRIEND
-  )
+  );
   const { lang } = useLanguage();
   const handleUserClickHasSeen = (notification) => {
     if (!notification.hasSeen.includes(user._id)) {
@@ -86,7 +86,7 @@ const NotificationItem = ({ notification, notifications }) => {
       followed: [...sender.followed],
       sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
       receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
-    });    
+    });
     if (
       currentPersonalUser &&
       currentPersonalUser._id === notification.creator._id
@@ -113,12 +113,12 @@ const NotificationItem = ({ notification, notifications }) => {
 
   const onRejectRequestToAddFriend = () => {
     rejectRequestToAddFriend({
-      variables : {senderId : notification.creator._id }
-    }).then(({data}) => {
+      variables: { senderId: notification.creator._id },
+    }).then(({ data }) => {
       const { sender, receiver } = data.rejectRequestToAddFriend;
-        updateMutationOnChange(sender, receiver);        
-    })
-  }
+      updateMutationOnChange(sender, receiver);
+    });
+  };
   const { colorMode } = useThemeUI();
   if (!user) return null;
   return (
@@ -129,7 +129,7 @@ const NotificationItem = ({ notification, notifications }) => {
         })}
       >
         <Link
-          to={notification.href}
+          to={notification.url}
           key={notification._id}
           className={classNames("notification-link", {
             unseen: !notification.hasSeen.includes(user._id),
@@ -139,21 +139,19 @@ const NotificationItem = ({ notification, notifications }) => {
           <div className="avatar-container">
             <LazyLoadImage
               src={`${notification.creator.avatar}`}
-              alt={notification.href}
+              alt={notification.url}
               effect="blur"
               width="40px"
               height="40px"
             />
           </div>
           <div className="notification-content">
-            <span className="creator-name">{notification.creator.name} </span>
-            <span>
-              {notificationContent(
-                notification.field,
-                notification.action,
-                lang
-              )}
-            </span>
+            {/* <span className="creator-name">{notification.creator.name} </span> */}
+            <span
+              dangerouslySetInnerHTML={{
+                __html: notificationContent(notification, lang),
+              }}
+            />
             <div className="notification-datetime">
               <Moment
                 fromNow
@@ -164,14 +162,14 @@ const NotificationItem = ({ notification, notifications }) => {
             </div>
           </div>
         </Link>
-        {showResponseButtons(notification, user) && (
+        {/* {showResponseButtons(notification, user) && (
           <ButtonsGroup>
             <ButtonAccept onClick={onAcceptRequestToAddFriend}>
               Accept
             </ButtonAccept>
             <ButtonDecline onClick={onRejectRequestToAddFriend}>Decline</ButtonDecline>
           </ButtonsGroup>
-        )}
+        )} */}
       </div>
     </Wrapper>
   );

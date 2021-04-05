@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const MENTION_USERS_IN_POST_SUBSCRIPTION = gql`
-  subscription($userId : ID!) {
+  subscription($userId: ID!) {
     mentionUsersInPost(userId: $userId) {
       sender {
         _id
@@ -12,11 +12,16 @@ export const MENTION_USERS_IN_POST_SUBSCRIPTION = gql`
       }
       notification {
         _id
-        receivers
-        action
         field
-        href     
+        content
         hasSeen
+        creator {
+          _id
+          name
+          avatar
+        }
+        url
+        isQuestion
         createdAt
       }
     }

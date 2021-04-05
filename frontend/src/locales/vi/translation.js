@@ -167,10 +167,10 @@ export const vi = {
       postCreated: "vừa đăng một trạng thái mới.",
       sentRequestToAddFriend: "gửi cho bạn một lời mời kết bạn.",
       acceptRequestToAddFriend: "đã chấp nhận lời mời kết bạn của bạn.",
-      postMention : "Nhắc đến bạn trong bài viết của anh ấy",
-      likePost: "đã thích bài viết của bạn",
+      postMention : "Nhắc đến bạn trong bài viết của anh ấy",      
       commentMention : "Đã nhắc đến bạn trong bình luận của anh ấy",
-      commentCreated : "Đã viết bình luận trong bài viết của bạn"
+      commentCreated : "Đã viết bình luận trong bài viết của bạn",
+      likePost: (creatorName, shortenText) => `${creatorName} đã thích bài viết <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong> của bạn`,
     },
     greeting: {
       welcome: "Chào mừng bạn đã đến với Pul.com",

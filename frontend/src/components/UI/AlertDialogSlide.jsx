@@ -5,15 +5,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
 import {useQuery} from "@apollo/client"
 import {GET_DIALOG} from "../../apollo/operations/queries/cache";
 import {cacheMutations} from "../../apollo/operations/mutations/cache"
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
-function AlertDialogSlide({...props}) {    
+function AlertDialogSlide() {    
   const {data : {dialog}} = useQuery(GET_DIALOG);
   const {title, content} = dialog; 
   const {setDialog} = cacheMutations
@@ -26,9 +22,7 @@ function AlertDialogSlide({...props}) {
   return (
     <div>
       <Dialog
-        open={title && content}
-        TransitionComponent={Transition}
-        keepMounted
+        open={title && content}                
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"

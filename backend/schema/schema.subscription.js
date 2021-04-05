@@ -4,7 +4,7 @@ export const schemaSubscription = gql`
   type Subscription {
     notifyCreatedPost(userId: ID!): SubscriptionNotificationPayload!
     notifyMentionUsersInPost(userId: ID!) : Notification!
-    notifyUserLikePost(userId: ID!) : NotificationPayload!
+    notifyUserLikePost(userId: ID!) : Notification!
     notifyMentionUsersInComment(userId : ID!) : Notification!
     notifyOwnerPostUserComment(userId: ID!): CommentSubscriptionPayload!
     notifyOwnerCommentUserLike(userId : ID!) : Notification!

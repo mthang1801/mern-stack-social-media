@@ -13,10 +13,10 @@ export const schemaType = gql`
     avatar: String
     comments: [Comment!]!
     responses: [Response!]
-    notifications: [Notification!]!
-    following: [ID!]!
-    followed: [ID!]!
-    sentRequestToAddFriend: [ID!]!
+    notifications: [ID!]
+    following: [ID!]
+    followed: [ID!]
+    sentRequestToAddFriend: [ID!]
     receivedRequestToAddFriend: [ID!]
     isOnline: Boolean!
     offlinedAt: String
@@ -72,19 +72,9 @@ export const schemaType = gql`
     createdAt: String!
     updatedAt: String!
   }
-  type Notification {
-    _id: ID!
-    field: String!
-    action: String!
-    creator: User!
-    href: String!
-    hasSeen: [ID!]!
-    receivers: [ID!]!
-    acceptInvite: Boolean!
-    createdAt: String!
-  }
+ 
 
-  type NotificationPayload {
+  type Notification {
     _id: ID!
     field: String!
     content: String!
@@ -98,10 +88,10 @@ export const schemaType = gql`
   }
 
   type NotificationFieldIdentity {
-    post: ID
-    user: ID
-    comment: ID
-    response: ID
+    post: Post
+    user: User
+    comment: Comment
+    response: Response
   }
 
   type PersonalChat {

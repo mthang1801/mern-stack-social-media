@@ -19,18 +19,16 @@ subscription NotifyCreatedPost($userId : ID!){
     notification{
       _id
       field
-      action
-      hasSeen     
-      href 
-      acceptInvite
-      creator{
+      content
+      hasSeen
+      creator {
         _id
         name
-        email
         avatar
-        slug
       }
-      createdAt    
+      url
+      isQuestion
+      createdAt 
     }
   }
 }

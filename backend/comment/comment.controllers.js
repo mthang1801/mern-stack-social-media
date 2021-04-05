@@ -57,24 +57,24 @@ export const commentControllers = {
         session.startTransaction();
         if (mentions.length) {
           //create notification to mentions in comment
-          const newNotification = new Notification({
-            field: fields.comment,
-            action: actions.MENTION,
-            creator: currentUserId,
-            receivers: mentions,
-            href: `/posts/${post._id}`,
-          });
-          for (let mentionId of mentions) {
-            const mentioner = await User.findById(mentionId);
-            mentioner.notifications.push(newNotification._id);
-            await mentioner.save();
-          }
-          await (await newNotification.save())
-            .populate("creator")
-            .execPopulate();
-          await pubsub.publish(notifyMentionUsersInComment, {
-            notifyMentionUsersInComment: { ...newNotification._doc },
-          });
+          // const newNotification = new Notification({
+          //   field: fields.comment,
+          //   action: actions.MENTION,
+          //   creator: currentUserId,
+          //   receivers: mentions,
+          //   href: `/posts/${post._id}`,
+          // });
+          // for (let mentionId of mentions) {
+          //   const mentioner = await User.findById(mentionId);
+          //   mentioner.notifications.push(newNotification._id);
+          //   await mentioner.save();
+          // }
+          // await (await newNotification.save())
+          //   .populate("creator")
+          //   .execPopulate();
+          // await pubsub.publish(notifyMentionUsersInComment, {
+          //   notifyMentionUsersInComment: { ...newNotification._doc },
+          // });
         }
 
         //save new comment
@@ -90,30 +90,30 @@ export const commentControllers = {
 
         //create notification to notify owner post realize user has commented and push usersComment to post
         if (!post.usersComment.includes(currentUserId)) {
-          const ownerNotification = new Notification({
-            field: fields.comment,
-            action: actions.CREATED,
-            creator: currentUserId,
-            receivers: [post.author],
-            href: `/posts/${post._id}`,
-          });
-          //push notification to owner Post
-          await User.findByIdAndUpdate(
-            post.author,
-            { $push: { notifications: ownerNotification._id } },
-            { new: true }
-          );
+          // const ownerNotification = new Notification({
+          //   field: fields.comment,
+          //   action: actions.CREATED,
+          //   creator: currentUserId,
+          //   receivers: [post.author],
+          //   href: `/posts/${post._id}`,
+          // });
+          // //push notification to owner Post
+          // await User.findByIdAndUpdate(
+          //   post.author,
+          //   { $push: { notifications: ownerNotification._id } },
+          //   { new: true }
+          // );
 
-          //save notification owner Post
-          await (await ownerNotification.save())
-            .populate("creator")
-            .execPopulate();
-          await pubsub.publish(notifyOwnerPostUserComment, {
-            notifyOwnerPostUserComment: {
-              comment: newComment,
-              notification: ownerNotification,
-            },
-          });
+          // //save notification owner Post
+          // await (await ownerNotification.save())
+          //   .populate("creator")
+          //   .execPopulate();
+          // await pubsub.publish(notifyOwnerPostUserComment, {
+          //   notifyOwnerPostUserComment: {
+          //     comment: newComment,
+          //     notification: ownerNotification,
+          //   },
+          // });
 
           post.usersComment.push(currentUserId);
         }

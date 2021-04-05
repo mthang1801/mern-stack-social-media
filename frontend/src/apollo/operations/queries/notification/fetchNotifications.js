@@ -5,16 +5,23 @@ export const FETCH_NOTIFICATIONS = gql`
     fetchNotifications(skip : $skip, limit : $limit ) {
       _id
       field
-      action
+      content
       hasSeen
       receivers
       creator {
         _id
         name
         avatar
+        slug
       }
-      href
-      acceptInvite
+      fieldIdentity{
+        post {
+          _id
+          shortenText
+        }
+      }      
+      url
+      isQuestion
       createdAt
     }
   }

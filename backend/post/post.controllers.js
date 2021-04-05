@@ -190,7 +190,7 @@ export const postControllers = {
         //save notification into user model
         await User.findByIdAndUpdate(post.author._id, {$push : {notifications : newNotification._id}}); 
         //save notification
-        await (await newNotification.save()).populate({path : "creator", select : "name avatar slug"}).execPopulate();
+        await (await newNotification.save()).populate({path : "fieldIdentity.post", select:  "shrotenText"}).populate({path : "creator", select : "name avatar slug"}).execPopulate();
         
         await pubsub.publish(notifyUserLikePost, {notifyUserLikePost : newNotification._doc})
       }

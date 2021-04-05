@@ -3,18 +3,17 @@ import { gql } from "@apollo/client";
 export const NOTIFY_MENTION_USERS_IN_POST = gql`
   subscription ($userId: ID!){
     notifyMentionUsersInPost(userId: $userId) {
-      _id 
+      _id
       field
-      action
-      href 
+      content
       hasSeen
-      acceptInvite
-      creator{
+      creator {
         _id
         name
         avatar
-        slug
       }
+      url
+      isQuestion
       createdAt
     }
   }

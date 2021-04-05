@@ -13,7 +13,10 @@ subscription($userId : ID!){
       slug
     }
     fieldIdentity{
-      post
+      post{
+        _id        
+        shortenText
+      }
     }
     url
     hasSeen

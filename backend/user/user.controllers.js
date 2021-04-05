@@ -51,11 +51,8 @@ export const userController = {
   },
   loginUser: async (data) => {
     const { email, password } = data;
-    const user = await User.findOne({ email }).populate({
-      path: "notifications",
-      populate: { path: "creator" },
-    });
-
+    const user = await User.findOne({ email });
+    console.log(user)
     if (!user) {
       throw new UserInputError("email or password was not correct");
     }
@@ -69,12 +66,10 @@ export const userController = {
       tokenExpire: process.env.JWT_TOKEN_EXPIRE,
     };
   },
-  fetchCurrentUser: async (req) => {
-    const userId = getAuthUser(req, false);   
-    const user = await User.findById(userId).populate({
-      path: "notifications",
-      populate: { path: "creator" },
-    });
+  fetchCurrentUser: async (req) => {        
+    const userId = getAuthUser(req, false);      
+    const user = await User.findById(userId)
+    
     if (!user) {
       return null;
     }

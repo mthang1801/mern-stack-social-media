@@ -5,10 +5,10 @@ export const NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION = gql`
     notifyMentionUsersInComment(userId: $userId){
       _id 
       field
-      action
-      href 
+      content
+      url 
       hasSeen
-      acceptInvite
+      isQuestion
       creator{
         _id
         name

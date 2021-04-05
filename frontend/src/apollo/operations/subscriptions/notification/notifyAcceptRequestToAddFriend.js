@@ -27,18 +27,17 @@ export const NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
       }
       receivers 
       notification{
-        _id 
+        _id
         field
-        action
-        href 
+        content
         hasSeen
-        acceptInvite
-        creator{
+        creator {
           _id
           name
           avatar
-          slug
         }
+        url
+        isQuestion
         createdAt
       }
     }

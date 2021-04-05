@@ -50,13 +50,11 @@ const FlashPopUpNotification = ({ onClick }) => {
           </SenderAvatar>
           <NotificationContent>
             <SenderName>{latestNotification.creator.name}</SenderName>
-            <span>
-              {notificationContent(
-                latestNotification.field,
-                latestNotification.action,
-                lang
-              )}
-            </span>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: notificationContent(latestNotification, lang),
+              }}
+            ></span>
           </NotificationContent>
         </>
       ) : null}

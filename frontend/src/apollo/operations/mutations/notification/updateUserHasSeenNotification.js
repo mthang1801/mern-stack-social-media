@@ -5,15 +5,15 @@ export const UPDATE_USER_HAS_SEEN_NOTIFICATION = gql`
     updateUserHasSeenNotification(notificationId : $notificationId){
       _id
       field
-      action
+      content
       hasSeen
       creator {
         _id
         name
         avatar
       }
-      href
-      acceptInvite
+      url
+      isQuestion
       createdAt
     }
   }

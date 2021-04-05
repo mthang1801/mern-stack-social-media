@@ -39,9 +39,9 @@ function App() {
       if(_isMounted){
         setCurrentUser({...fetchCurrentUser});  
         //after fetching current user, fetch notification and friends  
-        const skip = 0;        
+        const skip = 0;               
         const limitNotifications = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
-        const {data : notificationsData} = await fetchNotifications({skip, limit : limitNotifications})        
+        const {data : notificationsData} = await fetchNotifications({skip, limit : limitNotifications})                
         setNotifications([...notificationsData.fetchNotifications]);
         
         const limitFriends = +process.env.REACT_APP_FRIENDS_PER_LOAD;

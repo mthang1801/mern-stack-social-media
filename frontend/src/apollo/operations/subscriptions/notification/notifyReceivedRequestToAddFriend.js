@@ -31,18 +31,16 @@ subscription ($userId : ID!){
     notification{
       _id
       field
-      action
-      hasSeen      
-      acceptInvite
-      href
-      creator{
+      content
+      hasSeen
+      creator {
         _id
         name
-        email
         avatar
-        slug
       }
-      createdAt    
+      url
+      isQuestion
+      createdAt  
     }
   }
 }

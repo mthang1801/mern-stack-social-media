@@ -14,22 +14,21 @@ export const NOTIFY_OWNER_POST_USER_COMMENT_SUBSCRIPTION = gql`
         }
         post
         likes
-        responses 
+        responses
         createdAt
       }
       notification {
         _id
         field
-        action
-        href
+        content
         hasSeen
-        acceptInvite
         creator {
           _id
           name
           avatar
-          slug
         }
+        url
+        isQuestion
         createdAt
       }
     }

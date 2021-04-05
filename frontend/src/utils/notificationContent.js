@@ -1,27 +1,28 @@
 import i18n from "../i18n"
 
-const notificationContent = (field, action, lang) => {
+const notificationContent = (notification, lang) => {
   const {notifications} = i18n.store.data[lang].translation;
-  field = field.toLowerCase();
-  action = action.toUpperCase();  
-
+  let { field, content} = notification;
+  field = field.toUpperCase();
+  content = content.toUpperCase();    
+  console.log(notification)
   switch(field){
-    case "post" : 
-      switch(action){        
+    case "POST" : 
+      switch(content){        
         case "MENTION" : {          
           return notifications.postMention; 
         };
-        case "LIKE" : {
-          return notifications.likePost;
-        }
+        case "LIKED" :           
+          return notifications.likePost(notification.creator?.name, notification.fieldIdentity?.post?.shortenText);
+        
       }
-    case "user" : 
-      switch(action){
+    case "USER" : 
+      switch(content){
         case "ADDED" : return  notifications.sentRequestToAddFriend;
         case "ACCEPTED" : return notifications.acceptRequestToAddFriend
       }
-    case "comment" : 
-      switch(action){
+    case "COMMENT" : 
+      switch(content){
         case "MENTION" : return notifications.commentMention; 
         case "CREATED" : return notifications.commentCreated;
       }
@@ -30,8 +31,8 @@ const notificationContent = (field, action, lang) => {
 
 const showResponseButtons = (notification, user) => {
   const field = notification.field.toLowerCase();
-  const action = notification.action.toUpperCase();
-  if(field === "user" && action === "ADDED" && user.receivedRequestToAddFriend.includes(notification.creator._id)){
+  const content = notification.content.toUpperCase();
+  if(field === "user" && content === "ADDED" && user.receivedRequestToAddFriend.includes(notification.creator._id)){
     return true ; 
   }
   return false ;
