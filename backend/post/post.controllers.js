@@ -166,16 +166,16 @@ export const postControllers = {
     session.endSession();
     return { ...newPost._doc, author: { ...currentUser._doc } };
   },
-  likePost: async (req, postId, pubsub, notifyUserLikePost) => {
+  likePost: async (req, postId, pubsub, likePostSubscription) => {
     try {
       const currentUserId = getAuthUser(req);
-      const post = await Post.findById(postId).populate({path : "author", select : "slug"});
+      const post = await Post.findById(postId).populate({path : "author", select : "name slug"});
       if(!post || post.likes.includes(currentUserId)){
         return false ; 
       }
       //create notification to notify user like post author
       //Firstly, check notification has existed
-      const checkNotificationExisted = await Notification.findOne({"fieldIdentity.post": postId, content : contents.LIKED, creator: currentUserId});
+      const checkNotificationExisted = await Notification.findOne({"fieldIdentity.post": postId, content : contents.LIKED, creator: currentUserId});      
       if(!checkNotificationExisted){
         const newNotification = new Notification({
           field : fields.POST,
@@ -192,7 +192,7 @@ export const postControllers = {
         //save notification
         await (await newNotification.save()).populate({path : "fieldIdentity.post", select:  "shrotenText"}).populate({path : "creator", select : "name avatar slug"}).execPopulate();
         
-        await pubsub.publish(notifyUserLikePost, {notifyUserLikePost : newNotification._doc})
+        await pubsub.publish(likePostSubscription, {likePostSubscription : newNotification._doc})
       }
       post.likes.push(currentUserId);
       await  post.save();
@@ -201,13 +201,20 @@ export const postControllers = {
       throw new ApolloError(error.message);
     }
   },
-  unlikePost: async (req, postId) => {
+  removeLikePost: async (req, postId, pubsub, removeLikePostSubscription) => {
     const currentUserId = getAuthUser(req);
     const post = await Post.findByIdAndUpdate(
       postId,
       { $pull: { likes: currentUserId } },
       { new: true }
     );
+    //find notification user liked post and remove it
+    const notification = await Notification.findOneAndDelete({field : fields.POST, "fieldIdentity.post" : postId, creator : currentUserId}).populate({path : "fieldIdentity.post", select:  "shrotenText"}).populate({path : "creator", select : "name avatar slug"});
+    if(notification){      
+      await User.findByIdAndUpdate(notification.receivers[0],{$pull : {notifications : notification._id}});
+      await pubsub.publish(removeLikePostSubscription, {removeLikePostSubscription : notification._doc})
+    }
+    
     return !!post;
   },
   updatePost: async (req, postId, data, pubsub, postActions) => {

@@ -17,7 +17,7 @@ import { BiLike } from "react-icons/bi";
 import { useThemeUI } from "theme-ui";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
-import { LIKE_POST, UNLIKE_POST } from "../../apollo/operations/mutations/post";
+import { LIKE_POST, REMOVE_LIKE_POST } from "../../apollo/operations/mutations/post";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import LazyLoad from "react-lazyload";
 import CommentEditor from "./CommentEditor";
@@ -29,7 +29,7 @@ const PostCardFooter = ({ post, fetchComments }) => {
     data: { user },
   } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
   const [likePost] = useMutation(LIKE_POST);
-  const [unlikePost] = useMutation(UNLIKE_POST);
+  const [removeLikePost] = useMutation(REMOVE_LIKE_POST);
   const [showCommentEditor, setShowCommentEditor] = useState(false);
   const { updateLikePost, updateUnlikePost } = cacheMutations;
   const onLikePost = () => {
@@ -45,8 +45,8 @@ const PostCardFooter = ({ post, fetchComments }) => {
   };
 
   const onUnlikePost = () => {
-    unlikePost({ variables: { postId: post._id } }).then(({ data }) => {
-      if (data.unlikePost) {
+    removeLikePost({ variables: { postId: post._id } }).then(({ data }) => {
+      if (data.removeLikePost) {
         updateUnlikePost(post._id, user._id);
       }
     });

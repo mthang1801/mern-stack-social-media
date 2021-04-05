@@ -5,7 +5,7 @@ export const schemaMutation = gql`
     createUser(data: CreateUserInput!): UserAuthPayload!
     createPost(data: PostInput!): Post!
     likePost(postId: ID!): Boolean!
-    unlikePost(postId: ID!): Boolean!
+    removeLikePost(postId: ID!): Boolean!
     createComment(postId: ID!, data: CommentInput!): Comment!
     removeComment(commentId: ID!): Boolean!
     removeResponse(responseId: ID!): Boolean!

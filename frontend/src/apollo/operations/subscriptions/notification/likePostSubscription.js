@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const NOTIFY_USER_LIKE_POST_SUBSCRIPTION = gql`
+export const LIKE_POST_SUBSCRIPTION = gql`
 subscription($userId : ID!){
-  notifyUserLikePost(userId : $userId){
+  likePostSubscription(userId : $userId){
     _id
     field
     content

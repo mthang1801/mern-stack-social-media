@@ -34,6 +34,7 @@ const Notifications = () => {
       currentPersonalUser,
       receivedRequestsToAddFriend,
       personalPosts,
+      latestNotification
     },
   } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, {
     fetchPolicy: "cache-first",
@@ -42,6 +43,7 @@ const Notifications = () => {
   const {
     setCountNumberNotificationsUnseen,
     increaseNumberNotificationsUnseen,
+    decreaseNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,
     setLatestNotification,
@@ -50,6 +52,9 @@ const Notifications = () => {
     setReceivedRequestsToAddFriend,
     setPersonalPosts,
     addCommentToOwnerPost,
+    removeNewNotification,  
+    addNotificationItemToNotificationsList,
+    removeNotificationItemFromNotificationsList  
   } = cacheMutations;
 
   useEffect(() => {
@@ -71,7 +76,7 @@ const Notifications = () => {
   ]);
 
   //sender and receiver only use in field 'user'
-  const updatedNotifications = (
+  const updatedAddNotification = (
     newNotification,
     sender = null,
     receiver = null
@@ -81,36 +86,36 @@ const Notifications = () => {
     increaseNumberNotificationsUnseen();
     if (sender && receiver) {
       setCurrentUser({
-        // ...user,
-        // friends: [...receiver.friends],
-        // following: [...receiver.following],
-        // followed: [...receiver.followed],
-        // sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-        // receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
         ...receiver,
       });
 
       if (currentPersonalUser && currentPersonalUser._id === sender._id) {
         setCurrentPersonalUser({
-          // ...currentPersonalUser,
-          // friends: [...sender.friends],
-          // following: [...sender.following],
-          // followed: [...sender.followed],
-          // sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-          // receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
           ...sender,
         });
       }
     }
-
-    setNotifications([{ ...newNotification, new: true }, ...notifications]);
+    addNotificationItemToNotificationsList(newNotification);
   };
+
+  const updatedRemoveNotification = (
+    removedNotification,     
+  ) => {
+    if(latestNotification._id === removedNotification._id){
+      setLatestNotification(null);
+    }
+    removeNewNotification(removedNotification._id);
+    decreaseNumberNotificationsUnseen();
+    setCurrentUser({...user, notifications : [...notifications.filter(_id => _id !== removedNotification._id)] });    
+    removeNotificationItemFromNotificationsList(removedNotification);
+  }
 
   useEffect(() => {
     let unsubscribeMentionUsersInPost,
       unsubscribeRequestAddFriend,
       unsubscribeAcceptRequestAddFriend,
       unsubscribeUserLikePost,
+      unsubscribeUserRemoveLikePost,
       unsubscribeOwnerPostReceivedUserComment,
       unsubscribeMentionUsersInComment;
     if (subscribeToMoreNotifications && user) {
@@ -123,25 +128,26 @@ const Notifications = () => {
           const {
             notifyMentionUsersInPost: newNotification,
           } = subscriptionData.data;
-          updatedNotifications(newNotification);
+          updatedAddNotification(newNotification);
         },
       });
       unsubscribeUserLikePost = subscribeToMoreNotifications({
-        document:
-          subscriptions.notificationSubscription
-            .NOTIFY_USER_LIKE_POST_SUBSCRIPTION,
+        document: subscriptions.notificationSubscription.LIKE_POST_SUBSCRIPTION,
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
-            const { notifyUserLikePost } = subscriptionData.data;
-            if (notifyUserLikePost) {
-              updatedNotifications(notifyUserLikePost);
+            const { likePostSubscription } = subscriptionData.data;
+            if (likePostSubscription) {
+              updatedAddNotification(likePostSubscription);
               if (personalPosts[user._id]) {
                 const personalPostsByUserId = personalPosts[user._id].map(
                   (_post) => {
-                    if (_post._id === notifyUserLikePost.post._id) {
+                    if (_post._id === likePostSubscription.post._id) {
                       let _p = { ..._post };
-                      _p.likes = [..._p.likes, notifyUserLikePost.creator._id];
+                      _p.likes = [
+                        ..._p.likes,
+                        likePostSubscription.creator._id,
+                      ];
                       return _p;
                     }
                     return { ..._post };
@@ -152,6 +158,16 @@ const Notifications = () => {
             }
           }
         },
+      });
+      unsubscribeUserRemoveLikePost = subscribeToMoreNotifications({
+        document : subscriptions.notificationSubscription.REMOVE_LIKE_POST_SUBSCRIPTION, 
+        variables : {userId : user._id} , 
+        updateQuery : (_, {subscriptionData}) => {
+          if(subscriptionData){
+            const {removeLikePostSubscription} = subscriptionData.data;
+            updatedRemoveNotification(removeLikePostSubscription)
+          }
+        }
       });
       unsubscribeRequestAddFriend = subscribeToMoreNotifications({
         document:
@@ -171,7 +187,7 @@ const Notifications = () => {
             { ...sender },
             ...receivedRequestsToAddFriend,
           ]);
-          updatedNotifications(newNotification, sender, receiver);
+          updatedAddNotification(newNotification, sender, receiver);
         },
       });
       unsubscribeAcceptRequestAddFriend = subscribeToMoreNotifications({
@@ -186,7 +202,7 @@ const Notifications = () => {
             sender,
             receiver,
           } = subscriptionData.data.notifyAcceptRequestToAddFriend;
-          updatedNotifications(newNotification, sender, receiver);
+          updatedAddNotification(newNotification, sender, receiver);
         },
       });
       unsubscribeOwnerPostReceivedUserComment = subscribeToMoreNotifications({
@@ -200,7 +216,7 @@ const Notifications = () => {
               comment,
               notification,
             } = subscriptionData.data.notifyOwnerPostUserComment;
-            updatedNotifications(notification);
+            updatedAddNotification(notification);
             addCommentToOwnerPost(user._id, comment);
           }
         },
@@ -213,7 +229,7 @@ const Notifications = () => {
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
             const { notifyMentionUsersInComment } = subscriptionData.data;
-            updatedNotifications(notifyMentionUsersInComment);
+            updatedAddNotification(notifyMentionUsersInComment);
           }
         },
       });
@@ -225,6 +241,9 @@ const Notifications = () => {
       }
       if (unsubscribeUserLikePost) {
         unsubscribeUserLikePost();
+      }
+      if(unsubscribeUserRemoveLikePost){
+        unsubscribeUserRemoveLikePost();
       }
       if (unsubscribeRequestAddFriend) {
         unsubscribeRequestAddFriend();

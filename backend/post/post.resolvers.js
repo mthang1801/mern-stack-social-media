@@ -26,10 +26,10 @@ export const postResolvers = {
         req,
         args.postId,
         pubsub,
-        subscriptionActions.NOTIFY_OWNER_POST_USER_LIKE_POST
+        subscriptionActions.LIKE_POST_SUBSCRIPTION
       ),
-    unlikePost: (_, args, { req }, info) =>
-      postControllers.unlikePost(req, args.postId),
+    removeLikePost: (_, args, { req }, info) =>
+      postControllers.removeLikePost(req, args.postId, pubsub, subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION),
   },
   Subscription: {
     notifyCreatedPost: {
@@ -55,16 +55,24 @@ export const postResolvers = {
         }
       ),
     },
-    notifyUserLikePost: {
+    likePostSubscription: {
       subscribe: withFilter(
         () =>
           pubsub.asyncIterator(
-            subscriptionActions.NOTIFY_OWNER_POST_USER_LIKE_POST
+            subscriptionActions.LIKE_POST_SUBSCRIPTION
           ),
         (payload, { userId }) => {
-          return payload.notifyUserLikePost.receivers.includes(userId);
+          return payload.likePostSubscription.receivers.includes(userId);
         }
       ),
     },
+    removeLikePostSubscription : {
+      subscribe : withFilter(
+        () => pubsub.asyncIterator(subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION),
+        (payload, {userId}) => {
+          return payload.removeLikePostSubscription.receivers.includes(userId)
+        }
+      )
+    }
   },
 };

@@ -8,5 +8,6 @@ export const GET_NOTIFICATIONS_CACHE_DATA = gql`
     currentPersonalUser @client
     receivedRequestsToAddFriend @client
     personalPosts @client
+    latestNotification @client
   }
 `
