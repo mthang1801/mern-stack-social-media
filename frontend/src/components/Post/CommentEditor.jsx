@@ -139,7 +139,9 @@ const CommentEditor = ({ post }) => {
     if (
       e.which === 13 &&
       editorState.getCurrentContent().hasText() &&
-      !openMention
+      !openMention && 
+      !document.querySelector(`[data-target=comment-input-${post._id}]`).querySelector("[role=listbox]")
+      
     ) {
       const rawEditorState = convertToRaw(editorState.getCurrentContent());
       const rawText = JSON.stringify(rawEditorState);

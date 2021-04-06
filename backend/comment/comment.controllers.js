@@ -40,7 +40,8 @@ export const commentControllers = {
     data,
     pubsub,
     notifyMentionUsersInComment,
-    notifyUserCommentPostSubscription
+    notifyUserCommentPostSubscription,
+    createCommentSubscription
   ) => {
     try {
       const { text, mentions, shortenText, rawText } = data;
@@ -169,6 +170,20 @@ export const commentControllers = {
             notification: notificationForOwnerPost,
           },
         });
+
+        if(post.status === "PUBLIC"){
+          await pubsub.publish(createCommentSubscription, {createCommentSubscription : {
+            comment : newComment._doc
+          }})
+        }else if(post.status === "FRIENDS"){
+          const author = await User.findById(post.author);
+          for(let friendId of author.friends){
+            await pubsub.publish(createCommentSubscription, {createCommentSubscription : {
+              comment : newComment._doc,
+              receiver : friendId
+            }})
+          }
+        }
         await session.commitTransaction();
         session.endSession();
         return newComment;

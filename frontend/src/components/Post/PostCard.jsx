@@ -36,7 +36,7 @@ const PostCard = ({post}) => {
       setLoading(false);
     })
   }
-  console.log(post)
+  
   return (
     <Wrapper theme={colorMode}>
       <PostCardHeader post={post}/>

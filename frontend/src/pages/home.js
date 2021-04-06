@@ -15,6 +15,7 @@ import {
   MainContentRightSide,
 } from "./styles/pages.styles.js";
 import Posts from "../components/Post/Posts";
+import useHomePostsSubscription from "../hooks/useHomePostsSubscription"
 const Home = () => {
   const {
     data: { user, openFriendsList, posts },
@@ -23,6 +24,8 @@ const Home = () => {
     skip: true,
     fetchPolicy: "cache-and-network",
   });
+  
+  useHomePostsSubscription();
 
   const [fetched, setFetched] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);

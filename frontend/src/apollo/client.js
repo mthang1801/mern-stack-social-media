@@ -31,6 +31,7 @@ const wsLink = new WebSocketLink({
   uri : "ws://localhost:5000/graphql",
   options : {           
     reconnect: true,    
+    lazy : true,
     connectionParams : {
       authToken : localStorage.getItem("token") ? `Bearer ${localStorage.getItem("token")}` : ""
     },        
@@ -57,7 +58,7 @@ const restartWebsocketConnection = () => {
   wsLink.subscriptionClient.tryReconnect();
 }
 const closeWebsocketConnection = () => {
-  wsLink.subscriptionClient.close();
+  wsLink.subscriptionClient.close(false,false);
 }
 
 export {client , restartWebsocketConnection, closeWebsocketConnection}

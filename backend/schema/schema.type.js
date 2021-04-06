@@ -193,9 +193,12 @@ export const schemaType = gql`
   }
 
   type CommentSubscriptionPayload {
-    comment: Comment!
-    notification: Notification!
+    comment: Comment
+    notification: Notification
+    receiver : ID
   }
+
+
 
   type MessagesResult {
     messages: [PersonalChat!]

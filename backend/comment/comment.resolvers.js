@@ -21,7 +21,8 @@ export const commentResolvers = {
         args.data,
         pubsub,
         subscriptionActions.NOTIFY_MENTIONED_USERS_IN_COMMENT,
-        subscriptionActions.NOTIFY_USER_COMMENT_POST_SUBSCRIPTION
+        subscriptionActions.NOTIFY_USER_COMMENT_POST_SUBSCRIPTION,
+        subscriptionActions.CREATE_COMMENT_SUBSCIPTION
       ),
     removeComment: (_, args, { req }, info) =>
       commentControllers.removeComment(req, args.commentId),
@@ -84,6 +85,17 @@ export const commentResolvers = {
         () => pubsub.asyncIterator(subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION), 
         (payload, {userId}) => {          
           return payload.removeLikeCommentSubscription.receiver.toString() === userId.toString()
+        }
+      )
+    },
+    createCommentSubscription : {
+      subscribe : withFilter(
+        () => pubsub.asyncIterator(subscriptionActions.CREATE_COMMENT_SUBSCIPTION),
+        (payload, {userId}) => {
+          if(payload.createCommentSubscription.receiver){
+            return payload.createCommentSubscription.receiver.toString() === userId.toString()
+          }
+          return true
         }
       )
     }

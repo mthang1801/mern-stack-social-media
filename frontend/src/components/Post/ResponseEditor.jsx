@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import Editor from "@draft-js-plugins/editor";
-import draftToHtml from "draftjs-to-html"
+import draftToHtml from "draftjs-to-html";
 import createMentionPlugin from "@draft-js-plugins/mention";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
@@ -30,18 +30,21 @@ import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
 import { CREATE_RESPONSE } from "../../apollo/operations/mutations/post/createResponse";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import shortid  from 'shortid';
-const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {    
+import shortid from "shortid";
+const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
   const [editorState, setEditorState] = useState(() =>
-    comment.author._id === user._id || !dataResponse ? EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse((dataResponse))))
+    comment.author._id === user._id || !dataResponse
+      ? EditorState.createEmpty()
+      : EditorState.createWithContent(convertFromRaw(JSON.parse(dataResponse)))
   );
   const [openMention, setOpenMention] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
-  const {
-    refetch: searchFriends,    
-  } = useQuery(SEARCH_FRIENDS, { fetchPolicy: "network-only", skip: true });
+  const { refetch: searchFriends } = useQuery(SEARCH_FRIENDS, {
+    fetchPolicy: "network-only",
+    skip: true,
+  });
   const [createResponse] = useMutation(CREATE_RESPONSE);
-  const { addNewResponseToComment } = cacheMutations;  
+  const { addNewResponseToComment } = cacheMutations;
   const { colorMode } = useThemeUI();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const [showControls, setShowControls] = useState(false);
@@ -50,8 +53,8 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
   const editorRef = useRef(null);
   const { i18n, lang } = useLanguage();
   const { commentInputPlaceholder } = i18n.store.data[lang].translation.comment;
-  const onSearchChange = useCallback(({ value }) => {    
-    if (value) {      
+  const onSearchChange = useCallback(({ value }) => {
+    if (value) {
       searchFriends({ search: value }).then(({ data }) => {
         const { searchFriends } = data;
         setSuggestions([...searchFriends]);
@@ -79,7 +82,7 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
       component(props) {
         return <LinkAnchor {...props} aria-label="link" />;
       },
-    });   
+    });
     // Mention
     const mentionPlugin = createMentionPlugin({
       mentionComponent(mentionProps) {
@@ -117,21 +120,21 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
     return { plugins, EmojiSelect, EmojiSuggestions, MentionSuggestions };
   }, []);
 
-  useEffect(( ) => {
-    let timer ; 
-    console.log(focus)
-    if(focus){
-      if(timer){
+  useEffect(() => {
+    let timer;
+    console.log(focus);
+    if (focus) {
+      if (timer) {
         clearTimeout(timer);
       }
-      timer = setTimeout(()=>{
+      timer = setTimeout(() => {
         editorRef.current.focus();
         removeFocus();
-      },66)
+      }, 66);
     }
-    return () =>  clearTimeout(timer)
-  }, [focus])
- 
+    return () => clearTimeout(timer);
+  }, [focus]);
+
   useEffect(() => {
     function trackUserClickCommentControls(e) {
       if (
@@ -149,8 +152,14 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
   }, [responseRef, showControls]);
 
   const onSubmitComment = (e) => {
-    if (e.which === 13 && editorState.getCurrentContent().hasText()) {
-     
+    if (
+      e.which === 13 &&
+      editorState.getCurrentContent().hasText() &&
+      !openMention &&
+      !document
+        .querySelector(`[data-target=response-input-${comment._id}]`)
+        .querySelector("[role=listbox]")
+    ) {
       const rawEditorState = convertToRaw(editorState.getCurrentContent());
       const rawText = JSON.stringify(rawEditorState);
       const shortenText = draftToHtml(rawEditorState)
@@ -175,20 +184,26 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
         mention._id.toString()
       );
       if (textData) {
-        setEditorState(EditorState.createEmpty());              
-        createResponse({variables : {
-          commentId : comment._id , text : textData, shortenText, rawText, mentions
-        }})
+        setEditorState(EditorState.createEmpty());
+        createResponse({
+          variables: {
+            commentId: comment._id,
+            text: textData,
+            shortenText,
+            rawText,
+            mentions,
+          },
+        })
           .then(({ data }) => {
             document
               .querySelector(`[data-target=response-input-${comment._id}]`)
               .querySelector("[contenteditable=false]")
               ?.setAttribute("contenteditable", true);
-              
-            const {createResponse} = data;                       
-            addNewResponseToComment(comment.post, comment._id, createResponse)
+
+            const { createResponse } = data;
+            addNewResponseToComment(comment.post, comment._id, createResponse);
           })
-          .catch((err) => {            
+          .catch((err) => {
             document
               .querySelector(`[data-target=response-input-${comment._id}]`)
               .querySelector("[contenteditable=true]")
@@ -219,8 +234,8 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
           open={openMention}
           onOpenChange={onOpenChange}
           onSearchChange={onSearchChange}
-          suggestions={suggestions}          
-        />        
+          suggestions={suggestions}
+        />
         <EmojiSuggestions />
       </CommentInput>
       <CommentControls
@@ -229,7 +244,7 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
         show={showControls}
         onClick={() => setShowControls(true)}
       >
-        <EmojiSelect />     
+        <EmojiSelect />
       </CommentControls>
     </Wrapper>
   );
