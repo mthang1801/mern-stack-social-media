@@ -26,7 +26,7 @@ const CommentCard = ({
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const { controls } = i18n.store.data[lang].translation.comment;
-  
+
   return (
     <CommentContainer>
       <UserAvatar>
@@ -67,12 +67,11 @@ const CommentCard = ({
           <ControlItem onClick={() => onClickResponse(comment)}>
             {controls.response}
           </ControlItem>
-          {user._id === comment.author._id}
-          {
+          {user._id === comment.author._id && (
             <ControlItem onClick={() => onClickRemoveComment(comment)}>
               {controls.remove}
             </ControlItem>
-          }
+          )}
           <ControlItem>
             <Moment fromNow>{+comment.createdAt}</Moment>
           </ControlItem>

@@ -6,6 +6,8 @@ import { LIKE_POST_SUBSCRIPTION } from "./likePostSubscription";
 import { REMOVE_LIKE_POST_SUBSCRIPTION } from "./removeLikePostSubscription";
 import { NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION } from "./notifyMentionUsersInComment";
 import { NOTIFFY_USER_COMMENT_POST_SUBSCRIPTION } from "./notifyUserCommentPostSubscription";
+import { LIKE_COMMENT_SUBSCRIPTION } from "./likeCommentSubscription";
+import { REMOVE_LIKE_COMMENT_SUBSCRIPTION } from "./removeLikeCommentSubscription";
 const notificationSubscription = {
   POST_CREATED_SUBSCRIPTIONS,  
   NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND,
@@ -15,6 +17,8 @@ const notificationSubscription = {
   REMOVE_LIKE_POST_SUBSCRIPTION,
   NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION,
   NOTIFFY_USER_COMMENT_POST_SUBSCRIPTION,
+  LIKE_COMMENT_SUBSCRIPTION,
+  REMOVE_LIKE_COMMENT_SUBSCRIPTION
 };
 
 export default notificationSubscription;

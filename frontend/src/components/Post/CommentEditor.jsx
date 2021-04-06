@@ -11,6 +11,7 @@ import createMentionPlugin from "@draft-js-plugins/mention";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import createHashTagPlugin from "@draft-js-plugins/hashtag";
+import draftToHtml from "draftjs-to-html"
 import _ from "lodash";
 import { useQuery, useMutation } from "@apollo/client";
 import { SEARCH_FRIENDS } from "../../apollo/operations/queries/user";
@@ -137,6 +138,7 @@ const CommentEditor = ({ post }) => {
   const onSubmitComment = (e) => {
     if (e.which === 13 && editorState.getCurrentContent().hasText() && !openMention) {
       const rawEditorState = convertToRaw(editorState.getCurrentContent());
+      const shortenText = draftToHtml(rawEditorState).split("</p>")[0].replace(/<p>|&nbsp;/g, "");    
       document
         .querySelector(`[data-target=comment-input-${post._id}]`)
         .querySelector("[contenteditable=true]")
@@ -158,7 +160,7 @@ const CommentEditor = ({ post }) => {
       if (textData) {
         setEditorState(EditorState.createEmpty());
         createComment({
-          variables: { postId: post._id, text: textData, mentions: mentions },
+          variables: { postId: post._id, text: textData, shortenText, mentions: mentions },
         })
           .then(({ data }) => {
             document

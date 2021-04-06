@@ -23,6 +23,7 @@ export const schemaInput = gql`
   
   input CommentInput{
     text : String
+    shortenText : String
     mentions : [ID!]
   }
 

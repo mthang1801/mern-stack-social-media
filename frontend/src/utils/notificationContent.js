@@ -25,6 +25,7 @@ const notificationContent = (notification, lang) => {
       switch(content){
         case "MENTIONED" : return notifications.commentMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText); 
         case "CREATED" : return notifications.commentCreated(notification.creator?.name, notification.fieldIdentity?.post?.shortenText);
+        case "LIKED" : return notifications.commentLiked(notification.creator?.name, notification.fieldIdentity?.comment?.shortenText);
       }
   }
 }

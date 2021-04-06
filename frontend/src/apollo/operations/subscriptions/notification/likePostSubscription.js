@@ -17,6 +17,7 @@ subscription($userId : ID!){
         _id        
         shortenText
       }
+      
     }
     url
     hasSeen    

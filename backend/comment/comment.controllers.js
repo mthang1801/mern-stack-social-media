@@ -43,7 +43,7 @@ export const commentControllers = {
     notifyUserCommentPostSubscription
   ) => {
     try {
-      const { text, mentions } = data;
+      const { text, mentions, shortenText } = data;
 
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId);
@@ -55,6 +55,7 @@ export const commentControllers = {
         }
         const newComment = new Comment({
           text,
+          shortenText,
           mentions,
           author: currentUserId,
           post: postId,
@@ -72,26 +73,29 @@ export const commentControllers = {
                 creator: currentUserId,
                 receiver: mentionId,
               },
-              { updatedAt: Date.now(), hasSeen : false },
+              { updatedAt: Date.now(), hasSeen: false },
               { new: true }
-            ).populate({ path: "creator", select: "slug name avatar" }).populate({path : "fieldIdentity.post" , select : "shortenText"});
+            )
+              .populate({ path: "creator", select: "slug name avatar" })
+              .populate({ path: "fieldIdentity.post", select: "shortenText" });
             if (!notification) {
               notification = new Notification({
                 field: fields.COMMENT,
                 content: contents.MENTIONED,
                 fieldIdentity: {
                   post: postId,
+                  comment: newComment._id,
                 },
                 creator: currentUserId,
                 receiver: mentionId,
                 url: `/${currentUser.slug}/posts/${post._id}`,
-              });            
+              });
               const mentioner = await User.findById(mentionId);
               mentioner.notifications.push(notification._id);
               await mentioner.save();
               await (await notification.save())
                 .populate({ path: "creator", select: "name slug avatar" })
-                .populate({path : "fieldIdentity.post" , select : "shortenText"})
+                .populate({ path: "fieldIdentity.post", select: "shortenText" })
                 .execPopulate();
             }
 
@@ -121,7 +125,7 @@ export const commentControllers = {
             creator: currentUserId,
             receiver: post.author,
           },
-          { updatedAt: Date.now(), hasSeen : false },
+          { updatedAt: Date.now(), hasSeen: false },
           { new: true }
         )
           .populate({ path: "creator", select: "name slug avatar" })
@@ -132,6 +136,7 @@ export const commentControllers = {
             content: contents.CREATED,
             fieldIdentity: {
               post: postId,
+              comment: newComment._id,
             },
             creator: currentUserId,
             receiver: post.author,
@@ -156,7 +161,7 @@ export const commentControllers = {
         await User.findByIdAndUpdate(currentUserId, {
           $push: { comments: newComment._id },
         });
-        
+
         await pubsub.publish(notifyUserCommentPostSubscription, {
           notifyUserCommentPostSubscription: {
             comment: newComment,
@@ -204,17 +209,51 @@ export const commentControllers = {
       throw new ApolloError(error.message);
     }
   },
-  likeComment: async (req, commentId, pubsub, notifyOwnerCommentUserLike) => {
+  likeComment: async (req, commentId, pubsub, likeCommentSubscription) => {
     const currentUserId = getAuthUser(req);
-    const comment = await Comment.findById(commentId);
+    const comment = await Comment.findById(commentId).populate({
+      path: "author",
+      select: "slug name avatar",
+    });
     if (!comment || comment.likes.includes(currentUserId.toString())) {
       return false;
     }
     comment.likes.push(currentUserId);
     await comment.save();
+    //create notification
+    const notification = new Notification({
+      field: fields.COMMENT,
+      content: contents.LIKED,
+      fieldIdentity: {
+        post: comment.post,
+        comment: comment._id,
+      },
+      creator: currentUserId,
+      receiver: comment.author._id,
+      url: `/${comment.author.slug}/posts/${comment.post}`,
+    });
+    if (currentUserId.toString() !== comment.author._id.toString()) {
+      await User.findByIdAndUpdate(notification.receiver, {
+        $push: { notifications: notification._id },
+      });
+      await (await notification.save())
+        .populate({ path: "creator", select: "name slug avatar" })
+        .populate("fieldIdentity.post")
+        .populate({ path: "fieldIdentity.comment", select: "shortenText" })
+        .execPopulate();
+    }
+    await pubsub.publish(likeCommentSubscription, {
+      likeCommentSubscription: notification._doc,
+    });
+
     return true;
   },
-  removeLikeComment: async (req, commentId) => {
+  removeLikeComment: async (
+    req,
+    commentId,
+    pubsub,
+    removeLikeCommentSubscription
+  ) => {
     const currentUserId = getAuthUser(req);
     const comment = await Comment.findById(commentId);
     if (!comment || !comment.likes.includes(currentUserId)) {
@@ -222,6 +261,27 @@ export const commentControllers = {
     }
     comment.likes.pull(currentUserId);
     await comment.save();
+    //remove notification
+    const removedNotification = await Notification.findOneAndDelete({
+      field: fields.COMMENT,
+      content: contents.LIKED,
+      "fieldIdentity.post": comment.post,
+      "fieldIdentity.comment": comment._id,
+      creator: currentUserId,
+      receiver: comment.author,
+    })
+      .populate({ path: "creator", select: "name avatar slug" })
+      .populate({ path: "fieldIdentity.post", select: "_id" })
+      .populate({ path: "fieldIdentity.comment", select: "_id" });
+    if (removedNotification) {
+      await User.findByIdAndUpdate(removedNotification.receiver, {
+        $pull: { notifications: removedNotification._id },
+      });
+      await pubsub.publish(removeLikeCommentSubscription, {
+        removeLikeCommentSubscription: removedNotification._doc,
+      });
+    }
+
     return true;
   },
 };

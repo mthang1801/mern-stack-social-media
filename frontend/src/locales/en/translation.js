@@ -171,6 +171,7 @@ export const en = {
       postMention : "has mentioned you in his post",      
       commentMentioned : (creatorName, shortenText) => `<strong>${creatorName}</strong> has mentioned you in his comment`,
       commentCreated :  (creatorName, shortenText) => `<strong>${creatorName}</strong> has commented in your post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
+      commentLiked :  (creatorName, shortenText) => `<strong>${creatorName}</strong> liked your comment <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
       likePost : (creatorName, shortenText) => `<strong>${creatorName}</strong> Liked your post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
     },
     greeting: {

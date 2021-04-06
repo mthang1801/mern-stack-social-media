@@ -30,10 +30,10 @@ export const commentResolvers = {
         req,
         args.commentId,
         pubsub,
-        subscriptionActions.NOTIFY_OWNER_COMMENT_USER_LIKE
+        subscriptionActions.LIKE_COMMENT_SUBSCRIPTION
       ),
     removeLikeComment: (_, args, { req }) =>
-      commentControllers.removeLikeComment(req, args.commentId),
+      commentControllers.removeLikeComment(req, args.commentId, pubsub, subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION),
   },
   Subscription: {
     notifyMentionUsersInComment: {
@@ -43,7 +43,7 @@ export const commentResolvers = {
             subscriptionActions.NOTIFY_MENTIONED_USERS_IN_COMMENT
           ),
         (payload, { userId }) => {
-          console.log(payload, userId)
+          console.log(payload, userId);
           return (
             payload.notifyMentionUsersInComment.receiver.toString() ===
             userId.toString()
@@ -57,7 +57,7 @@ export const commentResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.NOTIFY_USER_COMMENT_POST_SUBSCRIPTION
           ),
-        (payload, { userId }) => {         
+        (payload, { userId }) => {
           return (
             payload.notifyUserCommentPostSubscription.notification.receiver.toString() ===
             userId.toString()
@@ -65,19 +65,27 @@ export const commentResolvers = {
         }
       ),
     },
-    notifyOwnerCommentUserLike: {
+    likeCommentSubscription: {
       subscribe: withFilter(
         () =>
           pubsub.asyncIterator(
-            subscriptionActions.NOTIFY_OWNER_COMMENT_USER_LIKE
+            subscriptionActions.LIKE_COMMENT_SUBSCRIPTION
           ),
-        (payload, { userId }) => {
+        (payload, { userId }) => {             
           return (
-            payload.notifyOwnerCommentUserLike.author.toString() ===
+            payload.likeCommentSubscription.receiver.toString() ===
             userId.toString()
           );
         }
       ),
     },
+    removeLikeCommentSubscription : {
+      subscribe : withFilter(
+        () => pubsub.asyncIterator(subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION), 
+        (payload, {userId}) => {          
+          return payload.removeLikeCommentSubscription.receiver.toString() === userId.toString()
+        }
+      )
+    }
   },
 };

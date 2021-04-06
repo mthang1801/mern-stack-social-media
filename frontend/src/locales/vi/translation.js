@@ -169,8 +169,9 @@ export const vi = {
       acceptRequestToAddFriend: "đã chấp nhận lời mời kết bạn của bạn.",
       postMention : "Nhắc đến bạn trong bài viết của anh ấy",      
       commentMentioned : (creatorName) => `<strong>${creatorName}</strong> đã nhắc đến bạn trong bình luận của anh ấy`,
-      commentCreated : (creatorName, shortenText) => `${creatorName} đã bình luận một bài viết của bạn <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
-      likePost: (creatorName, shortenText) => `${creatorName} đã thích bài viết <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong> của bạn`,
+      commentCreated : (creatorName, shortenText) => `<strong>${creatorName}</strong> đã bình luận một bài viết của bạn <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
+      commentLiked : (creatorName, shortenText) => `<strong>${creatorName}</strong> đã thích bình luận <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong> của bạn`,
+      likePost: (creatorName, shortenText) => `<strong>${creatorName}</strong> đã thích bài viết <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong> của bạn`,
     },
     greeting: {
       welcome: "Chào mừng bạn đã đến với Pul.com",

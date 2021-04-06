@@ -46,6 +46,7 @@ export const schemaType = gql`
   type Comment {
     _id: ID!
     text: String
+    shortenText : String
     mentions: [ID!]
     author: User!
     post: ID!
