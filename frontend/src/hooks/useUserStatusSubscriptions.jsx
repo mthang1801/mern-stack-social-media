@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_CURRENT_USER, GET_FRIENDS } from "../../apollo/operations/queries/cache";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import { GET_CURRENT_USER, GET_FRIENDS } from "../apollo/operations/queries/cache";
+import { cacheMutations } from "../apollo/operations/mutations/cache";
 import io from "socket.io-client";
 import _ from "lodash"
 const useUserStatusSubscriptions = () => {

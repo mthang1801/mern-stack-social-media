@@ -17,7 +17,7 @@ import { Route, Switch } from "react-router-dom";
 import { FETCH_CHAT_CONVERSATIONS } from "../apollo/operations/queries/chat";
 import { UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../apollo/operations/mutations/chat";
 import { cacheMutations } from "../apollo/operations/mutations";
-import useChatSubscriptions from "../components/Global/useChatSubscriptions";
+import useChatSubscriptions from "../hooks/useChatSubscriptions";
 
 const ChatConversations = lazy(() =>
   import("../components/Chat/Conversations")

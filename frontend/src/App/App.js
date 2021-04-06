@@ -9,8 +9,8 @@ import { useQuery } from "@apollo/client";
 import ErrorBoundary from "../containers/ErrorBoundary";
 import Explores from "../pages/explores";
 import HomePage from "../pages/home"
-import useUserStatusSubscriptions from "../components/Global/useUserStatusSubscriptions"
-import useContactSubscription from "../components/Global/useContactSubscription"
+import useUserStatusSubscriptions from "../hooks/useUserStatusSubscriptions"
+import useContactSubscription from "../hooks/useContactSubscription"
 const AuthPage = lazy(() => import("../pages/auth"));
 const NotificationsPage = lazy(() => import("../pages/notifications"));
 const PersonalPage = lazy(() => import("../pages/personal"));

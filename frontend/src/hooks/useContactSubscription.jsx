@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
-import { FETCH_CURRENT_USER } from "../../apollo/operations/queries/user";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import { FETCH_CURRENT_USER } from "../apollo/operations/queries/user";
+import { cacheMutations } from "../apollo/operations/mutations/cache";
 import {useQuery} from "@apollo/client"
-import subscriptions from "../../apollo/operations/subscriptions";
-import {GET_CONTACT_CACHE_DATA} from "../../apollo/operations/queries/cache"
+import subscriptions from "../apollo/operations/subscriptions";
+import {GET_CONTACT_CACHE_DATA} from "../apollo/operations/queries/cache"
 const useContactSubscription = () => {
   const {data : {user,receivedRequestsToAddFriend,currentPersonalUser,friends}} = useQuery(GET_CONTACT_CACHE_DATA)
   const {setReceivedRequestsToAddFriend, setCurrentUser, setCurrentPersonalUser, setFriends} = cacheMutations

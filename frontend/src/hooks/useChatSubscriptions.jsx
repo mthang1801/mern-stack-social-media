@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import chatSubscriptions from "../../apollo/operations/subscriptions/chat";
-import { FETCH_CHAT_CONVERSATIONS } from "../../apollo/operations/queries/chat/fetchChatConversations";
+import chatSubscriptions from "../apollo/operations/subscriptions/chat";
+import { FETCH_CHAT_CONVERSATIONS } from "../apollo/operations/queries/chat/fetchChatConversations";
 import { useQuery, useMutation } from "@apollo/client";
 import {
   GET_CURRENT_USER,
   GET_CURRENT_CHAT,
-} from "../../apollo/operations/queries/cache";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import { UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE } from "../../apollo/operations/mutations/chat";
+} from "../apollo/operations/queries/cache";
+import { cacheMutations } from "../apollo/operations/mutations/cache";
+import { UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE } from "../apollo/operations/mutations/chat";
 
 const useChatSubscriptions = () => {
   const { subscribeToMore: subscribeChatMessage } = useQuery(
