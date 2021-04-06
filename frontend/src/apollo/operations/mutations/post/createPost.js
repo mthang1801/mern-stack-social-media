@@ -4,6 +4,7 @@ export const CREATE_POST = gql`
   mutation CreatePost(
     $text: String
     $shortenText: String
+    $rawText : String
     $mentions: [ID!]
     $fileNames: [String!]
     $fileMimetype: [String!]
@@ -14,6 +15,7 @@ export const CREATE_POST = gql`
       data: {
         text: $text
         shortenText: $shortenText
+        rawText : $rawText
         mentions: $mentions
         fileNames: $fileNames
         fileMimetype: $fileMimetype
@@ -24,6 +26,7 @@ export const CREATE_POST = gql`
       _id
       text
       shortenText
+      rawText
       mentions {
         _id
         name

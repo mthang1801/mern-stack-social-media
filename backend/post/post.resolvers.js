@@ -19,7 +19,7 @@ export const postResolvers = {
         req,
         args.data,
         pubsub,
-        subscriptionActions.NOTIFY_MENTION_USERS_IN_POST
+        subscriptionActions.NOTIFY_MENTIONED_USERS_IN_POST
       ),
     likePost: (_, args, { req }, info) =>
       postControllers.likePost(
@@ -32,26 +32,14 @@ export const postResolvers = {
       postControllers.removeLikePost(req, args.postId, pubsub, subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION),
   },
   Subscription: {
-    notifyCreatedPost: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.NOTIFY_POST_CREATED),
-        (payload, { userId }) => {
-          return userId
-            ? payload.notifyCreatedPost.receivers.includes(userId.toString())
-            : false;
-        }
-      ),
-    },
     notifyMentionUsersInPost: {
       subscribe: withFilter(
         () =>
           pubsub.asyncIterator(
-            subscriptionActions.NOTIFY_MENTION_USERS_IN_POST
+            subscriptionActions.NOTIFY_MENTIONED_USERS_IN_POST
           ),
         (payload, { userId }) => {
-          return payload.notifyMentionUsersInPost.receivers.includes(
-            userId.toString()
-          );
+          return payload.notifyMentionUsersInPost.receiver.toString() === userId.toString()
         }
       ),
     },

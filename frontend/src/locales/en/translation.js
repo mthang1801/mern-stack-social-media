@@ -168,7 +168,7 @@ export const en = {
       postCreated: "has just posted a new status.",
       sentRequestToAddFriend: "send you a request to add friend",
       acceptRequestToAddFriend: "has accepted your request to add friend.",
-      postMention : "has mentioned you in his post",      
+      postMentioned : (creatorName, shortenText) => `<strong>${creatorName}</strong> has mentioned you in post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,      
       commentMentioned : (creatorName, shortenText) => `<strong>${creatorName}</strong> has mentioned you in his comment`,
       commentCreated :  (creatorName, shortenText) => `<strong>${creatorName}</strong> has commented in your post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
       commentLiked :  (creatorName, shortenText) => `<strong>${creatorName}</strong> liked your comment <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,

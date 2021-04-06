@@ -20,7 +20,7 @@ export const responseControllers = {
   },
   createResponse : async (req, commentId, data) => {
     try {
-      const {text, mentions} =data ; 
+      const {text, rawText,mentions} =data ; 
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId);
       if(!currentUser){
@@ -34,6 +34,7 @@ export const responseControllers = {
 
       const newResponse = new Response({
         text, 
+        rawText,
         mentions, 
         post : post._id, 
         author : currentUserId,

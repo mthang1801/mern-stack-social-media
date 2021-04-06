@@ -14,6 +14,7 @@ export const schemaInput = gql`
   input PostInput{
     text : String
     shortenText : String
+    rawText : String
     mentions : [ID!]
     fileNames : [String!]
     fileMimetype : [String!]
@@ -24,6 +25,7 @@ export const schemaInput = gql`
   input CommentInput{
     text : String
     shortenText : String
+    rawText : String
     mentions : [ID!]
   }
 

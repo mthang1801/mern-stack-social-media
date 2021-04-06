@@ -374,7 +374,7 @@ export default createGlobalStyle`
     padding: 5px 10px 1px 10px;
     -webkit-transition: background-color 0.4s
       cubic-bezier(0.27, 1.27, 0.48, 0.56);
-    transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);
+    transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);    
   }
   .e1eijkox:active {
     background-color: #cce7ff;    
@@ -384,7 +384,7 @@ export default createGlobalStyle`
     -webkit-transition: background-color 0.4s
       cubic-bezier(0.27, 1.27, 0.48, 0.56);
     transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);
-    background-color: #e6f3ff;    
+    background-color: #e6f3ff;        
   }
   .e1adbvmt:active {
     background-color: var(--blue-1);    
@@ -564,7 +564,7 @@ export default createGlobalStyle`
     cursor: pointer;
     -webkit-transition: background-color 0.4s
       cubic-bezier(0.27, 1.27, 0.48, 0.56);
-    transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);
+    transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);    
   }
   .e1eigyu0 {
     padding: 0;
@@ -577,7 +577,7 @@ export default createGlobalStyle`
     -webkit-transition: background-color 0.4s
       cubic-bezier(0.27, 1.27, 0.48, 0.56);
     transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);
-    background-color: #efefef;
+    background-color: #efefef;    
   }
   .e11mkpma {
     width: 1.5rem;
@@ -603,7 +603,7 @@ export default createGlobalStyle`
     width: 100%;
     height: 100%;
     font-size: 1.2rem;
-    color: #bdbdbd;
+    color: #bdbdbd;    
     background: none;
     border: none;
     outline: none;
@@ -612,12 +612,11 @@ export default createGlobalStyle`
     padding: 0;
     width: 100%;
     height: 100%;
-    font-size: 1.2rem;
-    color: #bdbdbd;
+    font-size: 1.2rem;    
     background: none;
     border: none;
     outline: none;
-    color: #42a5f5;
+    color: #42a5f5;    
   }
   .e1duapnp {
     background-color: #000;
@@ -627,7 +626,7 @@ export default createGlobalStyle`
   /* 
 .m6zwb4v,
 .m6zwb4v:visited {
-  color: #575f67;
+  color: #575f67;  
   cursor: pointer;
   display: inline-block;
   background: #e6f3ff;
@@ -635,39 +634,38 @@ export default createGlobalStyle`
   padding-right: 2px;
   border-radius: 2px;
   -webkit-text-decoration: none;
-  text-decoration: none;
+  text-decoration: none;  
 }
 .m6zwb4v:hover,
 .m6zwb4v:focus {
   color: #677584;
   background: #edf5fd;
-  outline: 0;
+  outline: 0;    
 }
 .m6zwb4v:active {
   color: #222;
-  background: #455261;
+  background: #455261;    
 }
 
 .m1ymsnxd {  
   padding: 7px 10px 3px 10px;
   -webkit-transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);
-  transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);
-  & *{
-    color : var(--color-text-default);
-  }
+  transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);  
+ 
 }
 .m1ymsnxd:active {
-  background-color: #cce7ff;
-  color : var(--color-text-default);
+  background-color: #cce7ff;    
+ 
 }
 .m126ak5t {
   padding: 7px 10px 3px 10px;
   -webkit-transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);
   transition: background-color 0.4s cubic-bezier(0.27, 1.27, 0.48, 0.56);
-  background-color: #e6f3ff;
+  background-color: var(--blue-1);  
 }
 .m126ak5t:active {
   background-color: #cce7ff;
+
 }
 .mtiwdxc {
   display: inline-block;
@@ -699,10 +697,7 @@ export default createGlobalStyle`
       color : ${({ theme }) =>
       theme === "dark"
         ? "var(--color-text-dark)"
-        : "var(--color-text-default)"};
-      &:hover{
-        color : var(--color-text-default);
-      }       
+        : "var(--color-text-default)"};     
     }    
   }
 `;

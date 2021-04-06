@@ -43,7 +43,7 @@ export const commentControllers = {
     notifyUserCommentPostSubscription
   ) => {
     try {
-      const { text, mentions, shortenText } = data;
+      const { text, mentions, shortenText, rawText } = data;
 
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId);
@@ -56,6 +56,7 @@ export const commentControllers = {
         const newComment = new Comment({
           text,
           shortenText,
+          rawText,
           mentions,
           author: currentUserId,
           post: postId,

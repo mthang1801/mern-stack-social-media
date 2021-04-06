@@ -167,7 +167,7 @@ export const vi = {
       postCreated: "vừa đăng một trạng thái mới.",
       sentRequestToAddFriend: "gửi cho bạn một lời mời kết bạn.",
       acceptRequestToAddFriend: "đã chấp nhận lời mời kết bạn của bạn.",
-      postMention : "Nhắc đến bạn trong bài viết của anh ấy",      
+      postMentioned : (creatorName, shortenText) =>  `<strong>${creatorName}</strong> đã nhắc đến bạn trong bài viết <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong> của anh ấy`,      
       commentMentioned : (creatorName) => `<strong>${creatorName}</strong> đã nhắc đến bạn trong bình luận của anh ấy`,
       commentCreated : (creatorName, shortenText) => `<strong>${creatorName}</strong> đã bình luận một bài viết của bạn <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
       commentLiked : (creatorName, shortenText) => `<strong>${creatorName}</strong> đã thích bình luận <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong> của bạn`,

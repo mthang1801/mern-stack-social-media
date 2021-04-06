@@ -48,6 +48,7 @@ const PostEditor = ({ user }) => {
 
   const onSubmitPostStatus = () => {
     const rawEditorState = convertToRaw(editorState.getCurrentContent());
+    const rawText = JSON.stringify(rawEditorState);
     const shortenText = draftToHtml(rawEditorState).split("</p>")[0].replace(/<p>|&nbsp;/g, "");    
     document.getElementById("post-editor").querySelector("[contenteditable=true]").setAttribute("contenteditable", false);
     const text = document.getElementById("post-editor").innerHTML;
@@ -77,6 +78,7 @@ const PostEditor = ({ user }) => {
     createPost({variables : {
       text,
       shortenText,
+      rawText,
       mentions,
       fileNames,
       fileMimetype,

@@ -8,6 +8,9 @@ const CommentSchema = new mongoose.Schema(
     shortenText : {
       type : String
     },
+    rawText : {
+      type : String
+    },
     mentions : [
       {
         type : mongoose.Schema.Types.ObjectId,

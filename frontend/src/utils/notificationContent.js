@@ -9,8 +9,8 @@ const notificationContent = (notification, lang) => {
   switch(field){
     case "POST" : 
       switch(content){        
-        case "MENTION" : {          
-          return notifications.postMention; 
+        case "MENTIONED" : {          
+          return notifications.postMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText); 
         };
         case "LIKED" :           
           return notifications.likePost(notification.creator?.name, notification.fieldIdentity?.post?.shortenText);

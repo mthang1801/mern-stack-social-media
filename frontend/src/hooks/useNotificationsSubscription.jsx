@@ -127,14 +127,14 @@ const useNotificationsSubscription = () => {
     if (subscribeToMoreNotifications && user) {
       unsubscribeMentionUsersInPost = subscribeToMoreNotifications({
         document:
-          subscriptions.notificationSubscription.NOTIFY_MENTION_USERS_IN_POST,
+          subscriptions.notificationSubscription.NOTIFY_MENTIONED_USERS_IN_POST,
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
           if (subscriptionData) {
             const {
-              notifyMentionUsersInPost: newNotification,
+              notifyMentionUsersInPost,
             } = subscriptionData.data;
-            updatedAddNotification(newNotification);
+            updatedAddNotification(notifyMentionUsersInPost);
           }
         },
       });

@@ -11,7 +11,7 @@ import createMentionPlugin from "@draft-js-plugins/mention";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
 import createHashTagPlugin from "@draft-js-plugins/hashtag";
-import draftToHtml from "draftjs-to-html"
+import draftToHtml from "draftjs-to-html";
 import _ from "lodash";
 import { useQuery, useMutation } from "@apollo/client";
 import { SEARCH_FRIENDS } from "../../apollo/operations/queries/user";
@@ -136,9 +136,16 @@ const CommentEditor = ({ post }) => {
   }, [commentRef, showControls]);
 
   const onSubmitComment = (e) => {
-    if (e.which === 13 && editorState.getCurrentContent().hasText() && !openMention) {
+    if (
+      e.which === 13 &&
+      editorState.getCurrentContent().hasText() &&
+      !openMention
+    ) {
       const rawEditorState = convertToRaw(editorState.getCurrentContent());
-      const shortenText = draftToHtml(rawEditorState).split("</p>")[0].replace(/<p>|&nbsp;/g, "");    
+      const rawText = JSON.stringify(rawEditorState);
+      const shortenText = draftToHtml(rawEditorState)
+        .split("</p>")[0]
+        .replace(/<p>|&nbsp;/g, "");
       document
         .querySelector(`[data-target=comment-input-${post._id}]`)
         .querySelector("[contenteditable=true]")
@@ -160,18 +167,24 @@ const CommentEditor = ({ post }) => {
       if (textData) {
         setEditorState(EditorState.createEmpty());
         createComment({
-          variables: { postId: post._id, text: textData, shortenText, mentions: mentions },
+          variables: {
+            postId: post._id,
+            text: textData,
+            shortenText,
+            rawText,
+            mentions: mentions,
+          },
         })
           .then(({ data }) => {
             document
               .querySelector(`[data-target=comment-input-${post._id}]`)
               .querySelector("[contenteditable=false]")
               ?.setAttribute("contenteditable", true);
-              
-            const {createComment} = data;
+
+            const { createComment } = data;
             addCommentToPost(post._id, createComment);
           })
-          .catch((err) => {          
+          .catch((err) => {
             document
               .querySelector(`[data-target=comment-input-${post._id}]`)
               .querySelector("[contenteditable=true]")
@@ -182,12 +195,12 @@ const CommentEditor = ({ post }) => {
   };
 
   useEffect(() => {
-    let timer ;
+    let timer;
     timer = setTimeout(() => {
       editorRef.current?.focus();
-    },100)
+    }, 100);
     return () => clearTimeout(timer);
-  },[])
+  }, []);
   return (
     <Wrapper ref={commentRef}>
       <CommentInput
@@ -212,7 +225,7 @@ const CommentEditor = ({ post }) => {
           onSearchChange={onSearchChange}
           suggestions={suggestions}
         />
-        <EmojiSuggestions />       
+        <EmojiSuggestions />
       </CommentInput>
       <CommentControls
         ref={controlsRef}

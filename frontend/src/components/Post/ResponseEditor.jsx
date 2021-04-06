@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import Editor from "@draft-js-plugins/editor";
+import draftToHtml from "draftjs-to-html"
 import createMentionPlugin from "@draft-js-plugins/mention";
 import createEmojiPlugin from "@draft-js-plugins/emoji";
 import createLinkifyPlugin from "@draft-js-plugins/linkify";
@@ -151,6 +152,10 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
     if (e.which === 13 && editorState.getCurrentContent().hasText()) {
      
       const rawEditorState = convertToRaw(editorState.getCurrentContent());
+      const rawText = JSON.stringify(rawEditorState);
+      const shortenText = draftToHtml(rawEditorState)
+        .split("</p>")[0]
+        .replace(/<p>|&nbsp;/g, "");
       document
         .querySelector(`[data-target=response-input-${comment._id}]`)
         .querySelector("[contenteditable=true]")
@@ -172,7 +177,7 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
       if (textData) {
         setEditorState(EditorState.createEmpty());              
         createResponse({variables : {
-          commentId : comment._id , text : textData, mentions
+          commentId : comment._id , text : textData, shortenText, rawText, mentions
         }})
           .then(({ data }) => {
             document

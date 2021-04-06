@@ -27,6 +27,7 @@ export const schemaType = gql`
     _id: ID!
     text: String
     shortenText : String
+    rawText : String
     mentions: [User!]
     status: PostStatusEnum!
     files: [File!]
@@ -47,6 +48,7 @@ export const schemaType = gql`
     _id: ID!
     text: String
     shortenText : String
+    rawText : String
     mentions: [ID!]
     author: User!
     post: ID!
@@ -56,8 +58,10 @@ export const schemaType = gql`
     updatedAt: String
   }
   type Response {
-    _id: ID!
+    _id: ID!    
     text: String
+    shortenText : String
+    rawText : String
     mentions: [ID!]
     author: User!
     comment: ID!

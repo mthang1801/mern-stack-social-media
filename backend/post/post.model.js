@@ -7,6 +7,9 @@ const PostSchema = new mongoose.Schema(
     },           
     shortenText : {
       type : String,       
+    },    
+    rawText : {
+      type : String
     },
     mentions: [
       {

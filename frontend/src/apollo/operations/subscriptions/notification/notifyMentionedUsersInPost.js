@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const NOTIFY_MENTION_USERS_IN_POST = gql`
+export const NOTIFY_MENTIONED_USERS_IN_POST = gql`
   subscription ($userId: ID!){
     notifyMentionUsersInPost(userId: $userId) {
       _id
@@ -11,6 +11,11 @@ export const NOTIFY_MENTION_USERS_IN_POST = gql`
         _id
         name
         avatar
+      }
+      fieldIdentity{
+        post{
+          shortenText
+        }
       }
       url
       isQuestion
