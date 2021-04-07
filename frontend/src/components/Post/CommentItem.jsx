@@ -104,8 +104,8 @@ const CommentItem = ({ comment, user }) => {
           data.author.name
         } ","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":${
           data.author.name.length
-        },"key":0}],"data":{}},{"key":"2haps","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{"0":{"type":"mention","mutability":"SEGMENTED","data":{"mention":{"__typename":"User","_id":"${
-          data._id
+        },"key":0}],"data":{}}],"entityMap":{"0":{"type":"mention","mutability":"SEGMENTED","data":{"mention":{"__typename":"User","_id":"${
+          data.author._id
         }","name":"${data.author.name}","avatar":"${
           data.author.avatar
         }","slug":"${data.author.slug}"}}}}}`
@@ -123,25 +123,23 @@ const CommentItem = ({ comment, user }) => {
   const onLoadResponses = () => {
     fetchResponses({ commentId: comment._id, skip: 0, limit: 3 }).then(
       ({ data }) => {
-        if (data.fetchResponses) {
+        if (data.fetchResponses) {          
           addResponsesToComment(comment.post, comment._id, data.fetchResponses);
-          if (!showResponse) {
-            setDataResponse("");
+          if (!showResponse) {            
             setShowResponse(true);
             setFocusResponseEditor(true);
           }
         }
       }
     );
-  };
+  };  
 
   const onLoadMoreResponses = () => {
     const skip = comment.responsesData?.length || 0;
     fetchResponses({ commentId: comment._id, skip }).then(({ data }) => {
       if (data.fetchResponses) {
         addResponsesToComment(comment.post, comment._id, data.fetchResponses);
-        if (!showResponse) {
-          setDataResponse("");
+        if (!showResponse) {          
           setShowResponse(true);
           setFocusResponseEditor(true);
         }

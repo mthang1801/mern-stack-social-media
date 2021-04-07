@@ -6,6 +6,7 @@ export const CREATE_COMMENT_SUBSCIPTION = gql`
       comment {
         _id
         text
+        rawText
         author {
           _id
           name
@@ -16,6 +17,7 @@ export const CREATE_COMMENT_SUBSCIPTION = gql`
         likes
         responses
         createdAt
+        updatedAt
       }
     }
   }

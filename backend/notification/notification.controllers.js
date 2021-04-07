@@ -8,7 +8,7 @@ export const notificationControllers = {
     
     const currentUser = await User.findById(currentUserId).populate({
       path: "notifications",
-      populate : [{path : "fieldIdentity.post", select : "shortenText"},{path : "creator", select: "name slug avatar"}],
+      populate : [{path : "fieldIdentity.post", select : "shortenText"}, {path : "fieldIdentity.comment", select : "shortenText"},{path : "creator", select: "name slug avatar"}],
       options: { sort: { createdAt: -1 }, skip, limit },
     });        
     if (!currentUser) {

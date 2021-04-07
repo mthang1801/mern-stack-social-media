@@ -125,9 +125,12 @@ const useNotificationsSubscription = () => {
       unsubscribeUserLikePost,
       unsubscribeUserRemoveLikePost,
       unsubscribeOwnerPostReceivedUserComment,
-      unsubscribeMentionUsersInComment,
+      unsubscribeMentionedUsersInComment,
       unsubscribeLikeComment,
-      unsubscribeRemoveLikeComment;
+      unsubscribeRemoveLikeComment,
+      unsubscribeUserResponseComment,
+      unsubscribeMentionedUsersInResponse
+      ;
     if (subscribeToMoreNotifications && user) {
       unsubscribeMentionUsersInPost = subscribeToMoreNotifications({
         document:
@@ -232,7 +235,7 @@ const useNotificationsSubscription = () => {
           }
         },
       });
-      unsubscribeMentionUsersInComment = subscribeToMoreNotifications({
+      unsubscribeMentionedUsersInComment = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription
             .NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION,
@@ -279,6 +282,27 @@ const useNotificationsSubscription = () => {
           }
         },
       });
+      unsubscribeUserResponseComment = subscribeToMoreNotifications({
+        document : subscriptions.notificationSubscription.NOTIFY_USER_RESPONSE_COMMENT_SUBSCRIPTION, 
+        variables : {userId : user._id } , 
+        updateQuery : (_ , {subscriptionData}) => {
+          if(subscriptionData){
+            const {notifyUserResponseCommentSubscription} = subscriptionData.data;
+            updatedAddNotification(notifyUserResponseCommentSubscription)
+          }
+        }
+      });
+      unsubscribeMentionedUsersInResponse = subscribeToMoreNotifications({
+        document : subscriptions.notificationSubscription.NOTIFY_MENTIONED_USERS_IN_RESPONSE, 
+        variables : {userId : user._id}, 
+        updateQuery : (_, {subscriptionData}) => {
+          console.log(subscriptionData)
+          if(subscriptionData){
+            const {notifyMentionedUsersInResponse} = subscriptionData.data;
+            updatedAddNotification(notifyMentionedUsersInResponse)
+          }
+        }
+      })
     }
 
     return () => {
@@ -300,14 +324,20 @@ const useNotificationsSubscription = () => {
       if (unsubscribeOwnerPostReceivedUserComment) {
         unsubscribeOwnerPostReceivedUserComment();
       }
-      if (unsubscribeMentionUsersInComment) {
-        unsubscribeMentionUsersInComment();
+      if (unsubscribeMentionedUsersInComment) {
+        unsubscribeMentionedUsersInComment();
       }
       if (unsubscribeLikeComment) {
         unsubscribeLikeComment();
       }
       if (unsubscribeRemoveLikeComment) {
         unsubscribeRemoveLikeComment();
+      }
+      if(unsubscribeUserResponseComment){
+        unsubscribeUserResponseComment()
+      }
+      if(unsubscribeMentionedUsersInResponse){
+        unsubscribeMentionedUsersInResponse();
       }
     };
   }, [
@@ -317,7 +347,6 @@ const useNotificationsSubscription = () => {
     notifications,
     user,
   ]);
-  return <div></div>;
 };
 
 export default useNotificationsSubscription;

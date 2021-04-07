@@ -3,7 +3,7 @@ import {
   FaHome,
   FaUserFriends,
   FaShopify,
-  FaGlobeAmericas,  
+  FaGlobeAmericas,
 } from "react-icons/fa";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { ImNewspaper } from "react-icons/im";
@@ -19,8 +19,7 @@ import { CgMoreO } from "react-icons/cg";
 import { MdCardMembership, MdInsertEmoticon } from "react-icons/md";
 import { BsChatDots } from "react-icons/bs";
 import { RiContactsBook2Line } from "react-icons/ri";
-import { BiLockAlt,BiLike, BiCommentDetail,BiShareAlt } from "react-icons/bi";
-
+import { BiLockAlt, BiLike, BiCommentDetail, BiShareAlt } from "react-icons/bi";
 
 export const vi = {
   translation: {
@@ -144,7 +143,7 @@ export const vi = {
         name: "Trends",
         icon: () => <IoMdTrendingUp />,
       },
-    ],    
+    ],
     statusFooter: [
       {
         name: "Hình ảnh/ Videos",
@@ -167,11 +166,42 @@ export const vi = {
       postCreated: "vừa đăng một trạng thái mới.",
       sentRequestToAddFriend: "gửi cho bạn một lời mời kết bạn.",
       acceptRequestToAddFriend: "đã chấp nhận lời mời kết bạn của bạn.",
-      postMentioned : (creatorName, shortenText) =>  `<strong>${creatorName}</strong> đã nhắc đến bạn trong bài viết <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong> của anh ấy`,      
-      commentMentioned : (creatorName) => `<strong>${creatorName}</strong> đã nhắc đến bạn trong bình luận của anh ấy`,
-      commentCreated : (creatorName, shortenText) => `<strong>${creatorName}</strong> đã bình luận một bài viết của bạn <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
-      commentLiked : (creatorName, shortenText) => `<strong>${creatorName}</strong> đã thích bình luận <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong> của bạn`,
-      likePost: (creatorName, shortenText) => `<strong>${creatorName}</strong> đã thích bài viết <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong> của bạn`,
+      postMentioned: (creatorName, shortenText) =>
+        `<strong>${creatorName}</strong> đã nhắc đến bạn trong bài viết <strong>${
+          shortenText ? shortenText.slice(0, 50) + "..." : ""
+        }</strong> của anh ấy`,
+      commentMentioned: (creatorName) =>
+        `<strong>${creatorName}</strong> đã nhắc đến bạn trong bình luận của anh ấy`,
+      commentCreated: (creatorName, shortenText) =>
+        `<strong>${creatorName}</strong> đã bình luận một bài viết của bạn <strong>${
+          shortenText ? shortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
+      commentLiked: (creatorName, shortenText) =>
+        `<strong>${creatorName}</strong> đã thích bình luận <strong>${
+          shortenText ? shortenText.slice(0, 50) + "..." : ""
+        }</strong> của bạn`,
+      likePost: (creatorName, shortenText) =>
+        `<strong>${creatorName}</strong> đã thích bài viết <strong>${
+          shortenText ? shortenText.slice(0, 50) + "..." : ""
+        }</strong> của bạn`,
+      responseCreated: (creatorName, postShortenText, commentShortenText) =>
+        `<strong>${creatorName}</strong> đã phản hồi bình luận ${
+          commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
+        } trong bài viết <strong>${
+          postShortenText ? postShortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
+      responseMentioned: (creatorName, postShortenText, commentShortenText) =>
+        `<strong>${creatorName}</strong> đã nhắc đến bạn tại bình luận ${
+          commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
+        } trong bài viết <strong>${
+          postShortenText ? postShortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
+      responseLiked: (creatorName, postShortenText, commentShortenText) =>
+        `<strong>${creatorName}</strong> đã thích bình luận ${
+          commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
+        } của bạn trong bài viết <strong>${
+          postShortenText ? postShortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
     },
     greeting: {
       welcome: "Chào mừng bạn đã đến với Pul.com",
@@ -194,10 +224,10 @@ export const vi = {
       rejectRequest: "Từ chối",
       getMore: "Lấy thêm",
     },
-    post : {
-      post : "Đăng bài viết",
-      postPlaceholder : "Chia sẻ cảm nghĩ của bạn",      
-      status :  [
+    post: {
+      post: "Đăng bài viết",
+      postPlaceholder: "Chia sẻ cảm nghĩ của bạn",
+      status: [
         {
           name: "Công khai",
           icon: () => <FaGlobeAmericas />,
@@ -212,48 +242,47 @@ export const vi = {
         },
       ],
       controls: {
-        like : {
-          name : "Thích",
-          icon : () => <BiLike/>
+        like: {
+          name: "Thích",
+          icon: () => <BiLike />,
         },
-        liked : {
-          name : "Đã Thích",
-          icon : () => <BiLike/>
+        liked: {
+          name: "Đã Thích",
+          icon: () => <BiLike />,
         },
-        comment : {
-          name : "Bình luận",
-          icon : () => <BiCommentDetail/>
+        comment: {
+          name: "Bình luận",
+          icon: () => <BiCommentDetail />,
         },
-        share :{
-          name : "Chia sẻ",
-          icon : () => <BiShareAlt/>
+        share: {
+          name: "Chia sẻ",
+          icon: () => <BiShareAlt />,
         },
-        countComments: (count) => `${count} bình luận`
+        countComments: (count) => `${count} bình luận`,
       },
-      
     },
-    comment : {
+    comment: {
       controls: {
-        like : "Thích",
-        liked : "Đã thích", 
-        response : "Trả lời",
-        remove : "Xóa",
-        loadMoreResponses : "Tải thêm bình luận"
+        like: "Thích",
+        liked: "Đã thích",
+        response: "Trả lời",
+        remove: "Xóa",
+        loadMoreResponses: "Tải thêm bình luận",
       },
-      commentPlaceholder : "Để lại bình luận của bạn",
-      commentInputPlaceholder : "Để lại bình luận của bạn tại đây",
-      fetchMoreComments : "Xem thêm bình luận" 
+      commentPlaceholder: "Để lại bình luận của bạn",
+      commentInputPlaceholder: "Để lại bình luận của bạn tại đây",
+      fetchMoreComments: "Xem thêm bình luận",
     },
-    chat : {
-      chatInputPlaceholder :`Gửi tin nhắn tới`
+    chat: {
+      chatInputPlaceholder: `Gửi tin nhắn tới`,
     },
     dialog: {
-      agree: "Đồng ý", 
-      disagree : "Hủy bỏ",
-      removeComment : {
-        title : "Cảnh báo", 
-        content : "Bạn có muốn xóa bình luận không?",
-      }
-    }
+      agree: "Đồng ý",
+      disagree: "Hủy bỏ",
+      removeComment: {
+        title: "Cảnh báo",
+        content: "Bạn có muốn xóa bình luận không?",
+      },
+    },
   },
 };

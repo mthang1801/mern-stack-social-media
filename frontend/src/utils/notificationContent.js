@@ -27,6 +27,12 @@ const notificationContent = (notification, lang) => {
         case "CREATED" : return notifications.commentCreated(notification.creator?.name, notification.fieldIdentity?.post?.shortenText);
         case "LIKED" : return notifications.commentLiked(notification.creator?.name, notification.fieldIdentity?.comment?.shortenText);
       }
+    case "RESPONSE" : 
+      switch(content){
+        case "CREATED" : return notifications.responseCreated(notification.creator?.name, notification.fieldIdentity?.post?.shortenText, notification.fieldIdentity?.comment?.shortenText);
+        case "MENTIONED" : return notifications.responseMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText, notification.fieldIdentity?.comment?.shortenText);
+        case "LIKED" : return notifications.responseLiked(notification.creator?.name, notification.fieldIdentity?.post?.shortenText, notification.fieldIdentity?.comment?.shortenText);
+      }
   }
 }
 

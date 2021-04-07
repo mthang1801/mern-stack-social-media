@@ -14,12 +14,48 @@ export const responseResolvers = {
   },
   Mutation: {
     createResponse: (_, args, { req }, info) =>
-      responseControllers.createResponse(req, args.commentId, args.data),
+      responseControllers.createResponse(
+        req,
+        args.commentId,
+        args.data,
+        pubsub,
+        subscriptionActions.NOTIFY_USER_RESPONSE_COMMENT,
+        subscriptionActions.NOTIFY_MENTIONED_USERS_IN_RESPONSE,
+        subscriptionActions.CREATE_RESPONSE_SUBSCRIPTION
+      ),
     likeResponse: (_, args, { req }, info) =>
       responseControllers.likeResponse(req, args.responseId),
     removeLikeResponse: (_, args, { req }, info) =>
       responseControllers.removeLikeResponse(req, args.responseId),
     removeResponse: (_, args, { req }) =>
       responseControllers.removeResponse(req, args.responseId),
+  },
+  Subscription: {
+    notifyUserResponseCommentSubscription: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.NOTIFY_USER_RESPONSE_COMMENT
+          ),
+        (payload, { userId }) =>          
+          payload.notifyUserResponseCommentSubscription.receiver.toString() ===
+          userId.toString()
+      ),
+    },
+    notifyMentionedUsersInResponse: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.NOTIFY_MENTIONED_USERS_IN_RESPONSE
+          ),
+        (payload, { userId }) =>
+          payload.notifyMentionedUsersInResponse.receiver.toString() ===
+          userId.toString()
+      ),
+    },
+    createResponseSubscription: {
+      subscribe: () =>
+        pubsub.asyncIterator(subscriptionActions.CREATE_RESPONSE_SUBSCRIPTION),
+    },
   },
 };

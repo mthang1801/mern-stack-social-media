@@ -4,6 +4,11 @@ const addNewResponseToPost = (setPostsVar) => (
   newResponse
 ) => {
   const posts = [...setPostsVar()];
+  const specificPost = posts.find(post => post._id === postId)
+  if(!specificPost || !specificPost.commentsData) return ; 
+  const specificCommentsData = specificPost.commentsData.find(commentItem => commentItem._id === commentId);
+  if(!specificCommentsData) return; 
+  
   const updatedPost = posts.map(post => {
     let _post  = {...post};
     if(_post._id === postId){

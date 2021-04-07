@@ -73,7 +73,7 @@ const CardWrapper = styled.aside`
     margin:  2rem 0 1rem 0 ;
     display : block;
     &__primary {
-      text-transform: capitalize;
+      // text-transform: capitalize;
       font-weight: bolder;
       font-size: 1.1em;
       margin-bottom: 0.5rem;

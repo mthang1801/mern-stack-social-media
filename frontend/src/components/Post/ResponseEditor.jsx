@@ -20,7 +20,6 @@ import {
   Wrapper,
   LinkAnchor,
 } from "./PostEditor/styles/PostEditorBody.styles";
-import { useHistory } from "react-router-dom";
 import {
   CommentInput,
   CommentControls,
@@ -37,7 +36,44 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
       ? EditorState.createEmpty()
       : EditorState.createWithContent(convertFromRaw(JSON.parse(dataResponse)))
   );
-  const [openMention, setOpenMention] = useState(true);
+
+  useEffect(() => {
+    let timer;
+    if (focus && editorState) {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(() => {
+        const rawData = convertToRaw(editorState.getCurrentContent());        
+        const parseDataResponse = JSON.parse(dataResponse);
+        if (
+          rawData.blocks[0].text.indexOf(parseDataResponse.blocks[0].text) ===
+            -1 &&
+          rawData.blocks[0].text
+            .toLowerCase()
+            .indexOf(user.name.toLowerCase()) !== -1
+        ) {
+          parseDataResponse.blocks[0] = {
+            ...parseDataResponse.blocks[0],
+            text: `${parseDataResponse.blocks[0].text} ${rawData.blocks[0].text}`,
+          };
+          rawData.blocks = [
+            { ...parseDataResponse.blocks[0] },
+            ...rawData.blocks.filter((_, idx) => idx !== 0),
+          ];
+          let entityIndex = Object.keys(rawData.entityMap).length;
+          rawData.entityMap[entityIndex] = {
+            ...parseDataResponse.entityMap[0],
+          };
+          setEditorState(
+            EditorState.createWithContent(convertFromRaw(rawData))
+          );
+        }
+      }, 66);
+    }
+  }, [focus, editorState]);
+
+  const [openMention, setOpenMention] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const { refetch: searchFriends } = useQuery(SEARCH_FRIENDS, {
     fetchPolicy: "network-only",
@@ -122,7 +158,6 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
 
   useEffect(() => {
     let timer;
-    console.log(focus);
     if (focus) {
       if (timer) {
         clearTimeout(timer);
@@ -158,7 +193,7 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
       !openMention &&
       !document
         .querySelector(`[data-target=response-input-${comment._id}]`)
-        .querySelector("[role=listbox]")
+        ?.getElementsByClassName(`esyutjr`)?.length
     ) {
       const rawEditorState = convertToRaw(editorState.getCurrentContent());
       const rawText = JSON.stringify(rawEditorState);
@@ -194,7 +229,7 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
             mentions,
           },
         })
-          .then(({ data }) => {
+          .then(({ data }) => {            
             document
               .querySelector(`[data-target=response-input-${comment._id}]`)
               .querySelector("[contenteditable=false]")

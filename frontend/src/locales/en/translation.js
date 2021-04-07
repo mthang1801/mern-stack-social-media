@@ -143,7 +143,7 @@ export const en = {
         name: "Contacts",
         icon: () => <RiContactsBook2Line />,
       },
-    ],   
+    ],
     statusFooter: [
       {
         name: "Photos/Videos",
@@ -168,11 +168,42 @@ export const en = {
       postCreated: "has just posted a new status.",
       sentRequestToAddFriend: "send you a request to add friend",
       acceptRequestToAddFriend: "has accepted your request to add friend.",
-      postMentioned : (creatorName, shortenText) => `<strong>${creatorName}</strong> has mentioned you in post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,      
-      commentMentioned : (creatorName, shortenText) => `<strong>${creatorName}</strong> has mentioned you in his comment`,
-      commentCreated :  (creatorName, shortenText) => `<strong>${creatorName}</strong> has commented in your post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
-      commentLiked :  (creatorName, shortenText) => `<strong>${creatorName}</strong> liked your comment <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
-      likePost : (creatorName, shortenText) => `<strong>${creatorName}</strong> Liked your post <strong>${shortenText ? shortenText.slice(0,50) + "...": ''}</strong>`,
+      postMentioned: (creatorName, shortenText) =>
+        `<strong>${creatorName}</strong> has mentioned you in post <strong>${
+          shortenText ? shortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
+      commentMentioned: (creatorName, shortenText) =>
+        `<strong>${creatorName}</strong> has mentioned you in his comment`,
+      commentCreated: (creatorName, shortenText) =>
+        `<strong>${creatorName}</strong> has commented in your post <strong>${
+          shortenText ? shortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
+      commentLiked: (creatorName, shortenText) =>
+        `<strong>${creatorName}</strong> liked your comment <strong>${
+          shortenText ? shortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
+      likePost: (creatorName, shortenText) =>
+        `<strong>${creatorName}</strong> Liked your post <strong>${
+          shortenText ? shortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
+      responseCreated: (creatorName, postShortenText, commentShortenText) =>
+        `<strong>${creatorName}</strong> has responsed at comment ${
+          commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
+        } in your post <strong>${
+          postShortenText ? postShortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
+      responseMentioned: (creatorName, postShortenText, commentShortenText) =>
+        `<strong>${creatorName}</strong> has mentioned you at comment ${
+          commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
+        } in your post <strong>${
+          postShortenText ? postShortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
+      responseLiked: (creatorName, postShortenText, commentShortenText) =>
+        `<strong>${creatorName}</strong> has liked your comment ${
+          commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
+        } in your post <strong>${
+          postShortenText ? postShortenText.slice(0, 50) + "..." : ""
+        }</strong>`,
     },
     greeting: {
       welcome: "Welcome to Pul.com",
@@ -195,18 +226,18 @@ export const en = {
       rejectRequest: "Reject",
       getMore: "Get More",
     },
-    post : {
-      post : "Post", 
-      postPlaceholder : "What's on your mind?",            
-      status : [
+    post: {
+      post: "Post",
+      postPlaceholder: "What's on your mind?",
+      status: [
         {
           name: "public",
           icon: () => <FaGlobeAmericas />,
         },
-       
+
         {
-          name : "friends",
-          icon : () => <FaUserFriends/>
+          name: "friends",
+          icon: () => <FaUserFriends />,
         },
         {
           name: "private",
@@ -214,48 +245,47 @@ export const en = {
         },
       ],
       controls: {
-        like : {
-          name : "Like",
-          icon : () => <BiLike/>
-        }, 
-        liked : {
-          name : "Liked",
-          icon : () => <BiLike/>
-        } ,
+        like: {
+          name: "Like",
+          icon: () => <BiLike />,
+        },
+        liked: {
+          name: "Liked",
+          icon: () => <BiLike />,
+        },
         comment: {
-          name : "Comment",
-          icon : () => <BiCommentDetail/>
+          name: "Comment",
+          icon: () => <BiCommentDetail />,
         },
-        share : {
-          name : "Share",
-          icon : () => <BiShareAlt/>
+        share: {
+          name: "Share",
+          icon: () => <BiShareAlt />,
         },
-        countComments: (count) => `${count} comments`
+        countComments: (count) => `${count} comments`,
       },
-      
     },
-    comment : {
+    comment: {
       controls: {
-        like : "Like",
-        liked : "Liked", 
-        response : "Response",
-        remove : "Remove",
-        loadMoreResponses : "Load More Responses"
+        like: "Like",
+        liked: "Liked",
+        response: "Response",
+        remove: "Remove",
+        loadMoreResponses: "Load More Responses",
       },
-      commentInputPlaceholder : "Comment here...",
-      commentPlaceholder : "Enter your comment here",
-      fetchMoreComments : "Get more comments",      
+      commentInputPlaceholder: "Comment here...",
+      commentPlaceholder: "Enter your comment here",
+      fetchMoreComments: "Get more comments",
     },
-    chat : {
-      chatInputPlaceholder : `Send message to`
+    chat: {
+      chatInputPlaceholder: `Send message to`,
     },
     dialog: {
-      agree: "Agree", 
-      disagree : "Cancel",
-      removeComment : {
-        title : "Warning", 
-        content : "Do you want to remove this comment?",
-      }
-    }
+      agree: "Agree",
+      disagree: "Cancel",
+      removeComment: {
+        title: "Warning",
+        content: "Do you want to remove this comment?",
+      },
+    },
   },
 };
