@@ -284,7 +284,10 @@ export const commentControllers = {
     removeLikeCommentSubscription
   ) => {
     const currentUserId = getAuthUser(req);
-    const comment = await Comment.findById(commentId);
+    const comment = await Comment.findById(commentId).populate({
+      path: "author",
+      select: "slug name avatar",
+    });
     if (!comment || !comment.likes.includes(currentUserId)) {
       return false;
     }
@@ -302,15 +305,19 @@ export const commentControllers = {
       .populate({ path: "creator", select: "name avatar slug" })
       .populate({ path: "fieldIdentity.post", select: "_id" })
       .populate({ path: "fieldIdentity.comment", select: "_id" });
+    let removeLikeCommentSubscriptionData = {
+      comment,
+    };
     if (removedNotification) {
       await User.findByIdAndUpdate(removedNotification.receiver, {
         $pull: { notifications: removedNotification._id },
       });
-      await pubsub.publish(removeLikeCommentSubscription, {
-        removeLikeCommentSubscription: removedNotification._doc,
-      });
+      removeLikeCommentSubscriptionData.notification = removedNotification._doc;
     }
 
+    await pubsub.publish(removeLikeCommentSubscription, {
+      removeLikeCommentSubscription: removeLikeCommentSubscriptionData,
+    });
     return true;
   },
 };

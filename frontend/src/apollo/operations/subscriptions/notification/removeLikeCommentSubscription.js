@@ -3,26 +3,42 @@ import { gql } from "@apollo/client";
 export const REMOVE_LIKE_COMMENT_SUBSCRIPTION = gql`
   subscription {
     removeLikeCommentSubscription {
-      _id
-      field
-      content
-      url
-      hasSeen
-      creator {
+      comment {
         _id
-        name
-        avatar
-        slug
+        post
+        likes
+        author {
+          _id
+          name
+          slug
+        }
       }
-      fieldIdentity {
-        post {
+
+      notification {
+        _id
+        field
+        content
+        url
+        hasSeen
+        creator {
           _id
+          name
+          avatar
+          slug
         }
-        comment {
-          _id
-          shortenText
+        fieldIdentity {
+          post {
+            _id
+          }
+          comment {
+            _id
+            shortenText
+          }
         }
-      }            
+        receiver
+        createdAt
+        updatedAt
+      }
     }
   }
 `;

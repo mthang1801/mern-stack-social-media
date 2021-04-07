@@ -267,19 +267,15 @@ const useNotificationsSubscription = () => {
           subscriptions.notificationSubscription
             .REMOVE_LIKE_COMMENT_SUBSCRIPTION,        
         updateQuery: (_, { subscriptionData }) => {
-          console.log(subscriptionData)
-          if (subscriptionData) {
-            console.log(subscriptionData)
-            // const { removeLikeCommentSubscription } = subscriptionData.data;
-            
-            // if (removeLikeCommentSubscription.creator._id !== user._id ) {
-            //   updatedRemoveNotification(removeLikeCommentSubscription);
-            //   removeLikeComment(
-            //     removeLikeCommentSubscription?.fieldIdentity?.post?._id,
-            //     removeLikeCommentSubscription?.fieldIdentity?.comment?._id,
-            //     removeLikeCommentSubscription?.creator?._id
-            //   );
-            // }
+          
+          if (subscriptionData) {            
+            const { comment, notification } = subscriptionData.data.removeLikeCommentSubscription;
+            if(notification && notification.receiver === user._id){
+              updatedRemoveNotification(notification);
+            }
+            if(!notification || (notification && notification.creator._id !== user._id))  {
+              updateCommentLikes(comment);
+            }
           }
         },
       });
