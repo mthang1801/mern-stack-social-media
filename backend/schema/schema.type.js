@@ -90,8 +90,8 @@ export const schemaType = gql`
     receivers: [ID!]!
     receiver : ID! 
     isQuestion: Boolean!
-    createdAt: String!
-    updatedAt : String!
+    createdAt: String
+    updatedAt : String
   }
 
   type NotificationFieldIdentity {

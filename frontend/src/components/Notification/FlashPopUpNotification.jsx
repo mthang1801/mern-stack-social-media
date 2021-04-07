@@ -37,7 +37,7 @@ const FlashPopUpNotification = ({ onClick }) => {
     onClick();
     setLatestNotification(null);
   };
-  console.log(latestNotification);
+  
   return (
     <Wrapper show={latestNotification} theme={colorMode} onClick={onClickPopup}>
       {latestNotification ? (

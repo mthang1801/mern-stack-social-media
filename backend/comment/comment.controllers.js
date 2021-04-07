@@ -171,17 +171,21 @@ export const commentControllers = {
           },
         });
 
-        if(post.status === "PUBLIC"){
-          await pubsub.publish(createCommentSubscription, {createCommentSubscription : {
-            comment : newComment._doc
-          }})
-        }else if(post.status === "FRIENDS"){
+        if (post.status === "PUBLIC") {
+          await pubsub.publish(createCommentSubscription, {
+            createCommentSubscription: {
+              comment: newComment._doc,
+            },
+          });
+        } else if (post.status === "FRIENDS") {
           const author = await User.findById(post.author);
-          for(let friendId of author.friends){
-            await pubsub.publish(createCommentSubscription, {createCommentSubscription : {
-              comment : newComment._doc,
-              receiver : friendId
-            }})
+          for (let friendId of author.friends) {
+            await pubsub.publish(createCommentSubscription, {
+              createCommentSubscription: {
+                comment: newComment._doc,
+                receiver: friendId,
+              },
+            });
           }
         }
         await session.commitTransaction();
@@ -236,19 +240,21 @@ export const commentControllers = {
     }
     comment.likes.push(currentUserId);
     await comment.save();
-    //create notification
-    const notification = new Notification({
-      field: fields.COMMENT,
-      content: contents.LIKED,
-      fieldIdentity: {
-        post: comment.post,
-        comment: comment._id,
-      },
-      creator: currentUserId,
-      receiver: comment.author._id,
-      url: `/${comment.author.slug}/posts/${comment.post}`,
-    });
+    let notification;
     if (currentUserId.toString() !== comment.author._id.toString()) {
+      //create notification
+      notification = new Notification({
+        field: fields.COMMENT,
+        content: contents.LIKED,
+        fieldIdentity: {
+          post: comment.post,
+          comment: comment._id,
+        },
+        creator: currentUserId,
+        receiver: comment.author._id,
+        url: `/${comment.author.slug}/posts/${comment.post}`,
+      });
+      //when this is not author, notification will be created
       await User.findByIdAndUpdate(notification.receiver, {
         $push: { notifications: notification._id },
       });
@@ -258,8 +264,15 @@ export const commentControllers = {
         .populate({ path: "fieldIdentity.comment", select: "shortenText" })
         .execPopulate();
     }
+
+    let likeCommentSubscriptionData = {
+      comment,
+    };
+    if (notification) {
+      likeCommentSubscriptionData.notification = notification._doc;
+    }
     await pubsub.publish(likeCommentSubscription, {
-      likeCommentSubscription: notification._doc,
+      likeCommentSubscription: likeCommentSubscriptionData,
     });
 
     return true;

@@ -12,7 +12,6 @@ import {
   Label,
   SendMessage,
 } from "./styles/ChatBoardFooter.styles";
-import "emoji-mart/css/emoji-mart.css";
 import { FiSend } from "react-icons/fi";
 import { IoMdAttach } from "react-icons/io";
 import { HiOutlinePhotograph } from "react-icons/hi";

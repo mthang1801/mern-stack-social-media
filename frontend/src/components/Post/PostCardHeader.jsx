@@ -7,7 +7,7 @@ import {
   Small
 } from "./styles/PostCardHeader.styles";
 import { Link } from "react-router-dom";
-import LazyLoad from "react-lazyload";
+import {LazyLoadImage} from "react-lazy-load-image-component";
 import { useThemeUI } from "theme-ui";
 import Moment from "react-moment";
 import Button from "../Controls/ButtonDefaultCircle";
@@ -22,10 +22,8 @@ const PostCardHeader = ({ post }) => {
   return (
     <Wrapper theme={colorMode}>
       <Information>
-        <Link to={`/${post.author.slug}`}>
-          <LazyLoad>
-            <img src={post.author.avatar} alt={post.author.avatar} />
-          </LazyLoad>
+        <Link to={`/${post.author.slug}`}>          
+            <LazyLoadImage effect="blur" src={post.author.avatar} alt={post.author.avatar} />          
         </Link>
         <Timeline>
           <Link

@@ -34,7 +34,12 @@ export const commentResolvers = {
         subscriptionActions.LIKE_COMMENT_SUBSCRIPTION
       ),
     removeLikeComment: (_, args, { req }) =>
-      commentControllers.removeLikeComment(req, args.commentId, pubsub, subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION),
+      commentControllers.removeLikeComment(
+        req,
+        args.commentId,
+        pubsub,
+        subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION
+      ),
   },
   Subscription: {
     notifyMentionUsersInComment: {
@@ -67,37 +72,29 @@ export const commentResolvers = {
       ),
     },
     likeCommentSubscription: {
+      subscribe: () =>
+        pubsub.asyncIterator(subscriptionActions.LIKE_COMMENT_SUBSCRIPTION),
+    },
+    removeLikeCommentSubscription: {
+      subscribe: () =>
+        pubsub.asyncIterator(
+          subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION
+        ),
+    },
+    createCommentSubscription: {
       subscribe: withFilter(
         () =>
-          pubsub.asyncIterator(
-            subscriptionActions.LIKE_COMMENT_SUBSCRIPTION
-          ),
-        (payload, { userId }) => {             
-          return (
-            payload.likeCommentSubscription.receiver.toString() ===
-            userId.toString()
-          );
+          pubsub.asyncIterator(subscriptionActions.CREATE_COMMENT_SUBSCIPTION),
+        (payload, { userId }) => {
+          if (payload.createCommentSubscription.receiver) {
+            return (
+              payload.createCommentSubscription.receiver.toString() ===
+              userId.toString()
+            );
+          }
+          return true;
         }
       ),
     },
-    removeLikeCommentSubscription : {
-      subscribe : withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION), 
-        (payload, {userId}) => {          
-          return payload.removeLikeCommentSubscription.receiver.toString() === userId.toString()
-        }
-      )
-    },
-    createCommentSubscription : {
-      subscribe : withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.CREATE_COMMENT_SUBSCIPTION),
-        (payload, {userId}) => {
-          if(payload.createCommentSubscription.receiver){
-            return payload.createCommentSubscription.receiver.toString() === userId.toString()
-          }
-          return true
-        }
-      )
-    }
   },
 };

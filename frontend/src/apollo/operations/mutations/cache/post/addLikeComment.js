@@ -6,7 +6,7 @@ const addLikeComment = setPostsVar => (postId, commentId, userId) => {
       _post.commentsData = _post.commentsData.map(comment => {
         let _comment = {...comment} ; 
         if(_comment._id === commentId){
-          _comment.likes  = [userId, ..._comment.likes];
+          _comment.likes  = [...new Set([userId, ..._comment.likes]) ];
         }
         return {..._comment}; 
       })

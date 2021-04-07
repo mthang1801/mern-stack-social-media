@@ -7,8 +7,8 @@ export const schemaSubscription = gql`
     removeLikePostSubscription(userId: ID!) : Notification!
     notifyUserCommentPostSubscription(userId: ID!): CommentSubscriptionPayload!
     notifyMentionUsersInComment(userId : ID!) : Notification!    
-    likeCommentSubscription(userId : ID!) : Notification!
-    removeLikeCommentSubscription(userId: ID!) : Notification!
+    likeCommentSubscription: CommentSubscriptionPayload!
+    removeLikeCommentSubscription : Notification!
     createCommentSubscription(userId: ID!) : CommentSubscriptionPayload!
 
 
