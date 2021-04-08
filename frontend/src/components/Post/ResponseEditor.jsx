@@ -40,6 +40,8 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
   useEffect(() => {
     let timer;
     if (focus) {
+      console.log(comment.author._id);
+      console.log(user._id)
       if (timer) {
         clearTimeout(timer);
       }
@@ -52,7 +54,8 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
             -1 &&
           rawData.blocks[0].text
             .toLowerCase()
-            .indexOf(user.name.toLowerCase()) === -1
+            .indexOf(user.name.toLowerCase()) === -1 && 
+            comment.author._id !== user._id
         ) {
           parseDataResponse.blocks[0] = {
             ...parseDataResponse.blocks[0],

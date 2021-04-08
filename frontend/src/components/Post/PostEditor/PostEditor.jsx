@@ -11,6 +11,7 @@ import _ from "lodash";
 import { useMutation } from "@apollo/client";
 import { CREATE_POST } from "../../../apollo/operations/mutations/post/createPost";
 import {cacheMutations} from "../../../apollo/operations/mutations/cache"
+
 const PostEditor = ({ user }) => {
   const [postStatus, setPostStatus] = useState("PUBLIC");
   const [editorState, setEditorState] = useState(() =>

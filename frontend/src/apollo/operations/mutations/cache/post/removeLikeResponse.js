@@ -1,5 +1,13 @@
 const removeLikeResponse = setPostsVar => (postId, commentId, responseId, userId) => {
   const posts = [...setPostsVar()];
+  
+  const findPostByPostId = posts.find(post => post._id === postId); 
+  if(!findPostByPostId || findPostByPostId && !findPostByPostId.commentsData) return; 
+  const findCommentsDataByCommentId = findPostByPostId.commentsData.find(comment => comment._id === commentId);
+  if(!findCommentsDataByCommentId || findCommentsDataByCommentId && !findCommentsDataByCommentId.responsesData) return ; 
+  const findResponsesByResponseId = findCommentsDataByCommentId.responsesData.find(response => response._id === responseId);
+  if(!findResponsesByResponseId) return ; 
+
   const updatedPost = posts.map(post => {
     let _post = {...post};
     if(_post._id === postId ){      
@@ -7,8 +15,8 @@ const removeLikeResponse = setPostsVar => (postId, commentId, responseId, userId
         let _comment = {...comment};
         if(_comment._id === commentId){         
           _comment.responsesData = _comment.responsesData.map(response => {
-            let _response = {...response};
-            if(_response._id === responseId){
+            let _response = {...response};            
+            if(_response._id === responseId){              
               _response.likes = _response.likes.filter(_id => _id !== userId);
             }
             return {..._response};

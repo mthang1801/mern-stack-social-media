@@ -194,14 +194,12 @@ export const schemaType = gql`
 
   type CommentSubscriptionPayload {
     comment: Comment
-    notification: Notification
-    receiver : ID
+    notification: Notification    
   }
 
   type ResponseSubscriptionPayload{
     response : Response
-    notification: Notification
-    receiver : ID
+    notification: Notification    
   }
 
 

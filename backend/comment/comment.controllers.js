@@ -85,24 +85,32 @@ export const commentControllers = {
                 field: fields.COMMENT,
                 content: contents.MENTIONED,
                 fieldIdentity: {
-                  post: postId
+                  post: postId,
                 },
                 creator: currentUserId,
                 receiver: mentionId,
                 url: `/${currentUser.slug}/posts/${post._id}?comment=${newComment._id}`,
               });
-              const mentioner = await User.findById(mentionId);
-              mentioner.notifications.push(notification._id);
-              await mentioner.save();
-              await (await notification.save())
-                .populate({ path: "creator", select: "name slug avatar" })
-                .populate({ path: "fieldIdentity.post", select: "shortenText" })
-                .execPopulate();
-            }
+              if (mentionId.toString() !== currentUserId.toString()) {
+                const mentioner = await User.findById(mentionId);
+                if (!mentioner.notifications.includes(notification._id)) {
+                  mentioner.notifications.push(notification._id);
+                }
 
-            await pubsub.publish(notifyMentionUsersInComment, {
-              notifyMentionUsersInComment: notification._doc,
-            });
+                await mentioner.save();
+                await (await notification.save())
+                  .populate({ path: "creator", select: "name slug avatar" })
+                  .populate({
+                    path: "fieldIdentity.post",
+                    select: "shortenText",
+                  })
+                  .execPopulate();
+              }
+
+              await pubsub.publish(notifyMentionUsersInComment, {
+                notifyMentionUsersInComment: notification._doc,
+              });
+            }
           }
         }
 
@@ -112,60 +120,62 @@ export const commentControllers = {
             path: "author",
             select: "name avatar slug isOnline offlinedAt",
           })
-          .execPopulate();        
+          .execPopulate();
 
         //create notification to notify owner post realize user has commented and push usersComment to post
-        let notificationForOwnerPost = await Notification.findOneAndUpdate(
-          {
-            field: fields.COMMENT,
-            content: contents.CREATED,
-            "fieldIdentity.post": postId,
-            creator: currentUserId,
-            receiver: post.author,
-          },
-          { updatedAt: Date.now(), hasSeen: false },
-          { new: true }
-        )
-          .populate({ path: "creator", select: "name slug avatar" })
-          .populate({ path: "fieldIdentity.post", select: "shortenText" });
-        if (!notificationForOwnerPost) {
-          notificationForOwnerPost = new Notification({
-            field: fields.COMMENT,
-            content: contents.CREATED,
-            fieldIdentity: {
-              post: postId
+        if (currentUserId.toString() !== post.author.toString()) {
+          let notificationForOwnerPost = await Notification.findOneAndUpdate(
+            {
+              field: fields.COMMENT,
+              content: contents.CREATED,
+              "fieldIdentity.post": postId,
+              creator: currentUserId,
+              receiver: post.author,
             },
-            creator: currentUserId,
-            receiver: post.author,
-            url: `/${currentUser.slug}/posts/${post._id}?comment=${newComment._id}`,
-          });
-          //push notification to owner Post
-          await User.findByIdAndUpdate(
-            post.author,
-            { $push: { notifications: notificationForOwnerPost._id } },
+            { updatedAt: Date.now(), hasSeen: false },
             { new: true }
-          );
+          )
+            .populate({ path: "creator", select: "name slug avatar" })
+            .populate({ path: "fieldIdentity.post", select: "shortenText" });
+          if (!notificationForOwnerPost) {
+            notificationForOwnerPost = new Notification({
+              field: fields.COMMENT,
+              content: contents.CREATED,
+              fieldIdentity: {
+                post: postId,
+              },
+              creator: currentUserId,
+              receiver: post.author,
+              url: `/${currentUser.slug}/posts/${post._id}?comment=${newComment._id}`,
+            });
+            //push notification to owner Post
+            await User.findByIdAndUpdate(
+              post.author,
+              { $addToSet: { notifications: notificationForOwnerPost._id } },
+              { new: true }
+            );
 
-          //save notification owner Post
-          await (await notificationForOwnerPost.save())
-            .populate("creator")
-            .populate({ path: "fieldIdentity.post", select: "shortenText" })
-            .execPopulate();
+            //save notification owner Post
+            await (await notificationForOwnerPost.save())
+              .populate("creator")
+              .populate({ path: "fieldIdentity.post", select: "shortenText" })
+              .execPopulate();
+          }
+          await pubsub.publish(notifyUserCommentPostSubscription, {
+            notifyUserCommentPostSubscription: notificationForOwnerPost._doc,
+          });
         }
+
         //push comment to post
         post.comments.push(newComment._id);
         await post.save();
         //push comment to user
         currentUser.comments.push(newComment._id);
-        await currentUser.save();        
-
-        await pubsub.publish(notifyUserCommentPostSubscription, {
-          notifyUserCommentPostSubscription: notificationForOwnerPost._doc
-        });
+        await currentUser.save();
 
         await pubsub.publish(createCommentSubscription, {
-          createCommentSubscription : newComment._doc
-        })
+          createCommentSubscription: newComment._doc,
+        });
         await session.commitTransaction();
         session.endSession();
         return newComment;

@@ -44,6 +44,7 @@ export const postControllers = {
     }
     if (currentUser) {
       const friendsID = currentUser.friends;
+      console.log(friendsID)
       const posts = await Post.find({
         author: { $in: friendsID },
         status: { $in: ["PUBLIC", "FRIENDS"] },

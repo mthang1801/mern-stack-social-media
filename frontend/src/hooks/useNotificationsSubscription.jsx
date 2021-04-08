@@ -46,7 +46,8 @@ const useNotificationsSubscription = () => {
     setCurrentPersonalUser,
     setReceivedRequestsToAddFriend,
     setPersonalPosts,
-    addCommentToOwnerPost,
+    addLikeResponse,
+    removeLikeResponse,
     updateCommentLikes,
     removeNewNotification,
     addNotificationItemToNotificationsList,
@@ -97,7 +98,6 @@ const useNotificationsSubscription = () => {
         (notification) => notification._id === newNotification._id
       )
     ) {
-      console.log("here")
       updateNotificationItemInNotificationsList(newNotification);
     } else {
       increaseNumberNotificationsUnseen();
@@ -131,7 +131,9 @@ const useNotificationsSubscription = () => {
       unsubscribeLikeComment,
       unsubscribeRemoveLikeComment,
       unsubscribeUserResponseComment,
-      unsubscribeMentionedUsersInResponse;
+      unsubscribeMentionedUsersInResponse,
+      unsubscribeUserLikeResponse,
+      unsubscribeUserRemoveLikeResponse;
     if (subscribeToMoreNotifications && user) {
       unsubscribeMentionUsersInPost = subscribeToMoreNotifications({
         document:
@@ -228,7 +230,6 @@ const useNotificationsSubscription = () => {
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
             const { notifyUserCommentPostSubscription } = subscriptionData.data;
-            console.log(notifyUserCommentPostSubscription)
             updatedAddNotification(notifyUserCommentPostSubscription);
           }
         },
@@ -310,10 +311,64 @@ const useNotificationsSubscription = () => {
             .NOTIFY_MENTIONED_USERS_IN_RESPONSE,
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
-          console.log(subscriptionData);
           if (subscriptionData) {
             const { notifyMentionedUsersInResponse } = subscriptionData.data;
             updatedAddNotification(notifyMentionedUsersInResponse);
+          }
+        },
+      });
+      unsubscribeUserLikeResponse = subscribeToMoreNotifications({
+        document:
+          subscriptions.notificationSubscription.LIKE_RESPONSE_SUBSCRIPTION,
+        updateQuery: (_, { subscriptionData }) => {
+          if (subscriptionData) {
+            const { likeResponseSubscription } = subscriptionData.data;
+            if (likeResponseSubscription.receiver.toString() === user._id) {
+              updatedAddNotification(likeResponseSubscription);
+            }
+            const {
+              post,
+              comment,
+              response,
+            } = likeResponseSubscription.fieldIdentity;
+            if (likeResponseSubscription.creator._id.toString() !== user._id) {
+              addLikeResponse(
+                post._id,
+                comment._id,
+                response._id,
+                likeResponseSubscription.creator._id
+              );
+            }
+          }
+        },
+      });
+      unsubscribeUserRemoveLikeResponse = subscribeToMoreNotifications({
+        document:
+          subscriptions.notificationSubscription
+            .REMOVE_LIKE_RESPONSE_SUBSCRIPTION,
+        updateQuery: (_, { subscriptionData }) => {
+          if (subscriptionData) {
+            const { removeLikeResponseSubscription } = subscriptionData.data;
+            if (
+              removeLikeResponseSubscription.receiver.toString() === user._id
+            ) {
+              updatedRemoveNotification(removeLikeResponseSubscription);
+            }
+            const {
+              post,
+              comment,
+              response,
+            } = removeLikeResponseSubscription.fieldIdentity;
+            if (
+              removeLikeResponseSubscription.creator._id.toString() !== user._id
+            ) {
+              removeLikeResponse(
+                post._id,
+                comment._id,
+                response._id,
+                removeLikeResponseSubscription.creator._id
+              );
+            }
           }
         },
       });
@@ -352,6 +407,12 @@ const useNotificationsSubscription = () => {
       }
       if (unsubscribeMentionedUsersInResponse) {
         unsubscribeMentionedUsersInResponse();
+      }
+      if (unsubscribeUserLikeResponse) {
+        unsubscribeUserLikeResponse();
+      }
+      if (unsubscribeUserRemoveLikeResponse) {
+        unsubscribeUserRemoveLikeResponse();
       }
     };
   }, [

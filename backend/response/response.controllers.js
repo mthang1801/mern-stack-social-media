@@ -14,7 +14,6 @@ import mongoose from "mongoose";
 export const responseControllers = {
   fetchResponses: async (commentId, skip, limit) => {
     try {
-      console.log(commentId, skip, limit);
       const comment = await Comment.findById(commentId).populate({
         path: "responses",
         populate: { path: "author", select: "name avatar slug" },
@@ -77,6 +76,7 @@ export const responseControllers = {
               receiver: mentionId,
               "fieldIdentity.post": post._id,
               "fieldIdentity.comment": commentId,
+              "fieldIdentity.response" : newResponse._id
             },
             { updatedAt: Date.now(), hasSeen: false },
             { new: true }
@@ -97,13 +97,10 @@ export const responseControllers = {
               fieldIdentity: {
                 post: post._id,
                 comment: comment._id,
+                response : newResponse._id
               },
               url: `/${post.author.slug}/posts/${post._id}?comment=${comment._id}&response=${newResponse._id}`,
             });
-            const mentioner = await User.findById(mentionId);
-
-            mentioner.notifications.push(notification._id);
-            await mentioner.save();
             await (await notification.save())
               .populate({ path: "creator", select: "name slug avatar" })
               .populate({ path: "fieldIdentity.post", select: "shortenText" })
@@ -113,10 +110,18 @@ export const responseControllers = {
               })
               .execPopulate();
           }
-          //pubsub
-          await pubsub.publish(notifyMentionedUsersInResponse, {
-            notifyMentionedUsersInResponse: notification._doc,
-          });
+          if (mentionId.toString() !== currentUserId.toString()) {
+            const mentioner = await User.findById(mentionId);
+            if (!mentioner.notifications.includes(notification._id)) {
+              mentioner.notifications.push(notification._id);
+            }
+
+            await mentioner.save();
+            //pubsub
+            await pubsub.publish(notifyMentionedUsersInResponse, {
+              notifyMentionedUsersInResponse: notification._doc,
+            });
+          }
         }
       }
 
@@ -126,60 +131,66 @@ export const responseControllers = {
           select: "name avatar slug isOnline offlinedAt",
         })
         .execPopulate();
+
       //create notification to notify owner comment realize user has response and push responseSponse to comment
-      let notificationForOwnerComment = await Notification.findOneAndUpdate(
-        {
-          field: fields.RESPONSE,
-          content: contents.CREATED,
-          "fieldIdentity.post": post._id,
-          "fieldIdentity.comment": commentId,
-          receiver: comment.author,
-        },
-        { updatedAt: Date.now(), hasSeen: false },
-        { new: true }
-      )
-        .populate({ path: "creator", select: "name slug avatar" })
-        .populate({ path: "fieldIdentity.post", select: "shortenText" })
-        .populate({
-          path: "fieldIdentity.comment",
-          select: "shortenText",
-        });
-      if (!notificationForOwnerComment) {
-        notificationForOwnerComment = new Notification({
-          field: fields.RESPONSE,
-          content: contents.CREATED,
-          fieldIdentity: {
-            post: post._id,
-            comment: comment._id,
+      if (currentUserId.toString() !== comment.author.toString()) {
+        let notificationForOwnerComment = await Notification.findOneAndUpdate(
+          {
+            field: fields.RESPONSE,
+            content: contents.CREATED,
+            "fieldIdentity.post": post._id,
+            "fieldIdentity.comment": commentId,
+            "fieldIdentity.response" : newResponse._id,
+            receiver: comment.author,
           },
-          creator: currentUserId,
-          receiver: comment.author,
-          url: `/${post.author.slug}/posts/${post._id}?comment=${comment._id}&response=${newResponse._id}`,
-        });
-        await (await notificationForOwnerComment.save())
+          { updatedAt: Date.now(), hasSeen: false },
+          { new: true }
+        )
           .populate({ path: "creator", select: "name slug avatar" })
           .populate({ path: "fieldIdentity.post", select: "shortenText" })
           .populate({
             path: "fieldIdentity.comment",
             select: "shortenText",
-          })
-          .execPopulate();
+          });
+        if (!notificationForOwnerComment) {
+          notificationForOwnerComment = new Notification({
+            field: fields.RESPONSE,
+            content: contents.CREATED,
+            fieldIdentity: {
+              post: post._id,
+              comment: comment._id,
+              response : newResponse._id
+            },
+            creator: currentUserId,
+            receiver: comment.author,
+            url: `/${post.author.slug}/posts/${post._id}?comment=${comment._id}&response=${newResponse._id}`,
+          });
+          await (await notificationForOwnerComment.save())
+            .populate({ path: "creator", select: "name slug avatar" })
+            .populate({ path: "fieldIdentity.post", select: "shortenText" })
+            .populate({
+              path: "fieldIdentity.comment",
+              select: "shortenText",
+            })
+            .execPopulate();
+        }
+        //create pubsub to notify user response comment
+        await pubsub.publish(notifyUserResponseCommentSubscription, {
+          notifyUserResponseCommentSubscription:
+            notificationForOwnerComment._doc,
+        });
+        //push notification to owner Post
+        await User.findByIdAndUpdate(comment.author, {
+          $addToSet: { notifications: notificationForOwnerComment._id },
+        });
       }
-      //push notification to owner Post
-      await User.findByIdAndUpdate(comment.author, {
-        $push: { notifications: notificationForOwnerComment._id },
-      });
+
       // push response to post
       post.responses.push(newResponse._id);
       await post.save();
       //push repsonse to comment
       comment.responses.push(newResponse._id);
       await comment.save();
-
-      //create pubsub to notify user response comment
-      await pubsub.publish(notifyUserResponseCommentSubscription, {
-        notifyUserResponseCommentSubscription: notificationForOwnerComment._doc,
-      });
 
       await pubsub.publish(createResponseSubscription, {
         createResponseSubscription: newResponse._doc,
@@ -192,24 +203,133 @@ export const responseControllers = {
       console.log(error);
     }
   },
-  likeResponse: async (req, responseId) => {
+  likeResponse: async (req, responseId, pubsub, likeResponseSubscription) => {
     const currentUserId = getAuthUser(req);
-    const response = await Response.findById(responseId);
+    const response = await Response.findById(responseId).populate({
+      path: "post",
+      populate: { path: "author", select: "slug" },
+    });
     if (!response || response.likes.includes(currentUserId.toString())) {
       return false;
     }
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    //create notification to like response
+    if (currentUserId.toString() !== response.author.toString()) {
+      let notification = await Notification.findOneAndUpdate(
+        {
+          field: fields.RESPONSE,
+          content: contents.LIKED,
+          fieldIdentity: {
+            post: response.post._id,
+            comment: response.comment,
+            response: response._id,
+          },
+          creator: currentUserId,
+          receiver: response.author,
+        },
+        { hasSeen: false }
+      )
+        .populate({ path: "creator", select: "name slug avatar" })
+        .populate({ path: "fieldIdentity.post", select: "shortenText" })
+        .populate({
+          path: "fieldIdentity.comment",
+          select: "shortenText",
+        })
+        .populate({
+          path: "fieldIdentity.response",
+          select: "_id",
+        });
+      if (!notification) {
+        notification = new Notification({
+          field: fields.RESPONSE,
+          content: contents.LIKED,
+          fieldIdentity: {
+            post: response.post._id,
+            comment: response.comment,
+            response: response._id,
+          },
+          creator: currentUserId,
+          receiver: response.author,
+          url: `/${response.post.author.slug}/posts/${response.post._id}?comment=${response.comment}&response=${response._id}`,
+        });
+        await (await notification.save())
+          .populate({ path: "creator", select: "name slug avatar" })
+          .populate({ path: "fieldIdentity.post", select: "shortenText" })
+          .populate({
+            path: "fieldIdentity.comment",
+            select: "shortenText",
+          })
+          .populate({
+            path: "fieldIdentity.response",
+            select: "_id",
+          })
+          .execPopulate();
+        //save notification in user
+        await User.findByIdAndUpdate(response.author, {
+          $addToSet: { notifications: notification._id },
+        });
+      }
+      console.log(notification);
+      await pubsub.publish(likeResponseSubscription, {
+        likeResponseSubscription: notification._doc,
+      });
+    }
     response.likes.push(currentUserId);
     await response.save();
+    await session.commitTransaction();
+    session.endSession();
     return true;
   },
-  removeLikeResponse: async (req, responseId) => {
+  removeLikeResponse: async (
+    req,
+    responseId,
+    pubsub,
+    removeLikeResponseSubscription
+  ) => {
     const currentUserId = getAuthUser(req);
     const response = await Response.findById(responseId);
     if (!response || !response.likes.includes(currentUserId.toString())) {
       return false;
     }
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     response.likes.pull(currentUserId);
     await response.save();
+
+    //check notification and delete
+    if (currentUserId.toString() !== response.author.toString()) {
+      let notification = await Notification.findOneAndDelete({
+        field: fields.RESPONSE,
+        content: contents.LIKED,
+        fieldIdentity: {
+          post: response.post,
+          comment: response.comment,
+          response: response._id,
+        },
+        creator: currentUserId,
+        receiver: response.author,
+      })
+        .populate({ path: "creator", select: "name slug avatar" })
+        .populate({ path: "fieldIdentity.post", select: "shortenText" })
+        .populate({
+          path: "fieldIdentity.comment",
+          select: "shortenText",
+        })
+        .populate({
+          path: "fieldIdentity.response",
+          select: "_id",
+        });
+      if (notification) {
+        await pubsub.publish(removeLikeResponseSubscription, {
+          removeLikeResponseSubscription: notification._doc,
+        });
+      }
+    }
+
+    await session.commitTransaction();
+    session.endSession();
     return true;
   },
   removeResponse: async (req, responseId) => {
@@ -239,6 +359,15 @@ export const responseControllers = {
       });
       //remove response
       await Response.findByIdAndDelete(responseId);
+
+      //remove notifications relate response 
+      let notifications = await Notification.find({
+        "fieldIdentity.response" : responseId
+      })
+      for(let notification of notifications){
+        await Notification.findByIdAndDelete(notification._id);
+        await User.findOneAndUpdate({notifications : notification._id}, {$pull : {notifications: notification._id}});
+      }
       return true;
     } catch (error) {
       console.log(error);

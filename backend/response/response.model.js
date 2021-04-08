@@ -30,7 +30,7 @@ const ResponseSchema = new mongoose.Schema(
     },
     post: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "responses",
+      ref: "posts",
       required: true,
     },
     comment: {

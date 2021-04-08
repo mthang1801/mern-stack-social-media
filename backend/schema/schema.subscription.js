@@ -15,6 +15,8 @@ export const schemaSubscription = gql`
     notifyUserResponseCommentSubscription(userId : ID!) : Notification!
     notifyMentionedUsersInResponse(userId : ID!) : Notification!
     createResponseSubscription: Response!
+    likeResponseSubscription: Notification!
+    removeLikeResponseSubscription : Notification!
 
     notifyReceivedRequestToAddFriend(
       userId: ID!
@@ -67,5 +69,7 @@ export const subscriptionActions = {
   CREATE_COMMENT_SUBSCIPTION : "CREATE_COMMENT_SUBSCIPTION",
   NOTIFY_USER_RESPONSE_COMMENT : "NOTIFY_USER_RESPONSE_COMMENT", 
   NOTIFY_MENTIONED_USERS_IN_RESPONSE : "NOTIFY_MENTIONED_USERS_IN_RESPONSE", 
-  CREATE_RESPONSE_SUBSCRIPTION : "CREATE_RESPONSE_SUBSCRIPTION"
+  CREATE_RESPONSE_SUBSCRIPTION : "CREATE_RESPONSE_SUBSCRIPTION",
+  LIKE_RESPONSE_SUBSCRIPTION : "LIKE_RESPONSE_SUBSCRIPTION",
+  REMOVE_LIKE_RESPONSE_SUBSCRIPTION : "REMOVE_LIKE_RESPONSE_SUBSCRIPTION"
 };

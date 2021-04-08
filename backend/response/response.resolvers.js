@@ -24,9 +24,14 @@ export const responseResolvers = {
         subscriptionActions.CREATE_RESPONSE_SUBSCRIPTION
       ),
     likeResponse: (_, args, { req }, info) =>
-      responseControllers.likeResponse(req, args.responseId),
+      responseControllers.likeResponse(
+        req,
+        args.responseId,
+        pubsub,
+        subscriptionActions.LIKE_RESPONSE_SUBSCRIPTION
+      ),
     removeLikeResponse: (_, args, { req }, info) =>
-      responseControllers.removeLikeResponse(req, args.responseId),
+      responseControllers.removeLikeResponse(req, args.responseId, pubsub, subscriptionActions.REMOVE_LIKE_RESPONSE_SUBSCRIPTION),
     removeResponse: (_, args, { req }) =>
       responseControllers.removeResponse(req, args.responseId),
   },
@@ -37,7 +42,7 @@ export const responseResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.NOTIFY_USER_RESPONSE_COMMENT
           ),
-        (payload, { userId }) =>          
+        (payload, { userId }) =>
           payload.notifyUserResponseCommentSubscription.receiver.toString() ===
           userId.toString()
       ),
@@ -56,6 +61,16 @@ export const responseResolvers = {
     createResponseSubscription: {
       subscribe: () =>
         pubsub.asyncIterator(subscriptionActions.CREATE_RESPONSE_SUBSCRIPTION),
+    },
+    likeResponseSubscription: {
+      subscribe: () =>
+        pubsub.asyncIterator(subscriptionActions.LIKE_RESPONSE_SUBSCRIPTION),
+    },
+    removeLikeResponseSubscription: {
+      subscribe: () =>
+        pubsub.asyncIterator(
+          subscriptionActions.REMOVE_LIKE_RESPONSE_SUBSCRIPTION
+        ),
     },
   },
 };
