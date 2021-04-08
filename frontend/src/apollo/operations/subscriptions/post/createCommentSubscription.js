@@ -2,8 +2,7 @@ import {gql}  from "@apollo/client";
 
 export const CREATE_COMMENT_SUBSCIPTION = gql`
   subscription ($userId : ID!){
-    createCommentSubscription(userId : $userId){
-      comment {
+    createCommentSubscription(userId : $userId){      
         _id
         text
         rawText
@@ -18,7 +17,7 @@ export const CREATE_COMMENT_SUBSCIPTION = gql`
         responses
         createdAt
         updatedAt
-      }
+      
     }
   }
 `

@@ -1,6 +1,6 @@
 import {gql} from "@apollo/client";
 
-export const NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION = gql`
+export const NOTIFY_MENTIONED_USERS_IN_COMMENT_SUBSCRIPTION = gql`
   subscription ($userId : ID!){
     notifyMentionUsersInComment(userId: $userId){
       _id 

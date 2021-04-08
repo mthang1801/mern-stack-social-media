@@ -65,11 +65,15 @@ export const commentResolvers = {
           ),
         (payload, { userId }) => {
           return (
-            payload.notifyUserCommentPostSubscription.notification.receiver.toString() ===
+            payload.notifyUserCommentPostSubscription.receiver.toString() ===
             userId.toString()
           );
         }
       ),
+    },
+    createCommentSubscription: {
+      subscribe: () =>
+        pubsub.asyncIterator(subscriptionActions.CREATE_COMMENT_SUBSCIPTION),
     },
     likeCommentSubscription: {
       subscribe: () =>
@@ -80,21 +84,6 @@ export const commentResolvers = {
         pubsub.asyncIterator(
           subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION
         ),
-    },
-    createCommentSubscription: {
-      subscribe: withFilter(
-        () =>
-          pubsub.asyncIterator(subscriptionActions.CREATE_COMMENT_SUBSCIPTION),
-        (payload, { userId }) => {
-          if (payload.createCommentSubscription.receiver) {
-            return (
-              payload.createCommentSubscription.receiver.toString() ===
-              userId.toString()
-            );
-          }
-          return true;
-        }
-      ),
     },
   },
 };

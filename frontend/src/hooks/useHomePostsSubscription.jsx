@@ -16,7 +16,7 @@ const useHomePostsSubscription = () => {
         variables : {userId : user._id}, 
         updateQuery : (_, {subscriptionData})=>{
           if(subscriptionData){
-            const {createCommentSubscription : {comment}} = subscriptionData.data;            
+            const {createCommentSubscription : comment} = subscriptionData.data;            
             if(comment.author._id !== user._id){
               addCommentToPost(comment.post, comment);
             }            

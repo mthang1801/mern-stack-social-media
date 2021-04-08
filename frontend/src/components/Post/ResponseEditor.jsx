@@ -39,19 +39,20 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
 
   useEffect(() => {
     let timer;
-    if (focus && editorState) {
+    if (focus) {
       if (timer) {
         clearTimeout(timer);
       }
       timer = setTimeout(() => {
-        const rawData = convertToRaw(editorState.getCurrentContent());        
+        const rawData = convertToRaw(editorState.getCurrentContent());
         const parseDataResponse = JSON.parse(dataResponse);
+        
         if (
           rawData.blocks[0].text.indexOf(parseDataResponse.blocks[0].text) ===
             -1 &&
           rawData.blocks[0].text
             .toLowerCase()
-            .indexOf(user.name.toLowerCase()) !== -1
+            .indexOf(user.name.toLowerCase()) === -1
         ) {
           parseDataResponse.blocks[0] = {
             ...parseDataResponse.blocks[0],
@@ -187,15 +188,21 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
   }, [responseRef, showControls]);
 
   const onSubmitComment = (e) => {
+    
     if (
-      e.which === 13 &&
-      editorState.getCurrentContent().hasText() &&
+      e.which === 13 &&     
       !openMention &&
       !document
         .querySelector(`[data-target=response-input-${comment._id}]`)
         ?.getElementsByClassName(`esyutjr`)?.length
     ) {
-      const rawEditorState = convertToRaw(editorState.getCurrentContent());
+      if(e.shiftKey){
+        return; 
+      }
+      let rawEditorState = convertToRaw(editorState.getCurrentContent());
+      const filterBlockEmpty = rawEditorState.blocks.filter(block => block.text)
+      rawEditorState = {...rawEditorState, blocks : [...filterBlockEmpty]};
+      
       const rawText = JSON.stringify(rawEditorState);
       const shortenText = draftToHtml(rawEditorState)
         .split("</p>")[0]
@@ -207,6 +214,8 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
       const textData = document.querySelector(
         `[data-target=response-input-${comment._id}]`
       ).innerHTML;
+      
+      
       let mentions = [];
       if (rawEditorState.entityMap) {
         Object.values(rawEditorState.entityMap).map(({ data }) => {
@@ -218,7 +227,8 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
       mentions = _.unionBy(mentions, "_id").map((mention) =>
         mention._id.toString()
       );
-      if (textData) {
+     
+      if (rawEditorState.blocks?.length) {
         setEditorState(EditorState.createEmpty());
         createResponse({
           variables: {
@@ -229,12 +239,12 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
             mentions,
           },
         })
-          .then(({ data }) => {            
+          .then(({ data }) => {
             document
               .querySelector(`[data-target=response-input-${comment._id}]`)
               .querySelector("[contenteditable=false]")
               ?.setAttribute("contenteditable", true);
-
+            
             const { createResponse } = data;
             addNewResponseToComment(comment.post, comment._id, createResponse);
           })
@@ -247,6 +257,8 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
       }
     }
   };
+
+
   return (
     <Wrapper ref={responseRef}>
       <CommentInput
@@ -285,4 +297,4 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
   );
 };
 
-export default CommentEditor;
+export default React.memo(CommentEditor);

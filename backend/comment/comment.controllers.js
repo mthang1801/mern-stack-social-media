@@ -85,12 +85,11 @@ export const commentControllers = {
                 field: fields.COMMENT,
                 content: contents.MENTIONED,
                 fieldIdentity: {
-                  post: postId,
-                  comment: newComment._id,
+                  post: postId
                 },
                 creator: currentUserId,
                 receiver: mentionId,
-                url: `/${currentUser.slug}/posts/${post._id}`,
+                url: `/${currentUser.slug}/posts/${post._id}?comment=${newComment._id}`,
               });
               const mentioner = await User.findById(mentionId);
               mentioner.notifications.push(notification._id);
@@ -113,10 +112,7 @@ export const commentControllers = {
             path: "author",
             select: "name avatar slug isOnline offlinedAt",
           })
-          .execPopulate();
-
-        //push comment to post
-        post.comments.push(newComment._id);
+          .execPopulate();        
 
         //create notification to notify owner post realize user has commented and push usersComment to post
         let notificationForOwnerPost = await Notification.findOneAndUpdate(
@@ -137,12 +133,11 @@ export const commentControllers = {
             field: fields.COMMENT,
             content: contents.CREATED,
             fieldIdentity: {
-              post: postId,
-              comment: newComment._id,
+              post: postId
             },
             creator: currentUserId,
             receiver: post.author,
-            url: `/${currentUser.slug}/posts/${post._id}`,
+            url: `/${currentUser.slug}/posts/${post._id}?comment=${newComment._id}`,
           });
           //push notification to owner Post
           await User.findByIdAndUpdate(
@@ -157,37 +152,20 @@ export const commentControllers = {
             .populate({ path: "fieldIdentity.post", select: "shortenText" })
             .execPopulate();
         }
-
+        //push comment to post
+        post.comments.push(newComment._id);
         await post.save();
         //push comment to user
-        await User.findByIdAndUpdate(currentUserId, {
-          $push: { comments: newComment._id },
-        });
+        currentUser.comments.push(newComment._id);
+        await currentUser.save();        
 
         await pubsub.publish(notifyUserCommentPostSubscription, {
-          notifyUserCommentPostSubscription: {
-            comment: newComment,
-            notification: notificationForOwnerPost,
-          },
+          notifyUserCommentPostSubscription: notificationForOwnerPost._doc
         });
 
-        if (post.status === "PUBLIC") {
-          await pubsub.publish(createCommentSubscription, {
-            createCommentSubscription: {
-              comment: newComment._doc,
-            },
-          });
-        } else if (post.status === "FRIENDS") {
-          const author = await User.findById(post.author);
-          for (let friendId of author.friends) {
-            await pubsub.publish(createCommentSubscription, {
-              createCommentSubscription: {
-                comment: newComment._doc,
-                receiver: friendId,
-              },
-            });
-          }
-        }
+        await pubsub.publish(createCommentSubscription, {
+          createCommentSubscription : newComment._doc
+        })
         await session.commitTransaction();
         session.endSession();
         return newComment;

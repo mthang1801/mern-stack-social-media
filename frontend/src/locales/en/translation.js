@@ -189,19 +189,19 @@ export const en = {
       responseCreated: (creatorName, postShortenText, commentShortenText) =>
         `<strong>${creatorName}</strong> has responsed at comment ${
           commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
-        } in your post <strong>${
+        } in the post <strong>${
           postShortenText ? postShortenText.slice(0, 50) + "..." : ""
         }</strong>`,
       responseMentioned: (creatorName, postShortenText, commentShortenText) =>
         `<strong>${creatorName}</strong> has mentioned you at comment ${
           commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
-        } in your post <strong>${
+        } in the post <strong>${
           postShortenText ? postShortenText.slice(0, 50) + "..." : ""
         }</strong>`,
       responseLiked: (creatorName, postShortenText, commentShortenText) =>
         `<strong>${creatorName}</strong> has liked your comment ${
           commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
-        } in your post <strong>${
+        } in the post <strong>${
           postShortenText ? postShortenText.slice(0, 50) + "..." : ""
         }</strong>`,
     },

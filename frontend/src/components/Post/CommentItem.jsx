@@ -10,7 +10,6 @@ import {
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
-import Moment from "react-moment";
 import { BsArrowReturnRight } from "react-icons/bs";
 import { Response } from "./styles/CommentItem.styles";
 import ResponseEditor from "./ResponseEditor";

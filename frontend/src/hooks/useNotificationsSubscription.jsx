@@ -15,12 +15,13 @@ const useNotificationsSubscription = () => {
       fetchPolicy: "cache-and-network",
     }
   );
-  const {
-    refetch: fetchCountNumberNotificationsUnseen,
-  } = useQuery(FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {
-    skip: true,
-    fetchPolicy: "cache-and-network",
-  });
+  const { refetch: fetchCountNumberNotificationsUnseen } = useQuery(
+    FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
+    {
+      skip: true,
+      fetchPolicy: "cache-and-network",
+    }
+  );
   const {
     data: {
       countNumberNotificationsUnseen,
@@ -96,6 +97,7 @@ const useNotificationsSubscription = () => {
         (notification) => notification._id === newNotification._id
       )
     ) {
+      console.log("here")
       updateNotificationItemInNotificationsList(newNotification);
     } else {
       increaseNumberNotificationsUnseen();
@@ -129,8 +131,7 @@ const useNotificationsSubscription = () => {
       unsubscribeLikeComment,
       unsubscribeRemoveLikeComment,
       unsubscribeUserResponseComment,
-      unsubscribeMentionedUsersInResponse
-      ;
+      unsubscribeMentionedUsersInResponse;
     if (subscribeToMoreNotifications && user) {
       unsubscribeMentionUsersInPost = subscribeToMoreNotifications({
         document:
@@ -226,21 +227,18 @@ const useNotificationsSubscription = () => {
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
-            const {
-              comment,
-              notification,
-            } = subscriptionData.data.notifyUserCommentPostSubscription;
-            updatedAddNotification(notification);
-            addCommentToOwnerPost(user._id, comment);
+            const { notifyUserCommentPostSubscription } = subscriptionData.data;
+            console.log(notifyUserCommentPostSubscription)
+            updatedAddNotification(notifyUserCommentPostSubscription);
           }
         },
       });
       unsubscribeMentionedUsersInComment = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription
-            .NOTIFY_MENTION_USERS_IN_COMMENT_SUBSCRIPTION,
+            .NOTIFY_MENTIONED_USERS_IN_COMMENT_SUBSCRIPTION,
         variables: { userId: user._id },
-        updateQuery: (_, { subscriptionData }) => {          
+        updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
             const { notifyMentionUsersInComment } = subscriptionData.data;
             updatedAddNotification(notifyMentionUsersInComment);
@@ -249,60 +247,76 @@ const useNotificationsSubscription = () => {
       });
       unsubscribeLikeComment = subscribeToMoreNotifications({
         document:
-          subscriptions.notificationSubscription.LIKE_COMMENT_SUBSCRIPTION,        
-        updateQuery: (_, { subscriptionData }) => { 
-          console.log(subscriptionData)         
+          subscriptions.notificationSubscription.LIKE_COMMENT_SUBSCRIPTION,
+        updateQuery: (_, { subscriptionData }) => {
+          console.log(subscriptionData);
           if (subscriptionData) {
-            const { comment, notification } = subscriptionData.data.likeCommentSubscription;
+            const {
+              comment,
+              notification,
+            } = subscriptionData.data.likeCommentSubscription;
             //create notification to receiver
-            if(notification && notification.receiver === user._id){
+            if (notification && notification.receiver === user._id) {
               updatedAddNotification(notification);
-            }                        
-            if(!notification || (notification && notification.creator._id !== user._id))  {
+            }
+            if (
+              !notification ||
+              (notification && notification.creator._id !== user._id)
+            ) {
               updateCommentLikes(comment);
             }
-            
           }
         },
       });
       unsubscribeRemoveLikeComment = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription
-            .REMOVE_LIKE_COMMENT_SUBSCRIPTION,        
+            .REMOVE_LIKE_COMMENT_SUBSCRIPTION,
         updateQuery: (_, { subscriptionData }) => {
-          
-          if (subscriptionData) {            
-            const { comment, notification } = subscriptionData.data.removeLikeCommentSubscription;
-            if(notification && notification.receiver === user._id){
+          if (subscriptionData) {
+            const {
+              comment,
+              notification,
+            } = subscriptionData.data.removeLikeCommentSubscription;
+            if (notification && notification.receiver === user._id) {
               updatedRemoveNotification(notification);
             }
-            if(!notification || (notification && notification.creator._id !== user._id))  {
+            if (
+              !notification ||
+              (notification && notification.creator._id !== user._id)
+            ) {
               updateCommentLikes(comment);
             }
           }
         },
       });
       unsubscribeUserResponseComment = subscribeToMoreNotifications({
-        document : subscriptions.notificationSubscription.NOTIFY_USER_RESPONSE_COMMENT_SUBSCRIPTION, 
-        variables : {userId : user._id } , 
-        updateQuery : (_ , {subscriptionData}) => {
-          if(subscriptionData){
-            const {notifyUserResponseCommentSubscription} = subscriptionData.data;
-            updatedAddNotification(notifyUserResponseCommentSubscription)
+        document:
+          subscriptions.notificationSubscription
+            .NOTIFY_USER_RESPONSE_COMMENT_SUBSCRIPTION,
+        variables: { userId: user._id },
+        updateQuery: (_, { subscriptionData }) => {
+          if (subscriptionData) {
+            const {
+              notifyUserResponseCommentSubscription,
+            } = subscriptionData.data;
+            updatedAddNotification(notifyUserResponseCommentSubscription);
           }
-        }
+        },
       });
       unsubscribeMentionedUsersInResponse = subscribeToMoreNotifications({
-        document : subscriptions.notificationSubscription.NOTIFY_MENTIONED_USERS_IN_RESPONSE, 
-        variables : {userId : user._id}, 
-        updateQuery : (_, {subscriptionData}) => {
-          console.log(subscriptionData)
-          if(subscriptionData){
-            const {notifyMentionedUsersInResponse} = subscriptionData.data;
-            updatedAddNotification(notifyMentionedUsersInResponse)
+        document:
+          subscriptions.notificationSubscription
+            .NOTIFY_MENTIONED_USERS_IN_RESPONSE,
+        variables: { userId: user._id },
+        updateQuery: (_, { subscriptionData }) => {
+          console.log(subscriptionData);
+          if (subscriptionData) {
+            const { notifyMentionedUsersInResponse } = subscriptionData.data;
+            updatedAddNotification(notifyMentionedUsersInResponse);
           }
-        }
-      })
+        },
+      });
     }
 
     return () => {
@@ -333,10 +347,10 @@ const useNotificationsSubscription = () => {
       if (unsubscribeRemoveLikeComment) {
         unsubscribeRemoveLikeComment();
       }
-      if(unsubscribeUserResponseComment){
-        unsubscribeUserResponseComment()
+      if (unsubscribeUserResponseComment) {
+        unsubscribeUserResponseComment();
       }
-      if(unsubscribeMentionedUsersInResponse){
+      if (unsubscribeMentionedUsersInResponse) {
         unsubscribeMentionedUsersInResponse();
       }
     };
