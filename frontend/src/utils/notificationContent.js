@@ -1,7 +1,7 @@
 import i18n from "../i18n"
 
 const notificationContent = (notification, lang) => {
-  const {notifications} = i18n.store.data[lang].translation;
+  const {notifications : {post : postNotification, comment : commentNotification, response : responseNotification,  contact : contactNotification}} = i18n.store.data[lang].translation;
   let { field, content} = notification;
   field = field.toUpperCase();
   content = content.toUpperCase();    
@@ -10,28 +10,27 @@ const notificationContent = (notification, lang) => {
     case "POST" : 
       switch(content){        
         case "MENTIONED" : {          
-          return notifications.postMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText); 
+          return postNotification.postMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText); 
         };
         case "LIKED" :           
-          return notifications.likePost(notification.creator?.name, notification.fieldIdentity?.post?.shortenText);
+          return postNotification.likePost(notification.creator?.name, notification.fieldIdentity?.post?.shortenText);
         
-      }
-    case "USER" : 
-      switch(content){
-        case "ADDED" : return  notifications.sentRequestToAddFriend;
-        case "ACCEPTED" : return notifications.acceptRequestToAddFriend
       }
     case "COMMENT" : 
       switch(content){
-        case "MENTIONED" : return notifications.commentMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText); 
-        case "CREATED" : return notifications.commentCreated(notification.creator?.name, notification.fieldIdentity?.post?.shortenText);
-        case "LIKED" : return notifications.commentLiked(notification.creator?.name, notification.fieldIdentity?.comment?.shortenText);
+        case "MENTIONED" : return commentNotification.commentMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText); 
+        case "CREATED" : return commentNotification.commentCreated(notification.creator?.name, notification.fieldIdentity?.post?.shortenText);
+        case "LIKED" : return commentNotification.commentLiked(notification.creator?.name, notification.fieldIdentity?.comment?.shortenText);
       }
     case "RESPONSE" : 
       switch(content){
-        case "CREATED" : return notifications.responseCreated(notification.creator?.name, notification.fieldIdentity?.post?.shortenText, notification.fieldIdentity?.comment?.shortenText);
-        case "MENTIONED" : return notifications.responseMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText, notification.fieldIdentity?.comment?.shortenText);
-        case "LIKED" : return notifications.responseLiked(notification.creator?.name, notification.fieldIdentity?.post?.shortenText, notification.fieldIdentity?.comment?.shortenText);
+        case "CREATED" : return responseNotification.responseCreated(notification.creator?.name, notification.fieldIdentity?.post?.shortenText, notification.fieldIdentity?.comment?.shortenText);
+        case "MENTIONED" : return responseNotification.responseMentioned(notification.creator?.name, notification.fieldIdentity?.post?.shortenText, notification.fieldIdentity?.comment?.shortenText);
+        case "LIKED" : return responseNotification.responseLiked(notification.creator?.name, notification.fieldIdentity?.post?.shortenText, notification.fieldIdentity?.comment?.shortenText);
+      }
+    case "CONTACT" : 
+      switch(content){
+        case "SENT_REQUEST_TO_ADD_FRIEND" : return contactNotification.sentRequestToAddFriend(notification.creator?.name)
       }
   }
 }

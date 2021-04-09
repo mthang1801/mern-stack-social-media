@@ -4,7 +4,7 @@ export const schemaQuery = gql`
   type Query {
     users : [User!]!    
     fetchCurrentUser : User!
-    fetchPersonalUser(slug : String!) : User
+    fetchPersonalUser(slug : String!) : User!
     fetchPosts(userId: ID,skip: Int, limit: Int) : [Post!]!    
     fetchComments(postId: ID!, except : [ID!], skip: Int, limit: Int) : [Comment!]
     fetchResponses(commentId : ID!, skip : Int, limit: Int) : [Response!]

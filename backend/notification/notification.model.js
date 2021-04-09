@@ -26,9 +26,13 @@ const NotificationSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "posts",
       },
-      user: {
+      sender: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
+      },
+      receiver :{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "users"
       },
       response: {
         type: mongoose.Schema.Types.ObjectId,

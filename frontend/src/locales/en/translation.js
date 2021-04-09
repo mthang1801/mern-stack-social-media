@@ -3,7 +3,7 @@ import {
   FaHome,
   FaUserFriends,
   FaShopify,
-  FaGlobeAmericas,  
+  FaGlobeAmericas,
 } from "react-icons/fa";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { ImNewspaper } from "react-icons/im";
@@ -19,7 +19,7 @@ import { CgMoreO } from "react-icons/cg";
 import { MdCardMembership, MdInsertEmoticon } from "react-icons/md";
 import { BsChatDots } from "react-icons/bs";
 import { RiContactsBook2Line } from "react-icons/ri";
-import { BiLockAlt,BiLike, BiCommentDetail,BiShareAlt } from "react-icons/bi";
+import { BiLockAlt, BiLike, BiCommentDetail, BiShareAlt } from "react-icons/bi";
 
 export const en = {
   translation: {
@@ -168,11 +168,20 @@ export const en = {
       postCreated: "has just posted a new status.",
       sentRequestToAddFriend: "send you a request to add friend",
       acceptRequestToAddFriend: "has accepted your request to add friend.",
-      postMentioned: (creatorName, shortenText) =>
-        `<strong>${creatorName}</strong> has mentioned you in post <strong>${
-          shortenText ? shortenText.slice(0, 50) + "..." : ""
-        }</strong>`,
-      commentMentioned: (creatorName, shortenText) =>
+      post: {
+        postMentioned: (creatorName, shortenText) =>
+          `<strong>${creatorName}</strong> has mentioned you in post <strong>${
+            shortenText ? shortenText.slice(0, 50) + "..." : ""
+          }</strong>`,
+        
+        likePost: (creatorName, shortenText) =>
+          `<strong>${creatorName}</strong> Liked your post <strong>${
+            shortenText ? shortenText.slice(0, 50) + "..." : ""
+          }</strong>`,
+        
+      },
+      comment : {
+        commentMentioned: (creatorName, shortenText) =>
         `<strong>${creatorName}</strong> has mentioned you in his comment`,
       commentCreated: (creatorName, shortenText) =>
         `<strong>${creatorName}</strong> has commented in your post <strong>${
@@ -182,11 +191,9 @@ export const en = {
         `<strong>${creatorName}</strong> liked your comment <strong>${
           shortenText ? shortenText.slice(0, 50) + "..." : ""
         }</strong>`,
-      likePost: (creatorName, shortenText) =>
-        `<strong>${creatorName}</strong> Liked your post <strong>${
-          shortenText ? shortenText.slice(0, 50) + "..." : ""
-        }</strong>`,
-      responseCreated: (creatorName, postShortenText, commentShortenText) =>
+      },
+      response : {
+        responseCreated: (creatorName, postShortenText, commentShortenText) =>
         `<strong>${creatorName}</strong> has responsed at comment ${
           commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
         } in the post <strong>${
@@ -204,6 +211,10 @@ export const en = {
         } in the post <strong>${
           postShortenText ? postShortenText.slice(0, 50) + "..." : ""
         }</strong>`,
+      },
+      contact: {
+        sentRequestToAddFriend : (senderName) => `<strong>${senderName}</strong> sent to you an invitation to make friend`
+      },
     },
     greeting: {
       welcome: "Welcome to Pul.com",

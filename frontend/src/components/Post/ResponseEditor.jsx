@@ -22,15 +22,13 @@ import {
 } from "./PostEditor/styles/PostEditorBody.styles";
 import {
   CommentInput,
-  CommentControls,
-  InputImage,
+  CommentControls,  
 } from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
 import { CREATE_RESPONSE } from "../../apollo/operations/mutations/post/createResponse";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import shortid from "shortid";
-const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
+const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFocus }) => {
   const [editorState, setEditorState] = useState(() =>
     comment.author._id === user._id || !dataResponse
       ? EditorState.createEmpty()
@@ -40,22 +38,20 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
   useEffect(() => {
     let timer;
     if (focus) {
-      console.log(comment.author._id);
-      console.log(user._id)
       if (timer) {
         clearTimeout(timer);
       }
       timer = setTimeout(() => {
         const rawData = convertToRaw(editorState.getCurrentContent());
-        const parseDataResponse = JSON.parse(dataResponse);
-        
+        if(!dataResponse) return ;
+        const parseDataResponse = JSON.parse(dataResponse);        
         if (
           rawData.blocks[0].text.indexOf(parseDataResponse.blocks[0].text) ===
             -1 &&
           rawData.blocks[0].text
             .toLowerCase()
             .indexOf(user.name.toLowerCase()) === -1 && 
-            comment.author._id !== user._id
+            response.author._id !== user._id
         ) {
           parseDataResponse.blocks[0] = {
             ...parseDataResponse.blocks[0],
@@ -75,7 +71,7 @@ const CommentEditor = ({ comment, user, dataResponse, focus, removeFocus }) => {
         }
       }, 66);
     }
-  }, [focus, editorState]);
+  }, [focus, editorState, response,dataResponse]);
 
   const [openMention, setOpenMention] = useState(false);
   const [suggestions, setSuggestions] = useState([]);

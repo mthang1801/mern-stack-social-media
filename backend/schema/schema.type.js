@@ -10,6 +10,7 @@ export const schemaType = gql`
     password: String
     friends: [String!]!
     posts: [Post!]!
+    countPosts : Int
     avatar: String
     comments: [Comment!]!
     responses: [Response!]
@@ -96,7 +97,8 @@ export const schemaType = gql`
 
   type NotificationFieldIdentity {
     post: Post
-    user: User
+    sender : User
+    receiver : User
     comment: Comment
     response: Response
   }
@@ -201,8 +203,6 @@ export const schemaType = gql`
     response : Response
     notification: Notification    
   }
-
-
 
   type MessagesResult {
     messages: [PersonalChat!]

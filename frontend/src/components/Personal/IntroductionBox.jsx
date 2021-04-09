@@ -1,5 +1,5 @@
 import React from 'react'
-import {BoxWrapper, WorkList, Introduce, Website} from "./IntroductionBox.styles"
+import {BoxWrapper, WorkList, Introduce, Website} from "./styles/IntroductionBox.styles"
 import {useQuery} from "@apollo/client"
 import {GET_CURRENT_PERSONAL_USER, GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
 import {useThemeUI} from "theme-ui"

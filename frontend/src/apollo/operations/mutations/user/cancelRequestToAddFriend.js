@@ -6,20 +6,16 @@ export const CANCEL_REQUEST_TO_ADD_FRIEND = gql`
       sender {
         _id
         slug
-        following
-        followed
-        sentRequestToAddFriend
-        receivedRequestToAddFriend
+        following        
         friends
+        sentRequestToAddFriend                
       }
       receiver {
         _id
-        slug
-        following
-        followed
-        sentRequestToAddFriend
-        receivedRequestToAddFriend
+        slug        
+        followed        
         friends
+        receivedRequestToAddFriend        
       }
     }
   }

@@ -24,7 +24,16 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 
 const server = new ApolloServer({
   schema: schemas,
-  context: ({ req }) => ({req})
+  context: ({ req }) => ({req}),
+  formatError: err => {
+    if(!err.statusCode){
+      err.statusCode = 500; 
+    }
+    if(!err.message){
+      err.message = "Something went wrong from server";
+    }
+    return {statusCode : err.statusCode , message: err.message}
+  }
 });
 server.applyMiddleware({ app });
 const httpServer = createServer(app);

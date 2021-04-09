@@ -75,8 +75,7 @@ export const responseControllers = {
               creator: currentUserId,
               receiver: mentionId,
               "fieldIdentity.post": post._id,
-              "fieldIdentity.comment": commentId,
-              "fieldIdentity.response" : newResponse._id
+              "fieldIdentity.comment": commentId,              
             },
             { updatedAt: Date.now(), hasSeen: false },
             { new: true }
@@ -139,8 +138,7 @@ export const responseControllers = {
             field: fields.RESPONSE,
             content: contents.CREATED,
             "fieldIdentity.post": post._id,
-            "fieldIdentity.comment": commentId,
-            "fieldIdentity.response" : newResponse._id,
+            "fieldIdentity.comment": commentId,           
             receiver: comment.author,
           },
           { updatedAt: Date.now(), hasSeen: false },
@@ -305,8 +303,7 @@ export const responseControllers = {
         content: contents.LIKED,
         fieldIdentity: {
           post: response.post,
-          comment: response.comment,
-          response: response._id,
+          comment: response.comment,          
         },
         creator: currentUserId,
         receiver: response.author,

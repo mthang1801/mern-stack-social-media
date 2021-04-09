@@ -25,8 +25,7 @@ const CommentCard = ({
 }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
-  const { controls } = i18n.store.data[lang].translation.comment;
-
+  const { controls } = i18n.store.data[lang].translation.comment;  
   return (
     <CommentContainer>
       <UserAvatar>

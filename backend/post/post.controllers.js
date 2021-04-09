@@ -3,7 +3,7 @@ import { User } from "../user/user.model";
 import { Post } from "../post/post.model";
 import { Notification } from "../notification/notification.model";
 import mongoose from "mongoose";
-import { statusEnum } from "./post.model";
+import { POST_STATUS_ENUM } from "./post.model";
 import {
   UserInputError,
   AuthenticationError,
@@ -101,7 +101,7 @@ export const postControllers = {
     if (!currentUser) {
       throw new AuthenticationError("User not found");
     }
-    if (!status || !statusEnum.includes(status)) {
+    if (!status || !POST_STATUS_ENUM[status]) {
       throw new UserInputError(
         "Mentions has item not match with User's friends"
       );

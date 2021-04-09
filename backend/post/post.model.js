@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-export const statusEnum = ["public", "private", "friends", "PUBLIC", "PRIVATE", "FRIENDS"]
+export const POST_STATUS_ENUM = {PUBLIC : "PUBLIC", PRIVATE :"PRIVATE", FRIENDS : "FRIENDS"}
 const PostSchema = new mongoose.Schema(
   {   
     text: {
@@ -69,7 +69,7 @@ const PostSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: statusEnum,
+      enum: Object.keys(POST_STATUS_ENUM),
       default: "PUBLIC",
     },
   },

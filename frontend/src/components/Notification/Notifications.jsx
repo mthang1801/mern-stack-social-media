@@ -4,14 +4,14 @@ import styled from "styled-components";
 import { useQuery } from "@apollo/client";
 import { GET_NOTIFICATIONS } from "../../apollo/operations/queries/cache";
 import LazyLoad from "react-lazyload";
-import useNotificationsSubscription from "../../hooks/useNotificationsSubscription"
+import useNotificationsPostSubscription from "../../hooks/useNotificationsPostSubscription"
 const Notifications = () => {
   const {
     data: { notifications },
   } = useQuery(GET_NOTIFICATIONS, {
     fetchPolicy: "cache-first",
   });
-  useNotificationsSubscription();
+  useNotificationsPostSubscription();
 
 
   if (!notifications.length)

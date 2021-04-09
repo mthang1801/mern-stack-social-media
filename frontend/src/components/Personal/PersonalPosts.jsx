@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Wrapper, LeftSide, RightSide } from "./PersonalPosts.styles";
+import { Wrapper, LeftSide, RightSide } from "./styles/PersonalPosts.styles";
 import Posts from "../Post/Posts";
 import { useQuery } from "@apollo/client";
 import {

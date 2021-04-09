@@ -18,7 +18,7 @@ export const schemaMutation = gql`
     addContact(receiverId: ID!, message: String!): Boolean!
     acceptContact(senderId: ID!): Boolean!
 
-    sendRequestToAddFriend(userId: ID!): UsersContact!
+    sendRequestToAddFriend(receiverId: ID!): UsersContact!
     acceptRequestToAddFriend(senderId: ID!): UsersContact!
     removeFriend(friendId: ID!): UsersContact!
     rejectRequestToAddFriend(senderId: ID!): UsersContact!

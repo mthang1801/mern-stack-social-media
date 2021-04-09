@@ -7,7 +7,7 @@ import {
 } from "../apollo/operations/queries/notification";
 import { cacheMutations } from "../apollo/operations/mutations";
 import subscriptions from "../apollo/operations/subscriptions";
-const useNotificationsSubscription = () => {
+const useNotificationsPostSubscription = () => {
   const { subscribeToMore: subscribeToMoreNotifications } = useQuery(
     FETCH_NOTIFICATIONS,
     {
@@ -81,14 +81,15 @@ const useNotificationsSubscription = () => {
   ) => {
     setLatestNotification(newNotification);
     setNewNotifications(newNotification._id);
-
     if (sender && receiver) {
       setCurrentUser({
+        ...user,
         ...receiver,
       });
 
       if (currentPersonalUser && currentPersonalUser._id === sender._id) {
         setCurrentPersonalUser({
+          ...currentPersonalUser,
           ...sender,
         });
       }
@@ -105,24 +106,41 @@ const useNotificationsSubscription = () => {
     }
   };
 
-  const updatedRemoveNotification = (removedNotification) => {
+  const updatedRemoveNotification = (removedNotification, sender, receiver) => {
     if (latestNotification?._id === removedNotification._id) {
       setLatestNotification(null);
     }
     removeNewNotification(removedNotification._id);
     decreaseNumberNotificationsUnseen();
+    removeNotificationItemFromNotificationsList(removedNotification);
+    if (sender && receiver) {
+      setCurrentUser({
+        ...user,
+        ...receiver,
+      });
+      if (currentPersonalUser && currentPersonalUser._id === sender._id) {
+        setCurrentPersonalUser({
+          ...currentPersonalUser,
+          ...sender,
+        });
+      }
+      return;
+    }
     setCurrentUser({
       ...user,
       notifications: [
         ...notifications.filter((_id) => _id !== removedNotification._id),
       ],
     });
-    removeNotificationItemFromNotificationsList(removedNotification);
   };
 
+  console.log(user);
+  console.log(currentPersonalUser);
+
   useEffect(() => {
-    let unsubscribeMentionUsersInPost,
-      unsubscribeRequestAddFriend,
+    let unsubscribeRequestAddFriend,
+      unsubscribeCancelRequestToAddFriend,
+      unsubscribeMentionUsersInPost,
       unsubscribeAcceptRequestAddFriend,
       unsubscribeUserLikePost,
       unsubscribeUserRemoveLikePost,
@@ -135,6 +153,47 @@ const useNotificationsSubscription = () => {
       unsubscribeUserLikeResponse,
       unsubscribeUserRemoveLikeResponse;
     if (subscribeToMoreNotifications && user) {
+      //#region Contact
+      unsubscribeRequestAddFriend = subscribeToMoreNotifications({
+        document:
+          subscriptions.notificationSubscription
+            .SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        variables: { userId: user._id },
+        updateQuery: (_, { subscriptionData }) => {
+          if (subscriptionData) {
+            const {
+              sentRequestToAddFriendSubscription: notification,
+            } = subscriptionData.data;
+            const { receiver, sender } = notification?.fieldIdentity;
+            if (sender && receiver) {
+              updatedAddNotification(notification, sender, receiver);
+            }
+          }
+        },
+      });
+
+      unsubscribeCancelRequestToAddFriend = subscribeToMoreNotifications({
+        document:
+          subscriptions.notificationSubscription
+            .CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        variables: { userId: user._id },
+        updateQuery: (_, { subscriptionData }) => {
+          if (subscriptionData) {
+            const {
+              cancelRequestToAddFriendSubscription: notification,
+            } = subscriptionData.data;
+            console.log(subscriptionData)
+            const { sender, receiver } = notification.fieldIdentity;
+            if (sender && receiver) {
+              updatedRemoveNotification(notification, sender, receiver);
+            }
+          }
+        },
+      });
+
+      //#endregion
+
+      //#region Post
       unsubscribeMentionUsersInPost = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription.NOTIFY_MENTIONED_USERS_IN_POST,
@@ -186,27 +245,7 @@ const useNotificationsSubscription = () => {
           }
         },
       });
-      unsubscribeRequestAddFriend = subscribeToMoreNotifications({
-        document:
-          subscriptions.notificationSubscription
-            .NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND,
-        variables: { userId: user._id },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData) return prev;
-          const {
-            notification: newNotification,
-            receiver,
-            sender,
-          } = subscriptionData.data.notifyReceivedRequestToAddFriend;
 
-          // push new sender to received requests to add friend cache
-          setReceivedRequestsToAddFriend([
-            { ...sender },
-            ...receivedRequestsToAddFriend,
-          ]);
-          updatedAddNotification(newNotification, sender, receiver);
-        },
-      });
       unsubscribeAcceptRequestAddFriend = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription
@@ -372,9 +411,16 @@ const useNotificationsSubscription = () => {
           }
         },
       });
+      //#endregion
     }
 
     return () => {
+      if (unsubscribeRequestAddFriend) {
+        unsubscribeRequestAddFriend();
+      }
+      if (unsubscribeCancelRequestToAddFriend) {
+        unsubscribeCancelRequestToAddFriend();
+      }
       if (unsubscribeMentionUsersInPost) {
         unsubscribeMentionUsersInPost();
       }
@@ -383,9 +429,6 @@ const useNotificationsSubscription = () => {
       }
       if (unsubscribeUserRemoveLikePost) {
         unsubscribeUserRemoveLikePost();
-      }
-      if (unsubscribeRequestAddFriend) {
-        unsubscribeRequestAddFriend();
       }
       if (unsubscribeAcceptRequestAddFriend) {
         unsubscribeAcceptRequestAddFriend();
@@ -424,4 +467,4 @@ const useNotificationsSubscription = () => {
   ]);
 };
 
-export default useNotificationsSubscription;
+export default useNotificationsPostSubscription;

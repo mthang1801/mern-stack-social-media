@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import { FETCH_CURRENT_USER } from "../apollo/operations/queries/user";
 import { cacheMutations } from "../apollo/operations/mutations/cache";
 import {useQuery} from "@apollo/client"
@@ -7,19 +7,16 @@ import {GET_CONTACT_CACHE_DATA} from "../apollo/operations/queries/cache"
 const useContactSubscription = () => {
   const {data : {user,receivedRequestsToAddFriend,currentPersonalUser,friends}} = useQuery(GET_CONTACT_CACHE_DATA)
   const {setReceivedRequestsToAddFriend, setCurrentUser, setCurrentPersonalUser, setFriends} = cacheMutations
-  const {
-    refetch: fetchCurrentUser,
+  const {    
     subscribeToMore: subscribeUser,
   } = useQuery(FETCH_CURRENT_USER, { skip: true });
-
+  
   //function to handle when subscription called
   const updateSubscriptionOnChange = (sender, receiver) => {
     setCurrentUser({
       ...user,
-      friends: [...receiver.friends],
-      following: [...receiver.following],
-      followed: [...receiver.followed],
-      sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
+      friends: [...receiver.friends],     
+      followed: [...receiver.followed],      
       receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
     });
     if (
@@ -29,18 +26,11 @@ const useContactSubscription = () => {
       setCurrentPersonalUser({
         ...currentPersonalUser,
         friends: [...sender.friends],
-        following: [...sender.following],
-        followed: [...sender.followed],
-        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-        receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
+        following: [...sender.following],        
+        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],        
       });
     }
   };
-  useEffect(() => {
-    fetchCurrentUser();
-    return () => fetchCurrentUser();
-  }, [fetchCurrentUser]);
-
   useEffect(() => {
     let unsubscribeRejectRquestToAddFriend,
       unsubscribeCancelRequestToAddFriend,
@@ -108,6 +98,7 @@ const useContactSubscription = () => {
       }
     };
   }, [subscribeUser, user,receivedRequestsToAddFriend, friends]);
+
 };
 
 export default useContactSubscription;

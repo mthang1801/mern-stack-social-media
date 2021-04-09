@@ -42,7 +42,7 @@ export const userResolvers = {
         args.limit || +process.env.CONTACT_USERS_PER_PAGE
       );
     },
-    searchFriends : (_, args, {req}, info) => userController.searchFriends(req, args.search)
+    searchFriends: (_, args, { req }, info) => userController.searchFriends(req, args.search)
   },
   Mutation: {
     createUser: (_, args, ctx, info) => {
@@ -51,9 +51,9 @@ export const userResolvers = {
     sendRequestToAddFriend: (_, args, { req }, info) => {
       return userController.sendRequestToAddFriend(
         req,
-        args.userId,
+        args.receiverId,
         pubsub,
-        subscriptionActions.NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND
+        subscriptionActions.SEND_REQUEST_TO_ADD_FRIEND
       );
     },
     rejectRequestToAddFriend: (_, args, { req }, info) => {
@@ -93,12 +93,24 @@ export const userResolvers = {
         pubsub,
         subscriptionActions.REMOVE_FRIEND
       );
-    },    
+    },
   },
   User: {
     password: (_, args, ctx, info) => userController.hidePassword(),
   },
   Subscription: {
+    sentRequestToAddFriendSubscription: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(subscriptionActions.SEND_REQUEST_TO_ADD_FRIEND),
+        (payload, { userId }) => payload.sentRequestToAddFriendSubscription.receiver.toString() === userId.toString()
+      )
+    },
+    cancelRequestToAddFriendSubscription :{
+      subscribe : withFilter(
+        () => pubsub.asyncIterator(subscriptionActions.CANCEL_REQUEST_TO_ADD_FRIEND), 
+        (payload, {userId}) => payload.cancelRequestToAddFriendSubscription.receiver.toString() === userId.toString()
+      )
+    },
     notifyReceivedRequestToAddFriend: {
       subscribe: withFilter(
         () =>
@@ -127,20 +139,7 @@ export const userResolvers = {
         }
       ),
     },
-    cancelRequestToAddFriendSubscription: {
-      subscribe: withFilter(
-        () =>
-          pubsub.asyncIterator(
-            subscriptionActions.CANCEL_REQUEST_TO_ADD_FRIEND
-          ),
-        (payload, { userId }) => {
-          return (
-            payload.cancelRequestToAddFriendSubscription.receiver._id.toString() ===
-            userId.toString()
-          );
-        }
-      ),
-    },
+  
     notifyAcceptRequestToAddFriend: {
       subscribe: withFilter(
         () =>

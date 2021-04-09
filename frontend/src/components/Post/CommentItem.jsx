@@ -50,7 +50,7 @@ const CommentItem = ({ comment, user }) => {
   const [RemoveLikeComment] = useMutation(REMOVE_LIKE_COMMENT);
   const [removeResponse] = useMutation(REMOVE_RESPONSE)
   const { refetch: fetchResponses } = useQuery(FETCH_RESPONSES, { skip: true });
-  
+  const [response, setResponse] = useState(comment);
   const onClickRemoveComment = () => {
     setDialog({
       agree: false,
@@ -96,7 +96,7 @@ const CommentItem = ({ comment, user }) => {
       })
       .catch((err) => console.log(err));
   };
-  const onClickResponseComment = useCallback(async (data) => {
+  const onClickResponseComment = useCallback(async (data) => {    
     if(data){
       setDataResponse(
         `{"blocks":[{"key":"${shortid.generate()}","text":"${
@@ -109,6 +109,7 @@ const CommentItem = ({ comment, user }) => {
           data.author.avatar
         }","slug":"${data.author.slug}"}}}}}`
       );
+      setResponse(data);
     }
     
     if (comment.responses.length && !comment.responsesData?.length) {
@@ -159,7 +160,7 @@ const CommentItem = ({ comment, user }) => {
         {comment.responsesData && (
           <ResponsesComponent>
             <Responses
-              responses={comment.responsesData}
+              responses={comment.responsesData}              
               user={user}
               onClickResponse={onClickResponseComment}
             />
@@ -178,6 +179,7 @@ const CommentItem = ({ comment, user }) => {
             <Response>
               <ResponseEditor
                 comment={comment}
+                response={response}
                 user={user}
                 dataResponse={dataResponse}
                 focus={focusResponseEditor}

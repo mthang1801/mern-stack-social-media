@@ -13,17 +13,13 @@ import { userMutations } from "../../apollo/operations/mutations";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import Button from "../Controls/ButtonDefaultCircle";
 import { useQuery, useMutation } from "@apollo/client";
-import {
-  GET_CURRENT_PERSONAL_USER,
-  GET_CURRENT_USER,  
-  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
-} from "../../apollo/operations/queries/cache";
+import { GET_PERSONAL_USER_CACHE_DATA } from "../../apollo/operations/queries/cache";
 import { useThemeUI } from "theme-ui";
 import {
   PersonalContactContainer,
   ResponseRequests,
   DropdownResponseRequest,
-} from "./PersonalHeadingContact.styles";
+} from "./styles/PersonalHeadingContact.styles";
 const PersonalContact = () => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
@@ -43,23 +39,11 @@ const PersonalContact = () => {
     userMutations.ACCEPT_REQUEST_TO_ADD_FRIEND
   );
   const [removeFriend] = useMutation(userMutations.REMOVE_FRIEND);
-  const {
-    setCurrentUser,    
-    setCurrentPersonalUser,
-  } = cacheMutations;
+  const { setCurrentUser, setCurrentPersonalUser } = cacheMutations;
   //user Query
   const {
-    data: { currentPersonalUser },
-  } = useQuery(GET_CURRENT_PERSONAL_USER);
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER);
-
-  const {
-    data: { receivedRequestsToAddFriend },
-  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
-    fetchPolicy: "cache-first",
-  });
+    data: { user, currentPersonalUser },
+  } = useQuery(GET_PERSONAL_USER_CACHE_DATA);
 
   //color theme
   const { colorMode } = useThemeUI();
@@ -72,17 +56,13 @@ const PersonalContact = () => {
       ...user,
       friends: [...sender.friends],
       following: [...sender.following],
-      followed: [...sender.followed],
       sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-      receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
     });
-    
+
     setCurrentPersonalUser({
       ...currentPersonalUser,
       friends: [...receiver.friends],
-      following: [...receiver.following],
       followed: [...receiver.followed],
-      sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
       receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
     });
   };
@@ -121,8 +101,8 @@ const PersonalContact = () => {
 
   // Handle add friend
   const onSendRequestToAddFriend = (e) => {
-    sendRequestToAddFriend({ variables: { userId: currentPersonalUser._id } })
-      .then(({ data }) => {
+    sendRequestToAddFriend({ variables: { receiverId: currentPersonalUser._id } })
+      .then(({ data }) => {        
         const { sender, receiver } = data.sendRequestToAddFriend;
         updateMutationOnChange(sender, receiver);
       })
@@ -145,6 +125,7 @@ const PersonalContact = () => {
     cancelRequestToAddFriend({
       variables: { receiverId: currentPersonalUser._id },
     }).then(({ data }) => {
+      console.log(data);
       const { sender, receiver } = data.cancelRequestToAddFriend;
       updateMutationOnChange(sender, receiver);
     });

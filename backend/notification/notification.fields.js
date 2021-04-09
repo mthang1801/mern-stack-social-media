@@ -3,5 +3,6 @@ export const fields = {
   USER : "USER",
   COMMENT : "COMMENT",
   RESPONSE : "RESPONSE",
-  CHAT : "CHAT"  
+  CHAT : "CHAT"  ,
+  CONTACT : "CONTACT"
 }

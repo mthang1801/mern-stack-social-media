@@ -1,36 +1,43 @@
-import {gql} from "@apollo/client"
+import { gql } from "@apollo/client";
 
 export const FETCH_PERSONAL_USER = gql`
-query FetchPersonalUser($slug : String!){
-  fetchPersonalUser(slug :$slug){
-    _id
-    name
-    slug
-    nickname
-    email    
-    friends
-    avatar  
-    following
-    followed
-    sentRequestToAddFriend 
-    receivedRequestToAddFriend 
-    posts{
+  query FetchPersonalUser($slug: String!) {
+    fetchPersonalUser(slug: $slug) {
       _id
-      text
-      mentions {
+      name
+      nickname
+      slug
+      email
+      friends
+      notifications
+      avatar
+      posts {
         _id
-        name
-        email
-      }           
-      files{
-        filename
-        mimetype
-        encoding
+        text
+        shortenText
+        mentions {
+          _id
+          name
+          avatar
+          slug
+        }
+        author {
+          _id
+          name
+          slug
+          avatar
+        }
+        comments
+        responses
+        likes
+        status
+        createdAt
       }
-      status
-      createdAt
-    }    
-     
+      countPosts
+      following
+      followed
+      sentRequestToAddFriend
+      receivedRequestToAddFriend
+    }
   }
-}
-`
+`;
