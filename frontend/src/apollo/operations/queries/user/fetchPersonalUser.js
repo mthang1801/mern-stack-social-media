@@ -11,29 +11,7 @@ export const FETCH_PERSONAL_USER = gql`
       friends
       notifications
       avatar
-      posts {
-        _id
-        text
-        shortenText
-        mentions {
-          _id
-          name
-          avatar
-          slug
-        }
-        author {
-          _id
-          name
-          slug
-          avatar
-        }
-        comments
-        responses
-        likes
-        status
-        createdAt
-      }
-      countPosts
+      posts       
       following
       followed
       sentRequestToAddFriend

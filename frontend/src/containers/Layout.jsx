@@ -8,7 +8,7 @@ import { GET_TOGGLE_BUTTON_MENU } from "../apollo/operations/queries/cache";
 import useMenuList from "../components/Menu/useMenuList";
 import { useThemeUI } from "theme-ui";
 import AlertDialogSlide from "../components/UI/AlertDialogSlide";
-
+import LazyLoad from "react-lazyload"
 
 const Layout = ({ children, className, ...props }) => {
   const getToggleButtonMenu = useQuery(GET_TOGGLE_BUTTON_MENU);
@@ -27,7 +27,10 @@ const Layout = ({ children, className, ...props }) => {
         <MenuList list={menu} title="Menu" />
         <MenuList list={explores} title="Explores" />
       </div>
-      <div className="body">{children}</div>
+      
+      <div className="body"><LazyLoad>{children}</LazyLoad></div>
+      
+     
     </div>
   );
 };

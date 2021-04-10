@@ -185,76 +185,12 @@ export default createGlobalStyle`
   h6 > a {
     text-decoration: none;    
   }
-  p{
-    line-height: var(--lineHeight-relaxed);
-    --baseline-multiplier: 0.179;
-    --x-height-multiplier: 0.35;
-    margin: var(--spacing-0) var(--spacing-0) var(--spacing-1) var(--spacing-0);
-    padding: var(--spacing-0);
-  }
+  
 
   span:focus,
   div:focus,
   p:focus{
     outline : none !important;
-  }
-
-  ul,
-  ol {   
-    margin-right: var(--spacing-0);
-    padding: var(--spacing-0);
-    margin-bottom: var(--spacing-8);
-    list-style-position: outside;
-    list-style-image: none;
-  }
-  ul li,
-  ol li {
-    padding-left: var(--spacing-0);    
-  }
-  
-  li *:last-child {
-    margin-bottom: var(--spacing-0);
-  }
-  
-  li > ul {
-    margin-left: var(--spacing-8);
-    margin-top: calc(var(--spacing-8) / 2);
-  }
-
-  blockquote {
-    border-left: 3px solid var(--success);
-    font-family: Georgia, Times, "Times New Roman", serif;   
-    font-style: italic;
-    line-height: 1.6em;        
-    margin-left: calc(-1 * var(--spacing-6));
-    margin-right: var(--spacing-8);
-    padding: var(--spacing-4) var(--spacing-0) var(--spacing-4) var(--spacing-6);   
-    font-size: var(--fontSize-2);    
-    margin-bottom: var(--spacing-8);
-    z-index: 0 ;    
-  }
-  blockquote code{
-    font-size : 1em;
-  }
-  
-  blockquote > :last-child {
-    margin-bottom: var(--spacing-0);
-  }
-  
-  blockquote > ul,
-  blockquote > ol {
-    list-style-position: inside;
-  }
-
-  table {
-    width: 100%;
-    margin-bottom: var(--spacing-8);
-    border-collapse: collapse;
-    border-spacing: 0.25rem;
-  }
-  
-  table thead tr th {
-    border-bottom: 1px solid var(--color-accent);
   }
 
   a{
@@ -264,17 +200,6 @@ export default createGlobalStyle`
     &:hover{             
       opacity : 0.85;
     }    
-  }
-
-  textarea{
-    width : 100%;
-    background-color : ${({ theme }) =>
-      theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
-    border:  none ;
-    outline : none  ;
-    color : inherit ; 
-    font-family : var(--fontFamily);
-    font-size : 1em;
   }
 
   small{

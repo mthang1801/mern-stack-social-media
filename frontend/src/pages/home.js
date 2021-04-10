@@ -16,6 +16,7 @@ import {
 } from "./styles/pages.styles.js";
 import Posts from "../components/Post/Posts";
 import useHomePostsSubscription from "../hooks/useHomePostsSubscription"
+import LazyLoad from "react-lazyload"
 const Home = () => {
   const {
     data: { user, openFriendsList, posts },
@@ -91,8 +92,8 @@ const Home = () => {
       <MainBody>
         <MainContent>
           <MainContentLeftSide>
-            {user && <PostEditor user={user} />}
-            {posts.length ? <Posts posts={posts} /> : null}
+            {user && <LazyLoad once><PostEditor user={user} /></LazyLoad>}
+            {posts.length ? <LazyLoad><Posts posts={posts} /></LazyLoad> : null}
           </MainContentLeftSide>
           <MainContentRightSide>
             <HomeSidebar user={user} />

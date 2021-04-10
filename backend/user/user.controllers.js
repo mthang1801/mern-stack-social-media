@@ -68,61 +68,24 @@ export const userController = {
     };
   },
   fetchCurrentUser: async (req) => {
+    console.time("fetch Current User")
     const userId = getAuthUser(req, false);
     const user = await User.findById(userId);
 
     if (!user) {
       return null;
     }
+    console.timeEnd("fetch Current User");
     return user;
   },
-  fetchPersonalUser: async (req, slug) => {
-    const currentUserId = getAuthUser(req, false);
-    const currentUser = await User.findById(currentUserId);
-    if (currentUser.slug === slug) {
-      const countPosts = currentUser.posts.length;
-      await currentUser
-        .populate({
-          path: "posts",
-          populate: [
-            { path: "mentions", select: "name slug avatar" },
-            { path: "author", select: "name slug avatar" },
-          ],
-          options: { skip: 0, limit: +process.env.POSTS_PER_PAGE },
-        })
-        .execPopulate();
-      const userResult = { ...currentUser._doc, countPosts };
-      console.log(userResult);
-      return userResult;
+  fetchPersonalUser: async (req, slug) => {    
+    try {      
+    const userBySlug = await User.findOne({slug}, {password : 0});        
+    return userBySlug;
+    } catch (error) {
+      console.log(error)
+      raiseError(error.message);
     }
-    const user = await User.findOne({ slug }).populate({
-      path: "posts",
-      match: {
-        $or: [
-          { friends: currentUserId, status: POST_STATUS_ENUM.FRIENDS },
-          { status: POST_STATUS_ENUM.PUBLIC },
-        ],
-      },
-      populate: [
-        { path: "mentions", select: "name slug avatar" },
-        { path: "author", select: "name slug avatar" },
-      ],
-      options: { skip: 0, limit: +process.env.POSTS_PER_PAGE },
-    });
-    if (!user) {
-      const err = new Error("User Not found");
-      err.statusCode = 404;
-      throw err;
-    }
-    const countPosts = await Post.countDocuments({
-      author: user._id,
-      $or: [
-        { friends: currentUserId, status: POST_STATUS_ENUM.FRIENDS },
-        { status: POST_STATUS_ENUM.PUBLIC },
-      ],
-    });
-    const userResult = { ...user._doc, countPosts };
-    return userResult;
   },
   fetchListContact: async (req) => {
     const currentUserId = getAuthUser(req);

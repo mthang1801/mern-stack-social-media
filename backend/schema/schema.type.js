@@ -9,8 +9,7 @@ export const schemaType = gql`
     email: String!
     password: String
     friends: [String!]!
-    posts: [Post!]!
-    countPosts : Int
+    posts: [ID!]!    
     avatar: String
     comments: [Comment!]!
     responses: [Response!]

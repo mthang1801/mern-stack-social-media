@@ -11,23 +11,36 @@ import {
 } from "apollo-server-express";
 import { fields, contents } from "../notification";
 import decodeBase64 from "../utils/decodeBase64";
-
+import { raiseError } from "../utils/raiseError";
 export const postControllers = {
   fetchPosts: async (req, userId, skip, limit) => {
-    console.time("fetch Posts");
+    
     const currentUserId = getAuthUser(req, false);
     const currentUser = await User.findById(currentUserId);
+    console.log(userId, currentUserId, skip, limit);
     if (userId) {
-      const Posts = await Post.find({
-        $and: [
-          { author: userId },
-          {
-            $or: [
-              { status: "friends", friends: currentUserId },
-              { status: "public" },
-            ],
-          },
-        ],
+      if (userId !== currentUserId) {
+        return Post.find({
+          author: userId,
+          $or: [
+            { status: POST_STATUS_ENUM.FRIENDS, friends: currentUserId },
+            { status: POST_STATUS_ENUM.PUBLIC },
+          ],
+        })
+          .populate({
+            path: "mentions",
+            select: "name avatar slug isOnline offlinedAt",
+          })
+          .populate({
+            path: "author",
+            select: "name avatar slug isOnline offlinedAt",
+          })
+          .sort({ createdAt: -1 })
+          .skip(+skip)
+          .limit(+limit);        
+      }
+      return Post.find({
+        author: userId,
       })
         .populate({
           path: "mentions",
@@ -40,44 +53,43 @@ export const postControllers = {
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);
-      return Posts;
     }
-    if (currentUser) {
-      const friendsID = currentUser.friends;
-      console.log(friendsID)
-      const posts = await Post.find({
-        author: { $in: friendsID },
-        status: { $in: ["PUBLIC", "FRIENDS"] },
+    if (!currentUser) {
+      return [];
+    }
+    //otherwise, current user existed
+    const friendsID = currentUser.friends;
+    const posts = await Post.find({
+      author: { $in: friendsID },
+      status: { $in: ["PUBLIC", "FRIENDS"] },
+    })
+      .populate({
+        path: "author",
+        select: "name avatar slug isOnline offlinedAt",
       })
-        .populate({
-          path: "author",
-          select: "name avatar slug isOnline offlinedAt",
-        })
-        .populate({
-          path: "mentions",
-          select: "name avatar slug isOnline offlinedAt",
-        })
-        .sort({ createdAt: -1 })
-        .skip(+skip)
-        .limit(+limit);
-      const standardizedPosts = posts.map((post) => {
-        const _post = post._doc;
-        if (_post.files) {
-          let files = _post.files.map((file) => {
-            let _file = file._doc;
-            _file.data = `data:${file.mimetype};base64,${file.data.toString(
-              "base64"
-            )}`;
-            return { ..._file };
-          });
-          _post.files = files;
-        }
-        return { ..._post };
-      });
-      console.timeEnd("fetch Posts");
-      return standardizedPosts;
-    }
-    return [];
+      .populate({
+        path: "mentions",
+        select: "name avatar slug isOnline offlinedAt",
+      })
+      .sort({ createdAt: -1 })
+      .skip(+skip)
+      .limit(+limit);
+    const standardizedPosts = posts.map((post) => {
+      const _post = post._doc;
+      if (_post.files) {
+        let files = _post.files.map((file) => {
+          let _file = file._doc;
+          _file.data = `data:${file.mimetype};base64,${file.data.toString(
+            "base64"
+          )}`;
+          return { ..._file };
+        });
+        _post.files = files;
+      }
+      return { ..._post };
+    });
+    
+    return standardizedPosts;
   },
   createPost: async (req, data, pubsub, notifyMentionUsersInPost) => {
     const {

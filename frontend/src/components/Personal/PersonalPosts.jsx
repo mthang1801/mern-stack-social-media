@@ -1,92 +1,103 @@
 import React, { useEffect, useState } from "react";
 import { Wrapper, LeftSide, RightSide } from "./styles/PersonalPosts.styles";
 import Posts from "../Post/Posts";
+import PostEditor from "../Post/PostEditor/PostEditor";
 import { useQuery } from "@apollo/client";
-import {
-  GET_CURRENT_USER,
-  GET_CURRENT_PERSONAL_USER,
-  GET_PERSONAL_POSTS,
-} from "../../apollo/operations/queries/cache";
+import { GET_PERSONAL_USER_CACHE_DATA } from "../../apollo/operations/queries/cache";
 import { FETCH_POSTS } from "../../apollo/operations/queries/post";
 import IntroductionBox from "./IntroductionBox";
 import { cacheMutations } from "../../apollo/operations/mutations";
+import LazyLoad from "react-lazyload";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const PersonalPosts = () => {
   const [loadingMore, setLoadingMore] = useState(false);
+  const [postsData, setPostsData] = useState([]);
   const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+    data: { user, currentPersonalUser },
+  } = useQuery(GET_PERSONAL_USER_CACHE_DATA, { fetchPolicy: "cache-first" });
   const {
-    data: { currentPersonalUser },
-  } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { personalPosts },
-  } = useQuery(GET_PERSONAL_POSTS, { fetchPolicy: "cache-first" });
-
-  // const { refetch: fetchMorePosts } = useQuery(FETCH_POSTS, {
-  //   skip: true,
-  //   fetchPolicy: "cache-and-network",
-  // });
-  // const { setPersonalPosts } = cacheMutations;
-  useEffect(() => {
-    window.addEventListener("scroll", () => {
-      const docEl = document.documentElement;
-      if (docEl.clientHeight + docEl.scrollTop > docEl.scrollHeight * 0.75) {
-        setLoadingMore(true);
+    data: fetchedPostsData,
+    loading,
+    fetchMore: fetchMorePostsData,
+  } = useQuery(FETCH_POSTS, {
+    variables: {
+      userId: currentPersonalUser._id,
+      skip: 0,
+      limit: +process.env.REACT_APP_POSTS_PER_PAGE,
+    },
+    onCompleted: (data) => {
+      console.log(data);
+      if (data) {
+        setPostsData((prevPosts) => [...prevPosts, ...data.fetchPosts]);
       }
-    });
-    return () => {
-      window.removeEventListener("scroll", () => {
-        const docEl = document.documentElement;
-        if (docEl.clientHeight + docEl.scrollTop > docEl.scrollHeight * 0.75) {
+    },
+  });
+
+  useEffect(() => {
+    let isScrolling;
+    function trackUserScroll(e) {
+      clearTimeout(isScrolling);
+      isScrolling = setTimeout(() => {
+        const {
+          scrollHeight,
+          scrollTop,
+          clientHeight,
+        } = document.documentElement;
+        if (
+          scrollTop + clientHeight > 0.8 * scrollHeight &&
+          currentPersonalUser.posts.length > postsData.length
+        ) {
           setLoadingMore(true);
         }
-      });
+      }, 66);
+    }
+    window.addEventListener("scroll", trackUserScroll);
+    return () => {
+      window.removeEventListener("scroll", trackUserScroll);
+      if (isScrolling) {
+        clearTimeout(isScrolling);
+      }
     };
-  }, []);
+  });
 
-  // useEffect(() => {
-  //   let _mounted = true;
-  //   if (
-  //     loadingMore &&
-  //     currentPersonalUser &&
-  //     personalPosts[currentPersonalUser.slug] &&
-  //     fetchMorePosts
-  //   ) {
-  //     const skip = personalPosts[currentPersonalUser.slug].length;
-  //     const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
-  //     const userId = currentPersonalUser._id;
-  //     fetchMorePosts({ skip, limit, userId }).then(
-  //       ({ data: { fetchPosts } }) => {
-  //         if (_mounted) {
-  //           setPersonalPosts({
-  //             ...personalPosts,
-  //             [currentPersonalUser.slug]: [
-  //               ...personalPosts[currentPersonalUser.slug],
-  //               ...fetchPosts,
-  //             ],
-  //           });
-  //           setLoadingMore(false);
-  //         }
-  //       }
-  //     );
-  //   }
-  //   return () => (_mounted = false);
-  // }, [loadingMore, currentPersonalUser, personalPosts, fetchMorePosts]);
+  useEffect(() => {
+    if (loadingMore) {
+      const skip = postsData.length;
+      const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
+      fetchMorePostsData({
+        variables: {
+          userId: currentPersonalUser._id,
+          skip,
+          limit,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (fetchMoreResult) {
+            setPostsData((prevPosts) => [
+              ...prevPosts,
+              ...fetchMoreResult.fetchPosts,
+            ]);
+          }
+        },
+      }).then(() => setLoadingMore(false));
+    }
+  }, [loadingMore]);
+
+  if (!fetchedPostsData) return null;
+  if (loading) return <div>Loading...</div>;
   return (
     <Wrapper>
       <LeftSide>
         <IntroductionBox />
       </LeftSide>
-      <RightSide>        
-        {currentPersonalUser &&
-        personalPosts[currentPersonalUser.slug] &&
-        personalPosts[currentPersonalUser.slug].length ? (
-          <Posts posts={personalPosts[currentPersonalUser.slug]} />
+      <RightSide>
+        {user?._id === currentPersonalUser?._id && <PostEditor user={user} />}
+        {postsData.length && currentPersonalUser ? (
+          <Posts posts={postsData} />
         ) : null}
       </RightSide>
     </Wrapper>
   );
 };
 
-export default PersonalPosts;
+export default React.memo(PersonalPosts);

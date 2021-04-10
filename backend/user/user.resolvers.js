@@ -140,8 +140,7 @@ export const userResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.ACCEPT_REQUEST_TO_ADD_FRIEND
           ),
-        (payload, { userId }) =>{
-          console.log(JSON.stringify(payload, null, 4))
+        (payload, { userId }) =>{          
           return payload.acceptRequestToAddFriendSubscription.receiver.toString() ===
           userId.toString()
         }

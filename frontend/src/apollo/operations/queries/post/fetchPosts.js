@@ -5,6 +5,7 @@ export const FETCH_POSTS = gql`
     fetchPosts(userId : $userId, skip: $skip, limit : $limit) {
       _id
       text
+      rawText
       shortenText
       mentions {
         _id
