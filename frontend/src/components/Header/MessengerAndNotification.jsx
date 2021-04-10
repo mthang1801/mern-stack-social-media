@@ -21,8 +21,10 @@ const Control = () => {
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
   const [loadingNotificationsMore, setLoadingNotificationsMore] = useState(
     false
-  );
+  );  
+  const [boardHeight, setBoardHeight] = useState(0);
   const notificationRef = useRef(false);
+  const notificationBoardRef = useRef(0);
   const { setLatestNotification, setNotifications } = cacheMutations;
 
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
@@ -44,6 +46,7 @@ const Control = () => {
     return () =>
       window.removeEventListener("click", handleClickOutsideNotificationBoard);
   }, [notificationRef.current , openNotificationBoard]);
+
 
   const handleClickNotification = useCallback(async () => { 
     setLoadingNotificationsMore(false);
@@ -73,10 +76,16 @@ const Control = () => {
       );
     }
     return () => (_isMounted = false);
-  }, [loadingNotificationsMore]);
+  }, [loadingNotificationsMore]);  
 
+  useEffect(() => {
+    if(notificationBoardRef.current){      
+      console.log(notificationBoardRef.current.offsetHeight)
+      setBoardHeight(notificationBoardRef.current.offsetHeight)
+    }    
+  },[notificationBoardRef.current, openNotificationBoard])
   const onOpenNotificationBoard = useCallback(() => {
-    setOpenNotificationBoard(true);
+    setOpenNotificationBoard(true);    
   },[]);
 
   return (
@@ -92,7 +101,7 @@ const Control = () => {
           ) : null}
         </Button>
         {user && (
-          <NotificationBoard open={openNotificationBoard}>
+          <NotificationBoard  open={openNotificationBoard}>
             <Scrollbars
               autoHide
               autoHideTimeout={1000}

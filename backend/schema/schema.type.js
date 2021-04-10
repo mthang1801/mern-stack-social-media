@@ -91,8 +91,13 @@ export const schemaType = gql`
     receivers: [ID!]!
     receiver : ID! 
     isQuestion: Boolean!
+    questionType : QuestionType
     createdAt: String
     updatedAt : String
+  }
+
+  type QuestionType{
+    yesNoQuestion : Boolean
   }
 
   type NotificationFieldIdentity {
@@ -153,6 +158,7 @@ export const schemaType = gql`
   type UsersContact {
     sender: User!
     receiver: User!
+    notification : Notification
   }
 
   type ListContact {

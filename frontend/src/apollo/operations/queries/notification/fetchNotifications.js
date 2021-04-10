@@ -22,6 +22,9 @@ export const FETCH_NOTIFICATIONS = gql`
       }      
       url
       isQuestion
+      questionType{
+        yesNoQuestion
+      }
       createdAt
       updatedAt
     }

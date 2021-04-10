@@ -27,11 +27,11 @@ export const schemaSubscription = gql`
 
     sentRequestToAddFriendSubscription(userId : ID!) : Notification!
     cancelRequestToAddFriendSubscription(userId : ID!) : Notification!
-
+    rejectRequestToAddFriendSubscription(userId: ID!): UsersContact!    
 
     commentActions(postId: ID!): CommentSubscriptionPayload
     contactActions(userId: ID!): ContactSubscriptionPayload!
-    rejectRequestToAddFriendSubscription(userId: ID!): UsersContact!    
+    
     removeFriendSubscription(userId: ID!): UsersContact!    
 
     sentMessageChatSubscription(userId: ID!): ChatSubscriptionPayload!
@@ -48,12 +48,12 @@ export const schemaSubscription = gql`
 export const subscriptionActions = {
   SEND_REQUEST_TO_ADD_FRIEND : "SEND_REQUEST_TO_ADD_FRIEND",
   CANCEL_REQUEST_TO_ADD_FRIEND : "CANCEL_REQUEST_TO_ADD_FRIEND",
+  REJECT_REQUEST_TO_ADD_FRIEND: "REJECT_REQUEST_TO_ADD_FRIEND",  
+
   NOTIFY_POST_CREATED: "NOTIFY_POST_CREATED",
-  NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND:
-    "NOTIFY_RECEIVED_REQUEST_TO_ADD_FRIEND",
   NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND: "NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND",
   UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN: "UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN",
-  REJECT_REQUEST_TO_ADD_FRIEND: "REJECT_REQUEST_TO_ADD_FRIEND",  
+ 
   REMOVE_FRIEND: "REMOVE_FRIEND",
   COMMENT_ACTIONS: "COMMENT_ACTIONS",
   CONTACT_ACTIONS: "CONTACT_ACTIONS",

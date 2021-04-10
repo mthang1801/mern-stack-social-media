@@ -6,27 +6,46 @@ import {
   userMutations,
   cacheMutations,
 } from "../../apollo/operations/mutations";
-import classNames from "classnames";
-import styled from "styled-components";
+import {AcceptButton, DenyButton} from "../Custom/CustomMaterialButton"
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import useLanguage from "../Global/useLanguage";
 import Moment from "react-moment";
-import "moment/locale/vi"
+import "moment/locale/vi";
+import {
+  Wrapper,
+  LinkWrapper,
+  AvatarContainer,
+  NotificationContent,
+  Controls,
+} from "./styles/NotificationItem.styles";
 import {
   notificationContent,
   showResponseButtons,
 } from "../../utils/notificationContent";
-import {GET_NOTIFICATIONS_CACHE_DATA} from "../../apollo/operations/queries/cache/components/getNotifications"
+import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache/components/getNotifications";
 import { useThemeUI } from "theme-ui";
+import Button from "@material-ui/core/Button";
 const NotificationItem = ({ notification }) => {
   //Query
-  const {data : {user, newNotifications, currentPersonalUser, countNumberNotificationsUnseen, notifications}} = useQuery(GET_NOTIFICATIONS_CACHE_DATA, {fetchPolicy : "cache-first"})  
+  const {
+    data: {
+      user,
+      newNotifications,
+      currentPersonalUser,
+      latestNotification,
+      notifications,
+    },
+  } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, { fetchPolicy: "cache-first" });
   //Mutations
   const {
     updateNotificationHasSeen,
     decreaseNumberNotificationsUnseen,
     setCurrentUser,
     setCurrentPersonalUser,
+    removeNotificationItemFromNotificationsList,
+    setLatestNotification,
+    removeNewNotification,
+    updateHasSeenLatestMessage,
   } = cacheMutations;
   const [updateToHasSeen] = useMutation(
     notificationMutations.UPDATE_USER_HAS_SEEN_NOTIFICATION
@@ -36,25 +55,39 @@ const NotificationItem = ({ notification }) => {
   );
   const [rejectRequestToAddFriend] = useMutation(
     userMutations.REJECT_REQUEST_TO_ADD_FRIEND
-  );  
+  );
   const { lang } = useLanguage();
   const handleUserClickHasSeen = (notification) => {
-    updateToHasSeen({variables : {notificationId : notification._id}}).then(({data}) => {
-      if(data.updateUserHasSeenNotification){
-        decreaseNumberNotificationsUnseen();        
-        updateNotificationHasSeen(notification._id)
+    updateToHasSeen({ variables: { notificationId: notification._id } }).then(
+      ({ data }) => {
+        if (data.updateUserHasSeenNotification) {
+          decreaseNumberNotificationsUnseen();
+          updateNotificationHasSeen(notification._id);
+        }
       }
-    })
+    );
   };
 
-  const updateMutationOnChange = (sender, receiver) => {
+  const updateMutationOnChange = (sender, receiver, removedNotification) => {
+    if (removedNotification) {
+      if (latestNotification?._id === removedNotification._id) {
+        setLatestNotification(null);
+      }
+      removeNewNotification(removedNotification._id);
+      decreaseNumberNotificationsUnseen();
+      removeNotificationItemFromNotificationsList(removedNotification);
+      setCurrentUser({
+        ...user,
+        notifications: [
+          ...notifications.filter((_id) => _id !== removedNotification._id),
+        ],
+      });
+    }
     setCurrentUser({
       ...user,
-      friends: [...sender.friends],
-      following: [...sender.following],
-      followed: [...sender.followed],
-      sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-      receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
+      friends: [...receiver.friends],
+      followed: [...receiver.followed],
+      receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
     });
     if (
       currentPersonalUser &&
@@ -62,169 +95,92 @@ const NotificationItem = ({ notification }) => {
     ) {
       setCurrentPersonalUser({
         ...currentPersonalUser,
-        friends: [...receiver.friends],
-        following: [...receiver.following],
-        followed: [...receiver.followed],
-        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
+        friends: [...sender.friends],
+        following: [...sender.following],
+        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
       });
     }
   };
 
-  const onAcceptRequestToAddFriend = () => {
-    acceptRequestToAddFriend({
-      variables: { senderId: notification.creator._id },
-    }).then(({ data }) => {
-      const { sender, receiver } = data.acceptRequestToAddFriend;
-      updateMutationOnChange(sender, receiver);
-    });
+  const onAcceptRequestToAddFriend = (e) => {
+    // e.preventDefault();
+    // acceptRequestToAddFriend({
+    //   variables: { senderId: notification.creator._id },
+    // }).then(({ data }) => {
+    //   const { sender, receiver } = data.acceptRequestToAddFriend;
+    //   updateMutationOnChange(sender, receiver);
+    // });
   };
 
-  const onRejectRequestToAddFriend = () => {
+  const onRejectRequestToAddFriend = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     rejectRequestToAddFriend({
       variables: { senderId: notification.creator._id },
     }).then(({ data }) => {
-      const { sender, receiver } = data.rejectRequestToAddFriend;
-      updateMutationOnChange(sender, receiver);
+      const { sender, receiver, notification } = data.rejectRequestToAddFriend;
+      console.log(sender, receiver, notification);
+      // when reject, receiver is current User, sender is creator
+      updateMutationOnChange(sender, receiver, notification);
     });
   };
   const { colorMode } = useThemeUI();
   if (!user) return null;
   return (
-    <Wrapper theme={colorMode}>
-      <div
-        className={classNames("notification-item-container", {
-          unseen: !notification.hasSeen,
-        })}
+    <Wrapper theme={colorMode} hasSeen={notification.hasSeen}>
+      <LinkWrapper
+        to={notification.url}
+        key={notification._id}
+        onClick={() => handleUserClickHasSeen(notification)}
       >
-        <Link
-          to={notification.url}
-          key={notification._id}
-          className={classNames("notification-link", {
-            unseen: !notification.hasSeen,
-          })}
-          onClick={() => handleUserClickHasSeen(notification)}
-        >
-          <div className="avatar-container">
-            <LazyLoadImage
-              src={`${notification.creator.avatar}`}
-              alt={notification.url}
-              effect="blur"
-              width="40px"
-              height="40px"
-            />
-          </div>
-          <div className="notification-content">            
-            <span
-              dangerouslySetInnerHTML={{
-                __html: notificationContent(notification, lang),
-              }}
-            />
-            <div className="notification-datetime">
-              <Moment
-                fromNow
-                className={newNotifications?.has(notification._id) ? "new" : ""}
-                locale={lang}
-              >
-                {new Date(+notification.updatedAt)}
-              </Moment>
-            </div>
-          </div>
-        </Link>
-        {/* {showResponseButtons(notification, user) && (
-          <ButtonsGroup>
-            <ButtonAccept onClick={onAcceptRequestToAddFriend}>
-              Accept
-            </ButtonAccept>
-            <ButtonDecline onClick={onRejectRequestToAddFriend}>Decline</ButtonDecline>
-          </ButtonsGroup>
-        )} */}
-      </div>
+        <AvatarContainer>
+          <LazyLoadImage
+            src={`${notification.creator.avatar}`}
+            alt={notification.url}
+            effect="blur"
+            width="40px"
+            height="40px"
+          />
+        </AvatarContainer>
+        <NotificationContent>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: notificationContent(notification, lang),
+            }}
+          />
+          <small>
+            <Moment
+              fromNow
+              className={newNotifications?.has(notification._id) ? "new" : ""}
+              locale={lang}
+            >
+              {new Date(+notification.updatedAt)}
+            </Moment>
+          </small>
+        </NotificationContent>
+      </LinkWrapper>
+      {notification.isQuestion && notification.questionType?.yesNoQuestion ? (
+        <Controls>
+          <AcceptButton
+            variant="contained"
+            size="small"
+            color="primary"
+            onClick={onAcceptRequestToAddFriend}
+          >
+            Accept
+          </AcceptButton>
+          <DenyButton
+            variant="contained"
+            size="small"
+            color="secondary"
+            onClick={onRejectRequestToAddFriend}
+          >
+            Reject
+          </DenyButton>
+        </Controls>
+      ) : null}
     </Wrapper>
   );
 };
-const ButtonsGroup = styled.div`
-  display: flex;
-  padding: 1rem;
-`;
-
-const ButtonAccept = styled.button`
-  padding: 0.5rem 1rem;
-  outline: none;
-  border: none;
-  background-color: #16c172e3;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: var(--white);
-  &:hover {
-    background-color: #009651e3;
-  }
-`;
-const ButtonDecline = styled.button`
-  padding: 0.5rem 1rem;
-  outline: none;
-  border: none;
-  background-color: #ec1b1be3;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: var(--white);
-  &:hover {
-    background-color: #c70000e3;
-  }
-`;
-
-const Wrapper = styled.div`
-  .notification-item-container:hover {
-    background-color: ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-background-dark)"
-        : "var(--color-background-default)"};
-  }
-  .unseen {
-    background-color: ${({ theme }) =>
-      theme === "dark" ? "var(--dark)" : "var(--light)"};
-  }
-  .notification-link {
-    display: flex;
-    align-items: flex-start;
-    padding: 0.6rem;
-    transition: var(--mainTransition);
-    &:last-child {
-      overflow: hidden;
-    }
-    &:hover {
-      background-color: inherit;
-    }
-  }
-
-  .avatar-container {
-    width: 40px;
-    height: 40px;
-    margin-right: 0.5rem;
-    & img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-    }
-  }
-  .notification-content {
-    font-size: 0.9rem;
-  }
-  .notification-datetime {
-    font-size: 0.85rem;
-    opacity: 0.7;
-  }
-  .new {
-    font-weight: bold;
-    color: red;
-  }
-  .creator-name {
-    font-weight: bolder;
-  }
-`;
 
 export default React.memo(NotificationItem);

@@ -23,6 +23,7 @@ const NotificationsBoard = () => {
 
 const Wrapper = styled.div`
   width: 100%;
+  height: 100%;
   background-color: ${({ theme }) =>
     theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
   border-radius: 0.5rem;

@@ -53,8 +53,7 @@ export const userController = {
   },
   loginUser: async (data) => {
     const { email, password } = data;
-    const user = await User.findOne({ email });
-    console.log(user);
+    const user = await User.findOne({ email });  
     if (!user) {
       throw new UserInputError("email or password was not correct");
     }
@@ -84,13 +83,14 @@ export const userController = {
       const countPosts = currentUser.posts.length;
       await currentUser.populate({
         path: "posts",
-        populate: [
+        populate: [          
           { path: "mentions", select: "name slug avatar" },
           { path: "author", select: "name slug avatar" },
         ],
         options: { skip: 0, limit: +process.env.POSTS_PER_PAGE },
-      });
-      const userResult = { ...currentUser._doc, countPosts };
+      }).execPopulate();
+      const userResult = { ...currentUser._doc, countPosts };  
+      console.log(userResult)    
       return userResult;
     }
     const user = await User.findOne({ slug }).populate({
@@ -220,7 +220,7 @@ export const userController = {
           "fieldIdentity.sender": currentUserId,
           "fieldIdentity.receiver": receiverId,
         },
-        { hasSeen: false },
+        { hasSeen: false, isQuestion : true, "questionType.yesNoQuestion" : true },
         { new: true }
       );
       if (!notification) {
@@ -470,14 +470,14 @@ export const userController = {
         receivedRequestToAddFriend: senderId,
       });
       if (!currentUser) {
-        throw new UserInputError("Reject failed");
+        raiseError("Reject failed");
       }
       const sender = await User.findOne({
         _id: senderId,
         sentRequestToAddFriend: currentUserId,
       });
       if (!sender) {
-        throw new UserInputError("Reject failed");
+        raiseError("Reject request failed");
       }
       const session = await mongoose.startSession();
       session.startTransaction();
@@ -485,17 +485,27 @@ export const userController = {
       await currentUser.save();
       sender.sentRequestToAddFriend.pull(currentUserId);
       await sender.save();
-      await session.commitTransaction();
+      //update notification
+      const notification = await Notification.findOneAndDelete({
+        field : fields.CONTACT,
+        content: contents.SENT_REQUEST_TO_ADD_FRIEND,
+        "fieldIdentity.sender" : senderId, 
+        "fieldIdentity.receiver" : currentUserId
+      });
+      await session.commitTransaction();      
       session.endSession();
-      pubsub.publish(rejectRequestToAddFriendSubscription, {
+     
+      await pubsub.publish(rejectRequestToAddFriendSubscription, {
         rejectRequestToAddFriendSubscription: {
-          sender: currentUser,
-          receiver: sender,
+          sender: sender,
+          receiver: currentUser,          
         },
       });
+      
       return {
-        sender: currentUser,
-        receiver: sender,
+        sender: sender,
+        receiver: currentUser,
+        notification 
       };
     } catch (error) {
       console.log(error);

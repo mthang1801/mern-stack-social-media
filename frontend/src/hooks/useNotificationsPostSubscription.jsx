@@ -43,8 +43,7 @@ const useNotificationsPostSubscription = () => {
     setNewNotifications,
     setLatestNotification,
     setCurrentUser,
-    setCurrentPersonalUser,
-    setReceivedRequestsToAddFriend,
+    setCurrentPersonalUser,    
     setPersonalPosts,
     addLikeResponse,
     removeLikeResponse,
@@ -133,9 +132,6 @@ const useNotificationsPostSubscription = () => {
       ],
     });
   };
-
-  console.log(user);
-  console.log(currentPersonalUser);
 
   useEffect(() => {
     let unsubscribeRequestAddFriend,

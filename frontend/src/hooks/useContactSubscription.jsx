@@ -15,9 +15,9 @@ const useContactSubscription = () => {
   const updateSubscriptionOnChange = (sender, receiver) => {
     setCurrentUser({
       ...user,
-      friends: [...receiver.friends],     
-      followed: [...receiver.followed],      
-      receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
+      friends: [...sender.friends],     
+      following: [...sender.following],      
+      sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
     });
     if (
       currentPersonalUser &&
@@ -25,9 +25,9 @@ const useContactSubscription = () => {
     ) {
       setCurrentPersonalUser({
         ...currentPersonalUser,
-        friends: [...sender.friends],
-        following: [...sender.following],        
-        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],        
+        friends: [...receiver.friends],
+        followed: [...receiver.followed],        
+        receivedRequestsToAddFriend: [...receiver.receivedRequestToAddFriend],        
       });
     }
   };
@@ -46,6 +46,8 @@ const useContactSubscription = () => {
             sender,
             receiver,
           } = subscriptionData.data.rejectRequestToAddFriendSubscription;
+          console.log(sender)
+          console.log(receiver);
           updateSubscriptionOnChange(sender, receiver);
         },
       });

@@ -34,7 +34,7 @@ const PersonalPage = (props) => {
         .catch((err) => console.log(err));
     }
     return () => (_mounted = false);
-  }, [fetchPersonalUser, slug, currentPersonalUser]);    
+  }, [fetchPersonalUser, slug, currentPersonalUser]);      
   return (
     <Layout>
       <PersonalHeading />

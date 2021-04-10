@@ -29,13 +29,14 @@ export const NotificationBoard = styled.div`
   position: absolute;
   top: 125%;
   right: -100%;
-  z-index: 1;
+  z-index: ${({open}) => open ? 1 : -1 };
   transition: var(--mainTransition);
   width: 350px;
-  height: ${({open}) => open ? "30rem" : 0};
+  height: ${({open}) => open ? "600px" : 0} ;
   max-height : 30rem;
   overflow: auto;
   visibility: ${({open}) => open ? "visible" : "hidden"};
-  opacity: ${({open}) => open ? 1 : 0};
+  opacity: ${({open}) => open ? 1 : 0};  
   border-radius : 1rem;  
+ 
 ` 

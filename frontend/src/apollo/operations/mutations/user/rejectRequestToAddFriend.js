@@ -21,6 +21,9 @@ export const REJECT_REQUEST_TO_ADD_FRIEND = gql`
         receivedRequestToAddFriend
         friends
       }
+      notification{
+        _id
+      }
     }
   }
 `

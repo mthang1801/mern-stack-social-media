@@ -100,7 +100,9 @@ export default createGlobalStyle`
   --color-hover-dark : var(--gray-dark);
 
   --color-card-dark : #2d2f31;    
+  --color-card-dark-secondary : #17181a;    
   --color-card-default : #fff;
+  --color-card-default-secondary :#f1f1f1;
   --color-hover-default : var(--light);
   
   --color-border-dark : #616161;   
