@@ -1,8 +1,9 @@
-import { gql } from "@apollo/client";
+import {gql} from "@apollo/client";
 
-export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
-    cancelRequestToAddFriendSubscription(userId: $userId) {
+
+export const ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
+  subscription ($userId : ID!){
+    acceptRequestToAddFriendSubscription(userId : $userId){
       _id
       field
       content
@@ -12,13 +13,17 @@ export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
         sender {
           _id          
           following
+          followed
           friends
           sentRequestToAddFriend
+          receivedRequestToAddFriend
         }
         receiver {
           _id          
+          following
           followed
           friends
+          sentRequestToAddFriend
           receivedRequestToAddFriend
           notifications
         }
@@ -33,4 +38,4 @@ export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
       createdAt
     }
   }
-`;
+`

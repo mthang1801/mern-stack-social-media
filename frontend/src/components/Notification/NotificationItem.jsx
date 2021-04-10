@@ -103,13 +103,17 @@ const NotificationItem = ({ notification }) => {
   };
 
   const onAcceptRequestToAddFriend = (e) => {
-    // e.preventDefault();
-    // acceptRequestToAddFriend({
-    //   variables: { senderId: notification.creator._id },
-    // }).then(({ data }) => {
-    //   const { sender, receiver } = data.acceptRequestToAddFriend;
-    //   updateMutationOnChange(sender, receiver);
-    // });
+    e.preventDefault();
+    e.stopPropagation();
+    acceptRequestToAddFriend({
+      variables: { senderId: notification.creator._id },
+    }).then(({ data }) => {
+      const { sender, receiver, notification } = data.acceptRequestToAddFriend;
+      console.log(sender);
+      console.log(receiver)
+      console.log(notification)
+      updateMutationOnChange(sender, receiver, notification);
+    });
   };
 
   const onRejectRequestToAddFriend = (e) => {

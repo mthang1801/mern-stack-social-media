@@ -210,7 +210,8 @@ export const vi = {
           }</strong>`,
       },
       contact: {
-        sentRequestToAddFriend : (senderName) => `<strong>${senderName}</strong> đã gửi cho bạn một lời kết bạn.`
+        sentRequestToAddFriend : (senderName) => `<strong>${senderName}</strong> đã gửi cho bạn một lời kết bạn.`,
+        acceptRequestToAddFriend : (senderName) => `<strong>${senderName}</strong> đã chấp nhận lời mời kết bạn của bạn.`
       },
     },
     greeting: {

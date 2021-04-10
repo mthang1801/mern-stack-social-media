@@ -13,6 +13,7 @@ import { LIKE_RESPONSE_SUBSCRIPTION } from "./likeResponseSubscription";
 import { REMOVE_LIKE_RESPONSE_SUBSCRIPTION } from "./removeLikeResponseSubscription";
 import { SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION } from "./sentRequestToAddFriendSubscription";
 import { CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION } from "./cancelRequestToAddFriend";
+import {ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION} from "./acceptRequestToAddFriendSubscription"
 const notificationSubscription = {
   POST_CREATED_SUBSCRIPTIONS,    
   NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND,
@@ -28,7 +29,8 @@ const notificationSubscription = {
   LIKE_RESPONSE_SUBSCRIPTION,
   REMOVE_LIKE_RESPONSE_SUBSCRIPTION,
   SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-  CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION
+  CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+  ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION
 };
 
 export default notificationSubscription;

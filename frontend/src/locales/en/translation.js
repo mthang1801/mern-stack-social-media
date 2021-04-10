@@ -213,7 +213,8 @@ export const en = {
         }</strong>`,
       },
       contact: {
-        sentRequestToAddFriend : (senderName) => `<strong>${senderName}</strong> sent to you an invitation to make friend`
+        sentRequestToAddFriend : (senderName) => `<strong>${senderName}</strong> sent to you an invitation to make friend`,
+        acceptRequestToAddFriend : (senderName) => `<strong>${senderName}</strong> has accepted your request to add friend. From now, you and ${senderName} are friends.`,
       },
     },
     greeting: {

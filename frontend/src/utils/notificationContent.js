@@ -30,7 +30,8 @@ const notificationContent = (notification, lang) => {
       }
     case "CONTACT" : 
       switch(content){
-        case "SENT_REQUEST_TO_ADD_FRIEND" : return contactNotification.sentRequestToAddFriend(notification.creator?.name)
+        case "SENT_REQUEST_TO_ADD_FRIEND" : return contactNotification.sentRequestToAddFriend(notification.creator?.name);
+        case "ACCEPT_REQUEST_TO_ADD_FRIEND" : return contactNotification.acceptRequestToAddFriend(notification.creator?.name);
       }
   }
 }

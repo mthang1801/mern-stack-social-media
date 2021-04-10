@@ -136,6 +136,7 @@ const useNotificationsPostSubscription = () => {
   useEffect(() => {
     let unsubscribeRequestAddFriend,
       unsubscribeCancelRequestToAddFriend,
+      unsubscribeAcceptRequestToAddFriend,
       unsubscribeMentionUsersInPost,
       unsubscribeAcceptRequestAddFriend,
       unsubscribeUserLikePost,
@@ -186,6 +187,18 @@ const useNotificationsPostSubscription = () => {
           }
         },
       });
+
+      unsubscribeAcceptRequestToAddFriend = subscribeToMoreNotifications({
+        document : subscriptions.notificationSubscription.ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION, 
+        variables : {userId : user._id } , 
+        updateQuery : (_, {subscriptionData}) => {
+          if(subscriptionData){
+            const {acceptRequestToAddFriendSubscription : notification} = subscriptionData.data;
+            const {sender, receiver} = notification.fieldIdentity;
+            updatedAddNotification(notification, sender, receiver);
+          }
+        }
+      })
 
       //#endregion
 
@@ -416,6 +429,9 @@ const useNotificationsPostSubscription = () => {
       }
       if (unsubscribeCancelRequestToAddFriend) {
         unsubscribeCancelRequestToAddFriend();
+      }
+      if(unsubscribeAcceptRequestToAddFriend){
+        unsubscribeAcceptRequestToAddFriend();
       }
       if (unsubscribeMentionUsersInPost) {
         unsubscribeMentionUsersInPost();

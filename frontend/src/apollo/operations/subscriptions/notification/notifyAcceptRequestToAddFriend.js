@@ -2,7 +2,7 @@ import {gql} from "@apollo/client";
 
 export const NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
   subscription ($userId: ID!){
-    notifyAcceptRequestToAddFriend(userId: $userId){
+    acceptRequestToAddFriendSubscription(userId: $userId){
       action
       field   
       sender{
