@@ -21,6 +21,9 @@ export const REMOVE_FRIEND = gql`
         receivedRequestToAddFriend
         friends
       }
+      notification{
+        _id
+      }
     }
   }
 `

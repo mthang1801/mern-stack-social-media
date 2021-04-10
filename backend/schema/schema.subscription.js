@@ -29,11 +29,10 @@ export const schemaSubscription = gql`
     cancelRequestToAddFriendSubscription(userId : ID!) : Notification!
     rejectRequestToAddFriendSubscription(userId: ID!): UsersContact!    
     acceptRequestToAddFriendSubscription(userId: ID!): Notification!
+    removeFriendSubscription(userId: ID!): UsersContact!  
 
     commentActions(postId: ID!): CommentSubscriptionPayload
     contactActions(userId: ID!): ContactSubscriptionPayload!
-    
-    removeFriendSubscription(userId: ID!): UsersContact!    
 
     sentMessageChatSubscription(userId: ID!): ChatSubscriptionPayload!
     notifySenderThatReceiverHasReceivedMessageChat(
@@ -51,11 +50,10 @@ export const subscriptionActions = {
   CANCEL_REQUEST_TO_ADD_FRIEND : "CANCEL_REQUEST_TO_ADD_FRIEND",
   REJECT_REQUEST_TO_ADD_FRIEND: "REJECT_REQUEST_TO_ADD_FRIEND",  
   ACCEPT_REQUEST_TO_ADD_FRIEND: "ACCEPT_REQUEST_TO_ADD_FRIEND",
-  NOTIFY_POST_CREATED: "NOTIFY_POST_CREATED",
-  
-  UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN: "UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN",
- 
   REMOVE_FRIEND: "REMOVE_FRIEND",
+
+  NOTIFY_POST_CREATED: "NOTIFY_POST_CREATED",
+  UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN: "UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN",
   COMMENT_ACTIONS: "COMMENT_ACTIONS",
   CONTACT_ACTIONS: "CONTACT_ACTIONS",
   SENT_CHAT: "SENT_CHAT",

@@ -8,12 +8,16 @@ export const REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
         slug       
         friends
         following        
-        sentRequestToAddFriend        
+        sentRequestToAddFriend      
+        followed        
+        receivedRequestToAddFriend   
       }
       receiver {
         _id
         slug    
         friends   
+        following        
+        sentRequestToAddFriend   
         followed        
         receivedRequestToAddFriend        
       }

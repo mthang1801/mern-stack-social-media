@@ -6,7 +6,7 @@ import {
   userMutations,
   cacheMutations,
 } from "../../apollo/operations/mutations";
-import {AcceptButton, DenyButton} from "../Custom/CustomMaterialButton"
+import { AcceptButton, DenyButton } from "../Custom/CustomMaterialButton";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import useLanguage from "../Global/useLanguage";
 import Moment from "react-moment";
@@ -18,13 +18,10 @@ import {
   NotificationContent,
   Controls,
 } from "./styles/NotificationItem.styles";
-import {
-  notificationContent,
-  showResponseButtons,
-} from "../../utils/notificationContent";
+import { notificationContent } from "../../utils/notificationContent";
 import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache/components/getNotifications";
 import { useThemeUI } from "theme-ui";
-import Button from "@material-ui/core/Button";
+
 const NotificationItem = ({ notification }) => {
   //Query
   const {
@@ -69,7 +66,10 @@ const NotificationItem = ({ notification }) => {
   };
 
   const updateMutationOnChange = (sender, receiver, removedNotification) => {
-    if (removedNotification) {
+    if (
+      removedNotification &&
+      user.notifications.includes(removedNotification._id)
+    ) {
       if (latestNotification?._id === removedNotification._id) {
         setLatestNotification(null);
       }
@@ -81,14 +81,19 @@ const NotificationItem = ({ notification }) => {
         notifications: [
           ...notifications.filter((_id) => _id !== removedNotification._id),
         ],
+        friends: [...receiver.friends],
+        followed: [...receiver.followed],
+        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
+      });
+    } else {
+      setCurrentUser({
+        ...user,
+        friends: [...receiver.friends],
+        followed: [...receiver.followed],
+        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
       });
     }
-    setCurrentUser({
-      ...user,
-      friends: [...receiver.friends],
-      followed: [...receiver.followed],
-      receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-    });
+
     if (
       currentPersonalUser &&
       currentPersonalUser._id === notification.creator._id
@@ -109,9 +114,6 @@ const NotificationItem = ({ notification }) => {
       variables: { senderId: notification.creator._id },
     }).then(({ data }) => {
       const { sender, receiver, notification } = data.acceptRequestToAddFriend;
-      console.log(sender);
-      console.log(receiver)
-      console.log(notification)
       updateMutationOnChange(sender, receiver, notification);
     });
   };
@@ -123,7 +125,6 @@ const NotificationItem = ({ notification }) => {
       variables: { senderId: notification.creator._id },
     }).then(({ data }) => {
       const { sender, receiver, notification } = data.rejectRequestToAddFriend;
-      console.log(sender, receiver, notification);
       // when reject, receiver is current User, sender is creator
       updateMutationOnChange(sender, receiver, notification);
     });

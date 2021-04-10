@@ -6,5 +6,7 @@ export const GET_CONTACT_CACHE_DATA = gql`
     friends @client
     currentPersonalUser @client
     receivedRequestsToAddFriend @client
+    latestNotification @client
+    notifications @client
   }
 `

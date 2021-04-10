@@ -14,6 +14,7 @@ import { cacheMutations } from "../../apollo/operations/mutations";
 import Button from "../Controls/ButtonDefaultCircle";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_PERSONAL_USER_CACHE_DATA } from "../../apollo/operations/queries/cache";
+import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache/components/getNotifications";
 import { useThemeUI } from "theme-ui";
 import {
   PersonalContactContainer,
@@ -23,6 +24,9 @@ import {
 const PersonalContact = () => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
+  const {
+    data: { notifications, latestNotification },
+  } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, { fetchPolicy: "cache-first" });
   //Mutations
   const [sendRequestToAddFriend] = useMutation(
     userMutations.SEND_REQUEST_TO_ADD_FRIEND
@@ -39,7 +43,14 @@ const PersonalContact = () => {
     userMutations.ACCEPT_REQUEST_TO_ADD_FRIEND
   );
   const [removeFriend] = useMutation(userMutations.REMOVE_FRIEND);
-  const { setCurrentUser, setCurrentPersonalUser } = cacheMutations;
+  const {
+    setCurrentUser,
+    setCurrentPersonalUser,
+    setLatestNotification,
+    removeNewNotification,
+    decreaseNumberNotificationsUnseen,
+    removeNotificationItemFromNotificationsList,
+  } = cacheMutations;
   //user Query
   const {
     data: { user, currentPersonalUser },
@@ -51,20 +62,49 @@ const PersonalContact = () => {
   const responseRef = useRef(false);
 
   //function to handle when user click button request
-  const updateMutationOnChange = (sender, receiver) => {
-    setCurrentUser({
-      ...user,
-      friends: [...sender.friends],
-      following: [...sender.following],
-      sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-    });
-
-    setCurrentPersonalUser({
-      ...currentPersonalUser,
-      friends: [...receiver.friends],
-      followed: [...receiver.followed],
-      receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-    });
+  const updateMutationOnChange = (sender, receiver, removedNotification) => {
+    if (
+      removedNotification &&
+      user.notifications.includes(removedNotification._id)
+    ) {
+      if (latestNotification?._id === removedNotification._id) {
+        setLatestNotification(null);
+      }
+      removeNewNotification(removedNotification._id);
+      decreaseNumberNotificationsUnseen();
+      removeNotificationItemFromNotificationsList(removedNotification);
+      setCurrentUser({
+        ...user,
+        notifications: [
+          ...notifications.filter((_id) => _id !== removedNotification._id),
+        ],
+        friends: [...sender.friends],
+        following: [...sender.following],
+        followed : [...sender.followed],
+        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
+        receivedRequestToAddFriend : [...sender.receivedRequestToAddFriend]
+      });
+    } else {
+      setCurrentUser({
+        ...user,
+        friends: [...sender.friends],
+        following: [...sender.following],
+        followed : [...sender.followed],
+        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
+        receivedRequestToAddFriend : [...sender.receivedRequestToAddFriend]
+      });
+    }
+    if(currentPersonalUser && currentPersonalUser._id === receiver._id){
+      setCurrentPersonalUser({
+        ...currentPersonalUser,
+        friends: [...receiver.friends],
+        followed: [...receiver.followed],
+        following : [...receiver.following],
+        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
+        sentRequestToAddFriend : [...receiver.sentRequestToAddFriend]
+      });
+    }
+   
   };
 
   useEffect(() => {
@@ -101,8 +141,10 @@ const PersonalContact = () => {
 
   // Handle add friend
   const onSendRequestToAddFriend = (e) => {
-    sendRequestToAddFriend({ variables: { receiverId: currentPersonalUser._id } })
-      .then(({ data }) => {        
+    sendRequestToAddFriend({
+      variables: { receiverId: currentPersonalUser._id },
+    })
+      .then(({ data }) => {
         const { sender, receiver } = data.sendRequestToAddFriend;
         updateMutationOnChange(sender, receiver);
       })
@@ -114,8 +156,8 @@ const PersonalContact = () => {
       variables: { senderId: currentPersonalUser._id },
     })
       .then(({ data }) => {
-        const { sender, receiver } = data.rejectRequestToAddFriend;
-        updateMutationOnChange(sender, receiver);
+        const { sender, receiver, notification } = data.rejectRequestToAddFriend;
+        updateMutationOnChange(receiver, sender, notification);
         setOpenResponse(false);
       })
       .catch((err) => console.log(err));
@@ -124,8 +166,7 @@ const PersonalContact = () => {
   const onCancelRequestToAddFriend = () => {
     cancelRequestToAddFriend({
       variables: { receiverId: currentPersonalUser._id },
-    }).then(({ data }) => {
-      console.log(data);
+    }).then(({ data }) => {      
       const { sender, receiver } = data.cancelRequestToAddFriend;
       updateMutationOnChange(sender, receiver);
     });
@@ -153,8 +194,8 @@ const PersonalContact = () => {
     acceptRequestToAddFriend({
       variables: { senderId: currentPersonalUser._id },
     }).then(({ data }) => {
-      const { sender, receiver } = data.acceptRequestToAddFriend;
-      updateMutationOnChange(sender, receiver);
+      const { sender, receiver, notification } = data.acceptRequestToAddFriend;      
+      updateMutationOnChange(receiver, sender , notification);
       setOpenResponse(false);
     });
   };
@@ -162,8 +203,8 @@ const PersonalContact = () => {
   const onRemoveFriend = () => {
     removeFriend({ variables: { friendId: currentPersonalUser._id } }).then(
       ({ data }) => {
-        const { sender, receiver } = data.removeFriend;
-        updateMutationOnChange(sender, receiver);
+        const { sender, receiver, notification } = data.removeFriend;
+        updateMutationOnChange(sender, receiver, notification);
       }
     );
   };
@@ -181,7 +222,6 @@ const PersonalContact = () => {
       </Button>
     </>
   );
-
   const FriendActionsContact = (
     <>
       <Button theme={colorMode} title="remove friend" onClick={onRemoveFriend}>

@@ -7,14 +7,18 @@ export const ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
         _id
         slug
         following        
-        sentRequestToAddFriend        
+        followed
+        sentRequestToAddFriend     
+        receivedRequestToAddFriend   
         friends
       }
       receiver {
         _id
         slug        
-        followed        
-        receivedRequestToAddFriend
+        following        
+        followed
+        sentRequestToAddFriend     
+        receivedRequestToAddFriend 
         friends
       }
       notification { 

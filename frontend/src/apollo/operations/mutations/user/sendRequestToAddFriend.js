@@ -7,14 +7,18 @@ export const SEND_REQUEST_TO_ADD_FRIEND = gql`
         _id
         slug                
         following        
-        sentRequestToAddFriend        
+        sentRequestToAddFriend    
+        followed        
+        receivedRequestToAddFriend    
         friends
       }
       receiver {
         _id
-        slug        
+        slug       
+        following        
+        sentRequestToAddFriend     
         followed        
-        receivedRequestToAddFriend
+        receivedRequestToAddFriend        
         friends
       }
     }

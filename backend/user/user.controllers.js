@@ -446,8 +446,8 @@ export const userController = {
           "fieldIdentity.receiver": senderId,
         },
         { hasSeen: false },
-        {new : true}
-      )
+        { new: true }
+      );
       if (!notificationForSender) {
         notificationForSender = new Notification({
           field: fields.CONTACT,
@@ -459,7 +459,7 @@ export const userController = {
           url: `/${currentUser.slug}`,
           creator: currentUserId,
           receiver: senderId,
-        });     
+        });
       }
 
       const updatedSenderRequest = await User.findByIdAndUpdate(
@@ -476,11 +476,11 @@ export const userController = {
         { new: true }
       );
       await (await notificationForSender.save())
-        .populate({path : "creator", select : "name slug avatar"})
-        .populate({path : "fieldIdentity.sender"})
-        .populate({path : "fieldIdentity.receiver"})
+        .populate({ path: "creator", select: "name slug avatar" })
+        .populate({ path: "fieldIdentity.sender" })
+        .populate({ path: "fieldIdentity.receiver" })
         .execPopulate();
-    
+
       await pubsub.publish(acceptRequestToAddFriendSubscription, {
         acceptRequestToAddFriendSubscription: notificationForSender._doc,
       });
@@ -489,14 +489,14 @@ export const userController = {
       const result = {
         sender: updatedSenderRequest,
         receiver: updatedCurrentUser,
+      };
+      if (removedNotificationRequestToAddFriend) {
+        result.notification = removedNotificationRequestToAddFriend;
       }
-      if(removedNotificationRequestToAddFriend){
-        result.notification = removedNotificationRequestToAddFriend
-      }
-      return result ;
+      return result;
     } catch (error) {
-      console.log(error)
-      raiseError(error.message)
+      console.log(error);
+      raiseError(error.message);
     }
   },
   rejectRequestToAddFriend: async (
@@ -624,24 +624,59 @@ export const userController = {
       currentUser.friends.pull(friendId);
       currentUser.following.pull(friendId);
       currentUser.followed.pull(friendId);
-      await currentUser.save();
+
       friend.friends.pull(currentUserId);
       friend.following.pull(currentUserId);
       friend.followed.pull(currentUserId);
-      pubsub.publish(removeFriendSubscription, {
-        removeFriendSubscription: {
-          sender: currentUser,
-          receiver: friend,
-        },
+
+      //remove accept notification
+      const notification = await Notification.findOneAndDelete({
+        field: fields.CONTACT,
+        content: contents.ACCEPT_REQUEST_TO_ADD_FRIEND,
+        $or: [
+          {
+            "fieldIdentity.sender": currentUserId,
+            "fieldIdentity.receiver": friendId,
+          },
+          {
+            "fieldIdentity.sender": friendId,
+            "fieldIdentity.receiver": currentUserId,
+          },
+        ],
       });
+
+      if (
+        notification &&
+        friend.notifications.includes(notification._id.toString())
+      ) {
+        friend.notifications.pull(notification._id);
+      }
+
+      if (
+        notification &&
+        currentUser.notifications.includes(notification._id.toString())
+      ) {
+        currentUser.notifications.pull(notification._id);
+      }
+
+      await currentUser.save();
       await friend.save();
-      await session.commitTransaction();
-      session.endSession();
-      return {
+
+      const returnResult = {
         sender: currentUser,
         receiver: friend,
       };
+      if (notification) {
+        returnResult.notification = notification;
+      }
+      await pubsub.publish(removeFriendSubscription, {
+        removeFriendSubscription: returnResult,
+      });
+      await session.commitTransaction();
+      session.endSession();
+      return returnResult;
     } catch (error) {
+      console.log(error);
       throw new ApolloError(error.message);
     }
   },
