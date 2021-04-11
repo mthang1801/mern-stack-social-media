@@ -22,7 +22,7 @@ export const REMOVE_FRIEND = gql`
         friends
       }
       notification{
-        _id
+        _id        
       }
     }
   }

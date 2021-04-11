@@ -8,6 +8,7 @@ export const SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
       content
       hasSeen
       isQuestion
+      url
       questionType{
         yesNoQuestion
       }

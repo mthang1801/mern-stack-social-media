@@ -74,4 +74,4 @@ const PersonalHeading = () => {
   );
 };
 
-export default PersonalHeading;
+export default React.memo(PersonalHeading);

@@ -1,32 +1,50 @@
 import React, { useState, useEffect, useRef } from "react";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
-import { TiMessages } from "react-icons/ti";
-import { FaUserCheck, FaReply, FaRocket } from "react-icons/fa";
-import { BsThreeDots } from "react-icons/bs";
-import { IoIosPersonAdd, IoIosRemove } from "react-icons/io";
-import { FcCheckmark, FcCancel } from "react-icons/fc";
-import { CgRemoveR } from "react-icons/cg";
-
-import { RiUserFollowLine, RiUserUnfollowLine } from "react-icons/ri";
+import {
+  FcCheckmark,
+  FcCancel,
+  FcAddressBook,
+  FcVoicePresentation,
+  FcInfo,
+  FcInvite,
+  FcConferenceCall,
+  FcPortraitMode,
+  FcApprove,
+  FcNeutralDecision,
+  FcHighPriority,
+  FcLeave,
+  FcDisapprove,
+} from "react-icons/fc";
 import { userMutations } from "../../apollo/operations/mutations";
 import { cacheMutations } from "../../apollo/operations/mutations";
-import Button from "../Controls/ButtonDefaultCircle";
+
+import Button from "@material-ui/core/Button";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_PERSONAL_USER_CACHE_DATA } from "../../apollo/operations/queries/cache";
+import {
+  GET_PERSONAL_USER_CACHE_DATA,
+  GET_DIALOG,
+} from "../../apollo/operations/queries/cache";
 import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache/components/getNotifications";
 import { useThemeUI } from "theme-ui";
 import {
   PersonalContactContainer,
   ResponseRequests,
   DropdownResponseRequest,
+  SettingWrapper,
+  SettingsDropdown,
+  SettingItem,
 } from "./styles/PersonalHeadingContact.styles";
 const PersonalContact = () => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
   const {
     data: { notifications, latestNotification },
   } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, { fetchPolicy: "cache-first" });
+  const {
+    data: { dialog },
+  } = useQuery(GET_DIALOG, { fetchPolicy: "cache-first" });
   //Mutations
   const [sendRequestToAddFriend] = useMutation(
     userMutations.SEND_REQUEST_TO_ADD_FRIEND
@@ -50,6 +68,7 @@ const PersonalContact = () => {
     removeNewNotification,
     decreaseNumberNotificationsUnseen,
     removeNotificationItemFromNotificationsList,
+    setDialog,
   } = cacheMutations;
   //user Query
   const {
@@ -60,7 +79,29 @@ const PersonalContact = () => {
   const { colorMode } = useThemeUI();
   //useRef
   const responseRef = useRef(false);
+  const settingRef = useRef(false);
 
+  //track dialog
+  useEffect(() => {
+    if (
+      dialog &&
+      dialog?.data?.type === "remove contact" &&
+      dialog?.data?.userId === currentPersonalUser._id &&
+      dialog?.agree
+    ) {
+      removeFriend({ variables: { friendId: currentPersonalUser._id } }).then(
+        ({ data }) => {
+          const { sender, receiver, notification } = data.removeFriend;
+          updateMutationOnChange(sender, receiver, notification);
+        }
+      ).then(() => {
+        setDialog({ agree : false , 
+          title : "", 
+          content : "", 
+          data : null})
+      });
+    }
+  }, [dialog, currentPersonalUser]);
   //function to handle when user click button request
   const updateMutationOnChange = (sender, receiver, removedNotification) => {
     if (
@@ -80,49 +121,52 @@ const PersonalContact = () => {
         ],
         friends: [...sender.friends],
         following: [...sender.following],
-        followed : [...sender.followed],
+        followed: [...sender.followed],
         sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-        receivedRequestToAddFriend : [...sender.receivedRequestToAddFriend]
+        receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
       });
     } else {
       setCurrentUser({
         ...user,
         friends: [...sender.friends],
         following: [...sender.following],
-        followed : [...sender.followed],
+        followed: [...sender.followed],
         sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-        receivedRequestToAddFriend : [...sender.receivedRequestToAddFriend]
+        receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
       });
     }
-    if(currentPersonalUser && currentPersonalUser._id === receiver._id){
+    if (currentPersonalUser && currentPersonalUser._id === receiver._id) {
       setCurrentPersonalUser({
         ...currentPersonalUser,
         friends: [...receiver.friends],
         followed: [...receiver.followed],
-        following : [...receiver.following],
+        following: [...receiver.following],
         receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-        sentRequestToAddFriend : [...receiver.sentRequestToAddFriend]
+        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
       });
     }
-   
   };
-
+  //track user click event
   useEffect(() => {
-    if (!responseRef.current) {
-      setOpenResponse(false);
-    }
-    window.addEventListener("click", (e) => {
-      if (responseRef.current && !responseRef.current.contains(e.target)) {
+    function trackUserClickEvent(e) {
+      if (
+        responseRef.current &&
+        !responseRef.current.contains(e.target) &&
+        openResponse
+      ) {
         setOpenResponse(false);
       }
-    });
-    return () =>
-      window.removeEventListener("click", (e) => {
-        if (responseRef.current && !responseRef.current.contains(e.target)) {
-          setOpenResponse(false);
-        }
-      });
-  }, [responseRef]);
+      if (
+        settingRef.current &&
+        !settingRef.current.contains(e.target) &&
+        openSettings
+      ) {
+        setOpenSettings(false);
+      }
+    }
+    window.addEventListener("click", trackUserClickEvent);
+    return () => window.removeEventListener("click", trackUserClickEvent);
+  });
 
   useEffect(() => {
     if (currentPersonalUser) {
@@ -156,7 +200,11 @@ const PersonalContact = () => {
       variables: { senderId: currentPersonalUser._id },
     })
       .then(({ data }) => {
-        const { sender, receiver, notification } = data.rejectRequestToAddFriend;
+        const {
+          sender,
+          receiver,
+          notification,
+        } = data.rejectRequestToAddFriend;
         updateMutationOnChange(receiver, sender, notification);
         setOpenResponse(false);
       })
@@ -166,7 +214,7 @@ const PersonalContact = () => {
   const onCancelRequestToAddFriend = () => {
     cancelRequestToAddFriend({
       variables: { receiverId: currentPersonalUser._id },
-    }).then(({ data }) => {      
+    }).then(({ data }) => {
       const { sender, receiver } = data.cancelRequestToAddFriend;
       updateMutationOnChange(sender, receiver);
     });
@@ -194,8 +242,8 @@ const PersonalContact = () => {
     acceptRequestToAddFriend({
       variables: { senderId: currentPersonalUser._id },
     }).then(({ data }) => {
-      const { sender, receiver, notification } = data.acceptRequestToAddFriend;      
-      updateMutationOnChange(receiver, sender , notification);
+      const { sender, receiver, notification } = data.acceptRequestToAddFriend;
+      updateMutationOnChange(receiver, sender, notification);
       setOpenResponse(false);
     });
   };
@@ -211,30 +259,21 @@ const PersonalContact = () => {
 
   const MyActionsContact = (
     <>
-      <Button theme={colorMode} title="update personal">
+      <Button size="large" theme={colorMode} title="update personal">
         <HiOutlinePencilAlt />
       </Button>
-      <Button theme={colorMode} title="history actions">
+      <Button size="large" theme={colorMode} title="history actions">
         <AiOutlineMenuUnfold />
-      </Button>
-      <Button theme={colorMode} title="setting">
-        <BsThreeDots />
       </Button>
     </>
   );
   const FriendActionsContact = (
     <>
-      <Button theme={colorMode} title="remove friend" onClick={onRemoveFriend}>
-        <IoIosRemove />
+      <Button size="large" theme={colorMode} title="chat">
+        <FcVoicePresentation />
       </Button>
-      <Button theme={colorMode} title="chat">
-        <TiMessages />
-      </Button>
-      <Button theme={colorMode} title="friend">
-        <FaUserCheck />
-      </Button>
-      <Button theme={colorMode} title="setting">
-        <BsThreeDots />
+      <Button size="large" theme={colorMode} title="friend">
+        <FcApprove />
       </Button>
     </>
   );
@@ -246,11 +285,12 @@ const PersonalContact = () => {
         currentPersonalUser._id.toString()
       ) ? (
         <Button
+          size="large"
           theme={colorMode}
           title="Cancel request"
           onClick={onCancelRequestToAddFriend}
         >
-          <CgRemoveR />
+          <FcCancel />
         </Button>
       ) : user &&
         currentPersonalUser &&
@@ -258,8 +298,8 @@ const PersonalContact = () => {
           currentPersonalUser._id.toString()
         ) ? (
         <ResponseRequests ref={responseRef}>
-          <Button theme={colorMode} title="Response the request">
-            <FaReply
+          <Button size="large" theme={colorMode} title="Response the request">
+            <FcInfo
               onClick={() => setOpenResponse((prevState) => !prevState)}
             />
           </Button>
@@ -277,32 +317,45 @@ const PersonalContact = () => {
           theme={colorMode}
           title="add friend"
           onClick={onSendRequestToAddFriend}
+          size="large"
         >
-          <IoIosPersonAdd />
+          <FcInvite />
         </Button>
       )}
 
-      <Button theme={colorMode} title="Chat">
-        <TiMessages />
+      <Button size="large" theme={colorMode} title="Chat">
+        <FcVoicePresentation />
       </Button>
       {user?.following?.includes(currentPersonalUser._id) ? (
         <Button
+          size="large"
           theme={colorMode}
           title="UnFollow"
           onClick={onHandleUnfollowUser}
         >
-          <RiUserUnfollowLine />
+          <FcApprove />
         </Button>
       ) : (
-        <Button theme={colorMode} title="Follow" onClick={onHandleFollowUser}>
-          <RiUserFollowLine />
+        <Button
+          size="large"
+          theme={colorMode}
+          title="Follow"
+          onClick={onHandleFollowUser}
+        >
+          <FcConferenceCall />
         </Button>
       )}
-      <Button theme={colorMode} title="Setting">
-        <BsThreeDots />
-      </Button>
     </>
   );
+
+  const onClickRemoveFriend = () => {
+    setDialog({
+      title: `Remove friend`,
+      content: `Are you sure to remove ${currentPersonalUser?.name}`,
+      data: { type: "remove contact", userId: currentPersonalUser._id },
+    });
+  };
+
   return (
     <PersonalContactContainer>
       {relationship === "me"
@@ -310,6 +363,40 @@ const PersonalContact = () => {
         : relationship === "friend"
         ? FriendActionsContact
         : StrangerActionsContact}
+      <SettingWrapper ref={settingRef}>
+        <Button
+          size="large"
+          theme={colorMode}
+          title="Setting"
+          onClick={() => setOpenSettings((prevState) => !prevState)}
+        >
+          <FcPortraitMode />
+        </Button>
+        {openSettings ? (
+          <SettingsDropdown theme={colorMode}>
+            {user.friends.includes(currentPersonalUser?._id) && (
+              <SettingItem theme={colorMode} onClick={onClickRemoveFriend}>
+                <span>
+                  <FcHighPriority />
+                </span>
+                <span>Remove Friend</span>
+              </SettingItem>
+            )}
+            <SettingItem theme={colorMode}>
+              <span>
+                <FcLeave />
+              </span>
+              <span>Find Report</span>
+            </SettingItem>
+            <SettingItem theme={colorMode}>
+              <span>
+                <FcDisapprove />
+              </span>
+              <span>Block</span>
+            </SettingItem>
+          </SettingsDropdown>
+        ) : null}
+      </SettingWrapper>
     </PersonalContactContainer>
   );
 };

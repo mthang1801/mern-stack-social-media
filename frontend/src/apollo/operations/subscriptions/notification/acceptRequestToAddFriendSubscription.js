@@ -9,6 +9,7 @@ export const ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
       content
       hasSeen
       isQuestion
+      url
       fieldIdentity {
         sender {
           _id          
