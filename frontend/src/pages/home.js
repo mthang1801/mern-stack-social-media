@@ -92,7 +92,7 @@ const Home = () => {
       <MainBody>
         <MainContent>
           <MainContentLeftSide>
-            {user && <LazyLoad once><PostEditor user={user} /></LazyLoad>}
+            {user && <LazyLoad once><PostEditor /></LazyLoad>}
             {posts.length ? <LazyLoad><Posts posts={posts} /></LazyLoad> : null}
           </MainContentLeftSide>
           <MainContentRightSide>

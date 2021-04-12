@@ -8,11 +8,13 @@ import { EditorState, convertToRaw } from "draft-js";
 import Button from "@material-ui/core/Button";
 import useLanguage from "../../Global/useLanguage";
 import _ from "lodash";
-import { useMutation } from "@apollo/client";
-import { CREATE_POST } from "../../../apollo/operations/mutations/post/createPost";
+import { useMutation, useQuery } from "@apollo/client";
+import { CREATE_POST} from "../../../apollo/operations/mutations/post/createPost";
 import {cacheMutations} from "../../../apollo/operations/mutations/cache"
-
-const PostEditor = ({ user }) => {
+import {GET_PERSONAL_USER_CACHE_DATA} from "../../../apollo/operations/queries/cache"
+const PostEditor = () => {
+  const {data : {user, currentPersonalUser}} = useQuery(GET_PERSONAL_USER_CACHE_DATA);
+  
   const [postStatus, setPostStatus] = useState("PUBLIC");
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
@@ -23,7 +25,7 @@ const PostEditor = ({ user }) => {
   const { i18n, lang } = useLanguage();
   const { post } = i18n.store.data[lang].translation;
   const [createPost, { loading: createPostLoading }] = useMutation(CREATE_POST);
-  const {setNewPost} = cacheMutations
+  const {setNewPost, addPostItemToCurrentPersonalUser} = cacheMutations
   const handleSetPostStatus = useCallback((status) => {
     setPostStatus(status);
   }, []);
@@ -87,8 +89,11 @@ const PostEditor = ({ user }) => {
       status: postStatus
     }})
       .then(({data}) => {
-        const {createPost} = data ;        
-        setNewPost(createPost)
+        const {createPost} = data ;              
+        setNewPost(createPost);
+        if(user._id === currentPersonalUser._id){
+          addPostItemToCurrentPersonalUser(createPost);
+        }
         document.getElementById("post-editor").querySelector("[contenteditable=true]").setAttribute("contenteditable", true);
         setEditorState(EditorState.createEmpty());
         setImages([]);

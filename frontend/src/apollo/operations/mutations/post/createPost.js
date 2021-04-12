@@ -25,23 +25,29 @@ export const CREATE_POST = gql`
     ) {
       _id
       text
-      shortenText
       rawText
+      shortenText
       mentions {
         _id
         name
-        slug
         avatar
+        slug
         isOnline
-        offlinedAt
-      }
+      }      
       author {
         _id
         name
         slug
         avatar
       }
-      likes
+      files{
+        filename
+        mimetype
+        data
+      }
+      comments       
+      responses     
+      likes      
       status
       createdAt
     }

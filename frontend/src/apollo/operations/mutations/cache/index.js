@@ -6,61 +6,62 @@ import createClearDialog from "./controls/clearDialog";
 import createSetPostStatus from "./post/setPostStatus";
 import createSetPosts from "./post/setPosts";
 import createSetPersonalPosts from "./post/setPersonalPosts";
-import createSetNewPost from "./post/setNewPost"
-import createUpdateLikePost from "./post/updateLikePost"
+import createSetNewPost from "./post/setNewPost";
+import createUpdateLikePost from "./post/updateLikePost";
 import createUpdateUnlikePost from "./post/updateUnlikePost";
 //Comment
 import createAddCommentToPost from "./post/addCommentToPost";
-import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost"
-import createAddCommentsToPost from "./post/addCommentsToPost"
+import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost";
+import createAddCommentsToPost from "./post/addCommentsToPost";
 import createRemoveComment from "./post/removeComment";
 import createAddLikeComment from "./post/addLikeComment";
 import createRemoveLikeComment from "./post/removeLikeComment";
-import createUpdateCommentLikes from "./post/updateCommentLikes"
+import createUpdateCommentLikes from "./post/updateCommentLikes";
 //Response
-import createAddNewResponseToComment from "./post/addNewResponseToComment"
+import createAddNewResponseToComment from "./post/addNewResponseToComment";
 import createAddResponsesToComment from "./post/addResponsesToComment";
-import createAddLikeResponse from "./post/addLikeResponse"
-import createRemoveLikeResponse from "./post/removeLikeResponse"
-import createRemoveResponse from "./post/removeResponse"
+import createAddLikeResponse from "./post/addLikeResponse";
+import createRemoveLikeResponse from "./post/removeLikeResponse";
+import createRemoveResponse from "./post/removeResponse";
 //User
 import createSetCurrentUser from "./user/setCurrentUser";
 import createSetCurrentPersonalUser from "./user/setCurrentPersonalUser";
 import createClearCurrentChat from "./user/clearCurrentChat";
+import createAddPostsToCurrentPersonalUser from "./user/addPostsToCurrentPersonalUser";
+import createAddPostItemToCurrentPersonalUser from "./user/addPostItemToCurrentPersonalUser";
 //Notifications
 import createSetNotifications from "./notifications/setNotifications";
 import createSetCountNumberNotificationsUnseen from "./notifications/setCountNumberNotificationsUnseen";
 import createSetNewNotifications from "./notifications/setNewNotifications";
-import createRemoveNewNotification from "./notifications/removeNewNotification"
+import createRemoveNewNotification from "./notifications/removeNewNotification";
 import createSetLatestNotification from "./notifications/setLatestNotification";
 import createAddNotificationItemToNotificationsList from "./notifications/addNotificationItemToNotificationsList";
-import createRemoveNotificationItemFromNotificationsList from "./notifications/removeNotificationItemFromNotificationsList"
+import createRemoveNotificationItemFromNotificationsList from "./notifications/removeNotificationItemFromNotificationsList";
 import createIncreaseCountNumberNotificationsUnseen from "./notifications/increaseCountNumberNotificationsUnseen";
 import createDecreaseCountNumberNotificationsUnseen from "./notifications/decreaseCountNumberNotificationsUnseen";
-import createUpdateNotificationItemInNotificationsList from "./notifications/updateNotificationItemInNotificationsList"
+import createUpdateNotificationItemInNotificationsList from "./notifications/updateNotificationItemInNotificationsList";
 import createUpdateNotificationHasSeen from "./notifications/updateNotificationHasSeen";
 //Friends
 import createSetOpenFriendsList from "./friends/setOpenFriendsList";
 import createSetFriends from "./friends/setFriends";
 import createSetReceivedRequestsToAddFriend from "./friends/setReceivedRequestsToAddFriend";
 import createSetSentRequestsToAddFriend from "./friends/setSentRequestsToAddFriend";
-import createSetMoreFriends from "./friends/setMoreFriends"
+import createSetMoreFriends from "./friends/setMoreFriends";
 //Messages Storage
 import createSetInitialMessagesStorage from "./messagesStorage/setInitialMessagesStorage";
 import createSetMessagesStorage from "./messagesStorage/setMessagesStorage";
 import createUpdateMessagesStorage from "./messagesStorage/updateMessagesStorage";
-import createUpdateHasSeenLatestMessage from './messagesStorage/updateHasSeenLatestMessage';
+import createUpdateHasSeenLatestMessage from "./messagesStorage/updateHasSeenLatestMessage";
 import createClearMessageStorage from "./messagesStorage/clearMessageStorage";
 import createUpdateMessagesStorageWhenReceiverSeenAllMessages from "./messagesStorage/updateMessagesStorageWhenReceiverSeenAllMessages";
-import createUpdateMoreMessages from "./messagesStorage/updateMoreMessages"
+import createUpdateMoreMessages from "./messagesStorage/updateMoreMessages";
 import createSetCurrentChat from "./chat/setCurrentChat";
-import createUpdateMessagesStorageToReceivedWhenUserOnline from "./messagesStorage/updateMessagesStorageToReceivedWhenUserOnline"
+import createUpdateMessagesStorageToReceivedWhenUserOnline from "./messagesStorage/updateMessagesStorageToReceivedWhenUserOnline";
 import createAddNewConversationToMessagesStorage from "./messagesStorage/addNewConversationToMessagesStorage";
 //Chat
 import createSetNumberOfConversations from "./chat/setNumberOfConversations";
-import createUpdateUserOnlineOffline from "./chat/updateUserOnlineOffline"
-import createUpdateUserOnlineOfflineMessagesStorage from "./chat/updateUserOnlineOfflineMessagesStorage"
-
+import createUpdateUserOnlineOffline from "./chat/updateUserOnlineOffline";
+import createUpdateUserOnlineOfflineMessagesStorage from "./chat/updateUserOnlineOfflineMessagesStorage";
 
 import {
   toggleButtonMenuVar,
@@ -80,57 +81,73 @@ import {
   setReceivedRequestsToAddFriendVar,
   setMessagesStorageVar,
   setCurrentChatVar,
-  setNumberOfConversationsVar
+  setNumberOfConversationsVar,
 } from "../../../cache";
 
 const mutations = {
   //Controls
   toggleButtonMenu: createToggleButtonMenu(toggleButtonMenuVar),
-  setDialog : createSetDialog(setDialogVar), 
-  clearDialog : createClearDialog(setDialogVar),
+  setDialog: createSetDialog(setDialogVar),
+  clearDialog: createClearDialog(setDialogVar),
   //Post
   setPostStatus: createSetPostStatus(setPostStatusVar),
   setPosts: createSetPosts(setPostsVar),
   setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
-  setNewPost : createSetNewPost(setPostsVar),
-  updateLikePost : createUpdateLikePost(setPostsVar),
-  updateUnlikePost : createUpdateUnlikePost(setPostsVar),  
-  removeComment : createRemoveComment(setPostsVar) ,
+  setNewPost: createSetNewPost(setPostsVar),
+  updateLikePost: createUpdateLikePost(setPostsVar),
+  updateUnlikePost: createUpdateUnlikePost(setPostsVar),
+  removeComment: createRemoveComment(setPostsVar),
   //Comment
-  addCommentToPost : createAddCommentToPost(setPostsVar),
-  addCommentToOwnerPost : createAddCommentToOwnerPost(setPersonalPostsVar),
-  addCommentsToPost : createAddCommentsToPost(setPostsVar),
-  addLikeComment : createAddLikeComment(setPostsVar),
-  removeLikeComment : createRemoveLikeComment(setPostsVar),
-  updateCommentLikes : createUpdateCommentLikes(setPostsVar),
+  addCommentToPost: createAddCommentToPost(setPostsVar),
+  addCommentToOwnerPost: createAddCommentToOwnerPost(setPersonalPostsVar),
+  addCommentsToPost: createAddCommentsToPost(setPostsVar),
+  addLikeComment: createAddLikeComment(setPostsVar),
+  removeLikeComment: createRemoveLikeComment(setPostsVar),
+  updateCommentLikes: createUpdateCommentLikes(setPostsVar),
   //Response
-  addNewResponseToComment : createAddNewResponseToComment(setPostsVar),
-  addResponsesToComment : createAddResponsesToComment(setPostsVar),
-  addLikeResponse : createAddLikeResponse(setPostsVar),
-  removeLikeResponse : createRemoveLikeResponse(setPostsVar),
-  removeResponse : createRemoveResponse(setPostsVar),
+  addNewResponseToComment: createAddNewResponseToComment(setPostsVar),
+  addResponsesToComment: createAddResponsesToComment(setPostsVar),
+  addLikeResponse: createAddLikeResponse(setPostsVar),
+  removeLikeResponse: createRemoveLikeResponse(setPostsVar),
+  removeResponse: createRemoveResponse(setPostsVar),
   //User
   setCurrentUser: createSetCurrentUser(setUserVar),
   setCurrentPersonalUser: createSetCurrentPersonalUser(
     setCurrentPersonalUserVar
   ),
+  addPostsToCurrentPersonalUser: createAddPostsToCurrentPersonalUser(
+    setCurrentPersonalUserVar
+  ),
+  addPostItemToCurrentPersonalUser: createAddPostItemToCurrentPersonalUser(
+    setCurrentPersonalUserVar
+  ),
   //Notifications
   setNotifications: createSetNotifications(setNotificationsVar),
-  addNotificationItemToNotificationsList : createAddNotificationItemToNotificationsList(setNotificationsVar),
-  updateNotificationItemInNotificationsList : createUpdateNotificationItemInNotificationsList(setNotificationsVar),  
-  removeNotificationItemFromNotificationsList : createRemoveNotificationItemFromNotificationsList(setNotificationsVar),
-  updateNotificationHasSeen : createUpdateNotificationHasSeen(setNotificationsVar),
+  addNotificationItemToNotificationsList: createAddNotificationItemToNotificationsList(
+    setNotificationsVar
+  ),
+  updateNotificationItemInNotificationsList: createUpdateNotificationItemInNotificationsList(
+    setNotificationsVar
+  ),
+  removeNotificationItemFromNotificationsList: createRemoveNotificationItemFromNotificationsList(
+    setNotificationsVar
+  ),
+  updateNotificationHasSeen: createUpdateNotificationHasSeen(
+    setNotificationsVar
+  ),
   setNewNotifications: createSetNewNotifications(setNewNotificationsVar),
-  removeNewNotification : createRemoveNewNotification(setNewNotificationsVar),
-  setLatestNotification: createSetLatestNotification(
-    setLatestNotificationVar
-  ),  
+  removeNewNotification: createRemoveNewNotification(setNewNotificationsVar),
+  setLatestNotification: createSetLatestNotification(setLatestNotificationVar),
   setCountNumberNotificationsUnseen: createSetCountNumberNotificationsUnseen(
     setCountNumberNotificationsUnseenVar
   ),
-  increaseNumberNotificationsUnseen : createIncreaseCountNumberNotificationsUnseen(setCountNumberNotificationsUnseenVar),
-  decreaseNumberNotificationsUnseen : createDecreaseCountNumberNotificationsUnseen(setCountNumberNotificationsUnseenVar),
-  
+  increaseNumberNotificationsUnseen: createIncreaseCountNumberNotificationsUnseen(
+    setCountNumberNotificationsUnseenVar
+  ),
+  decreaseNumberNotificationsUnseen: createDecreaseCountNumberNotificationsUnseen(
+    setCountNumberNotificationsUnseenVar
+  ),
+
   //Friends
   setOpenFriendsList: createSetOpenFriendsList(setOpenFriendsListVar),
   setFriends: createSetFriends(setFriendsVar),

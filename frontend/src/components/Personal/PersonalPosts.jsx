@@ -4,11 +4,9 @@ import Posts from "../Post/Posts";
 import PostEditor from "../Post/PostEditor/PostEditor";
 import { useQuery } from "@apollo/client";
 import { GET_PERSONAL_USER_CACHE_DATA } from "../../apollo/operations/queries/cache";
+import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import { FETCH_POSTS } from "../../apollo/operations/queries/post";
 import IntroductionBox from "./IntroductionBox";
-import { cacheMutations } from "../../apollo/operations/mutations";
-import LazyLoad from "react-lazyload";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const PersonalPosts = () => {
   const [loadingMore, setLoadingMore] = useState(false);
@@ -16,6 +14,7 @@ const PersonalPosts = () => {
   const {
     data: { user, currentPersonalUser },
   } = useQuery(GET_PERSONAL_USER_CACHE_DATA, { fetchPolicy: "cache-first" });
+  const {addPostsToCurrentPersonalUser, addPostItemToCurrentPersonalUser} = cacheMutations
   const {
     data: fetchedPostsData,
     loading,
@@ -26,10 +25,9 @@ const PersonalPosts = () => {
       skip: 0,
       limit: +process.env.REACT_APP_POSTS_PER_PAGE,
     },
-    onCompleted: (data) => {
-      console.log(data);
+    onCompleted: (data) => {      
       if (data) {
-        setPostsData((prevPosts) => [...prevPosts, ...data.fetchPosts]);
+        addPostsToCurrentPersonalUser(data.fetchPosts);
       }
     },
   });
@@ -46,7 +44,7 @@ const PersonalPosts = () => {
         } = document.documentElement;
         if (
           scrollTop + clientHeight > 0.8 * scrollHeight &&
-          currentPersonalUser.posts.length > postsData.length
+          currentPersonalUser.posts.length > currentPersonalUser.postsData?.length
         ) {
           setLoadingMore(true);
         }
@@ -62,8 +60,8 @@ const PersonalPosts = () => {
   });
 
   useEffect(() => {
-    if (loadingMore) {
-      const skip = postsData.length;
+    if (loadingMore && currentPersonalUser.postsData) {
+      const skip = currentPersonalUser.postsData.length;
       const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
       fetchMorePostsData({
         variables: {
@@ -73,16 +71,13 @@ const PersonalPosts = () => {
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (fetchMoreResult) {
-            setPostsData((prevPosts) => [
-              ...prevPosts,
-              ...fetchMoreResult.fetchPosts,
-            ]);
+            addPostsToCurrentPersonalUser(fetchMoreResult.fetchPosts);
           }
         },
       }).then(() => setLoadingMore(false));
     }
-  }, [loadingMore]);
-
+  }, [loadingMore, currentPersonalUser]);
+  
   if (!fetchedPostsData) return null;
   if (loading) return <div>Loading...</div>;
   return (
@@ -91,9 +86,9 @@ const PersonalPosts = () => {
         <IntroductionBox />
       </LeftSide>
       <RightSide>
-        {user?._id === currentPersonalUser?._id && <PostEditor user={user} />}
-        {postsData.length && currentPersonalUser ? (
-          <Posts posts={postsData} />
+        {user?._id === currentPersonalUser?._id && <PostEditor />}
+        {currentPersonalUser?.postsData?.length? (
+          <Posts posts={currentPersonalUser.postsData} />
         ) : null}
       </RightSide>
     </Wrapper>

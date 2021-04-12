@@ -14,7 +14,7 @@ const PersonalPage = (props) => {
   const { slug } = props.match.params; 
 
   const {data : postsData} = useQuery(FETCH_PERSONAL_USER, {fetchPolicy : "cache-and-network", variables : {slug}, onCompleted : (data) => {
-    if(data?.fetchPersonalUser){
+    if(data?.fetchPersonalUser){      
       setCurrentPersonalUser(data.fetchPersonalUser)
     }
   }})    
