@@ -18,16 +18,20 @@ export const SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
           name
           slug
           following
+          followed
           friends
           sentRequestToAddFriend
+          receivedRequestToAddFriend
         }
         receiver {
           _id
           name
           slug
+          following
           followed
           friends
           receivedRequestToAddFriend
+          sentRequestToAddFriend
           notifications
         }
       }
@@ -37,6 +41,7 @@ export const SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
         slug
         avatar
       }
+      receiver
       updatedAt
       createdAt
     }

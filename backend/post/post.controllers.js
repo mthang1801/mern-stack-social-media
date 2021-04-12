@@ -14,10 +14,9 @@ import decodeBase64 from "../utils/decodeBase64";
 import { raiseError } from "../utils/raiseError";
 export const postControllers = {
   fetchPosts: async (req, userId, skip, limit) => {
-    
     const currentUserId = getAuthUser(req, false);
     const currentUser = await User.findById(currentUserId);
-    console.log(userId, currentUserId, skip, limit);
+
     if (userId) {
       if (userId !== currentUserId) {
         return Post.find({
@@ -37,7 +36,7 @@ export const postControllers = {
           })
           .sort({ createdAt: -1 })
           .skip(+skip)
-          .limit(+limit);        
+          .limit(+limit);
       }
       return Post.find({
         author: userId,
@@ -88,7 +87,7 @@ export const postControllers = {
       }
       return { ..._post };
     });
-    
+
     return standardizedPosts;
   },
   createPost: async (req, data, pubsub, notifyMentionUsersInPost) => {

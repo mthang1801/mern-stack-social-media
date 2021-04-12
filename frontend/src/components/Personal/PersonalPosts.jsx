@@ -10,11 +10,10 @@ import IntroductionBox from "./IntroductionBox";
 
 const PersonalPosts = () => {
   const [loadingMore, setLoadingMore] = useState(false);
-  const [postsData, setPostsData] = useState([]);
   const {
     data: { user, currentPersonalUser },
   } = useQuery(GET_PERSONAL_USER_CACHE_DATA, { fetchPolicy: "cache-first" });
-  const {addPostsToCurrentPersonalUser, addPostItemToCurrentPersonalUser} = cacheMutations
+  const {addPostsToCurrentPersonalUser} = cacheMutations
   const {
     data: fetchedPostsData,
     loading,

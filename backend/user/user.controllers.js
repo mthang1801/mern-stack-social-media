@@ -68,7 +68,7 @@ export const userController = {
     };
   },
   fetchCurrentUser: async (req) => {
-    console.time("fetch Current User")
+    console.time("fetch Current User");
     const userId = getAuthUser(req, false);
     const user = await User.findById(userId);
 
@@ -78,12 +78,12 @@ export const userController = {
     console.timeEnd("fetch Current User");
     return user;
   },
-  fetchPersonalUser: async (req, slug) => {    
-    try {      
-    const userBySlug = await User.findOne({slug}, {password : 0});        
-    return userBySlug;
+  fetchPersonalUser: async (req, slug) => {
+    try {
+      const userBySlug = await User.findOne({ slug }, { password: 0 });
+      return userBySlug;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       raiseError(error.message);
     }
   },
@@ -285,12 +285,12 @@ export const userController = {
       const session = await mongoose.startSession();
       session.startTransaction();
       //remove notification
-      const notification = await Notification.findOneAndDelete({
+      const notification = await Notification.findOne({
         field: fields.CONTACT,
         content: contents.SENT_REQUEST_TO_ADD_FRIEND,
         "fieldIdentity.sender": currentUserId,
         "fieldIdentity.receiver": receiverId,
-      }).populate({ path: "creator", select: "slug name avatar" });
+      });
 
       const updatedSender = await User.findByIdAndUpdate(
         currentUserId,
@@ -306,21 +306,24 @@ export const userController = {
           $pull: {
             receivedRequestToAddFriend: currentUserId,
             followed: currentUserId,
-            notifications: notification._id,
+            notifications: notification?._id,
           },
         },
         { new: true }
       );
-      const updatedNotification = {
-        ...notification._doc,
-        fieldIdentity: {
-          sender: updatedSender,
-          receiver: updatedReceiver,
-        },
-      };
-      if (notification) {
+
+      const removedNotification = await Notification.findOneAndDelete({
+        field: fields.CONTACT,
+        content: contents.SENT_REQUEST_TO_ADD_FRIEND,
+        "fieldIdentity.sender": currentUserId,
+        "fieldIdentity.receiver": receiverId,
+      })
+        .populate({ path: "creator", select: "slug name avatar" })
+        .populate({ path: "fieldIdentity.sender" })
+        .populate({ path: "fieldIdentity.receiver" });
+      if (removedNotification) {
         await pubsub.publish(cancelRequestToAddFriendSubscription, {
-          cancelRequestToAddFriendSubscription: updatedNotification,
+          cancelRequestToAddFriendSubscription: removedNotification._doc,
         });
       }
 
@@ -503,7 +506,7 @@ export const userController = {
       await pubsub.publish(rejectRequestToAddFriendSubscription, {
         rejectRequestToAddFriendSubscription: {
           sender: sender,
-          receiver: currentUser,
+          receiver: currentUser,          
         },
       });
 
@@ -567,11 +570,11 @@ export const userController = {
   },
   removeFriend: async (req, friendId, pubsub, removeFriendSubscription) => {
     try {
-      const currentUserId = getAuthUser(req);     
+      const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
         friends: friendId,
-      });      
+      });
       if (!currentUser) {
         throw new AuthenticationError("User not found");
       }

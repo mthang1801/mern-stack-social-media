@@ -35,6 +35,7 @@ export const ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
         slug
         avatar
       }
+      receiver
       updatedAt
       createdAt
     }

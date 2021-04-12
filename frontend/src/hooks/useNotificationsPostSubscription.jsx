@@ -179,6 +179,7 @@ const useNotificationsPostSubscription = () => {
             const {
               cancelRequestToAddFriendSubscription: notification,
             } = subscriptionData.data;
+            
             console.log(subscriptionData)
             const { sender, receiver } = notification.fieldIdentity;
             if (sender && receiver) {
@@ -254,22 +255,7 @@ const useNotificationsPostSubscription = () => {
           }
         },
       });
-
-      unsubscribeAcceptRequestAddFriend = subscribeToMoreNotifications({
-        document:
-          subscriptions.notificationSubscription
-            .NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND,
-        variables: { userId: user._id },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData) return prev;
-          const {
-            notification: newNotification,
-            sender,
-            receiver,
-          } = subscriptionData.data.notifyAcceptRequestToAddFriend;
-          updatedAddNotification(newNotification, sender, receiver);
-        },
-      });
+     
       unsubscribeOwnerPostReceivedUserComment = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription

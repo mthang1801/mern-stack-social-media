@@ -74,26 +74,26 @@ const useContactSubscription = () => {
         },
       });
 
-      unsubscribeCancelRequestToAddFriend = subscribeUser({
-        document:
-          subscriptions.userSubscription
-            .CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-        variables: { userId: user._id },
-        updateQuery: (_, { subscriptionData }) => {
-          const {
-            sender,
-            receiver,
-          } = subscriptionData.data.cancelRequestToAddFriendSubscription;
+      // unsubscribeCancelRequestToAddFriend = subscribeUser({
+      //   document:
+      //     subscriptions.userSubscription
+      //       .CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+      //   variables: { userId: user._id },
+      //   updateQuery: (_, { subscriptionData }) => {
+      //     const {
+      //       sender,
+      //       receiver,
+      //     } = subscriptionData.data.cancelRequestToAddFriendSubscription;
 
-          // remove sender from received requests
-          setReceivedRequestsToAddFriend(
-            receivedRequestsToAddFriend.filter(
-              (senderRequest) => senderRequest._id !== sender._id
-            )
-          );
-          updateSubscriptionOnChange(sender, receiver);
-        },
-      });
+      //     // remove sender from received requests
+      //     setReceivedRequestsToAddFriend(
+      //       receivedRequestsToAddFriend.filter(
+      //         (senderRequest) => senderRequest._id !== sender._id
+      //       )
+      //     );
+      //     updateSubscriptionOnChange(sender, receiver);
+      //   },
+      // });
 
       unsubscribeRemoveFriend = subscribeUser({
         document: subscriptions.userSubscription.REMOVE_FRIEND,

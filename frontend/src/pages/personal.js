@@ -12,13 +12,20 @@ import PersonalPosts from "../components/Personal/PersonalPosts";
 const PersonalPage = (props) => {
   const { setCurrentPersonalUser } = cacheMutations;
   const { slug } = props.match.params; 
+  const {data : {currentPersonalUser}} = useQuery(GET_CURRENT_PERSONAL_USER)
+  const {refetch : fetchCurrentPersonalUser} = useQuery(FETCH_PERSONAL_USER, {skip : true})  
 
-  const {data : postsData} = useQuery(FETCH_PERSONAL_USER, {fetchPolicy : "cache-and-network", variables : {slug}, onCompleted : (data) => {
-    if(data?.fetchPersonalUser){      
-      setCurrentPersonalUser(data.fetchPersonalUser)
-    }
-  }})    
-  if(!postsData) return null;
+  useEffect(() => {
+    let _mounted = true ;
+    fetchCurrentPersonalUser({slug}).then(({data}) => {
+      if(data && _mounted){
+        setCurrentPersonalUser(data.fetchPersonalUser);
+      }
+    })
+    return () => _mounted = false ;
+  },[slug])
+  
+  if(!currentPersonalUser || currentPersonalUser.slug !== slug) return null;
   return (
     <Layout>
       <PersonalHeading />

@@ -54,6 +54,7 @@ const PersonalHeading = () => {
           {menus.length
             ? menus.map((menu) => (
                 <ProfileMenuItemLink
+                  key={menu.name}
                   to={menu.path(currentPersonalUser.slug)}
                   theme={colorMode}
                   active={(

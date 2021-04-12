@@ -8,8 +8,9 @@ export const PersonalContactContainer = styled.div`
     width: 45px;
     height: 45px;
     margin: 0 0.5rem;
-    transform : scale(1.25);
-    font-size : 1.5rem;
+    transform : scale(1.2);
+    font-size : 1.25rem;
+    color : inherit;
   }
 `;
 
@@ -49,39 +50,41 @@ export const DropdownResponseRequest = styled.div`
   }
 `;
 
-export const SettingWrapper =styled.div`
+export const Dropdown =styled.div`
   position : relative; 
 `
 
-export const SettingsDropdown = styled.div`
+export const DropdownMenu = styled.div`
   position : absolute; 
   bottom : 120%;
-  width : 160px;
+  width : 180px;
   border-radius : 0.5rem;
   right : 0;
   list-style: none ; 
   background-color : ${({theme}) => theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
-  border:  1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"}  
+  border:  1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"}  ;
+  overflow : hidden;
 `
 
-export const SettingItem = styled.span`  
+export const DropdownItem = styled.span`  
   cursor : pointer;
-  padding : 0.25rem 0.5rem;
+  padding : 0.4rem 0.75rem;
   display : flex;
   align-items :center;
+   
   & span {
     display  :flex;
     &:first-child{
-      margin-right : 0.5rem;      
+      margin-right : 1rem;      
     }
     & svg{
-      font-size : 1.1rem;
+      font-size : 1.25rem;
     }
   }
   &:not(:last-child){
     border-bottom : 1px solid var(--gray-light);    
   }
   &:hover{
-    background-color : ${({theme}) => theme === "dark" ? "var(--color-hover-dark)" : "var(--color-hover-default)"}
+    background-color : ${({theme}) => theme === "dark" ? "var(--color-hover-dark)" : "var(--color-hover-default)"};    
   }
 `

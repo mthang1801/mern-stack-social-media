@@ -26,7 +26,7 @@ const IntroductionBox = () => {
       {/* works list */}
       <WorkList>
         {works.map(work => (
-          <li>
+          <li key={work.job_name}>
            <Website><span><MdWork/></span><Link to={`/tags/${work.job_name}`}>{work.job_name}</Link>at<Link to={work.company_href}>{work.company_name}</Link></Website> 
           </li>
         ))}

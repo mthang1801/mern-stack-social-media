@@ -1,5 +1,4 @@
 import { POST_CREATED_SUBSCRIPTIONS } from "./postCreated";
-import { NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND } from "./notifyAcceptRequestToAddFriend";
 import { NOTIFY_MENTIONED_USERS_IN_POST } from "./notifyMentionedUsersInPost";
 import { LIKE_POST_SUBSCRIPTION } from "./likePostSubscription";
 import { REMOVE_LIKE_POST_SUBSCRIPTION } from "./removeLikePostSubscription";
@@ -16,7 +15,6 @@ import { CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION } from "./cancelRequestToAddF
 import {ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION} from "./acceptRequestToAddFriendSubscription"
 const notificationSubscription = {
   POST_CREATED_SUBSCRIPTIONS,    
-  NOTIFY_ACCEPT_REQUEST_TO_ADD_FRIEND,
   NOTIFY_MENTIONED_USERS_IN_POST,
   LIKE_POST_SUBSCRIPTION,
   REMOVE_LIKE_POST_SUBSCRIPTION,

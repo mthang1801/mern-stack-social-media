@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
-import { HiOutlinePencilAlt } from "react-icons/hi";
-import { AiOutlineMenuUnfold } from "react-icons/ai";
+
 import {
-  FcCheckmark,
-  FcCancel,
-  FcAddressBook,
-  FcVoicePresentation,
-  FcInfo,
-  FcInvite,
-  FcConferenceCall,
-  FcPortraitMode,
-  FcApprove,
-  FcNeutralDecision,
-  FcHighPriority,
-  FcLeave,
-  FcDisapprove,
-} from "react-icons/fc";
+  AiOutlineUnorderedList,
+  AiOutlineEdit,
+  AiOutlineUsergroupDelete,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+} from "react-icons/ai";
+import {
+  BsThreeDots,
+  BsExclamationSquare,
+  BsQuestionSquare,
+} from "react-icons/bs";
+import { BiUserVoice, BiBlock } from "react-icons/bi";
+
+import { FiUserX, FiUsers, FiUserCheck, FiUserPlus } from "react-icons/fi";
+import { RiMessengerLine } from "react-icons/ri";
+import { IoMdUndo } from "react-icons/io";
+
+import { FcCheckmark, FcCancel } from "react-icons/fc";
 import { userMutations } from "../../apollo/operations/mutations";
 import { cacheMutations } from "../../apollo/operations/mutations";
 
@@ -31,14 +34,15 @@ import {
   PersonalContactContainer,
   ResponseRequests,
   DropdownResponseRequest,
-  SettingWrapper,
-  SettingsDropdown,
-  SettingItem,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
 } from "./styles/PersonalHeadingContact.styles";
 const PersonalContact = () => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
+  const [openUserInteraction, setOpenUserInteraction] = useState(false);
   const {
     data: { notifications, latestNotification },
   } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, { fetchPolicy: "cache-first" });
@@ -80,7 +84,7 @@ const PersonalContact = () => {
   //useRef
   const responseRef = useRef(false);
   const settingRef = useRef(false);
-
+  const interactionRef = useRef(false);
   //track dialog
   useEffect(() => {
     if (
@@ -89,17 +93,14 @@ const PersonalContact = () => {
       dialog?.data?.userId === currentPersonalUser._id &&
       dialog?.agree
     ) {
-      removeFriend({ variables: { friendId: currentPersonalUser._id } }).then(
-        ({ data }) => {
+      removeFriend({ variables: { friendId: currentPersonalUser._id } })
+        .then(({ data }) => {
           const { sender, receiver, notification } = data.removeFriend;
           updateMutationOnChange(sender, receiver, notification);
-        }
-      ).then(() => {
-        setDialog({ agree : false , 
-          title : "", 
-          content : "", 
-          data : null})
-      });
+        })
+        .then(() => {
+          setDialog({ agree: false, title: "", content: "", data: null });
+        });
     }
   }, [dialog, currentPersonalUser]);
   //function to handle when user click button request
@@ -136,6 +137,14 @@ const PersonalContact = () => {
       });
     }
     if (currentPersonalUser && currentPersonalUser._id === receiver._id) {
+      console.log({
+        ...currentPersonalUser,
+        friends: [...receiver.friends],
+        followed: [...receiver.followed],
+        following: [...receiver.following],
+        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
+        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
+      });
       setCurrentPersonalUser({
         ...currentPersonalUser,
         friends: [...receiver.friends],
@@ -163,6 +172,13 @@ const PersonalContact = () => {
       ) {
         setOpenSettings(false);
       }
+      if (
+        interactionRef.current &&
+        !interactionRef.current.contains(e.target) &&
+        openUserInteraction
+      ) {
+        setOpenUserInteraction(false);
+      }
     }
     window.addEventListener("click", trackUserClickEvent);
     return () => window.removeEventListener("click", trackUserClickEvent);
@@ -182,7 +198,7 @@ const PersonalContact = () => {
       }
     }
   }, [user, currentPersonalUser]);
-
+  console.log(currentPersonalUser);
   // Handle add friend
   const onSendRequestToAddFriend = (e) => {
     sendRequestToAddFriend({
@@ -260,20 +276,17 @@ const PersonalContact = () => {
   const MyActionsContact = (
     <>
       <Button size="large" theme={colorMode} title="update personal">
-        <HiOutlinePencilAlt />
+        <AiOutlineEdit />
       </Button>
       <Button size="large" theme={colorMode} title="history actions">
-        <AiOutlineMenuUnfold />
+        <AiOutlineUnorderedList />
       </Button>
     </>
   );
   const FriendActionsContact = (
     <>
       <Button size="large" theme={colorMode} title="chat">
-        <FcVoicePresentation />
-      </Button>
-      <Button size="large" theme={colorMode} title="friend">
-        <FcApprove />
+        <RiMessengerLine />
       </Button>
     </>
   );
@@ -290,7 +303,7 @@ const PersonalContact = () => {
           title="Cancel request"
           onClick={onCancelRequestToAddFriend}
         >
-          <FcCancel />
+          <IoMdUndo />
         </Button>
       ) : user &&
         currentPersonalUser &&
@@ -299,7 +312,7 @@ const PersonalContact = () => {
         ) ? (
         <ResponseRequests ref={responseRef}>
           <Button size="large" theme={colorMode} title="Response the request">
-            <FcInfo
+            <BsQuestionSquare
               onClick={() => setOpenResponse((prevState) => !prevState)}
             />
           </Button>
@@ -319,32 +332,13 @@ const PersonalContact = () => {
           onClick={onSendRequestToAddFriend}
           size="large"
         >
-          <FcInvite />
+          <FiUserPlus />
         </Button>
       )}
 
       <Button size="large" theme={colorMode} title="Chat">
-        <FcVoicePresentation />
+        <RiMessengerLine />
       </Button>
-      {user?.following?.includes(currentPersonalUser._id) ? (
-        <Button
-          size="large"
-          theme={colorMode}
-          title="UnFollow"
-          onClick={onHandleUnfollowUser}
-        >
-          <FcApprove />
-        </Button>
-      ) : (
-        <Button
-          size="large"
-          theme={colorMode}
-          title="Follow"
-          onClick={onHandleFollowUser}
-        >
-          <FcConferenceCall />
-        </Button>
-      )}
     </>
   );
 
@@ -356,6 +350,86 @@ const PersonalContact = () => {
     });
   };
 
+  const UserInteraction = (
+    <Dropdown ref={interactionRef}>
+      <Button
+        size="large"
+        title={
+          user.friends.includes(currentPersonalUser._id)
+            ? "Friend"
+            : user.following.includes(currentPersonalUser._id)
+            ? "Following"
+            : "Follow"
+        }
+        onClick={() => setOpenUserInteraction((prevState) => !prevState)}
+      >
+        {user.friends.includes(currentPersonalUser._id) ? (
+          <FiUserCheck />
+        ) : user.following.includes(currentPersonalUser._id) ? (
+          <FiUsers />
+        ) : (
+          <AiOutlineEye />
+        )}
+      </Button>
+      {openUserInteraction && (
+        <DropdownMenu>
+          {user.following.includes(currentPersonalUser?._id) ? (
+            <DropdownItem theme={colorMode} onClick={onHandleUnfollowUser}>
+              <span>
+                <AiOutlineEyeInvisible />
+              </span>
+              <span>Unfollow</span>
+            </DropdownItem>
+          ) : (
+            <DropdownItem theme={colorMode} onClick={onHandleFollowUser}>
+              <span>
+                <AiOutlineEye />
+              </span>
+              <span>Follow</span>
+            </DropdownItem>
+          )}
+
+          {user.friends.includes(currentPersonalUser?._id) && (
+            <DropdownItem theme={colorMode} onClick={onClickRemoveFriend}>
+              <span>
+                <FiUserX />
+              </span>
+              <span>Remove Friend</span>
+            </DropdownItem>
+          )}
+        </DropdownMenu>
+      )}
+    </Dropdown>
+  );
+
+  const UserSettings = (
+    <Dropdown ref={settingRef}>
+      <Button
+        size="large"
+        title="Setting"
+        onClick={() => setOpenSettings((prevState) => !prevState)}
+      >
+        <BsThreeDots />
+      </Button>
+      {openSettings ? (
+        <DropdownMenu theme={colorMode}>
+          <DropdownItem theme={colorMode}>
+            <span>
+              <BsExclamationSquare />
+            </span>
+            <span>Find Report</span>
+          </DropdownItem>
+          <DropdownItem theme={colorMode}>
+            <span>
+              <BiBlock />
+            </span>
+            <span>Block</span>
+          </DropdownItem>
+        </DropdownMenu>
+      ) : null}
+    </Dropdown>
+  );
+
   return (
     <PersonalContactContainer>
       {relationship === "me"
@@ -363,40 +437,8 @@ const PersonalContact = () => {
         : relationship === "friend"
         ? FriendActionsContact
         : StrangerActionsContact}
-      <SettingWrapper ref={settingRef}>
-        <Button
-          size="large"
-          theme={colorMode}
-          title="Setting"
-          onClick={() => setOpenSettings((prevState) => !prevState)}
-        >
-          <FcPortraitMode />
-        </Button>
-        {openSettings ? (
-          <SettingsDropdown theme={colorMode}>
-            {user.friends.includes(currentPersonalUser?._id) && (
-              <SettingItem theme={colorMode} onClick={onClickRemoveFriend}>
-                <span>
-                  <FcHighPriority />
-                </span>
-                <span>Remove Friend</span>
-              </SettingItem>
-            )}
-            <SettingItem theme={colorMode}>
-              <span>
-                <FcLeave />
-              </span>
-              <span>Find Report</span>
-            </SettingItem>
-            <SettingItem theme={colorMode}>
-              <span>
-                <FcDisapprove />
-              </span>
-              <span>Block</span>
-            </SettingItem>
-          </SettingsDropdown>
-        ) : null}
-      </SettingWrapper>
+      {UserInteraction}
+      {UserSettings}
     </PersonalContactContainer>
   );
 };
