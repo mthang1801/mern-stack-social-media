@@ -176,7 +176,7 @@ const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
           <ReactTinyLink
             cardSize="large"
             showGraphic={true}
-            maxLine={3}
+            maxLine={3}            
             minLine={1}
             url={urlPreview}
             proxyUrl="https://cors-anywhere.herokuapp.com"

@@ -5,7 +5,7 @@ import LazyLoad from "react-lazyload"
 import useLanguage from "../../Global/useLanguage"
 import {MdZoomOutMap} from "react-icons/md"
 import {useThemeUI} from "theme-ui"
-const PostEditorHeader = ({user, postStatus, setPostStatus}) => {
+const PostEditorHeader = ({user, postStatus, setPostStatus, setOpenDialog, openDialog}) => {
   const {i18n , lang} =useLanguage()
   const { status} = i18n.store.data[lang].translation.post; 
   const {colorMode} = useThemeUI()
@@ -22,7 +22,7 @@ const PostEditorHeader = ({user, postStatus, setPostStatus}) => {
     window.addEventListener("click", trackUserClickWithDropdown);
     return () => window.removeEventListener("click" , trackUserClickWithDropdown)
   },[dropdownRef])
-
+  
   return (
     <Wrapper theme={colorMode}>
       <Information>
@@ -50,7 +50,7 @@ const PostEditorHeader = ({user, postStatus, setPostStatus}) => {
         </div>
       </Information>
       <Controls>
-        <ButtonZoom><MdZoomOutMap/></ButtonZoom>         
+        {!openDialog ? <ButtonZoom onClick={setOpenDialog}><MdZoomOutMap/></ButtonZoom> : null} 
       </Controls>
     </Wrapper>
   )

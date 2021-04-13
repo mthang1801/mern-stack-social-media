@@ -5,6 +5,7 @@ export const Wrapper = styled.div`
 `;
 
 export const DraftEditor = styled.div`
+  flex:  1; 
   cursor: text !important;
   .DraftEditor-root {
     width: 100% !important;
@@ -43,6 +44,10 @@ export const Label = styled.label`
 
 export const CardPreview = styled.div`
   margin: 1rem auto;
+  width : 100%;
+  & *{
+    width : 100%; 
+  }
 `;
 
 export const HashtagLink = styled.a`

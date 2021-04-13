@@ -58,7 +58,7 @@ function App() {
  
   useUserStatusSubscriptions()
   useContactSubscription()     
-  if (!fetched) return null;
+  // if (!fetched) return null;
   return (
     <Router>
       <GlobalStyles theme={colorMode} />
