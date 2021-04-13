@@ -5,7 +5,7 @@ import {
   FaShopify,
   FaGlobeAmericas,
 } from "react-icons/fa";
-import { AiOutlineGlobal } from "react-icons/ai";
+import { AiOutlineGlobal, AiOutlineSave } from "react-icons/ai";
 import { ImNewspaper } from "react-icons/im";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import {
@@ -14,12 +14,16 @@ import {
   IoMdTrendingUp,
   IoMdPhotos,
   IoIosChatbubbles,
+  IoMdGlobe,
 } from "react-icons/io";
 import { CgMoreO } from "react-icons/cg";
 import { MdCardMembership, MdInsertEmoticon } from "react-icons/md";
 import { BsChatDots } from "react-icons/bs";
 import { RiContactsBook2Line } from "react-icons/ri";
 import { BiLockAlt, BiLike, BiCommentDetail, BiShareAlt } from "react-icons/bi";
+import { FiEdit, FiTrash} from "react-icons/fi";
+import { VscPinned} from "react-icons/vsc";
+
 
 export const vi = {
   translation: {
@@ -238,6 +242,30 @@ export const vi = {
     post: {
       post: "Đăng bài viết",
       postPlaceholder: "Chia sẻ cảm nghĩ của bạn",
+      heading : {
+        settingOwnPost : {
+          pinPost : {
+            name : "Pin the post",
+            icon : <VscPinned/>
+          },
+          savePost: {
+            name : "Save the post",
+            icon : <AiOutlineSave/>
+          },
+          editPost : {
+            name : "Edit Post", 
+            icon : <FiEdit/>
+          },
+          editAudience : {
+            name : "Edit Audience", 
+            icon : <IoMdGlobe/>
+          },
+          moveToTrash : {
+            name : "Move To trash",
+            icon : <FiTrash/>
+          }
+        }
+      },
       status: [
         {
           name: "Công khai",

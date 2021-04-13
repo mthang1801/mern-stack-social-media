@@ -1,6 +1,6 @@
 const addPostsToCurrentPersonalUser = setCurrentPersonalUserVar => posts => {
-  const currentUser = {...setCurrentPersonalUserVar()};
-  if(currentUser.postsData){
+  let currentUser = {...setCurrentPersonalUserVar()};
+  if(currentUser.postsData?.length){
     currentUser.postsData = [...currentUser.postsData, ...posts];
   }else{
     currentUser.postsData = [...posts];

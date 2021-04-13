@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.article`
   width: 95%;
-  max-width: 800px;
+  max-width: 500px;
   background-color: ${({ theme }) =>
     theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
   box-shadow: var(--lightShadow);

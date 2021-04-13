@@ -19,7 +19,16 @@ export const postResolvers = {
         req,
         args.data,
         pubsub,
-        subscriptionActions.NOTIFY_MENTIONED_USERS_IN_POST
+        subscriptionActions.NOTIFY_MENTIONED_USERS_IN_POST,      
+      ),
+    editPost: (_, args, { req }, info) =>
+      postControllers.editPost(
+        req,
+        args.postId,
+        args.data,
+        pubsub,
+        subscriptionActions.NOTIFY_MENTIONED_USERS_IN_POST,
+        subscriptionActions.EDIT_POST_SUBSCRIPTION
       ),
     likePost: (_, args, { req }, info) =>
       postControllers.likePost(
@@ -29,7 +38,12 @@ export const postResolvers = {
         subscriptionActions.LIKE_POST_SUBSCRIPTION
       ),
     removeLikePost: (_, args, { req }, info) =>
-      postControllers.removeLikePost(req, args.postId, pubsub, subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION),
+      postControllers.removeLikePost(
+        req,
+        args.postId,
+        pubsub,
+        subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION
+      ),
   },
   Subscription: {
     notifyMentionUsersInPost: {
@@ -39,28 +53,41 @@ export const postResolvers = {
             subscriptionActions.NOTIFY_MENTIONED_USERS_IN_POST
           ),
         (payload, { userId }) => {
-          return payload.notifyMentionUsersInPost.receiver.toString() === userId.toString()
+          return (
+            payload.notifyMentionUsersInPost.receiver.toString() ===
+            userId.toString()
+          );
         }
       ),
     },
     likePostSubscription: {
       subscribe: withFilter(
-        () =>
-          pubsub.asyncIterator(
-            subscriptionActions.LIKE_POST_SUBSCRIPTION
-          ),
+        () => pubsub.asyncIterator(subscriptionActions.LIKE_POST_SUBSCRIPTION),
         (payload, { userId }) => {
-          return payload.likePostSubscription.receiver.toString() === userId.toString();
+          return (
+            payload.likePostSubscription.receiver.toString() ===
+            userId.toString()
+          );
         }
       ),
     },
-    removeLikePostSubscription : {
-      subscribe : withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION),
-        (payload, {userId}) => {
-          return payload.removeLikePostSubscription.receiver.toString() === userId.toString()
+    removeLikePostSubscription: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION
+          ),
+        (payload, { userId }) => {
+          return (
+            payload.removeLikePostSubscription.receiver.toString() ===
+            userId.toString()
+          );
         }
-      )
-    }
+      ),
+    },
+    editPostSubscription: {
+      subscribe: () =>
+        pubsub.asyncIterator(subscriptionActions.EDIT_POST_SUBSCRIPTION),
+    },
   },
 };

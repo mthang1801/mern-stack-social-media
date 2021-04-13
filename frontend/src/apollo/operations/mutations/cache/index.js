@@ -9,6 +9,7 @@ import createSetPersonalPosts from "./post/setPersonalPosts";
 import createSetNewPost from "./post/setNewPost";
 import createUpdateLikePost from "./post/updateLikePost";
 import createUpdateUnlikePost from "./post/updateUnlikePost";
+import createUpdatePost from "./post/updatePost";
 //Comment
 import createAddCommentToPost from "./post/addCommentToPost";
 import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost";
@@ -29,6 +30,7 @@ import createSetCurrentPersonalUser from "./user/setCurrentPersonalUser";
 import createClearCurrentChat from "./user/clearCurrentChat";
 import createAddPostsToCurrentPersonalUser from "./user/addPostsToCurrentPersonalUser";
 import createAddPostItemToCurrentPersonalUser from "./user/addPostItemToCurrentPersonalUser";
+import createUpdatePostInCurrentPersonalUser from "./user/updatePostInCurrentPersonalUser";
 //Notifications
 import createSetNotifications from "./notifications/setNotifications";
 import createSetCountNumberNotificationsUnseen from "./notifications/setCountNumberNotificationsUnseen";
@@ -97,6 +99,7 @@ const mutations = {
   updateLikePost: createUpdateLikePost(setPostsVar),
   updateUnlikePost: createUpdateUnlikePost(setPostsVar),
   removeComment: createRemoveComment(setPostsVar),
+  updatePost : createUpdatePost(setPostsVar),
   //Comment
   addCommentToPost: createAddCommentToPost(setPostsVar),
   addCommentToOwnerPost: createAddCommentToOwnerPost(setPersonalPostsVar),
@@ -121,6 +124,7 @@ const mutations = {
   addPostItemToCurrentPersonalUser: createAddPostItemToCurrentPersonalUser(
     setCurrentPersonalUserVar
   ),
+  updatePostInCurrentPersonalUser : createUpdatePostInCurrentPersonalUser(setCurrentPersonalUserVar),
   //Notifications
   setNotifications: createSetNotifications(setNotificationsVar),
   addNotificationItemToNotificationsList: createAddNotificationItemToNotificationsList(

@@ -8,27 +8,24 @@ import React, {
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import Editor from "@draft-js-plugins/editor";
 import draftToHtml from "draftjs-to-html";
-import createMentionPlugin from "@draft-js-plugins/mention";
-import createEmojiPlugin from "@draft-js-plugins/emoji";
-import createLinkifyPlugin from "@draft-js-plugins/linkify";
-import createHashTagPlugin from "@draft-js-plugins/hashtag";
 import _ from "lodash";
 import { useQuery, useMutation } from "@apollo/client";
+import useDraftEditorPlugin from "./useDraftEditorPlugin";
 import { SEARCH_FRIENDS } from "../../apollo/operations/queries/user";
-import {
-  HashtagLink,
-  Wrapper,
-  LinkAnchor,
-} from "./PostEditor/styles/PostEditorBody.styles";
-import {
-  CommentInput,
-  CommentControls,  
-} from "./styles/CommentEditor.styles";
+import { Wrapper } from "./PostEditor/styles/PostEditorBody.styles";
+import { CommentInput, CommentControls } from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
 import { CREATE_RESPONSE } from "../../apollo/operations/mutations/post/createResponse";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFocus }) => {
+const CommentEditor = ({
+  comment,
+  response,
+  user,
+  dataResponse,
+  focus,
+  removeFocus,
+}) => {
   const [editorState, setEditorState] = useState(() =>
     comment.author._id === user._id || !dataResponse
       ? EditorState.createEmpty()
@@ -43,15 +40,15 @@ const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFoc
       }
       timer = setTimeout(() => {
         const rawData = convertToRaw(editorState.getCurrentContent());
-        if(!dataResponse) return ;
-        const parseDataResponse = JSON.parse(dataResponse);        
+        if (!dataResponse) return;
+        const parseDataResponse = JSON.parse(dataResponse);
         if (
           rawData.blocks[0].text.indexOf(parseDataResponse.blocks[0].text) ===
             -1 &&
           rawData.blocks[0].text
             .toLowerCase()
-            .indexOf(user.name.toLowerCase()) === -1 && 
-            response.author._id !== user._id
+            .indexOf(user.name.toLowerCase()) === -1 &&
+          response.author._id !== user._id
         ) {
           parseDataResponse.blocks[0] = {
             ...parseDataResponse.blocks[0],
@@ -71,7 +68,7 @@ const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFoc
         }
       }, 66);
     }
-  }, [focus, editorState, response,dataResponse]);
+  }, [focus, editorState, response, dataResponse]);
 
   const [openMention, setOpenMention] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
@@ -99,62 +96,12 @@ const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFoc
       setSuggestions([]);
     }
   }, []);
-  // useMemo plugins
   const {
     plugins,
     MentionSuggestions,
     EmojiSelect,
     EmojiSuggestions,
-  } = useMemo(() => {
-    // Emoji
-    const emojiPlugin = createEmojiPlugin({
-      selectButtonContent: "☺",
-    });
-    const { EmojiSelect, EmojiSuggestions } = emojiPlugin;
-    // Linkify
-    const linkifyPlugin = createLinkifyPlugin({
-      target: "_blank",
-      rel: "noopener noreferrer",
-      component(props) {
-        return <LinkAnchor {...props} aria-label="link" />;
-      },
-    });
-    // Mention
-    const mentionPlugin = createMentionPlugin({
-      mentionComponent(mentionProps) {
-        return (
-          <a
-            className={mentionProps.className}
-            href={`${window.location.href}${mentionProps.mention.slug}`}
-            aria-label="mention"
-          >
-            {mentionProps.children}
-          </a>
-        );
-      },
-    });
-    const hashTagPlugin = createHashTagPlugin({
-      hashtagComponent(props) {
-        return (
-          <HashtagLink
-            to={`${window.location.href}search?q=${props.decoratedText.replace(
-              /#/g,
-              ""
-            )}`}
-            aria-label="hashtag"
-          >
-            {props.children}
-          </HashtagLink>
-        );
-      },
-    });
-    const { MentionSuggestions } = mentionPlugin;
-    // hashTag
-
-    const plugins = [mentionPlugin, hashTagPlugin, emojiPlugin, linkifyPlugin];
-
-    return { plugins, EmojiSelect, EmojiSuggestions, MentionSuggestions };
-  }, []);
+  } = useDraftEditorPlugin();
 
   useEffect(() => {
     let timer;
@@ -187,21 +134,22 @@ const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFoc
   }, [responseRef, showControls]);
 
   const onSubmitComment = (e) => {
-    
     if (
-      e.which === 13 &&     
+      e.which === 13 &&
       !openMention &&
       !document
         .querySelector(`[data-target=response-input-${comment._id}]`)
         ?.getElementsByClassName(`esyutjr`)?.length
     ) {
-      if(e.shiftKey){
-        return; 
+      if (e.shiftKey) {
+        return;
       }
       let rawEditorState = convertToRaw(editorState.getCurrentContent());
-      const filterBlockEmpty = rawEditorState.blocks.filter(block => block.text)
-      rawEditorState = {...rawEditorState, blocks : [...filterBlockEmpty]};
-      
+      const filterBlockEmpty = rawEditorState.blocks.filter(
+        (block) => block.text
+      );
+      rawEditorState = { ...rawEditorState, blocks: [...filterBlockEmpty] };
+
       const rawText = JSON.stringify(rawEditorState);
       const shortenText = draftToHtml(rawEditorState)
         .split("</p>")[0]
@@ -213,8 +161,7 @@ const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFoc
       const textData = document.querySelector(
         `[data-target=response-input-${comment._id}]`
       ).innerHTML;
-      
-      
+
       let mentions = [];
       if (rawEditorState.entityMap) {
         Object.values(rawEditorState.entityMap).map(({ data }) => {
@@ -226,7 +173,7 @@ const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFoc
       mentions = _.unionBy(mentions, "_id").map((mention) =>
         mention._id.toString()
       );
-     
+
       if (rawEditorState.blocks?.length) {
         setEditorState(EditorState.createEmpty());
         createResponse({
@@ -243,7 +190,7 @@ const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFoc
               .querySelector(`[data-target=response-input-${comment._id}]`)
               .querySelector("[contenteditable=false]")
               ?.setAttribute("contenteditable", true);
-            
+
             const { createResponse } = data;
             addNewResponseToComment(comment.post, comment._id, createResponse);
           })
@@ -256,7 +203,6 @@ const CommentEditor = ({ comment, response, user, dataResponse, focus, removeFoc
       }
     }
   };
-
 
   return (
     <Wrapper ref={responseRef}>

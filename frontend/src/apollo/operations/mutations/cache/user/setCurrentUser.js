@@ -1,3 +1,6 @@
-const setCurrentUser = setCurrentUserVar => user => setCurrentUserVar(user);
+const setCurrentUser = setCurrentUserVar => user => {
+  console.log(user);
+  setCurrentUserVar(user);
+}
 
 export default setCurrentUser

@@ -4,6 +4,7 @@ export const schemaMutation = gql`
   type Mutation {
     createUser(data: CreateUserInput!): UserAuthPayload!
     createPost(data: PostInput!): Post!
+    editPost(postId: ID!, data : PostInput!) : Post!
     likePost(postId: ID!): Boolean!
     removeLikePost(postId: ID!): Boolean!
     createComment(postId: ID!, data: CommentInput!): Comment!

@@ -11,23 +11,24 @@ import {
   Toolbar,
   Label,
   CardPreview,
-  HashtagLink,
-  LinkAnchor,
 } from "./styles/PostEditorBody.styles";
 import { ReactTinyLink } from "react-tiny-link";
 import Editor from "@draft-js-plugins/editor";
-import createMentionPlugin from "@draft-js-plugins/mention";
-import createEmojiPlugin from "@draft-js-plugins/emoji";
-import createLinkifyPlugin from "@draft-js-plugins/linkify";
-import createHashTagPlugin from "@draft-js-plugins/hashtag";
+import useDraftEditorPlugin from "../useDraftEditorPlugin";
 import { IoIosImage } from "react-icons/io";
 import generateBase64Image from "../../../utils/generateBase64Image";
 import ImagesCarousel from "../../UI/ImagesCarousel";
 import { useQuery } from "@apollo/client";
 import { SEARCH_FRIENDS } from "../../../apollo/operations/queries/user";
-import { useHistory } from "react-router-dom";
 import useLanguage from "../../Global/useLanguage";
-const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
+const PostEditorBody = ({
+  editorState,
+  setEditorState,
+  images,
+  setImages,
+  isEdited,
+  postEdited,  
+}) => {
   const [urlPreview, setUrlPreview] = useState(null);
   const editorRef = useRef(null);
   const [suggestions, setSuggestions] = useState([]);
@@ -36,66 +37,15 @@ const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
     refetch: searchFriends,
     loading: searchFriendsLoading,
   } = useQuery(SEARCH_FRIENDS, { fetchPolicy: "network-only", skip: true });
-  const { push } = useHistory();
   const { i18n, lang } = useLanguage();
   const { postPlaceholder } = i18n.store.data[lang].translation.post;
-  // useMemo plugins
+
   const {
     plugins,
     MentionSuggestions,
     EmojiSelect,
     EmojiSuggestions,
-  } = useMemo(() => {
-    // Emoji
-    const emojiPlugin = createEmojiPlugin({
-      selectButtonContent: "😀",
-    });
-    const { EmojiSelect, EmojiSuggestions } = emojiPlugin;
-    // Linkify
-    const linkifyPlugin = createLinkifyPlugin({
-      target: "_blank",
-      rel: "noopener noreferrer",
-      component(props) {
-        return (
-          <LinkAnchor {...props} aria-label="link" />
-        );
-      },
-    });
-    // Mention
-    const mentionPlugin = createMentionPlugin({
-      mentionComponent(mentionProps) {
-        return (
-          <a
-            className={mentionProps.className}
-            href={`${window.location.href}${mentionProps.mention.slug}`}
-            aria-label="mention"
-          >
-            {mentionProps.children}
-          </a>
-        );
-      },
-    });
-    const hashTagPlugin = createHashTagPlugin({
-      hashtagComponent(props) {
-        return (
-          <HashtagLink
-            href={`${
-              window.location.href
-            }search?q=${props.decoratedText.replace(/#/g, "")}`}
-            aria-label="hashtag"
-          >
-            {props.children}
-          </HashtagLink>
-        );
-      },
-    });
-    const { MentionSuggestions } = mentionPlugin;
-    // hashTag
-
-    const plugins = [mentionPlugin, hashTagPlugin, emojiPlugin, linkifyPlugin];
-
-    return { plugins, EmojiSelect, EmojiSuggestions, MentionSuggestions };
-  }, []);
+  } = useDraftEditorPlugin();
 
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const onSearchChange = useCallback(({ value }) => {
@@ -110,13 +60,21 @@ const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
   }, []);
 
   useEffect(() => {
-    const urlLength = document
-      .getElementById("post-editor")
+    let elementId;
+    if (isEdited && postEdited) {
+      elementId = `edited-post-body-${postEdited._id}`;
+    } else {
+      elementId = "post-editor-body";
+    }
+    let urlLength;
+
+    urlLength = document
+      .getElementById(elementId)
       .querySelectorAll("[aria-label=link]").length;
-    
+
     if (urlLength) {
       const url = document
-        .getElementById("post-editor")
+        .getElementById(elementId)
         .querySelectorAll("[aria-label=link]")
         [urlLength - 1].getAttribute("href");
       setUrlPreview(url);
@@ -152,7 +110,7 @@ const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
     <>
       <DraftEditor
         onClick={() => editorRef.current?.focus()}
-        id="post-editor"
+        id={isEdited ? `edited-post-body-${postEdited._id}` : "post-editor-body"}
         style={{ alignItems: "flex-start" }}
       >
         <Editor
@@ -176,7 +134,7 @@ const PostEditorBody = ({ editorState, setEditorState, images, setImages }) => {
           <ReactTinyLink
             cardSize="large"
             showGraphic={true}
-            maxLine={3}            
+            maxLine={3}
             minLine={1}
             url={urlPreview}
             proxyUrl="https://cors-anywhere.herokuapp.com"

@@ -7,18 +7,14 @@ import React, {
 } from "react";
 import { EditorState, convertToRaw } from "draft-js";
 import Editor from "@draft-js-plugins/editor";
-import createMentionPlugin from "@draft-js-plugins/mention";
-import createEmojiPlugin from "@draft-js-plugins/emoji";
-import createLinkifyPlugin from "@draft-js-plugins/linkify";
-import createHashTagPlugin from "@draft-js-plugins/hashtag";
 import draftToHtml from "draftjs-to-html";
 import _ from "lodash";
 import { useQuery, useMutation } from "@apollo/client";
 import { SEARCH_FRIENDS } from "../../apollo/operations/queries/user";
 import {
-  HashtagLink,
+  
   Wrapper,
-  LinkAnchor,
+
 } from "./PostEditor/styles/PostEditorBody.styles";
 import { useHistory } from "react-router-dom";
 import {
@@ -30,7 +26,7 @@ import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
 import { CREATE_COMMENT } from "../../apollo/operations/mutations/post/createComment";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import { Link } from "react-router-dom";
+import useDraftEditorPlugin from "./useDraftEditorPlugin"
 const CommentEditor = ({ post }) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
@@ -62,62 +58,12 @@ const CommentEditor = ({ post }) => {
       setSuggestions([]);
     }
   }, []);
-  // useMemo plugins
+  
   const {
     plugins,
     MentionSuggestions,
     EmojiSelect,
-    EmojiSuggestions,
-  } = useMemo(() => {
-    // Emoji
-    const emojiPlugin = createEmojiPlugin({
-      selectButtonContent: "☺",
-    });
-    const { EmojiSelect, EmojiSuggestions } = emojiPlugin;
-    // Linkify
-    const linkifyPlugin = createLinkifyPlugin({
-      target: "_blank",
-      rel: "noopener noreferrer",
-      component(props) {
-        return <LinkAnchor {...props} aria-label="link" />;
-      },
-    });
-    // Mention
-    const mentionPlugin = createMentionPlugin({
-      mentionComponent(mentionProps) {
-        return (
-          <a
-            className={mentionProps.className}
-            href={`${window.location.href}${mentionProps.mention.slug}`}
-            aria-label="mention"
-          >
-            {mentionProps.children}
-          </a>
-        );
-      },
-    });
-    const hashTagPlugin = createHashTagPlugin({
-      hashtagComponent(props) {
-        return (
-          <HashtagLink
-            to={`${window.location.href}search?q=${props.decoratedText.replace(
-              /#/g,
-              ""
-            )}`}
-            aria-label="hashtag"
-          >
-            {props.children}
-          </HashtagLink>
-        );
-      },
-    });
-    const { MentionSuggestions } = mentionPlugin;
-    // hashTag
-
-    const plugins = [mentionPlugin, hashTagPlugin, emojiPlugin, linkifyPlugin];
-
-    return { plugins, EmojiSelect, EmojiSuggestions, MentionSuggestions };
-  }, []);
+    EmojiSuggestions,} = useDraftEditorPlugin();
 
   useEffect(() => {
     function trackUserClickCommentControls(e) {

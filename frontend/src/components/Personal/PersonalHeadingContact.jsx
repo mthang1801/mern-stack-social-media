@@ -197,8 +197,7 @@ const PersonalContact = () => {
         setRelationship("stranger");
       }
     }
-  }, [user, currentPersonalUser]);
-  console.log(currentPersonalUser);
+  }, [user, currentPersonalUser]);  
   // Handle add friend
   const onSendRequestToAddFriend = (e) => {
     sendRequestToAddFriend({

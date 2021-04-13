@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PersonalHeading from "../components/Personal/PersonalHeading";
 import { useQuery } from "@apollo/client";
 import {
@@ -14,18 +14,19 @@ const PersonalPage = (props) => {
   const { slug } = props.match.params; 
   const {data : {currentPersonalUser}} = useQuery(GET_CURRENT_PERSONAL_USER)
   const {refetch : fetchCurrentPersonalUser} = useQuery(FETCH_PERSONAL_USER, {skip : true})  
-
+  const [fetched, setFetched] = useState(false);
   useEffect(() => {
     let _mounted = true ;
     fetchCurrentPersonalUser({slug}).then(({data}) => {
       if(data && _mounted){
         setCurrentPersonalUser(data.fetchPersonalUser);
+        setFetched(true);
       }
     })
     return () => _mounted = false ;
-  },[slug])
-  
-  if(!currentPersonalUser || currentPersonalUser.slug !== slug) return null;
+  },[slug])  
+
+  if(!currentPersonalUser || !fetched) return null;
   return (
     <Layout>
       <PersonalHeading />

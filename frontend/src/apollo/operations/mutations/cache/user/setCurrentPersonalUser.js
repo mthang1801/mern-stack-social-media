@@ -1,9 +1,6 @@
-const setCurrentPersonalUser = (setCurrentPersonalUserVar) => (user) =>{  
-  if(user){
-    setCurrentPersonalUserVar({...user});
-  }else{
-    setCurrentPersonalUserVar(null);
-  }
+const setCurrentPersonalUser = (setCurrentPersonalUserVar) => (user) =>{
+  console.log(user)
+  return setCurrentPersonalUserVar(user);
 }
   
 

@@ -5,6 +5,7 @@ export const schemaSubscription = gql`
     notifyMentionUsersInPost(userId: ID!) : Notification!
     likePostSubscription(userId: ID!) : Notification!
     removeLikePostSubscription(userId: ID!) : Notification!
+    editPostSubscription : Post!
 
     notifyUserCommentPostSubscription(userId: ID!): Notification!
     notifyMentionUsersInComment(userId : ID!) : Notification!    
@@ -30,7 +31,7 @@ export const schemaSubscription = gql`
     rejectRequestToAddFriendSubscription(userId: ID!): UsersContact!    
     acceptRequestToAddFriendSubscription(userId: ID!): Notification!
     removeFriendSubscription(userId: ID!): UsersContact!  
-
+        
     commentActions(postId: ID!): CommentSubscriptionPayload
     contactActions(userId: ID!): ContactSubscriptionPayload!
 
@@ -52,7 +53,7 @@ export const subscriptionActions = {
   ACCEPT_REQUEST_TO_ADD_FRIEND: "ACCEPT_REQUEST_TO_ADD_FRIEND",
   REMOVE_FRIEND: "REMOVE_FRIEND",
 
-  NOTIFY_POST_CREATED: "NOTIFY_POST_CREATED",
+  EDIT_POST_SUBSCRIPTION : "EDIT_POST_SUBSCRIPTION",
   UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN: "UPDATE_COUNT_NOTIFICATIONS_WHEN_SEEN",
   COMMENT_ACTIONS: "COMMENT_ACTIONS",
   CONTACT_ACTIONS: "CONTACT_ACTIONS",

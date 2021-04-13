@@ -25,6 +25,7 @@ const PersonalPosts = () => {
       limit: +process.env.REACT_APP_POSTS_PER_PAGE,
     },
     onCompleted: (data) => {      
+      console.log(data)
       if (data) {
         addPostsToCurrentPersonalUser(data.fetchPosts);
       }

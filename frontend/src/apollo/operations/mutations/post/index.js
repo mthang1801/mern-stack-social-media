@@ -1,4 +1,5 @@
 import {CREATE_POST} from "./createPost"
+import {EDIT_POST} from "./editPost"
 import {LIKE_POST} from "./likePost"
 import {REMOVE_LIKE_POST} from "./removeLikePost"
 import {CREATE_COMMENT} from "./createComment"
@@ -11,6 +12,7 @@ import {REMOVE_LIKE_RESPONSE} from "./removeLikeResponse"
 import {REMOVE_RESPONSE} from "./removeResponse"
 
 export {CREATE_POST}
+export {EDIT_POST}
 export {LIKE_POST}
 export {REMOVE_LIKE_POST}
 export {CREATE_COMMENT}
@@ -24,6 +26,7 @@ export {REMOVE_RESPONSE}
 
 export const postMutations = {
   CREATE_POST,
+  EDIT_POST,
   LIKE_POST,
   REMOVE_LIKE_POST,
   CREATE_COMMENT,

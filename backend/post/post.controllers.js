@@ -188,6 +188,95 @@ export const postControllers = {
     session.endSession();
     return newPost;
   },
+  editPost: async (req, postId, data, pubsub, notifyMentionUsersInPost, editPostSubscription) => {
+    try {
+      const currentUserId = getAuthUser(req);
+      const currentUser = await User.findById(currentUserId);
+      if (!currentUser) {
+        const error = new Error("Author is undetermined");
+        error.statusCode = 404;
+        throw error;
+      }
+      const post = await Post.findOne({ _id: postId, author: currentUserId });
+      if (!post) {
+        const error = new Error("Edit post failed");
+        error.statusCode = 404;
+        throw error;
+      }
+      const {
+        text,
+        shortenText,
+        rawText,
+        mentions,
+        fileNames,
+        fileMimetype,
+        fileEncodings,
+        status,
+      } = data;
+
+      const session = await mongoose.startSession();
+      session.startTransaction();
+
+      //remove notification of mentions in old post
+      for (let oldMentionId of post.mentions) {
+        await Notification.findOneAndDelete({
+          field: fields.POST,
+          content: contents.MENTIONED,
+          creator: currentUserId,
+          receiver: oldMentionId,
+          "fieldIdentity.post": post._id,
+        });
+      }
+
+      const updatedPost = await Post.findOneAndUpdate(
+        { _id: postId },
+        { text, shortenText, rawText, mentions, status },
+        { new: true }
+      )
+        .populate({
+          path: "mentions",
+          select: "name avatar slug isOnline offlinedAt",
+        })
+        .populate({ path: "author", select: "name avatar slug" });
+
+      if (mentions.length && status !== POST_STATUS_ENUM.PRIVATE) {
+        for (let mentionId of mentions) {
+          const newNotification = new Notification({
+            field: fields.POST,
+            content: contents.MENTIONED,
+            creator: currentUserId,
+            receiver: mentionId,
+            fieldIdentity: {
+              post: post._id,
+            },
+            url: `/${currentUser.slug}/posts/${updatedPost._id}`,
+          });
+          const mentioner = await User.findById(mentionId);
+          mentioner.notifications.push(newNotification._id);
+          await mentioner.save();
+          await (await newNotification.save())
+            .populate({ path: "creator", select: "name slug avatar" })
+            .populate({ path: "fieldIdentity.post", select: "shortenText" })
+            .execPopulate();
+          await pubsub.publish(notifyMentionUsersInPost, {
+            notifyMentionUsersInPost: newNotification._doc,
+          });
+        }
+      }
+
+      await pubsub.publish(editPostSubscription, {
+        editPostSubscription : updatedPost
+      })
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return updatedPost;
+    } catch (error) {
+      console.log(error);
+      raiseError(error.message, error.statusCode);
+    }
+  },
   likePost: async (req, postId, pubsub, likePostSubscription) => {
     try {
       const currentUserId = getAuthUser(req);

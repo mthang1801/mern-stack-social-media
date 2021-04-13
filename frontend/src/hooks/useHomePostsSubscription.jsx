@@ -1,15 +1,15 @@
 import React, {useEffect} from 'react'
 import {useQuery} from "@apollo/client"
 import {FETCH_POSTS} from "../apollo/operations/queries/post/fetchPosts"
-import {CREATE_COMMENT_SUBSCIPTION, CREATE_RESPONSE_SUBSCRIPTION} from "../apollo/operations/subscriptions/post"
+import {CREATE_COMMENT_SUBSCIPTION, CREATE_RESPONSE_SUBSCRIPTION, EDIT_POST_SUBSCRIPTION} from "../apollo/operations/subscriptions/post"
 import {GET_CURRENT_USER} from "../apollo/operations/queries/cache"
 import {cacheMutations} from "../apollo/operations/mutations/cache"
 const useHomePostsSubscription = () => {
   const {subscribeToMore : subscribePosts} = useQuery(FETCH_POSTS, {fetchPolicy : "cache-and-network", skip : true})
   const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"});
-  const {addCommentToPost, addNewResponseToComment} = cacheMutations
+  const {addCommentToPost, addNewResponseToComment, updatePost} = cacheMutations
   useEffect(()=>{
-    let unsubscribeCreateComment, unsubscribeCreateResponse ;
+    let unsubscribeCreateComment, unsubscribeCreateResponse, unsubscribeUpdatePost ;
     if(user && subscribePosts){
       unsubscribeCreateComment = subscribePosts({
         document : CREATE_COMMENT_SUBSCIPTION,
@@ -36,6 +36,17 @@ const useHomePostsSubscription = () => {
           }
         }
       })
+      unsubscribeUpdatePost = subscribePosts({
+        document : EDIT_POST_SUBSCRIPTION, 
+        updateQuery : (_, {subscriptionData}) => {
+          console.log(subscriptionData)
+          if(subscriptionData){
+            const {editPostSubscription} = subscriptionData.data;            
+            updatePost(editPostSubscription);
+          }
+          
+        }
+      })
     }
     return () => {
       if(unsubscribeCreateComment){
@@ -43,6 +54,9 @@ const useHomePostsSubscription = () => {
       }
       if(unsubscribeCreateResponse){
         unsubscribeCreateResponse();
+      }
+      if(unsubscribeUpdatePost){
+        unsubscribeUpdatePost();
       }
     }
   },[user,subscribePosts])
