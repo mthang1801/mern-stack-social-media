@@ -12,7 +12,7 @@ const EditPostDialog = ({ open, setOpen, editedEditorState, post }) => {
       onClose={() => setOpen(false)}      
     >
       <PostEditorContainer>
-        <PostEditor isEdited editedEditorState={editedEditorState} postEdited={post}/>
+        <PostEditor isEdited editedEditorState={editedEditorState} postEdited={post} openEdited={open} setOpenEdited={setOpen}/>
       </PostEditorContainer>
     </Dialog>
   );

@@ -18,7 +18,13 @@ import { Prompt } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 
-const PostEditor = ({ editedEditorState, isEdited, postEdited }) => {
+const PostEditor = ({
+  editedEditorState,
+  isEdited,
+  postEdited,
+  openEdited,
+  setOpenEdited,
+}) => {
   const {
     data: { user, currentPersonalUser },
   } = useQuery(GET_PERSONAL_USER_CACHE_DATA);
@@ -36,7 +42,12 @@ const PostEditor = ({ editedEditorState, isEdited, postEdited }) => {
   const { post } = i18n.store.data[lang].translation;
   const [createPost, { loading: createPostLoading }] = useMutation(CREATE_POST);
   const [editPost, { loading: editPostLoading }] = useMutation(EDIT_POST);
-  const { setNewPost, addPostItemToCurrentPersonalUser, updatePost, updatePostInCurrentPersonalUser } = cacheMutations;
+  const {
+    setNewPost,
+    addPostItemToCurrentPersonalUser,
+    updatePost,
+    updatePostInCurrentPersonalUser,
+  } = cacheMutations;
   const handleSetPostStatus = useCallback((status) => {
     setPostStatus(status);
   }, []);
@@ -124,10 +135,11 @@ const PostEditor = ({ editedEditorState, isEdited, postEdited }) => {
     if (isEdited && postEdited) {
       editPost({ variables: { postId: postEdited._id, ...postData } })
         .then(({ data }) => {
-          if (onOpenDialog) {
-            setOpenPostEditorDialog(false);
+          if (openEdited) {
+            setOpenEdited(false);
             setEditorState(EditorState.createEmpty());
           }
+
           const { editPost } = data;
           updatePost(editPost);
           if (user._id === currentPersonalUser._id) {

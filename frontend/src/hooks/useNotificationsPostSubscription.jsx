@@ -148,7 +148,8 @@ const useNotificationsPostSubscription = () => {
       unsubscribeUserResponseComment,
       unsubscribeMentionedUsersInResponse,
       unsubscribeUserLikeResponse,
-      unsubscribeUserRemoveLikeResponse;
+      unsubscribeUserRemoveLikeResponse,
+      unsubscribeRemoveMentionedUsersNotificationInPost;
     if (subscribeToMoreNotifications && user) {
       //#region Contact
       unsubscribeRequestAddFriend = subscribeToMoreNotifications({
@@ -406,6 +407,17 @@ const useNotificationsPostSubscription = () => {
           }
         },
       });
+
+      unsubscribeRemoveMentionedUsersNotificationInPost = subscribeToMoreNotifications({
+        document : subscriptions.notificationSubscription.REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST,
+        variables : {userId : user._id},
+        updateQuery : (_, {subscriptionData}) => {
+          if(subscriptionData){
+            const {removeMentionedNotificationSubscription} = subscriptionData.data; 
+            updatedRemoveNotification(removeMentionedNotificationSubscription)
+          }
+        }
+      })
       //#endregion
     }
 
@@ -454,6 +466,9 @@ const useNotificationsPostSubscription = () => {
       }
       if (unsubscribeUserRemoveLikeResponse) {
         unsubscribeUserRemoveLikeResponse();
+      }
+      if(unsubscribeRemoveMentionedUsersNotificationInPost){
+        unsubscribeRemoveMentionedUsersNotificationInPost()
       }
     };
   }, [

@@ -18,6 +18,7 @@ export const schemaSubscription = gql`
     createResponseSubscription: Response!
     likeResponseSubscription: Notification!
     removeLikeResponseSubscription : Notification!
+    removeMentionedNotificationSubscription(userId : ID!) :Notification!
 
     notifyReceivedRequestToAddFriend(
       userId: ID!
@@ -74,5 +75,6 @@ export const subscriptionActions = {
   NOTIFY_MENTIONED_USERS_IN_RESPONSE : "NOTIFY_MENTIONED_USERS_IN_RESPONSE", 
   CREATE_RESPONSE_SUBSCRIPTION : "CREATE_RESPONSE_SUBSCRIPTION",
   LIKE_RESPONSE_SUBSCRIPTION : "LIKE_RESPONSE_SUBSCRIPTION",
-  REMOVE_LIKE_RESPONSE_SUBSCRIPTION : "REMOVE_LIKE_RESPONSE_SUBSCRIPTION"
+  REMOVE_LIKE_RESPONSE_SUBSCRIPTION : "REMOVE_LIKE_RESPONSE_SUBSCRIPTION",
+  REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST : "REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST"
 };

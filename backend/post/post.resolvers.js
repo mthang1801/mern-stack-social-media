@@ -28,7 +28,8 @@ export const postResolvers = {
         args.data,
         pubsub,
         subscriptionActions.NOTIFY_MENTIONED_USERS_IN_POST,
-        subscriptionActions.EDIT_POST_SUBSCRIPTION
+        subscriptionActions.EDIT_POST_SUBSCRIPTION,
+        subscriptionActions.REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST
       ),
     likePost: (_, args, { req }, info) =>
       postControllers.likePost(
@@ -89,5 +90,11 @@ export const postResolvers = {
       subscribe: () =>
         pubsub.asyncIterator(subscriptionActions.EDIT_POST_SUBSCRIPTION),
     },
+    removeMentionedNotificationSubscription : {
+      subscribe : withFilter(
+        () => pubsub.asyncIterator(subscriptionActions.REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST), 
+        (payload, {userId}) => payload.removeMentionedNotificationSubscription.receiver.toString() === userId.toString()
+      )
+    }
   },
 };

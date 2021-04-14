@@ -13,6 +13,7 @@ import { REMOVE_LIKE_RESPONSE_SUBSCRIPTION } from "./removeLikeResponseSubscript
 import { SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION } from "./sentRequestToAddFriendSubscription";
 import { CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION } from "./cancelRequestToAddFriend";
 import {ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION} from "./acceptRequestToAddFriendSubscription"
+import {REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST} from "./removeMentionedNotificationSubscription"
 const notificationSubscription = {
   POST_CREATED_SUBSCRIPTIONS,    
   NOTIFY_MENTIONED_USERS_IN_POST,
@@ -28,7 +29,8 @@ const notificationSubscription = {
   REMOVE_LIKE_RESPONSE_SUBSCRIPTION,
   SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-  ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION
+  ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+  REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST
 };
 
 export default notificationSubscription;

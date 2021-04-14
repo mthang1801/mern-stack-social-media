@@ -188,7 +188,15 @@ export const postControllers = {
     session.endSession();
     return newPost;
   },
-  editPost: async (req, postId, data, pubsub, notifyMentionUsersInPost, editPostSubscription) => {
+  editPost: async (
+    req,
+    postId,
+    data,
+    pubsub,
+    notifyMentionUsersInPost,
+    editPostSubscription,
+    removeMentionedNotificationSubscription
+  ) => {
     try {
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId);
@@ -219,12 +227,15 @@ export const postControllers = {
 
       //remove notification of mentions in old post
       for (let oldMentionId of post.mentions) {
-        await Notification.findOneAndDelete({
+        const oldNotification = await Notification.findOneAndDelete({
           field: fields.POST,
           content: contents.MENTIONED,
           creator: currentUserId,
           receiver: oldMentionId,
           "fieldIdentity.post": post._id,
+        });
+        await pubsub.publish(removeMentionedNotificationSubscription, {
+          removeMentionedNotificationSubscription: oldNotification._doc,
         });
       }
 
@@ -265,8 +276,8 @@ export const postControllers = {
       }
 
       await pubsub.publish(editPostSubscription, {
-        editPostSubscription : updatedPost
-      })
+        editPostSubscription: updatedPost,
+      });
 
       await session.commitTransaction();
       session.endSession();
