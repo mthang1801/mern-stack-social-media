@@ -1,6 +1,6 @@
 //check if commentsData have contained comment or not
-const checkCommentExistedInPosts = setPostsVar => comment => {
-  const posts = [...setPostsVar()];
+const checkCommentExistedInPosts = postsVar => comment => {
+  const posts = [...postsVar()];
   const {post : postId} = comment;  
   const post = posts.find(post => post._id === postId);
   if(post.commentsData){

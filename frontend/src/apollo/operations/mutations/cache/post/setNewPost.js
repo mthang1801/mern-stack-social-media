@@ -1,9 +1,9 @@
 
 
-const setNewPost = setPostsVar => newPost => {
-  const posts = {...setPostsVar()}
+const setNewPost = postsVar => newPost => {
+  const posts = {...postsVar()}
   
-  return setPostsVar([...newPost, ...posts])
+  return postsVar([...newPost, ...posts])
 }
 
 export default setNewPost 

@@ -17,8 +17,7 @@ const ChatsPage = lazy(() => import("../pages/chats"));
 function App() { 
   const { colorMode } = useThemeUI();  
   const [isAuth, setIsAuth] = useState(null)  
-  useFetchCurrentUser(isAuth)  ;
- 
+  useFetchCurrentUser(isAuth)  ; 
   useUserStatusSubscriptions()
   useContactSubscription()    
   

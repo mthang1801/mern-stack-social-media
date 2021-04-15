@@ -1,5 +1,5 @@
-const addLikeResponse = setPostsVar => (postId, commentId, responseId, userId) => {
-  const posts = [...setPostsVar()];
+const addLikeResponse = postsVar => (postId, commentId, responseId, userId) => {
+  const posts = [...postsVar()];
   const findPostByPostId = posts.find(post => post._id === postId); 
   if(!findPostByPostId || findPostByPostId && !findPostByPostId.commentsData) return; 
   const findCommentsDataByCommentId = findPostByPostId.commentsData.find(comment => comment._id === commentId);
@@ -27,7 +27,7 @@ const addLikeResponse = setPostsVar => (postId, commentId, responseId, userId) =
     return {..._post};
   })
 
-  return setPostsVar(updatedPost);
+  return postsVar(updatedPost);
 }
 
 export default addLikeResponse;

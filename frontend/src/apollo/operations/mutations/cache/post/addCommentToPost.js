@@ -1,5 +1,5 @@
-const addCommentToPost = setPostsVar => (postId, newComment) => {
-  const posts = [...setPostsVar()];
+const addCommentToPost = postsVar => (postId, newComment) => {
+  const posts = [...postsVar()];
   const updatedPosts = posts.map(post => {
     let _post = {...post};
     if(_post._id === postId){
@@ -8,7 +8,7 @@ const addCommentToPost = setPostsVar => (postId, newComment) => {
     }
     return {..._post};
   })
-  return setPostsVar(updatedPosts);
+  return postsVar(updatedPosts);
 }
 
 export default addCommentToPost

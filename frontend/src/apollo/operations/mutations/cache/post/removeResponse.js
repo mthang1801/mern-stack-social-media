@@ -1,5 +1,5 @@
-const removeResponse = (setPostsVar) => (postId, commentId, responseId) => {
-  const posts = [...setPostsVar()];
+const removeResponse = (postsVar) => (postId, commentId, responseId) => {
+  const posts = [...postsVar()];
   const updatedPost = posts.map((post) => {
     let _post = { ...post };
     if (_post._id === postId) {
@@ -20,7 +20,7 @@ const removeResponse = (setPostsVar) => (postId, commentId, responseId) => {
     return { ..._post };
   });
 
-  return setPostsVar(updatedPost);
+  return postsVar(updatedPost);
 };
 
 export default removeResponse;

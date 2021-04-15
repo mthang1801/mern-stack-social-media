@@ -1,5 +1,5 @@
-const updateCommentLikes = setPostsVar => comment => {
-  const posts = [...setPostsVar()];
+const updateCommentLikes = postsVar => comment => {
+  const posts = [...postsVar()];
   const {post : postId} = comment;  
   //find post contain comment
   const post = posts.find(post => post._id === postId);
@@ -18,7 +18,7 @@ const updateCommentLikes = setPostsVar => comment => {
         }
         return {..._post};
       })
-    return setPostsVar(updatedPosts)
+    return postsVar(updatedPosts)
   }
   
 }

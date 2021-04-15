@@ -1,32 +1,39 @@
 import { gql } from "@apollo/client";
 
 const FETCH_CURRENT_USER = gql`
-  query{
+  query {
     fetchCurrentUser {
       _id
       name
       nickname
       slug
-      email       
+      email
       friends
-      notifications 
-      avatar  
+      notifications
+      avatar
       following
-      followed 
+      followed
       sentRequestToAddFriend
       receivedRequestToAddFriend
     }
   }
 `;
 
-const GET_CURRENT_USER_IN_CACHE = gql`
-  query {
-    user @client
+const FETCH_USER_FRIENDS_DATA = gql`
+  query FetchUserFriends($skip: Int, $limit: Int, $userId: ID) {
+    fetchFriends(skip: $skip, limit: $limit, userId: $userId) {
+      _id
+      name
+      slug
+      avatar
+      isOnline
+      offlinedAt
+      createdAt
+    }
   }
-`
-
+`;
 
 export default {
   FETCH_CURRENT_USER,
-  GET_CURRENT_USER_IN_CACHE
-}
+  FETCH_USER_FRIENDS_DATA
+};

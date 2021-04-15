@@ -1,5 +1,5 @@
-const updateUnlikePost = setPostsVar => (postId, userId) => {
-  const posts = [...setPostsVar()];
+const updateUnlikePost = postsVar => (postId, userId) => {
+  const posts = [...postsVar()];
   const updatedPosts = posts.map(post => {
     if(post._id === postId){
       let _post = {...post} ;
@@ -8,7 +8,7 @@ const updateUnlikePost = setPostsVar => (postId, userId) => {
     }
     return {...post};
   })
-  return setPostsVar(updatedPosts);
+  return postsVar(updatedPosts);
 }
 
 export default updateUnlikePost;

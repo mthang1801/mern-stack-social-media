@@ -1,5 +1,5 @@
-const updateLikePost = setPostsVar => (postId, userId) => {
-  const posts = [...setPostsVar()];
+const updateLikePost = postsVar => (postId, userId) => {
+  const posts = [...postsVar()];
   const updatedPosts = posts.map(post => {
     if(post._id === postId){
       let _post = {...post} ;
@@ -8,7 +8,7 @@ const updateLikePost = setPostsVar => (postId, userId) => {
     }
     return {...post};
   })
-  return setPostsVar(updatedPosts);
+  return postsVar(updatedPosts);
 }
 
 export default updateLikePost

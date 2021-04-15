@@ -1,5 +1,5 @@
-const addCommentsToPost = setPostsVar => (postId, newComments) => {
-  const posts = [...setPostsVar()];
+const addCommentsToPost = postsVar => (postId, newComments) => {
+  const posts = [...postsVar()];
   const post = posts.find(postItem => postItem._id === postId);
   if(post){  
     const updatedPosts = posts.map(post => {
@@ -9,7 +9,7 @@ const addCommentsToPost = setPostsVar => (postId, newComments) => {
       }
       return {..._post}; 
     })
-    return setPostsVar(updatedPosts);
+    return postsVar(updatedPosts);
   }
 }
 

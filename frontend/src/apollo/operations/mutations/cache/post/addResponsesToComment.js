@@ -1,9 +1,9 @@
-const addResponsesToComment = (setPostsVar) => (
+const addResponsesToComment = (postsVar) => (
   postId,
   commentId,
   responses
 ) => {
-  const posts = [...setPostsVar()];
+  const posts = [...postsVar()];
   const updatedPosts = posts.map((post) => {
     let _post = { ...post };
     if (_post._id === postId && _post.commentsData) {      
@@ -19,7 +19,7 @@ const addResponsesToComment = (setPostsVar) => (
     }
     return { ..._post };
   });
-  return setPostsVar([...updatedPosts]);
+  return postsVar([...updatedPosts]);
 };
 
 export default addResponsesToComment;

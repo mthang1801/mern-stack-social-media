@@ -1,9 +1,9 @@
-const addNewResponseToPost = (setPostsVar) => (
+const addNewResponseToPost = (postsVar) => (
   postId,
   commentId,
   newResponse
 ) => {
-  const posts = [...setPostsVar()];
+  const posts = [...postsVar()];
   const specificPost = posts.find(post => post._id === postId)
   if(!specificPost || !specificPost.commentsData) return ; 
   const specificCommentsData = specificPost.commentsData.find(commentItem => commentItem._id === commentId);
@@ -24,7 +24,7 @@ const addNewResponseToPost = (setPostsVar) => (
     }
     return {..._post};
   })
-  return setPostsVar(updatedPost);
+  return postsVar(updatedPost);
 };
 
 export default addNewResponseToPost

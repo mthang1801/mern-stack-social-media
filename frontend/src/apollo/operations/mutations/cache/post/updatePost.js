@@ -1,5 +1,5 @@
-const updatePost = setPostsVar => editedPost => {
-  const posts = [...setPostsVar()];
+const updatePost = postsVar => editedPost => {
+  const posts = [...postsVar()];
  console.log(posts)
  console.log(editedPost)
   if(posts.some(post => post._id === editedPost._id)){
@@ -10,7 +10,7 @@ const updatePost = setPostsVar => editedPost => {
       }
       return {..._post};
     })
-    return setPostsVar(updatedPost);
+    return postsVar(updatedPost);
   }
 }
 

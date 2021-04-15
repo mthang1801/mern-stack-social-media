@@ -1,3 +1,3 @@
-const setPosts = setPostsVar => posts => setPostsVar(posts)
+const setPosts = postsVar => posts => postsVar(posts)
 
 export default setPosts

@@ -14,7 +14,6 @@ export { CountNumberNotificationsUnseen } from "./Notification/CountNumbeNotific
 export { NewNotifications } from "./Notification/NewNotifications";
 export { LatestNotification } from "./cache/LatestNotification";
 //cache
-export { ToggleButtonMenu } from "./cache/ToggleButtonMenu";
 export { LoadingNotificationMore } from "./cache/LoadingNotificationsMore";
 export { OpenFriendsList } from "./cache/OpenFriendsList";
 export { Dialog } from "./cache/Dialog";

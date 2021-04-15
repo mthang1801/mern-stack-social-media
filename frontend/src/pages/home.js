@@ -1,13 +1,10 @@
-import React, { useEffect, useState, useCallback, lazy, Suspense } from "react";
+import React, { useEffect, useState, useCallback} from "react";
 import Layout from "../containers/Layout";
 import PostEditor from "../components/Post/PostEditor/PostEditor";
-import { useQuery } from "@apollo/client";
-import { GET_HOME_CACHE_DATA } from "../apollo/operations/queries/cache";
-import { FETCH_POSTS } from "../apollo/operations/queries/post";
-import { cacheMutations } from "../apollo/operations/mutations";
 import HomeSidebar from "../components/Sidebar/HomeSidebar";
 import MainBody from "../components/Body/MainBody";
 import FriendsBoard from "../components/Sidebar/FriendsBoard";
+import {useReactiveVar, useQuery} from "@apollo/client"
 import ButtonToggleFriendsList from "../components/Controls/ButtonToggleFriendsList";
 import {
   MainContent,
@@ -17,51 +14,37 @@ import {
 import Posts from "../components/Post/Posts";
 import useHomePostsSubscription from "../hooks/useHomePostsSubscription"
 import LazyLoad from "react-lazyload"
-const Home = () => {
-  const {
-    data: { user, openFriendsList, posts },
-  } = useQuery(GET_HOME_CACHE_DATA, { fetchPolicy: "cache-and-network" });
-  const { refetch: fetchPosts } = useQuery(FETCH_POSTS, {
-    skip: true,
-    fetchPolicy: "cache-and-network",
-  });
-  
+import { useFetchMorePosts, useFetchPosts } from "../apollo/post/post.actions";
+import {userVar, toggleFriendsBoardVar, postsVar} from "../apollo/cache"
+import {setToggleFriendsBoard} from "../apollo/controls/controls.actions"
+import postActionTypes from "../apollo/post/post.types"
+const Home = () => {  
+  const user =  useReactiveVar(userVar);
+  const toggleFriendsBoard = useReactiveVar(toggleFriendsBoardVar);
+  const posts = useReactiveVar(postsVar);
+  const [loading, setLoading] = useState();
+  const [fetchMore, setFetchMore] = useState(false);
   useHomePostsSubscription();
-
-  const [fetched, setFetched] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const { setPosts, setOpenFriendsList, setNewPost } = cacheMutations;
+ 
+  const { refetch: fetchPosts } = useQuery(postActionTypes.FETCH_POSTS, {
+    fetchPolicy: "no-cache",
+    skip: true,
+  });
   useEffect(() => {
-    let _mounted = true;
-    if (!posts.length && user && !fetched) {
-      fetchPosts().then(({ data: { fetchPosts } }) => {
-        if (_mounted && fetchPosts) {
-          console.log(fetchPosts)
-          setPosts([...fetchPosts]);
-          setFetched(true);
+    let _isMounted = true;
+    if (!posts.length && user) {
+      setLoading(true);
+      fetchPosts().then(({ data }) => {
+        if (data && _isMounted) {
+          postsVar(data.fetchPosts);
+          setLoading(false);          
         }
       });
     }
-    return () => (_mounted = false);
-  }, [user, posts, fetched]);
+    return () => (_isMounted = false);
+  }, [user, posts]);
 
-  useEffect(() => {
-    let _mounted = true;
-    if (user && loadingMore) {
-      const skip = posts.length;
-      const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
-      fetchPosts({ skip, limit }).then(({ data: { fetchPosts } }) => {
-        if (_mounted) {
-          console.log(fetchPosts);
-          if (fetchPosts) {            
-            setPosts([...posts, ...fetchPosts]);
-          }
-          setLoadingMore(false);
-        }
-      });
-    }
-    return () => (_mounted = false);
-  }, [posts, fetchPosts, setPosts, loadingMore, user]);
+  
 
   useEffect(() => {
     let isScrolling;
@@ -73,8 +56,8 @@ const Home = () => {
           scrollTop,
           scrollHeight,
         } = document.documentElement;
-        if (clientHeight + scrollTop > scrollHeight * 0.8) {
-          setLoadingMore(true);
+        if (clientHeight + scrollTop > scrollHeight * 0.8 ) {
+          setFetchMore(true);
         }
       }, 66);
     }
@@ -84,8 +67,20 @@ const Home = () => {
       window.removeEventListener("scroll", onTrackUserScrolled);
     };
   });
-  const handleOpenFriendsList = useCallback(() => {
-    setOpenFriendsList();
+ 
+  useEffect(() => {
+    if (user && fetchMore) {
+      const skip = posts.length;
+      const limit = +process.env.REACT_APP_POSTS_PER_PAGE;      
+      fetchPosts({ skip, limit }).then(({ data: { fetchPosts } }) => {
+        postsVar([...posts, ...fetchPosts]);
+        setFetchMore(false);
+      });
+    }
+  }, [user, posts, fetchMore, setFetchMore]);
+
+  const handleOpenFriendsList = useCallback(() => {    
+    setToggleFriendsBoard();
   }, []);  
   return (
     <Layout>
@@ -93,18 +88,19 @@ const Home = () => {
         <MainContent>
           <MainContentLeftSide>
             {user && <LazyLoad once><PostEditor /></LazyLoad>}
+            {loading && <div>Loading post</div>}
             {posts.length ? <LazyLoad><Posts posts={posts} /></LazyLoad> : null}
           </MainContentLeftSide>
           <MainContentRightSide>
             <HomeSidebar user={user} />
           </MainContentRightSide>
         </MainContent>
-        {user && (
+        {user &&  (
           <>
             {" "}
-            <FriendsBoard />
+            {<FriendsBoard />}
             <ButtonToggleFriendsList
-              hide={openFriendsList}
+              hide={toggleFriendsBoard}
               onClick={handleOpenFriendsList}
             />
           </>

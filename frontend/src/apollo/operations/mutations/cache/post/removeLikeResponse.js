@@ -1,5 +1,5 @@
-const removeLikeResponse = setPostsVar => (postId, commentId, responseId, userId) => {
-  const posts = [...setPostsVar()];
+const removeLikeResponse = postsVar => (postId, commentId, responseId, userId) => {
+  const posts = [...postsVar()];
   
   const findPostByPostId = posts.find(post => post._id === postId); 
   if(!findPostByPostId || findPostByPostId && !findPostByPostId.commentsData) return; 
@@ -28,7 +28,7 @@ const removeLikeResponse = setPostsVar => (postId, commentId, responseId, userId
     return {..._post};
   })
 
-  return setPostsVar(updatedPost);
+  return postsVar(updatedPost);
 }
 
 export default removeLikeResponse;

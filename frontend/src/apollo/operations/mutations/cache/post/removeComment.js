@@ -1,5 +1,5 @@
-const removeComment = setPostsVar => (postId, commentId) => {
-  const posts = [...setPostsVar()]; 
+const removeComment = postsVar => (postId, commentId) => {
+  const posts = [...postsVar()]; 
   const updatedPosts = posts.map(post => {
     let _post = {...post};
     if(_post._id === postId){
@@ -10,7 +10,7 @@ const removeComment = setPostsVar => (postId, commentId) => {
     }
     return {..._post};
   })
-  return setPostsVar(updatedPosts);
+  return postsVar(updatedPosts);
   
 };
 

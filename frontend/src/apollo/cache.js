@@ -23,7 +23,7 @@ const toggleMenuVar = makeVar(initialState.toggleMenu);
 const setDialogVar = makeVar(Dialog);
 //Post
 const setPostStatusVar = makeVar(PostStatus);
-const setPostsVar = makeVar(Posts);
+const postsVar = makeVar(Posts);
 const setPersonalPostsVar = makeVar(PersonalPosts);
 //User
 const userVar = makeVar(initialState.user);
@@ -38,7 +38,7 @@ const setCountNumberNotificationsUnseenVar = makeVar(
 const setNewNotificationsVar = makeVar(NewNotifications);
 const setLatestNotificationVar = makeVar(LatestNotification);
 //Friends
-const setOpenFriendsListVar = makeVar(OpenFriendsList);
+const toggleFriendsBoardVar = makeVar(initialState.toggleFriendsBoard);
 const setFriendsVar = makeVar(Friends);
 //Chat
 const setMessagesStorageVar = makeVar(MessagesStorage);
@@ -74,7 +74,7 @@ const cache = new InMemoryCache({
           read: () => setPostStatusVar(),
         },
         posts: {
-          read: () => setPostsVar(),
+          read: () => postsVar(),
         },
         personalPosts: {
           read: () => setPersonalPostsVar(),
@@ -83,8 +83,8 @@ const cache = new InMemoryCache({
         friends: {
           read: () => setFriendsVar(),
         },
-        openFriendsList: {
-          read: () => setOpenFriendsListVar(),
+        toggleFriendsBoard: {
+          read: () => toggleFriendsBoardVar(),
         },
         //notification
         notifications: {
@@ -120,14 +120,14 @@ export {
   toggleMenuVar,
   setPostStatusVar,
   userVar,
-  setPostsVar,
+  postsVar,
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
   setNewNotificationsVar,
   setLatestNotificationVar,
   setCurrentPersonalUserVar,
   setPersonalPostsVar,
-  setOpenFriendsListVar,
+  toggleFriendsBoardVar,
   setFriendsVar,
   setSentRequestsToAddFriendVar,
   setReceivedRequestsToAddFriendVar,
