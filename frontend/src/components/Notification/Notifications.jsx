@@ -1,21 +1,11 @@
 import React from "react";
 import NotificationItem from "./NotificationItem";
 import styled from "styled-components";
-import { useQuery } from "@apollo/client";
-import { GET_NOTIFICATIONS } from "../../apollo/operations/queries/cache";
 import LazyLoad from "react-lazyload";
 import useNotificationsPostSubscription from "../../hooks/useNotificationsPostSubscription"
-const Notifications = () => {
-  const {
-    data: { notifications },
-  } = useQuery(GET_NOTIFICATIONS, {
-    fetchPolicy: "cache-first",
-  });
+const Notifications = ({notifications}) => {
+ 
   useNotificationsPostSubscription();
-
-
-  if (!notifications.length)
-    return <NoNotifications>No notifications</NoNotifications>;
   return (
     <LazyLoad>
       {notifications.map((notification) => (

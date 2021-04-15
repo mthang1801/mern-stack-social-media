@@ -66,10 +66,10 @@ import createUpdateUserOnlineOffline from "./chat/updateUserOnlineOffline";
 import createUpdateUserOnlineOfflineMessagesStorage from "./chat/updateUserOnlineOfflineMessagesStorage";
 
 import {
-  toggleButtonMenuVar,
+  toggleMenuVar,
   setDialogVar,
   setPostStatusVar,
-  setUserVar,
+  userVar,
   setPostsVar,
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
@@ -88,7 +88,7 @@ import {
 
 const mutations = {
   //Controls
-  toggleButtonMenu: createToggleButtonMenu(toggleButtonMenuVar),
+  toggleButtonMenu: createToggleButtonMenu(toggleMenuVar),
   setDialog: createSetDialog(setDialogVar),
   clearDialog: createClearDialog(setDialogVar),
   //Post
@@ -114,7 +114,7 @@ const mutations = {
   removeLikeResponse: createRemoveLikeResponse(setPostsVar),
   removeResponse: createRemoveResponse(setPostsVar),
   //User
-  setCurrentUser: createSetCurrentUser(setUserVar),
+  setCurrentUser: createSetCurrentUser(userVar),
   setCurrentPersonalUser: createSetCurrentPersonalUser(
     setCurrentPersonalUserVar
   ),

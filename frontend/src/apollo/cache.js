@@ -1,8 +1,6 @@
 import { InMemoryCache, makeVar } from "@apollo/client";
 import {
-  ToggleButtonMenu,
   PostStatus,
-  User,
   Posts,
   Notifications,
   CountNumberNotificationsUnseen,
@@ -14,20 +12,21 @@ import {
   Friends,
   SentRequestsToAddFriends,
   ReceivedRequestsToAddFriend,
-  MessagesStorage,  
+  MessagesStorage,
   CurrentChat,
   NumberOfConversations,
-  Dialog
+  Dialog,
 } from "./models";
+import { initialState } from "./initialState";
 //Cache
-const toggleButtonMenuVar = makeVar(ToggleButtonMenu);
+const toggleMenuVar = makeVar(initialState.toggleMenu);
 const setDialogVar = makeVar(Dialog);
 //Post
 const setPostStatusVar = makeVar(PostStatus);
 const setPostsVar = makeVar(Posts);
 const setPersonalPostsVar = makeVar(PersonalPosts);
 //User
-const setUserVar = makeVar(User);
+const userVar = makeVar(initialState.user);
 const setCurrentPersonalUserVar = makeVar(CurrentPersonalUser);
 const setSentRequestsToAddFriendVar = makeVar(SentRequestsToAddFriends);
 const setReceivedRequestsToAddFriendVar = makeVar(ReceivedRequestsToAddFriend);
@@ -49,9 +48,16 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
+        //cache
+        toggleMenu: {
+          read: () => toggleMenuVar(),
+        },
+        dialog: {
+          read: () => setDialogVar(),
+        },
         //current User
         user: {
-          read: () => setUserVar(),
+          read: () => userVar(),
         },
         //other user
         sentRequestsToAddFriend: {
@@ -62,13 +68,6 @@ const cache = new InMemoryCache({
         },
         currentPersonalUser: {
           read: () => setCurrentPersonalUserVar(),
-        },      
-        //cache
-        toggleButtonMenu: {
-          read: () => toggleButtonMenuVar(),
-        },
-        dialog : {
-          read : () => setDialogVar()
         },
         //post
         postStatus: {
@@ -97,20 +96,20 @@ const cache = new InMemoryCache({
         //if has new notification, open popup immediately
         latestNotification: {
           read: () => setLatestNotificationVar(),
-        },        
+        },
         countNumberNotificationsUnseen: {
           read: () => setCountNumberNotificationsUnseenVar(),
         },
-        //Chat       
+        //Chat
         currentChat: {
           read: () => setCurrentChatVar(),
         },
         messagesStorage: {
           read: () => setMessagesStorageVar(),
-        },  
-        numberOfConversations : {
-          read : () => setNumberOfConversationsVar()
-        }              
+        },
+        numberOfConversations: {
+          read: () => setNumberOfConversationsVar(),
+        },
       },
     },
   },
@@ -118,9 +117,9 @@ const cache = new InMemoryCache({
 
 export {
   cache,
-  toggleButtonMenuVar,
+  toggleMenuVar,
   setPostStatusVar,
-  setUserVar,
+  userVar,
   setPostsVar,
   setNotificationsVar,
   setCountNumberNotificationsUnseenVar,
@@ -132,8 +131,8 @@ export {
   setFriendsVar,
   setSentRequestsToAddFriendVar,
   setReceivedRequestsToAddFriendVar,
-  setMessagesStorageVar,  
-  setCurrentChatVar,  
+  setMessagesStorageVar,
+  setCurrentChatVar,
   setNumberOfConversationsVar,
-  setDialogVar
+  setDialogVar,
 };

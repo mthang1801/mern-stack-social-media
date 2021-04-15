@@ -86,7 +86,7 @@ const Home = () => {
   });
   const handleOpenFriendsList = useCallback(() => {
     setOpenFriendsList();
-  }, []);
+  }, []);  
   return (
     <Layout>
       <MainBody>

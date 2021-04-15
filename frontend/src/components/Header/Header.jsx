@@ -8,7 +8,8 @@ import SettingAccount from "./SettingAccount";
 import Button from "../Controls/ButtonDefaultCircle";
 import { FaArrowLeft } from "react-icons/fa";
 import ButtonMenu from "../Controls/ButtonMenu";
-import {cacheMutations} from "../../apollo/operations/mutations";
+import {toggleMenu} from "../../apollo/controls/controls.actions"
+
 import classNames from "classnames";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
 import { useQuery } from "@apollo/client";
@@ -26,14 +27,12 @@ const Header = () => {
   });  
   const { colorMode } = useThemeUI();
   const { pathname } = useLocation();
-
-  const { toggleButtonMenu } = cacheMutations;
   
   const NavControls = user ? (
     <div className="nav-controls">
       <div className="center">
         <div className="nav-toggle">
-          <ButtonMenu onClick={toggleButtonMenu} />
+          <ButtonMenu onClick={toggleMenu} />
         </div>
         <div className="nav-bar">
           <Navigation />

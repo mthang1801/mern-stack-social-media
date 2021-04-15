@@ -3,7 +3,7 @@ import {gql} from "apollo-server-express"
 export const schemaQuery = gql`
   type Query {
     users : [User!]!    
-    fetchCurrentUser : User!
+    fetchCurrentUser : User
     fetchPersonalUser(slug : String!) : User!
     fetchPosts(userId: ID,skip: Int, limit: Int) : [Post!]!    
     fetchComments(postId: ID!, except : [ID!], skip: Int, limit: Int) : [Comment!]

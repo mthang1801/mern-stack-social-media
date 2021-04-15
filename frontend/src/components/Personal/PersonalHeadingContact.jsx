@@ -38,6 +38,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "./styles/PersonalHeadingContact.styles";
+
 const PersonalContact = () => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
@@ -72,7 +73,7 @@ const PersonalContact = () => {
     removeNewNotification,
     decreaseNumberNotificationsUnseen,
     removeNotificationItemFromNotificationsList,
-    setDialog,
+    setDialog
   } = cacheMutations;
   //user Query
   const {

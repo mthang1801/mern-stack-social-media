@@ -21,10 +21,8 @@ const Control = () => {
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
   const [loadingNotificationsMore, setLoadingNotificationsMore] = useState(
     false
-  );  
-  const [boardHeight, setBoardHeight] = useState(0);
-  const notificationRef = useRef(false);
-  const notificationBoardRef = useRef(0);
+  );    
+  const notificationRef = useRef(false);  
   const { setLatestNotification, setNotifications } = cacheMutations;
 
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
@@ -78,12 +76,7 @@ const Control = () => {
     return () => (_isMounted = false);
   }, [loadingNotificationsMore]);  
 
-  useEffect(() => {
-    if(notificationBoardRef.current){      
-      console.log(notificationBoardRef.current.offsetHeight)
-      setBoardHeight(notificationBoardRef.current.offsetHeight)
-    }    
-  },[notificationBoardRef.current, openNotificationBoard])
+
   const onOpenNotificationBoard = useCallback(() => {
     setOpenNotificationBoard(true);    
   },[]);
@@ -110,7 +103,7 @@ const Control = () => {
               autoHeightMax={200}
               onScroll={getMoreNotifications}
             >
-              <NotificationsBoard />
+              <NotificationsBoard notifications={notifications}/>
             </Scrollbars>
           </NotificationBoard>
         )}

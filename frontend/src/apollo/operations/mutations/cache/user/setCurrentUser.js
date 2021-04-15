@@ -1,5 +1,5 @@
-const setCurrentUser = setCurrentUserVar => user => {
-  console.log(user);
+const setCurrentUser = setCurrentUserVar => user => {  
+  console.log(user)
   setCurrentUserVar(user);
 }
 

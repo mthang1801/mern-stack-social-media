@@ -1,18 +1,16 @@
-import React, { useState, useCallback, createContext } from "react";
+import React from "react";
 import Header from "../components/Header/Header";
 import MenuList from "../components/Menu/MenuList";
 import styled from "styled-components";
 import classNames from "classnames";
-import { useQuery } from "@apollo/client";
-import { GET_TOGGLE_BUTTON_MENU } from "../apollo/operations/queries/cache";
+import {useToggleMenu} from "../apollo/controls/controls.actions"
 import useMenuList from "../components/Menu/useMenuList";
 import { useThemeUI } from "theme-ui";
 import AlertDialogSlide from "../components/UI/AlertDialogSlide";
 import LazyLoad from "react-lazyload"
 
-const Layout = ({ children, className, ...props }) => {
-  const getToggleButtonMenu = useQuery(GET_TOGGLE_BUTTON_MENU);
-  const { toggleButtonMenu } = getToggleButtonMenu.data;
+const Layout = ({ children, className, ...props }) => {  
+  const toggleMenu = useToggleMenu();  
   const { menu, explores } = useMenuList();
   const { colorMode } = useThemeUI();
   return (
@@ -21,7 +19,7 @@ const Layout = ({ children, className, ...props }) => {
       <Header />
       <div
         className={classNames("small-viewport-menu-list", {
-          "hide-small-viewport-list": toggleButtonMenu,
+          "hide-small-viewport-list": toggleMenu,
         })}
       >
         <MenuList list={menu} title="Menu" />
