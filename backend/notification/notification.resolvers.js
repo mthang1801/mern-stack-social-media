@@ -8,7 +8,7 @@ export const notificationResolvers = {
       notificationControllers.fetchNotifications(
         req,        
         args.skip || 0,
-        args.limit || +process.env.POSTS_PER_PAGE,
+        args.limit || +process.env.NOTIFICATIONS_PER_PAGE,
       ),
       countNotificationsUnseen : (_, args , {req}, info) => notificationControllers.countNotificationsUnseen(req)
   },

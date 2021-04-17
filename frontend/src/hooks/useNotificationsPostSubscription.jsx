@@ -6,7 +6,7 @@ import {
   FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
 } from "../apollo/operations/queries/notification";
 import { cacheMutations } from "../apollo/operations/mutations";
-import { addLikeResponse, removeLikeResponse } from "../apollo/post/post.caches";
+import { addLikeResponse, removeLikeResponse, updateCommentLikes } from "../apollo/post/post.caches";
 import subscriptions from "../apollo/operations/subscriptions";
 const useNotificationsPostSubscription = () => {
   const { subscribeToMore: subscribeToMoreNotifications } = useQuery(
@@ -36,6 +36,7 @@ const useNotificationsPostSubscription = () => {
   } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, {
     fetchPolicy: "cache-first",
   });
+  console.log(user)
   //mutations
   const {
     setCountNumberNotificationsUnseen,
@@ -45,8 +46,7 @@ const useNotificationsPostSubscription = () => {
     setLatestNotification,
     setCurrentUser,
     setCurrentPersonalUser,    
-    setPersonalPosts,    
-    updateCommentLikes,
+    setPersonalPosts,        
     removeNewNotification,
     addNotificationItemToNotificationsList,
     removeNotificationItemFromNotificationsList,
@@ -136,7 +136,7 @@ const useNotificationsPostSubscription = () => {
     let unsubscribeRequestAddFriend,
       unsubscribeCancelRequestToAddFriend,
       unsubscribeAcceptRequestToAddFriend,
-      unsubscribeMentionUsersInPost,
+      unsubscribeMentionedUsersInPost,
       unsubscribeAcceptRequestAddFriend,
       unsubscribeUserLikePost,
       unsubscribeUserRemoveLikePost,
@@ -204,15 +204,17 @@ const useNotificationsPostSubscription = () => {
       //#endregion
 
       //#region Post
-      unsubscribeMentionUsersInPost = subscribeToMoreNotifications({
+      unsubscribeMentionedUsersInPost = subscribeToMoreNotifications({
         document:
           subscriptions.notificationSubscription.NOTIFY_MENTIONED_USERS_IN_POST,
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
+          console.log(subscriptionData)
           if (subscriptionData) {
-            const { notifyMentionUsersInPost } = subscriptionData.data;
-            console.log(notifyMentionUsersInPost)
-            updatedAddNotification(notifyMentionUsersInPost);
+            
+            const { notifyMentionedUsersInPost } = subscriptionData.data;
+            console.log(notifyMentionedUsersInPost)
+            updatedAddNotification(notifyMentionedUsersInPost);
           }
         },
       });
@@ -431,8 +433,8 @@ const useNotificationsPostSubscription = () => {
       if(unsubscribeAcceptRequestToAddFriend){
         unsubscribeAcceptRequestToAddFriend();
       }
-      if (unsubscribeMentionUsersInPost) {
-        unsubscribeMentionUsersInPost();
+      if (unsubscribeMentionedUsersInPost) {
+        unsubscribeMentionedUsersInPost();
       }
       if (unsubscribeUserLikePost) {
         unsubscribeUserLikePost();

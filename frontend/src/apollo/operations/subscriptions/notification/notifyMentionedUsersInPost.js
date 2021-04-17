@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const NOTIFY_MENTIONED_USERS_IN_POST = gql`
   subscription ($userId: ID!){
-    notifyMentionUsersInPost(userId: $userId) {
+    notifyMentionedUsersInPost(userId: $userId) {
       _id
       field
       content

@@ -90,7 +90,7 @@ export const postControllers = {
 
     return standardizedPosts;
   },
-  createPost: async (req, data, pubsub, notifyMentionUsersInPost) => {
+  createPost: async (req, data, pubsub, notifyMentionedUsersInPost) => {
     const {
       text,
       shortenText,
@@ -178,8 +178,8 @@ export const postControllers = {
           .populate({ path: "creator", select: "name slug avatar" })
           .populate({ path: "fieldIdentity.post", select: "shortenText" })
           .execPopulate();
-        await pubsub.publish(notifyMentionUsersInPost, {
-          notifyMentionUsersInPost: newNotification._doc,
+        await pubsub.publish(notifyMentionedUsersInPost, {
+          notifyMentionedUsersInPost: newNotification._doc,
         });
       }
     }

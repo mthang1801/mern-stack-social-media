@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export const schemaSubscription = gql`
   type Subscription {    
-    notifyMentionUsersInPost(userId: ID!) : Notification!
+    notifyMentionedUsersInPost(userId: ID!) : Notification!
     likePostSubscription(userId: ID!) : Notification!
     removeLikePostSubscription(userId: ID!) : Notification!
     editPostSubscription : Post!

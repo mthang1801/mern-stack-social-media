@@ -9,7 +9,7 @@ import {
 import { IoMdNotifications } from "react-icons/io";
 import Button from "../Controls/ButtonDefaultCircle";
 import NotificationsBoard from "./NotificationsBoard";
-
+import useNotificationsPostSubscription from "../../hooks/useNotificationsPostSubscription"
 import { useQuery } from "@apollo/client";
 import { GET_HEADER_CACHE_DATA } from "../../apollo/operations/queries/cache";
 import { FETCH_NOTIFICATIONS } from "../../apollo/operations/queries/notification";
@@ -32,6 +32,9 @@ const Control = () => {
   const {
     data: { user, notifications, countNumberNotificationsUnseen },
   } = useQuery(GET_HEADER_CACHE_DATA, { fetchPolicy: "cache-and-network" });
+
+  useNotificationsPostSubscription();
+  
   useEffect(() => {
     function handleClickOutsideNotificationBoard(e) {
       if (

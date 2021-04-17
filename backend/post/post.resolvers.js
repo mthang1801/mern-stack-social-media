@@ -47,7 +47,7 @@ export const postResolvers = {
       ),
   },
   Subscription: {
-    notifyMentionUsersInPost: {
+    notifyMentionedUsersInPost: {
       subscribe: withFilter(
         () =>
           pubsub.asyncIterator(
@@ -55,7 +55,7 @@ export const postResolvers = {
           ),
         (payload, { userId }) => {
           return (
-            payload.notifyMentionUsersInPost.receiver.toString() ===
+            payload.notifyMentionedUsersInPost.receiver.toString() ===
             userId.toString()
           );
         }

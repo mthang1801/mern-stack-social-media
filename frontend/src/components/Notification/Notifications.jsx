@@ -2,10 +2,8 @@ import React from "react";
 import NotificationItem from "./NotificationItem";
 import styled from "styled-components";
 import LazyLoad from "react-lazyload";
-import useNotificationsPostSubscription from "../../hooks/useNotificationsPostSubscription"
 const Notifications = ({notifications}) => {
- 
-  useNotificationsPostSubscription();
+   
   return (
     <LazyLoad>
       {notifications.map((notification) => (
