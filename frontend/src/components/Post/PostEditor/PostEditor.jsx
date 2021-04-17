@@ -17,7 +17,7 @@ import { GET_PERSONAL_USER_CACHE_DATA } from "../../../apollo/operations/queries
 import { Prompt } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-
+import {pushNewPostToPostsList, updatePost} from "../../../apollo/post/post.caches"
 const PostEditor = ({
   editedEditorState,
   isEdited,
@@ -43,9 +43,7 @@ const PostEditor = ({
   const [createPost, { loading: createPostLoading }] = useMutation(CREATE_POST);
   const [editPost, { loading: editPostLoading }] = useMutation(EDIT_POST);
   const {
-    setNewPost,
-    addPostItemToCurrentPersonalUser,
-    updatePost,
+    addPostItemToCurrentPersonalUser,   
     updatePostInCurrentPersonalUser,
   } = cacheMutations;
   const handleSetPostStatus = useCallback((status) => {
@@ -133,6 +131,7 @@ const PostEditor = ({
       status: postStatus,
     };
     if (isEdited && postEdited) {
+      console.log("edited Post")
       editPost({ variables: { postId: postEdited._id, ...postData } })
         .then(({ data }) => {
           if (openEdited) {
@@ -160,6 +159,7 @@ const PostEditor = ({
             ?.setAttribute("contenteditable", true);
         });
     } else {
+      console.log("create new post")
       createPost({
         variables: {
           text,
@@ -177,9 +177,9 @@ const PostEditor = ({
             handleCloseDialog();
             setEditorState(EditorState.createEmpty());
           }
-          const { createPost } = data;
-          setNewPost(createPost);
-          if (user._id === currentPersonalUser._id) {
+          console.log(data)
+          const { createPost } = data;          
+          if (user?._id === currentPersonalUser?._id) {
             addPostItemToCurrentPersonalUser(createPost);
           }
           document
@@ -190,7 +190,7 @@ const PostEditor = ({
           setImages([]);
         })
         .catch((err) => {
-          console.log(err.message);
+          console.log(err);
           document
             .getElementById(elementId)
             ?.querySelector("[contenteditable=true]")

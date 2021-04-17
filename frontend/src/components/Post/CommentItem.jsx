@@ -20,13 +20,20 @@ import {
   REMOVE_COMMENT,
   LIKE_COMMENT,
   REMOVE_LIKE_COMMENT,
-  REMOVE_RESPONSE
+  REMOVE_RESPONSE,
 } from "../../apollo/operations/mutations/post";
-
 import { FETCH_RESPONSES } from "../../apollo/operations/queries/post/fetchResponses";
 import Responses from "./Responses";
 import shortid from "shortid";
 import CommentCard from "./CommentCard";
+import {
+  addLikeComment,
+  addResponsesToComment,
+  removeComment as removeCommentFromPostCache,
+  removeLikeComment,
+  removeResponse as removeResponseInCache,
+} from "../../apollo/post/post.caches";
+
 const CommentItem = ({ comment, user }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
@@ -35,20 +42,13 @@ const CommentItem = ({ comment, user }) => {
   const { controls } = i18n.store.data[lang].translation.comment;
   const { dialog: dialogAlert } = i18n.store.data[lang].translation;
   const [focusResponseEditor, setFocusResponseEditor] = useState(false);
-  const {
-    setDialog,
-    removeComment: removeCommentFromPostCache,
-    addLikeComment,
-    removeLikeComment,
-    addResponsesToComment,
-    removeResponse : removeResponseInCache
-  } = cacheMutations;
+  const { setDialog } = cacheMutations;
   const {
     data: { dialog },
   } = useQuery(GET_DIALOG);
   const [likeComment] = useMutation(LIKE_COMMENT);
   const [RemoveLikeComment] = useMutation(REMOVE_LIKE_COMMENT);
-  const [removeResponse] = useMutation(REMOVE_RESPONSE)
+  const [removeResponse] = useMutation(REMOVE_RESPONSE);
   const { refetch: fetchResponses } = useQuery(FETCH_RESPONSES, { skip: true });
   const [response, setResponse] = useState(comment);
   const onClickRemoveComment = () => {
@@ -56,26 +56,35 @@ const CommentItem = ({ comment, user }) => {
       agree: false,
       title: dialogAlert.removeComment.title,
       content: dialogAlert.removeComment.content,
-      data: { commentId: comment._id, role : "comment" },
+      data: { commentId: comment._id, role: "comment" },
     });
   };
   const [removeComment] = useMutation(REMOVE_COMMENT);
 
   useEffect(() => {
-    if (dialog.data?.commentId === comment._id && dialog.agree && dialog.data?.role === "comment") {
+    if (
+      dialog.data?.commentId === comment._id &&
+      dialog.agree &&
+      dialog.data?.role === "comment"
+    ) {
       removeComment({ variables: { commentId: comment._id } }).then(
         ({ data }) => {
           removeCommentFromPostCache(comment.post, comment._id);
         }
       );
-    }
-    else if(dialog.data?.role === "response" && dialog.data?.response && dialog.agree){
-      removeResponse({variables : {responseId : dialog.data.response._id}}).then(({data})=> {
-        if(data.removeResponse){
-          const {post, comment, _id} = dialog.data.response
+    } else if (
+      dialog.data?.role === "response" &&
+      dialog.data?.response &&
+      dialog.agree
+    ) {
+      removeResponse({
+        variables: { responseId: dialog.data.response._id },
+      }).then(({ data }) => {
+        if (data.removeResponse) {
+          const { post, comment, _id } = dialog.data.response;
           removeResponseInCache(post, comment, _id);
         }
-      })
+      });
     }
   }, [dialog]);
   const onLikeComent = () => {
@@ -96,50 +105,53 @@ const CommentItem = ({ comment, user }) => {
       })
       .catch((err) => console.log(err));
   };
-  const onClickResponseComment = useCallback(async (data) => {    
-    if(data){
-      setDataResponse(
-        `{"blocks":[{"key":"${shortid.generate()}","text":"${
-          data.author.name
-        } ","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":${
-          data.author.name.length
-        },"key":0}],"data":{}}],"entityMap":{"0":{"type":"mention","mutability":"SEGMENTED","data":{"mention":{"__typename":"User","_id":"${
-          data.author._id
-        }","name":"${data.author.name}","avatar":"${
-          data.author.avatar
-        }","slug":"${data.author.slug}"}}}}}`
-      );
-      setResponse(data);
-    }
-    
-    if (comment.responses.length && !comment.responsesData?.length) {
-      await onLoadResponses();
-    } else {
-      setShowResponse(true);
-      setFocusResponseEditor(true);
-    }
-  }, [comment.responsesData]);
+  const onClickResponseComment = useCallback(
+    async (data) => {
+      if (data) {
+        setDataResponse(
+          `{"blocks":[{"key":"${shortid.generate()}","text":"${
+            data.author.name
+          } ","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":${
+            data.author.name.length
+          },"key":0}],"data":{}}],"entityMap":{"0":{"type":"mention","mutability":"SEGMENTED","data":{"mention":{"__typename":"User","_id":"${
+            data.author._id
+          }","name":"${data.author.name}","avatar":"${
+            data.author.avatar
+          }","slug":"${data.author.slug}"}}}}}`
+        );
+        setResponse(data);
+      }
+
+      if (comment.responses.length && !comment.responsesData?.length) {
+        await onLoadResponses();
+      } else {
+        setShowResponse(true);
+        setFocusResponseEditor(true);
+      }
+    },
+    [comment.responsesData]
+  );
 
   const onLoadResponses = () => {
     fetchResponses({ commentId: comment._id, skip: 0, limit: 3 }).then(
       ({ data }) => {
-        if (data.fetchResponses) {          
+        if (data.fetchResponses) {
           addResponsesToComment(comment.post, comment._id, data.fetchResponses);
-          if (!showResponse) {            
+          if (!showResponse) {
             setShowResponse(true);
             setFocusResponseEditor(true);
           }
         }
       }
     );
-  };  
+  };
 
   const onLoadMoreResponses = () => {
     const skip = comment.responsesData?.length || 0;
     fetchResponses({ commentId: comment._id, skip }).then(({ data }) => {
       if (data.fetchResponses) {
         addResponsesToComment(comment.post, comment._id, data.fetchResponses);
-        if (!showResponse) {          
+        if (!showResponse) {
           setShowResponse(true);
           setFocusResponseEditor(true);
         }
@@ -160,7 +172,7 @@ const CommentItem = ({ comment, user }) => {
         {comment.responsesData && (
           <ResponsesComponent>
             <Responses
-              responses={comment.responsesData}              
+              responses={comment.responsesData}
               user={user}
               onClickResponse={onClickResponseComment}
             />

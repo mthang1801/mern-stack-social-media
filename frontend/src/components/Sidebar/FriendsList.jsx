@@ -9,7 +9,7 @@ import { useThemeUI } from "theme-ui";
 import { userVar } from "../../apollo/cache";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import userActionTypes from "../../apollo/user/user.types";
-import { useFetchUserFriends } from "../../apollo/user/user.actions";
+import { addFetchedFriendsToFriendsData } from "../../apollo/user/user.caches";
 import FriendItem from "./FriendItem";
 import { Scrollbars } from "react-custom-scrollbars";
 import useLanguage from "../Global/useLanguage";
@@ -39,7 +39,7 @@ const FriendsList = ({ show }) => {
       setLoading(true);
       fetchUserFriends().then(({ data }) => {
         if (data && _isMounted) {
-          userVar({ ...user, friendsData: data.fetchFriends });
+          addFetchedFriendsToFriendsData(data.fetchFriends);
           setLoading(false);
           setFetched(true);
         }

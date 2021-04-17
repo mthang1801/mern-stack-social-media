@@ -3,27 +3,10 @@ import createToggleButtonMenu from "./controls/toggleButtonMenu";
 import createSetDialog from "./controls/setDialog";
 import createClearDialog from "./controls/clearDialog";
 //Post
-import createSetPostStatus from "./post/setPostStatus";
-import createSetPosts from "./post/setPosts";
 import createSetPersonalPosts from "./post/setPersonalPosts";
-import createSetNewPost from "./post/setNewPost";
-import createUpdateLikePost from "./post/updateLikePost";
-import createUpdateUnlikePost from "./post/updateUnlikePost";
-import createUpdatePost from "./post/updatePost";
 //Comment
-import createAddCommentToPost from "./post/addCommentToPost";
 import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost";
-import createAddCommentsToPost from "./post/addCommentsToPost";
-import createRemoveComment from "./post/removeComment";
-import createAddLikeComment from "./post/addLikeComment";
-import createRemoveLikeComment from "./post/removeLikeComment";
-import createUpdateCommentLikes from "./post/updateCommentLikes";
-//Response
-import createAddNewResponseToComment from "./post/addNewResponseToComment";
-import createAddResponsesToComment from "./post/addResponsesToComment";
-import createAddLikeResponse from "./post/addLikeResponse";
-import createRemoveLikeResponse from "./post/removeLikeResponse";
-import createRemoveResponse from "./post/removeResponse";
+
 //User
 import createSetCurrentUser from "./user/setCurrentUser";
 import createSetCurrentPersonalUser from "./user/setCurrentPersonalUser";
@@ -91,28 +74,10 @@ const mutations = {
   toggleButtonMenu: createToggleButtonMenu(toggleMenuVar),
   setDialog: createSetDialog(setDialogVar),
   clearDialog: createClearDialog(setDialogVar),
-  //Post
-  setPostStatus: createSetPostStatus(setPostStatusVar),
-  setPosts: createSetPosts(postsVar),
-  setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),
-  setNewPost: createSetNewPost(postsVar),
-  updateLikePost: createUpdateLikePost(postsVar),
-  updateUnlikePost: createUpdateUnlikePost(postsVar),
-  removeComment: createRemoveComment(postsVar),
-  updatePost : createUpdatePost(postsVar),
-  //Comment
-  addCommentToPost: createAddCommentToPost(postsVar),
-  addCommentToOwnerPost: createAddCommentToOwnerPost(setPersonalPostsVar),
-  addCommentsToPost: createAddCommentsToPost(postsVar),
-  addLikeComment: createAddLikeComment(postsVar),
-  removeLikeComment: createRemoveLikeComment(postsVar),
-  updateCommentLikes: createUpdateCommentLikes(postsVar),
-  //Response
-  addNewResponseToComment: createAddNewResponseToComment(postsVar),
-  addResponsesToComment: createAddResponsesToComment(postsVar),
-  addLikeResponse: createAddLikeResponse(postsVar),
-  removeLikeResponse: createRemoveLikeResponse(postsVar),
-  removeResponse: createRemoveResponse(postsVar),
+  //Post  
+  setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),      
+  //Comment  
+  addCommentToOwnerPost: createAddCommentToOwnerPost(setPersonalPostsVar),  
   //User
   setCurrentUser: createSetCurrentUser(userVar),
   setCurrentPersonalUser: createSetCurrentPersonalUser(
@@ -124,7 +89,9 @@ const mutations = {
   addPostItemToCurrentPersonalUser: createAddPostItemToCurrentPersonalUser(
     setCurrentPersonalUserVar
   ),
-  updatePostInCurrentPersonalUser : createUpdatePostInCurrentPersonalUser(setCurrentPersonalUserVar),
+  updatePostInCurrentPersonalUser: createUpdatePostInCurrentPersonalUser(
+    setCurrentPersonalUserVar
+  ),
   //Notifications
   setNotifications: createSetNotifications(setNotificationsVar),
   addNotificationItemToNotificationsList: createAddNotificationItemToNotificationsList(

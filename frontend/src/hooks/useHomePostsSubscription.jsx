@@ -1,13 +1,12 @@
-import React, {useEffect} from 'react'
-import {useQuery} from "@apollo/client"
+import {useEffect} from 'react'
+import {useQuery, useReactiveVar} from "@apollo/client"
 import {FETCH_POSTS} from "../apollo/operations/queries/post/fetchPosts"
 import {CREATE_COMMENT_SUBSCIPTION, CREATE_RESPONSE_SUBSCRIPTION, EDIT_POST_SUBSCRIPTION} from "../apollo/operations/subscriptions/post"
-import {GET_CURRENT_USER} from "../apollo/operations/queries/cache"
-import {cacheMutations} from "../apollo/operations/mutations/cache"
+import {userVar} from "../apollo/cache"
+import {addCommentToPost, addNewResponseToComment, updatePost} from "../apollo/post/post.caches"
 const useHomePostsSubscription = () => {
   const {subscribeToMore : subscribePosts} = useQuery(FETCH_POSTS, {fetchPolicy : "cache-and-network", skip : true})
-  const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"});
-  const {addCommentToPost, addNewResponseToComment, updatePost} = cacheMutations
+  const user = useReactiveVar(userVar);
   useEffect(()=>{
     let unsubscribeCreateComment, unsubscribeCreateResponse, unsubscribeUpdatePost ;
     if(user && subscribePosts){

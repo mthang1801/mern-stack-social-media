@@ -17,7 +17,7 @@ import { CommentInput, CommentControls } from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
 import { CREATE_RESPONSE } from "../../apollo/operations/mutations/post/createResponse";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import {addNewResponseToComment} from "../../apollo/post/post.caches"
 const CommentEditor = ({
   comment,
   response,
@@ -76,8 +76,7 @@ const CommentEditor = ({
     fetchPolicy: "network-only",
     skip: true,
   });
-  const [createResponse] = useMutation(CREATE_RESPONSE);
-  const { addNewResponseToComment } = cacheMutations;
+  const [createResponse] = useMutation(CREATE_RESPONSE);  
   const { colorMode } = useThemeUI();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const [showControls, setShowControls] = useState(false);

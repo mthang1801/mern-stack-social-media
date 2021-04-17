@@ -6,17 +6,17 @@ import {
   REMOVE_LIKE_RESPONSE,
 } from "../../apollo/operations/mutations/post";
 import { cacheMutations } from "../../apollo/operations/mutations";
+import {
+  addLikeResponse,
+  removeLikeResponse as removeLikeResponseInCache,
+} from "../../apollo/post/post.caches";
 import useLanguage from "../Global/useLanguage";
 const Responses = ({ responses, user, onClickResponse }) => {
   const [likeResponse] = useMutation(LIKE_RESPONSE);
   const [removeLikeResponse] = useMutation(REMOVE_LIKE_RESPONSE);
   const { i18n, lang } = useLanguage();
   const { dialog: dialogAlert } = i18n.store.data[lang].translation;
-  const {
-    addLikeResponse,
-    removeLikeResponse: removeLikeResponseInCache,
-    setDialog,
-  } = cacheMutations;
+  const { setDialog } = cacheMutations;
 
   const onLikeResponse = useCallback((response) => {
     likeResponse({ variables: { responseId: response._id } }).then(

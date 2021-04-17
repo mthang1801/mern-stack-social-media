@@ -2,7 +2,9 @@ import React, { useEffect, useState, lazy, Suspense } from "react";
 import GlobalStyles from "./GlobalStyles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
-import {useFetchCurrentUser} from "../apollo/user/user.actions"
+import {useQuery} from "@apollo/client"
+import {userVar} from "../apollo/cache"
+import userActionTypes from "../apollo/user/user.types"
 import ErrorBoundary from "../containers/ErrorBoundary";
 import Explores from "../pages/explores";
 import HomePage from "../pages/home"
@@ -17,7 +19,27 @@ const ChatsPage = lazy(() => import("../pages/chats"));
 function App() { 
   const { colorMode } = useThemeUI();  
   const [isAuth, setIsAuth] = useState(null)  
-  useFetchCurrentUser(isAuth)  ; 
+  const { refetch: fetchCurrentUser } = useQuery(
+    userActionTypes.FETCH_CURRENT_USER,
+    {
+      fetchPolicy: "no-cache",
+      skip: true,
+      notifyOnNetworkStatusChange: true,
+    }
+  );
+  const user = userVar();
+
+  useEffect(() => {
+    let _isMounted = true;
+    if (fetchCurrentUser && !user) {
+      fetchCurrentUser().then(({ data }) => {
+        if (data && _isMounted) {
+          userVar(data.fetchCurrentUser);
+        }
+      });
+    }
+    return () => (_isMounted = false);
+  }, [isAuth, fetchCurrentUser, user]); 
   useUserStatusSubscriptions()
   useContactSubscription()    
   

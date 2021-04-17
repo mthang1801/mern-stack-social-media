@@ -12,20 +12,17 @@ import _ from "lodash";
 import { useQuery, useMutation } from "@apollo/client";
 import { SEARCH_FRIENDS } from "../../apollo/operations/queries/user";
 import {
-  
   Wrapper,
-
 } from "./PostEditor/styles/PostEditorBody.styles";
 import { useHistory } from "react-router-dom";
 import {
   CommentInput,
   CommentControls,
-  InputImage,
 } from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
 import { CREATE_COMMENT } from "../../apollo/operations/mutations/post/createComment";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import {addCommentToPost} from "../../apollo/post/post.caches"
 import useDraftEditorPlugin from "./useDraftEditorPlugin"
 const CommentEditor = ({ post }) => {
   const [editorState, setEditorState] = useState(() =>
@@ -38,8 +35,6 @@ const CommentEditor = ({ post }) => {
     loading: searchFriendsLoading,
   } = useQuery(SEARCH_FRIENDS, { fetchPolicy: "network-only", skip: true });
   const [createComment] = useMutation(CREATE_COMMENT);
-  const { addCommentToPost } = cacheMutations;
-  const { push } = useHistory();
   const { colorMode } = useThemeUI();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const [showControls, setShowControls] = useState(false);

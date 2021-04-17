@@ -1,6 +1,6 @@
-import postQueries from "./post.query";
-import postMutations from "./post.mutation";
-import postSubscriptions from "./post.subscription"
+import postQueries from "./post.queries";
+import postMutations from "./post.mutations";
+import postSubscriptions from "./post.subscriptions"
 export default {
   FETCH_POSTS : postQueries.FETCH_POSTS,
   FETCH_COMMENT : postQueries.FETCH_COMMENTS,

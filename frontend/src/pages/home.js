@@ -14,10 +14,11 @@ import {
 import Posts from "../components/Post/Posts";
 import useHomePostsSubscription from "../hooks/useHomePostsSubscription"
 import LazyLoad from "react-lazyload"
-import { useFetchMorePosts, useFetchPosts } from "../apollo/post/post.actions";
 import {userVar, toggleFriendsBoardVar, postsVar} from "../apollo/cache"
 import {setToggleFriendsBoard} from "../apollo/controls/controls.actions"
 import postActionTypes from "../apollo/post/post.types"
+import {addFetchedPostToCache} from "../apollo/post/post.caches"
+
 const Home = () => {  
   const user =  useReactiveVar(userVar);
   const toggleFriendsBoard = useReactiveVar(toggleFriendsBoardVar);
@@ -36,7 +37,7 @@ const Home = () => {
       setLoading(true);
       fetchPosts().then(({ data }) => {
         if (data && _isMounted) {
-          postsVar(data.fetchPosts);
+          addFetchedPostToCache(data.fetchPosts);
           setLoading(false);          
         }
       });
@@ -73,7 +74,9 @@ const Home = () => {
       const skip = posts.length;
       const limit = +process.env.REACT_APP_POSTS_PER_PAGE;      
       fetchPosts({ skip, limit }).then(({ data: { fetchPosts } }) => {
-        postsVar([...posts, ...fetchPosts]);
+        if(fetchPosts){
+          addFetchedPostToCache(fetchPosts);
+        }        
         setFetchMore(false);
       });
     }

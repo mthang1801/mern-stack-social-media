@@ -6,6 +6,7 @@ import {
   FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
 } from "../apollo/operations/queries/notification";
 import { cacheMutations } from "../apollo/operations/mutations";
+import { addLikeResponse, removeLikeResponse } from "../apollo/post/post.caches";
 import subscriptions from "../apollo/operations/subscriptions";
 const useNotificationsPostSubscription = () => {
   const { subscribeToMore: subscribeToMoreNotifications } = useQuery(
@@ -44,9 +45,7 @@ const useNotificationsPostSubscription = () => {
     setLatestNotification,
     setCurrentUser,
     setCurrentPersonalUser,    
-    setPersonalPosts,
-    addLikeResponse,
-    removeLikeResponse,
+    setPersonalPosts,    
     updateCommentLikes,
     removeNewNotification,
     addNotificationItemToNotificationsList,
@@ -212,6 +211,7 @@ const useNotificationsPostSubscription = () => {
         updateQuery: (prev, { subscriptionData }) => {
           if (subscriptionData) {
             const { notifyMentionUsersInPost } = subscriptionData.data;
+            console.log(notifyMentionUsersInPost)
             updatedAddNotification(notifyMentionUsersInPost);
           }
         },

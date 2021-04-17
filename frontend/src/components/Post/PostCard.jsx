@@ -7,11 +7,11 @@ import PostCardFooter from "./PostCardFooter";
 import Comments from "./Comments";
 import { FETCH_COMMENTS } from "../../apollo/operations/queries/post/fetchComments";
 import { useQuery } from "@apollo/client";
-import { cacheMutations } from "../../apollo/operations/mutations/cache/";
 import useLanguage from "../Global/useLanguage";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
 import { EditorState, convertFromRaw } from "draft-js";
 import EditPostDialog from "./EditPostDialog";
+import {addCommentsToPost} from "../../apollo/post/post.caches"
 const PostCard = ({ post }) => {
   const { colorMode } = useThemeUI();
   const {
@@ -24,8 +24,7 @@ const PostCard = ({ post }) => {
   const [loading, setLoading] = useState(false);
   const { i18n, lang } = useLanguage();
 
-  const { fetchMoreComments } = i18n.store.data[lang].translation.comment;
-  const { addCommentsToPost } = cacheMutations;
+  const { fetchMoreComments } = i18n.store.data[lang].translation.comment;  
 
   //for edit
   const [isEdited, setIsEdited] = useState(false);
