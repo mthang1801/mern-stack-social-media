@@ -17,7 +17,7 @@ import { BiLike } from "react-icons/bi";
 import { useThemeUI } from "theme-ui";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
-import { LIKE_POST, REMOVE_LIKE_POST } from "../../apollo/operations/mutations/post";
+import { LIKE_POST, REMOVE_LIKE_POST } from "../../apollo/post/post.types";
 
 import LazyLoad from "react-lazyload";
 import {updateLikePost, updateRemoveLikePost} from "../../apollo/post/post.caches"

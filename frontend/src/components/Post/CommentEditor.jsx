@@ -21,7 +21,7 @@ import {
 } from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
-import { CREATE_COMMENT } from "../../apollo/operations/mutations/post/createComment";
+import { CREATE_COMMENT } from "../../apollo/post/post.mutations";
 import {addCommentToPost} from "../../apollo/post/post.caches"
 import useDraftEditorPlugin from "./useDraftEditorPlugin"
 const CommentEditor = ({ post }) => {

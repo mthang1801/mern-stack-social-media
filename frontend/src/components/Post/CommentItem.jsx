@@ -21,8 +21,8 @@ import {
   LIKE_COMMENT,
   REMOVE_LIKE_COMMENT,
   REMOVE_RESPONSE,
-} from "../../apollo/operations/mutations/post";
-import { FETCH_RESPONSES } from "../../apollo/operations/queries/post/fetchResponses";
+} from "../../apollo/post/post.types";
+import { FETCH_RESPONSES } from "../../apollo/post/post.queries";
 import Responses from "./Responses";
 import shortid from "shortid";
 import CommentCard from "./CommentCard";

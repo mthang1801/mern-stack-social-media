@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import {
   LIKE_RESPONSE,
   REMOVE_LIKE_RESPONSE,
-} from "../../apollo/operations/mutations/post";
+} from "../../apollo/post/post.types";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import {
   addLikeResponse,

@@ -5,7 +5,7 @@ import PostEditor from "../Post/PostEditor/PostEditor";
 import { useQuery } from "@apollo/client";
 import { GET_PERSONAL_USER_CACHE_DATA } from "../../apollo/operations/queries/cache";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import { FETCH_POSTS } from "../../apollo/operations/queries/post";
+import { FETCH_POSTS } from "../../apollo/post/post.queries";
 import IntroductionBox from "./IntroductionBox";
 
 const PersonalPosts = () => {

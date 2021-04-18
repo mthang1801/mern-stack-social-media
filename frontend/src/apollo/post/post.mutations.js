@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 
-const CREATE_POST = gql`
+export const CREATE_POST = gql`
   mutation CreatePost(
     $text: String
     $shortenText: String
@@ -90,7 +90,7 @@ export const CREATE_COMMENT = gql`
   }
 `;
 
-const CREATE_RESPONSE = gql`
+export const CREATE_RESPONSE = gql`
   mutation CreateResponse(
     $commentId: ID!
     $text: String
@@ -125,7 +125,7 @@ const CREATE_RESPONSE = gql`
   }
 `;
 
-const EDIT_POST = gql`
+export const EDIT_POST = gql`
   mutation EditPost(
     $postId : ID!
     $text: String
@@ -181,48 +181,48 @@ const EDIT_POST = gql`
   }
 `;
 
-const LIKE_COMMENT = gql`
+export const LIKE_COMMENT = gql`
   mutation LikeComment($commentId: ID!){
     likeComment(commentId: $commentId)
   }
 `
 
-const LIKE_POST = gql`
+export const LIKE_POST = gql`
   mutation ($postId : ID!){
     likePost(postId : $postId)
   } 
 `
- const LIKE_RESPONSE = gql`
+ export const LIKE_RESPONSE = gql`
   mutation LikeResponse($responseId : ID!){
     likeResponse(responseId : $responseId)
   }
 `
 
-const REMOVE_COMMENT = gql`
+export const REMOVE_COMMENT = gql`
   mutation RemoveComment($commentId : ID!){
     removeComment(commentId: $commentId)
   }
 `
-const REMOVE_LIKE_COMMENT = gql`
+export const REMOVE_LIKE_COMMENT = gql`
   mutation RemoveLikeComment($commentId : ID!){
     removeLikeComment(commentId : $commentId)
   }
 `
 
-const REMOVE_LIKE_POST = gql`
+export const REMOVE_LIKE_POST = gql`
   mutation ($postId: ID!){
     removeLikePost(postId : $postId)
   }
 `
 
 
-const REMOVE_LIKE_RESPONSE = gql`
+export const REMOVE_LIKE_RESPONSE = gql`
   mutation RemoveLikeResponse($responseId: ID!){
     removeLikeResponse(responseId : $responseId) 
   }
 `
 
-const REMOVE_RESPONSE = gql`
+export const REMOVE_RESPONSE = gql`
   mutation RemoveResponse($responseId : ID!){
     removeResponse(responseId : $responseId)
   }

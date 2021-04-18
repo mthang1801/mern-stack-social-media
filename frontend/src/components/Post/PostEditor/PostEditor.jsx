@@ -8,10 +8,7 @@ import { EditorState, convertToRaw } from "draft-js";
 import useLanguage from "../../Global/useLanguage";
 import _ from "lodash";
 import { useMutation, useQuery } from "@apollo/client";
-import {
-  CREATE_POST,
-  EDIT_POST,
-} from "../../../apollo/operations/mutations/post";
+import {EDIT_POST, CREATE_POST} from "../../../apollo/post/post.types";
 import { cacheMutations } from "../../../apollo/operations/mutations/cache";
 import { GET_PERSONAL_USER_CACHE_DATA } from "../../../apollo/operations/queries/cache";
 import { Prompt } from "react-router-dom";
@@ -27,8 +24,7 @@ const PostEditor = ({
 }) => {
   const {
     data: { user, currentPersonalUser },
-  } = useQuery(GET_PERSONAL_USER_CACHE_DATA);
-
+  } = useQuery(GET_PERSONAL_USER_CACHE_DATA);  
   const [postStatus, setPostStatus] = useState("PUBLIC");
   const [editorState, setEditorState] = useState(() =>
     editedEditorState ? editedEditorState : EditorState.createEmpty()
@@ -41,7 +37,7 @@ const PostEditor = ({
   const { i18n, lang } = useLanguage();
   const { post } = i18n.store.data[lang].translation;
   const [createPost, { loading: createPostLoading }] = useMutation(CREATE_POST);
-  const [editPost, { loading: editPostLoading }] = useMutation(EDIT_POST);
+  const [editPost] = useMutation(EDIT_POST);
   const {
     addPostItemToCurrentPersonalUser,   
     updatePostInCurrentPersonalUser,
@@ -176,9 +172,9 @@ const PostEditor = ({
           if (onOpenDialog) {
             handleCloseDialog();
             setEditorState(EditorState.createEmpty());
-          }
-          console.log(data)
-          const { createPost } = data;          
+          }                    
+          const { createPost } = data;                  
+          pushNewPostToPostsList(createPost)
           if (user?._id === currentPersonalUser?._id) {
             addPostItemToCurrentPersonalUser(createPost);
           }

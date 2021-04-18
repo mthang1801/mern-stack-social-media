@@ -16,7 +16,7 @@ import useHomePostsSubscription from "../hooks/useHomePostsSubscription"
 import LazyLoad from "react-lazyload"
 import {userVar, toggleFriendsBoardVar, postsVar} from "../apollo/cache"
 import {setToggleFriendsBoard} from "../apollo/controls/controls.actions"
-import postActionTypes from "../apollo/post/post.types"
+import {FETCH_POSTS} from "../apollo/post/post.queries"
 import {addFetchedPostToCache} from "../apollo/post/post.caches"
 
 const Home = () => {  
@@ -27,7 +27,7 @@ const Home = () => {
   const [fetchMore, setFetchMore] = useState(false);
   useHomePostsSubscription();
  
-  const { refetch: fetchPosts } = useQuery(postActionTypes.FETCH_POSTS, {
+  const { refetch: fetchPosts } = useQuery(FETCH_POSTS, {
     fetchPolicy: "no-cache",
     skip: true,
   });

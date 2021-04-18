@@ -5,18 +5,18 @@ import PostCardHeader from "./PostCardHeader";
 import PostCardBody from "./PostCardBody";
 import PostCardFooter from "./PostCardFooter";
 import Comments from "./Comments";
-import { FETCH_COMMENTS } from "../../apollo/operations/queries/post/fetchComments";
-import { useQuery } from "@apollo/client";
+import { FETCH_COMMENTS } from "../../apollo/post/post.queries";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import {userVar} from "../../apollo/cache"
 import useLanguage from "../Global/useLanguage";
 import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
 import { EditorState, convertFromRaw } from "draft-js";
 import EditPostDialog from "./EditPostDialog";
 import {addCommentsToPost} from "../../apollo/post/post.caches"
+
 const PostCard = ({ post }) => {
   const { colorMode } = useThemeUI();
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+ const user = useReactiveVar(userVar);
   const { refetch: fetchComments } = useQuery(FETCH_COMMENTS, {
     fetchPolicy: "cache-and-network",
     skip: true,

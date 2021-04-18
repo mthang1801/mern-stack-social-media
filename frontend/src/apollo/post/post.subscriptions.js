@@ -1,29 +1,27 @@
-import {gql}  from "@apollo/client";
+import { gql } from "@apollo/client";
 
-const CREATE_COMMENT_SUBSCIPTION = gql`
-  subscription ($userId : ID!){
-    createCommentSubscription(userId : $userId){      
+export const CREATE_COMMENT_SUBSCIPTION = gql`
+  subscription($userId: ID!) {
+    createCommentSubscription(userId: $userId) {
+      _id
+      text
+      rawText
+      author {
         _id
-        text
-        rawText
-        author {
-          _id
-          name
-          avatar
-          slug
-        }
-        post
-        likes
-        responses
-        createdAt
-        updatedAt
-      
+        name
+        avatar
+        slug
+      }
+      post
+      likes
+      responses
+      createdAt
+      updatedAt
     }
   }
-`
+`;
 
-
-const CREATE_RESPONSE_SUBSCRIPTION = gql`
+export const CREATE_RESPONSE_SUBSCRIPTION = gql`
   subscription {
     createResponseSubscription {
       _id
@@ -45,8 +43,7 @@ const CREATE_RESPONSE_SUBSCRIPTION = gql`
   }
 `;
 
-
-const EDIT_POST_SUBSCRIPTION = gql`
+export const EDIT_POST_SUBSCRIPTION = gql`
   subscription EditPost {
     editPostSubscription {
       _id
@@ -79,40 +76,3 @@ const EDIT_POST_SUBSCRIPTION = gql`
     }
   }
 `;
-
-
-const MENTION_USERS_IN_POST_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
-    mentionUsersInPost(userId: $userId) {
-      sender {
-        _id
-        name
-        avatar
-        slug
-        isOnline
-      }
-      notification {
-        _id
-        field
-        content
-        hasSeen
-        creator {
-          _id
-          name
-          avatar
-        }
-        url
-        isQuestion
-        createdAt
-      }
-    }
-  }
-`;
-
-
-export default {
-  CREATE_COMMENT_SUBSCIPTION,
-  CREATE_RESPONSE_SUBSCRIPTION,
-  EDIT_POST_SUBSCRIPTION,
-  MENTION_USERS_IN_POST_SUBSCRIPTION
-}

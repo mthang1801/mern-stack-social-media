@@ -16,7 +16,7 @@ import { Wrapper } from "./PostEditor/styles/PostEditorBody.styles";
 import { CommentInput, CommentControls } from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
-import { CREATE_RESPONSE } from "../../apollo/operations/mutations/post/createResponse";
+import {CREATE_RESPONSE} from "../../apollo/post/post.types";
 import {addNewResponseToComment} from "../../apollo/post/post.caches"
 const CommentEditor = ({
   comment,
@@ -30,7 +30,7 @@ const CommentEditor = ({
     comment.author._id === user._id || !dataResponse
       ? EditorState.createEmpty()
       : EditorState.createWithContent(convertFromRaw(JSON.parse(dataResponse)))
-  );
+  );  
 
   useEffect(() => {
     let timer;

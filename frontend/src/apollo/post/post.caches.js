@@ -9,8 +9,8 @@ export const addFetchedPostToCache = (fetchedPosts) => {
 };
 
 export const pushNewPostToPostsList = newPost => {
-  const posts = [...postsVar()];
-  return [{...newPost}, , ...posts];
+  const posts = [...postsVar()];  
+  return postsVar([{...newPost},...posts]);
 }
 
 export const addCommentsToPost = (postId, newComments) => {
@@ -288,13 +288,13 @@ export const updateLikePost =(postId, userId) => {
   return postsVar(updatedPosts);
 }
 
-export const updatePost = updatedPost => {
+export const updatePost = editedPost => {  
   const posts = [...postsVar()];
-  if(posts.some(post => post._id === updatedPost._id)){
+  if(posts.some(post => post._id === editedPost._id)){
     const updatedPost = posts.map(post => {
       let _post = {...post};
-      if(_post._id === updatedPost._id){
-        return {..._post, ...updatedPost};
+      if(_post._id === editedPost._id){
+        return {..._post, ...editedPost};
       }
       return {..._post};
     })

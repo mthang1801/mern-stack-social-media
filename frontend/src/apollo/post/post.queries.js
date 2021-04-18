@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 
+
 export const FETCH_POSTS = gql`
   query ($userId : ID, $skip: Int, $limit : Int ){
     fetchPosts(userId : $userId, skip: $skip, limit : $limit) {
@@ -80,8 +81,3 @@ export const FETCH_RESPONSES = gql`
 `;
 
 
-export default {
-  FETCH_POSTS,
-  FETCH_COMMENTS,
-  FETCH_RESPONSES
-}
