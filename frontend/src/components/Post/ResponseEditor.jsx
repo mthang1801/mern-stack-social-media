@@ -11,7 +11,7 @@ import draftToHtml from "draftjs-to-html";
 import _ from "lodash";
 import { useQuery, useMutation } from "@apollo/client";
 import useDraftEditorPlugin from "./useDraftEditorPlugin";
-import { SEARCH_FRIENDS } from "../../apollo/operations/queries/user";
+import { SEARCH_FRIENDS } from "../../apollo/user/user.types";
 import { Wrapper } from "./PostEditor/styles/PostEditorBody.styles";
 import { CommentInput, CommentControls } from "./styles/CommentEditor.styles";
 import { useThemeUI } from "theme-ui";

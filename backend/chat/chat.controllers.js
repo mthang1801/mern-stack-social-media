@@ -17,8 +17,8 @@ export const chatControllers = {
         _exceptToObject[item] = true ; 
       }      
       const currentUserId = getAuthUser(req);
-      const user = await User.findById(currentUserId);
-      const { conversations } = user;
+      const currentUser = await User.findById(currentUserId);
+      const { conversations } = currentUser;
       if (conversations.length) {
         const sortedConversations = _.sortBy(
           conversations,
@@ -113,8 +113,8 @@ export const chatControllers = {
         conversations: [],
         numberOfConversations: 0,
       };
-    } catch (error) {
-      console.log(`102-${error.message}`);
+    } catch (error) {      
+      console.log(`102-${error}`);
       throw new ApolloError("Server error");
     }
   },  

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
 import {useQuery} from "@apollo/client"
 import {userVar} from "../apollo/cache"
-import userActionTypes from "../apollo/user/user.types"
+import {FETCH_CURRENT_USER} from "../apollo/user/user.types"
 import ErrorBoundary from "../containers/ErrorBoundary";
 import Explores from "../pages/explores";
 import HomePage from "../pages/home"
@@ -20,7 +20,7 @@ function App() {
   const { colorMode } = useThemeUI();  
   const [isAuth, setIsAuth] = useState(null)  
   const { refetch: fetchCurrentUser } = useQuery(
-    userActionTypes.FETCH_CURRENT_USER,
+    FETCH_CURRENT_USER,
     {
       fetchPolicy: "no-cache",
       skip: true,

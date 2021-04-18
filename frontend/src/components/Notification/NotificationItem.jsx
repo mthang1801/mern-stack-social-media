@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import {
   notificationMutations,
-  userMutations,
   cacheMutations,
 } from "../../apollo/operations/mutations";
 import { AcceptButton, DenyButton } from "../Custom/CustomMaterialButton";
@@ -21,7 +20,11 @@ import {
 import { notificationContent } from "../../utils/notificationContent";
 import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache/components/getNotifications";
 import { useThemeUI } from "theme-ui";
-
+import {
+  ACCEPT_REQUEST_TO_ADD_FRIEND,
+  REJECT_REQUEST_TO_ADD_FRIEND,
+} from "../../apollo/user/user.types";
+import {setCurrentUser} from "../../apollo/user/user.caches"
 const NotificationItem = ({ notification }) => {
   //Query
   const {
@@ -36,8 +39,7 @@ const NotificationItem = ({ notification }) => {
   //Mutations
   const {
     updateNotificationHasSeen,
-    decreaseNumberNotificationsUnseen,
-    setCurrentUser,
+    decreaseNumberNotificationsUnseen,    
     setCurrentPersonalUser,
     removeNotificationItemFromNotificationsList,
     setLatestNotification,
@@ -47,12 +49,8 @@ const NotificationItem = ({ notification }) => {
   const [updateToHasSeen] = useMutation(
     notificationMutations.UPDATE_USER_HAS_SEEN_NOTIFICATION
   );
-  const [acceptRequestToAddFriend] = useMutation(
-    userMutations.ACCEPT_REQUEST_TO_ADD_FRIEND
-  );
-  const [rejectRequestToAddFriend] = useMutation(
-    userMutations.REJECT_REQUEST_TO_ADD_FRIEND
-  );
+  const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
+  const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
   const { lang } = useLanguage();
   const handleUserClickHasSeen = (notification) => {
     updateToHasSeen({ variables: { notificationId: notification._id } }).then(

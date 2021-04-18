@@ -2,20 +2,16 @@ import React, { useEffect, useState } from "react";
 import Layout from "../containers/Layout";
 import styled from "styled-components";
 import Notifications from "../components/Notification/Notifications";
-import { useQuery } from "@apollo/client";
-import {
-  GET_CURRENT_USER,
-  GET_NOTIFICATIONS,
-} from "../apollo/operations/queries/cache";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import { userVar } from "../apollo/cache";
+import { GET_NOTIFICATIONS } from "../apollo/operations/queries/cache";
 import CardRequestAuth from "../components/Card/CardRequestAuth";
 import { cacheMutations } from "../apollo/operations/mutations";
 import MainBody from "../components/Body/MainBody";
 import { FETCH_NOTIFICATIONS } from "../apollo/operations/queries/notification";
 
 const NotificationsPage = () => {
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
+  const user = useReactiveVar(userVar);
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
     skip: true,
@@ -27,7 +23,7 @@ const NotificationsPage = () => {
   const [fetchNotificationsMore, setFetchNotificationsMore] = useState(false);
   useEffect(() => {
     let _mounted = true;
-    if(user && fetchNotifications){
+    if (user && fetchNotifications) {
       if (!notifications.length) {
         fetchNotifications({
           variables: {
@@ -39,8 +35,7 @@ const NotificationsPage = () => {
             setNotifications([...data.fetchNotifications]);
           }
         });
-      }
-      else if(fetchNotificationsMore){
+      } else if (fetchNotificationsMore) {
         const skip = notifications.length;
         const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
         fetchNotifications({ skip, limit }).then(
@@ -53,9 +48,15 @@ const NotificationsPage = () => {
         );
       }
     }
-   
+
     return () => (_mounted = false);
-  }, [user, notifications, fetchNotifications, setFetchNotificationsMore, fetchNotificationsMore]);
+  }, [
+    user,
+    notifications,
+    fetchNotifications,
+    setFetchNotificationsMore,
+    fetchNotificationsMore,
+  ]);
 
   useEffect(() => {
     function setLoadmoreOnScroll() {
@@ -82,7 +83,11 @@ const NotificationsPage = () => {
       <MainBody>
         <MainContent>
           <div className="notifications">
-            {user ? <Notifications /> : <CardRequestAuth />}
+            {user ? (
+              <Notifications notifications={notifications} />
+            ) : (
+              <CardRequestAuth />
+            )}
           </div>
           <div className="sidebar"></div>
         </MainContent>

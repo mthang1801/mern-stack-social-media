@@ -7,16 +7,15 @@ import PostCardFooter from "./PostCardFooter";
 import Comments from "./Comments";
 import { FETCH_COMMENTS } from "../../apollo/post/post.queries";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import {userVar} from "../../apollo/cache"
+import { userVar } from "../../apollo/cache";
 import useLanguage from "../Global/useLanguage";
-import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
 import { EditorState, convertFromRaw } from "draft-js";
 import EditPostDialog from "./EditPostDialog";
-import {addCommentsToPost} from "../../apollo/post/post.caches"
+import { addCommentsToPost } from "../../apollo/post/post.caches";
 
 const PostCard = ({ post }) => {
   const { colorMode } = useThemeUI();
- const user = useReactiveVar(userVar);
+  const user = useReactiveVar(userVar);
   const { refetch: fetchComments } = useQuery(FETCH_COMMENTS, {
     fetchPolicy: "cache-and-network",
     skip: true,
@@ -24,11 +23,13 @@ const PostCard = ({ post }) => {
   const [loading, setLoading] = useState(false);
   const { i18n, lang } = useLanguage();
 
-  const { fetchMoreComments } = i18n.store.data[lang].translation.comment;  
+  const { fetchMoreComments } = i18n.store.data[lang].translation.comment;
 
   //for edit
   const [isEdited, setIsEdited] = useState(false);
-  const [editedEditorState, setEditedEditorState] = useState(EditorState.createEmpty());
+  const [editedEditorState, setEditedEditorState] = useState(
+    EditorState.createEmpty()
+  );
 
   const onFetchComments = () => {
     setLoading(true);
@@ -52,13 +53,20 @@ const PostCard = ({ post }) => {
   };
 
   useEffect(() => {
-    if(isEdited){
-      setEditedEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(post.rawText))));
+    if (isEdited) {
+      setEditedEditorState(
+        EditorState.createWithContent(convertFromRaw(JSON.parse(post.rawText)))
+      );
     }
-  }, [isEdited])
+  }, [isEdited]);
   return (
     <Wrapper theme={colorMode}>
-      <EditPostDialog open={isEdited} setOpen={setIsEdited} editedEditorState={editedEditorState} post={post}/>
+      <EditPostDialog
+        open={isEdited}
+        setOpen={setIsEdited}
+        editedEditorState={editedEditorState}
+        post={post}
+      />
       <PostCardHeader post={post} user={user} setIsEdited={setIsEdited} />
       <PostCardBody post={post} />
       <PostCardFooter post={post} fetchComments={onFetchComments} />

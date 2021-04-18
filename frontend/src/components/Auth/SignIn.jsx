@@ -17,7 +17,7 @@ import { withRouter } from "react-router-dom";
 import GoogleRecaptcha from "./GoogleRecapcha";
 import FacebookAuth from "./GoogleAuth";
 import GoogleAuth from "./FacebookAuth";
-import { LOGIN } from "../../apollo/operations/queries/user";
+import { LOGIN } from "../../apollo/user/user.types";
 import { useLazyQuery } from "@apollo/client";
 import {login} from "./Auth.utility"
 function withLoginQuery(WrappedComponent) {

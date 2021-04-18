@@ -10,7 +10,7 @@ import Editor from "@draft-js-plugins/editor";
 import draftToHtml from "draftjs-to-html";
 import _ from "lodash";
 import { useQuery, useMutation } from "@apollo/client";
-import { SEARCH_FRIENDS } from "../../apollo/operations/queries/user";
+import { SEARCH_FRIENDS } from "../../apollo/user/user.types";
 import {
   Wrapper,
 } from "./PostEditor/styles/PostEditorBody.styles";

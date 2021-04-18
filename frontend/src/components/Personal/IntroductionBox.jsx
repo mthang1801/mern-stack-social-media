@@ -1,7 +1,8 @@
 import React from 'react'
 import {BoxWrapper, WorkList, Introduce, Website} from "./styles/IntroductionBox.styles"
-import {useQuery} from "@apollo/client"
-import {GET_CURRENT_PERSONAL_USER, GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
+import {useQuery, useReactiveVar} from "@apollo/client"
+import {GET_CURRENT_PERSONAL_USER} from "../../apollo/operations/queries/cache"
+import {userVar} from "../../apollo/cache"
 import {useThemeUI} from "theme-ui"
 import {Link} from "react-router-dom"
 import {FaGlobe} from "react-icons/fa"
@@ -15,7 +16,7 @@ const works = [
 
 
 const IntroductionBox = () => {
-  const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"})
+  const user = useReactiveVar(userVar);
   const {data : {currentPersonalUser}} = useQuery(GET_CURRENT_PERSONAL_USER, {fetchPolicy : "cache-first"})
   const {colorMode} = useThemeUI();
   return (

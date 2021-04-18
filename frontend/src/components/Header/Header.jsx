@@ -11,20 +11,15 @@ import ButtonMenu from "../Controls/ButtonMenu";
 import {toggleMenu} from "../../apollo/controls/controls.actions"
 
 import classNames from "classnames";
-import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
-import { useQuery } from "@apollo/client";
+import { userVar } from "../../apollo//cache";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import { useLocation } from "react-router-dom";
 import { useThemeUI } from "theme-ui";
 import ButtonLogin from "../Controls/ButtonLogin";
 import ButtonSignUp from "../Controls/ButtonSignUp";
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
-  const {
-    data: { user },
-    loading,
-  } = useQuery(GET_CURRENT_USER, {
-    fetchPolicy: "cache-only",
-  });  
+ const user = useReactiveVar(userVar);
   const { colorMode } = useThemeUI();
   const { pathname } = useLocation();
   
@@ -61,7 +56,7 @@ const Header = () => {
       </div>
     </div>
   );
-  if (loading) return <div>Loading...</div>;
+ 
   return (
     <Wrapper theme={colorMode}>
       <div className={classNames("nav-header", { shorten: !openSearch })}>

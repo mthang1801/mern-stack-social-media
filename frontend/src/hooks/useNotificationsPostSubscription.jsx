@@ -8,6 +8,8 @@ import {
 import { cacheMutations } from "../apollo/operations/mutations";
 import { addLikeResponse, removeLikeResponse, updateCommentLikes } from "../apollo/post/post.caches";
 import subscriptions from "../apollo/operations/subscriptions";
+import {CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION} from "../apollo/user/user.types"
+import {setCurrentUser} from "../apollo/user/user.caches"
 const useNotificationsPostSubscription = () => {
   const { subscribeToMore: subscribeToMoreNotifications } = useQuery(
     FETCH_NOTIFICATIONS,
@@ -43,8 +45,7 @@ const useNotificationsPostSubscription = () => {
     increaseNumberNotificationsUnseen,
     decreaseNumberNotificationsUnseen,
     setNewNotifications,
-    setLatestNotification,
-    setCurrentUser,
+    setLatestNotification,    
     setCurrentPersonalUser,    
     setPersonalPosts,        
     removeNewNotification,
@@ -170,9 +171,7 @@ const useNotificationsPostSubscription = () => {
       });
 
       unsubscribeCancelRequestToAddFriend = subscribeToMoreNotifications({
-        document:
-          subscriptions.notificationSubscription
-            .CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        document: CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {

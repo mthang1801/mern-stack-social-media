@@ -1,19 +1,48 @@
-import {useEffect} from "react";
-import { FETCH_CURRENT_USER } from "../apollo/operations/queries/user";
+import { useEffect } from "react";
+import { FETCH_CURRENT_USER } from "../apollo/user/user.types";
 import { cacheMutations } from "../apollo/operations/mutations/cache";
-import {useQuery} from "@apollo/client"
+import { useQuery } from "@apollo/client";
 import subscriptions from "../apollo/operations/subscriptions";
-import {GET_CONTACT_CACHE_DATA} from "../apollo/operations/queries/cache"
+import { GET_CONTACT_CACHE_DATA } from "../apollo/operations/queries/cache";
+import {
+  REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+  REMOVE_FRIEND_SUBSCRIPTION,
+} from "../apollo/user/user.subscriptions";
+import { setCurrentUser } from "../apollo/user/user.caches";
 const useContactSubscription = () => {
-  const {data : {user,receivedRequestsToAddFriend,currentPersonalUser,friends, latestNotification, notifications}} = useQuery(GET_CONTACT_CACHE_DATA)
-  const {setReceivedRequestsToAddFriend, setCurrentUser, setCurrentPersonalUser, setFriends, setLatestNotification, removeNewNotification, decreaseNumberNotificationsUnseen,removeNotificationItemFromNotificationsList} = cacheMutations
-  const {    
-    subscribeToMore: subscribeUser,
-  } = useQuery(FETCH_CURRENT_USER, { skip: true });
-  
-  //function to handle when subscription called 
-  const updateSubscriptionOnChange = (sender, receiver, removedNotification) => {  
-    if (removedNotification && user.notifications.includes(removedNotification._id)) {      
+  const {
+    data: {
+      user,
+      receivedRequestsToAddFriend,
+      currentPersonalUser,
+      friends,
+      latestNotification,
+      notifications,
+    },
+  } = useQuery(GET_CONTACT_CACHE_DATA);
+  const {
+    setReceivedRequestsToAddFriend,
+    setCurrentPersonalUser,
+    setFriends,
+    setLatestNotification,
+    removeNewNotification,
+    decreaseNumberNotificationsUnseen,
+    removeNotificationItemFromNotificationsList,
+  } = cacheMutations;
+  const { subscribeToMore: subscribeUser } = useQuery(FETCH_CURRENT_USER, {
+    skip: true,
+  });
+
+  //function to handle when subscription called
+  const updateSubscriptionOnChange = (
+    sender,
+    receiver,
+    removedNotification
+  ) => {
+    if (
+      removedNotification &&
+      user.notifications.includes(removedNotification._id)
+    ) {
       if (latestNotification?._id === removedNotification._id) {
         setLatestNotification(null);
       }
@@ -23,24 +52,27 @@ const useContactSubscription = () => {
       setCurrentUser({
         ...user,
         notifications: [
-          ...user.notifications.filter((_id) => _id !== removedNotification._id)],
-          friends: [...receiver.friends],     
-          following: [...receiver.following], 
-          followed : [...receiver.followed]     ,
-          sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-          receivedRequestsToAddFriend : [...receiver.receivedRequestToAddFriend]
+          ...user.notifications.filter(
+            (_id) => _id !== removedNotification._id
+          ),
+        ],
+        friends: [...receiver.friends],
+        following: [...receiver.following],
+        followed: [...receiver.followed],
+        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
+        receivedRequestsToAddFriend: [...receiver.receivedRequestToAddFriend],
       });
-    }else{
+    } else {
       setCurrentUser({
         ...user,
-        friends: [...receiver.friends],     
-        following: [...receiver.following], 
-        followed : [...receiver.followed]     ,
+        friends: [...receiver.friends],
+        following: [...receiver.following],
+        followed: [...receiver.followed],
         sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-        receivedRequestsToAddFriend : [...receiver.receivedRequestToAddFriend]
+        receivedRequestsToAddFriend: [...receiver.receivedRequestToAddFriend],
       });
     }
-   
+
     if (
       currentPersonalUser &&
       currentPersonalUser._id.toString() === sender._id.toString()
@@ -48,10 +80,10 @@ const useContactSubscription = () => {
       setCurrentPersonalUser({
         ...currentPersonalUser,
         friends: [...sender.friends],
-        following : [...sender.following],
-        followed: [...sender.followed],        
-        receivedRequestsToAddFriend: [...sender.receivedRequestToAddFriend],        
-        sentRequestToAddFriend : [...sender.sentRequestToAddFriend]
+        following: [...sender.following],
+        followed: [...sender.followed],
+        receivedRequestsToAddFriend: [...sender.receivedRequestToAddFriend],
+        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
       });
     }
   };
@@ -61,15 +93,13 @@ const useContactSubscription = () => {
       unsubscribeRemoveFriend;
     if (subscribeUser && user) {
       unsubscribeRejectRquestToAddFriend = subscribeUser({
-        document:
-          subscriptions.userSubscription
-            .REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
+        document: REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           const {
             sender,
             receiver,
-          } = subscriptionData.data.rejectRequestToAddFriendSubscription;        
+          } = subscriptionData.data.rejectRequestToAddFriendSubscription;
           updateSubscriptionOnChange(sender, receiver);
         },
       });
@@ -96,16 +126,16 @@ const useContactSubscription = () => {
       // });
 
       unsubscribeRemoveFriend = subscribeUser({
-        document: subscriptions.userSubscription.REMOVE_FRIEND,
+        document: REMOVE_FRIEND_SUBSCRIPTION,
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           const {
             sender,
             receiver,
-            notification
+            notification,
           } = subscriptionData.data.removeFriendSubscription;
-          console.log(subscriptionData)
-          updateSubscriptionOnChange(sender, receiver, notification);          
+          console.log(subscriptionData);
+          updateSubscriptionOnChange(sender, receiver, notification);
         },
       });
     }
@@ -121,8 +151,7 @@ const useContactSubscription = () => {
         unsubscribeRemoveFriend();
       }
     };
-  }, [subscribeUser, user,receivedRequestsToAddFriend, friends]);
-
+  }, [subscribeUser, user, receivedRequestsToAddFriend, friends]);
 };
 
 export default useContactSubscription;

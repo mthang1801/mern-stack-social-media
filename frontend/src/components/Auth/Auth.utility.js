@@ -14,20 +14,21 @@ import {
   Friends,
   MessagesStorage,
 } from "../../apollo/models";
+import {userVar, postsVar} from "../../apollo/cache"
+import { initialState } from "../../apollo/initialState";
+import {setCurrentUser} from "../../apollo/user/user.caches"
 const clearCache = () => {
-  const {
-    setCurrentUser,
+  const {    
     setCountNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,
-    setPosts,
     clearCurrentChat,
     setFriends,
     clearMessageStorage,
   } = cacheMutations;
-  setCurrentUser(User);
+  userVar(initialState.user);
+  postsVar(initialState.posts);
   setCountNumberNotificationsUnseen(CountNumberNotificationsUnseen);
-  setPosts(Posts);
   setNotifications(Notifications);
   setNewNotifications(NewNotifications);
   clearCurrentChat();
@@ -52,8 +53,7 @@ const login = async (user, token, tokenExpire) => {
     "tokenExpire",
     new Date(Date.now() + tokenExpire * 1000)
   );
-  const { setCurrentUser } = cacheMutations;
-  setCurrentUser({ ...user });
+  setCurrentUser(user)
   if (typeof window !== "undefined") {
     restartWebsocketConnection();
   }

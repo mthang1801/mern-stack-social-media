@@ -2,12 +2,12 @@ import React, { useState, useEffect, createRef, useCallback } from "react";
 import { Wrapper } from "./styles/ChatBoardBody.styles";
 import Bubble from "./Bubble";
 import { useThemeUI } from "theme-ui";
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import {
   GET_CURRENT_CHAT,
-  GET_MESSAGES_STORAGE,
-  GET_CURRENT_USER,
+  GET_MESSAGES_STORAGE,  
 } from "../../apollo/operations/queries/cache";
+import {userVar} from "../../apollo/cache"
 import { FETCH_MESSAGES } from "../../apollo/operations/queries/chat";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
 
@@ -17,10 +17,8 @@ const ChatBoardBody = () => {
   //useQuery
   const {
     data: { currentChat },
-  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-first" });
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-first" }); 
+  const user = useReactiveVar(userVar);
   const {
     data: { messagesStorage },
   } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-first" });

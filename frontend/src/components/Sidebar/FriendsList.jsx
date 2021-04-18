@@ -8,7 +8,7 @@ import {
 import { useThemeUI } from "theme-ui";
 import { userVar } from "../../apollo/cache";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import userActionTypes from "../../apollo/user/user.types";
+import {FETCH_USER_FRIENDS_DATA} from "../../apollo/user/user.types";
 import { addFetchedFriendsToFriendsData } from "../../apollo/user/user.caches";
 import FriendItem from "./FriendItem";
 import { Scrollbars } from "react-custom-scrollbars";
@@ -25,7 +25,7 @@ const FriendsList = ({ show }) => {
 
   const [fetched, setFetched] = useState(false);
   const { refetch: fetchUserFriends } = useQuery(
-    userActionTypes.FETCH_USER_FRIENDS,
+    FETCH_USER_FRIENDS_DATA,
     {
       fetchPolicy: "no-cache",
       notifyOnNetworkStatusChange: true,

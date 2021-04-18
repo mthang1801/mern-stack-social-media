@@ -2,7 +2,6 @@ import { GET_TOGGLE_BUTTON_MENU } from "./controls/getToggleButtonMenu";
 import {GET_DIALOG} from "./controls/getDialog"
 import { GET_POST_STATUS } from "./post/getPostStatus";
 import { GET_POSTS } from "./post/getPosts";
-import { GET_CURRENT_USER } from "./user/getCurrentUser";
 import { GET_NOTIFICATIONS } from "./notifications/getNotifications";
 import { GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN } from "./notifications/getCountNumberNotificationsUnseen";
 import { GET_NEW_NOTIFICATIONS } from "./notifications/getNewNotifications";
@@ -27,7 +26,6 @@ export { GET_TOGGLE_BUTTON_MENU };
 export { GET_DIALOG };
 export { GET_POST_STATUS };
 export { GET_POSTS };
-export { GET_CURRENT_USER };
 export { GET_NOTIFICATIONS };
 export { GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN };
 export { GET_NEW_NOTIFICATIONS };
@@ -53,7 +51,6 @@ export const cacheQueries = {
   GET_DIALOG,
   GET_POST_STATUS,
   GET_POSTS,
-  GET_CURRENT_USER,
   GET_NOTIFICATIONS,
   GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
   GET_NEW_NOTIFICATIONS,

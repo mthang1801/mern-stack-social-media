@@ -1,17 +1,13 @@
 import React, { lazy, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
-import { GET_CURRENT_USER } from "../apollo/operations/queries/cache";
-import { useQuery } from "@apollo/client";
+import { userVar } from "../apollo/cache";
+import { useReactiveVar } from "@apollo/client";
 const SignIn = lazy(() => import("../components/Auth/SignIn"));
 const SignUp = lazy(() => import("../components/Auth/SignUp"));
 
 const AuthPage = ({setIsAuth, ...props}) => {
   const { match, location, history } = props;
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, {
-    fetchPolicy: "cache-only",
-  }); 
+  const user = useReactiveVar(userVar);
   useEffect(() => {
     if (user && location.state && location.state.from) {
       history.replace(location.state.from);

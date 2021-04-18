@@ -3,12 +3,12 @@ import { Wrapper } from "./styles/ListContacts.styles";
 import ContactItem from "./ContactItem";
 import { usePopupContactActions } from "./hook/usePopupActions";
 import { useQuery } from "@apollo/client";
-import { FETCH_FRIENDS } from "../../apollo/operations/queries/user/fetchFriends";
+import { FETCH_USER_FRIENDS_DATA } from "../../apollo/user/user.types";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
 const ListContacts = ({ data }) => {
   const { setShowPopup } = usePopupContactActions();
   const [loadContactMore, setLoadContactMore] = useState(false);
-  const { refetch: fetchMoreContacts } = useQuery(FETCH_FRIENDS, {
+  const { refetch: fetchMoreContacts } = useQuery(FETCH_USER_FRIENDS_DATA, {
     skip: true,
     fetchPolicy: "cache-and-network",
   });

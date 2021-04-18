@@ -1,7 +1,7 @@
 import { client } from "../apollo/client";
 import { cacheMutations } from "../apollo/operations/mutations";
 import {initialState} from "../apollo/initialState"
-import {postsVar} from "../apollo/cache"
+import {postsVar, userVar} from "../apollo/cache"
 import {
   User,
   Posts,
@@ -10,15 +10,14 @@ import {
   CountNumberNotificationsUnseen,
 } from "../apollo/models";
 const clearCache = () => {
-  const {
-    setCurrentUser,
+  const {    
     setCountNumberNotificationsUnseen,
     setNotifications,
     setNewNotifications,    
   } = cacheMutations;
-  setCurrentUser(User);
-  setCountNumberNotificationsUnseen(CountNumberNotificationsUnseen);
+  userVar(initialState.user);  
   postsVar(initialState.posts);
+  setCountNumberNotificationsUnseen(CountNumberNotificationsUnseen);
   setNotifications(Notifications);
   setNewNotifications(NewNotifications);
 };

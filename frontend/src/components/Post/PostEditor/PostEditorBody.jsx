@@ -19,7 +19,7 @@ import { IoIosImage } from "react-icons/io";
 import generateBase64Image from "../../../utils/generateBase64Image";
 import ImagesCarousel from "../../UI/ImagesCarousel";
 import { useQuery } from "@apollo/client";
-import { SEARCH_FRIENDS } from "../../../apollo/operations/queries/user";
+import { SEARCH_FRIENDS } from "../../../apollo/user/user.types";
 import useLanguage from "../../Global/useLanguage";
 const PostEditorBody = ({
   editorState,

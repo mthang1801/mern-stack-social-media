@@ -1,19 +1,17 @@
-import React , {useEffect} from "react";
+import React  from "react";
 import {
-  GET_CURRENT_USER,
   GET_SENT_REQUESTS_TO_ADD_FRIEND,
 } from "../../apollo/operations/queries/cache";
-import { FETCH_USERS_SENT_REQUEST_TO_ADD_FRIEND } from "../../apollo/operations/queries/user";
-import { useQuery } from "@apollo/client";
+import { FETCH_USERS_SENT_REQUEST_TO_ADD_FRIEND } from "../../apollo/user/user.types";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import {userVar} from "../../apollo/cache"
 import { useThemeUI } from "theme-ui";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import { ContactWrapper, Title, LinkReadMore } from "./Contact.styles";
 import useLanguage from "../Global/useLanguage";
 import ContactItem from "./ContactItem";
 const SentRequestsToAddFriend = () => {
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+  const user = useReactiveVar(userVar);
   const {
     data: { sentRequestsToAddFriend },
   } = useQuery(GET_SENT_REQUESTS_TO_ADD_FRIEND, { fetchPolicy: "cache-first" });

@@ -5,9 +5,9 @@ import {
   RightSide,
   PopupSettings,
 } from "./styles/Chat.styles";
-import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
+import { userVar } from "../../apollo/cache";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import Search from "./Search";
 import ListConversations from "./ListConversations";
 import { useThemeUI } from "theme-ui";
@@ -16,9 +16,7 @@ import ChatBoard from "./ChatBoard";
 export const MessagesContext = createContext({});
 const Conversations = () => {
   //query
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+  const user = useReactiveVar(userVar)
 
   //state
   const [showPopup, setShowPopup] = useState(false);

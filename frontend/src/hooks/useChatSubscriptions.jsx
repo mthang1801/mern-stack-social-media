@@ -1,15 +1,14 @@
 import { useEffect } from "react";
 import chatSubscriptions from "../apollo/operations/subscriptions/chat";
 import { FETCH_CHAT_CONVERSATIONS } from "../apollo/operations/queries/chat/fetchChatConversations";
-import { useQuery, useMutation } from "@apollo/client";
-import {
-  GET_CURRENT_USER,
-  GET_CURRENT_CHAT,
-} from "../apollo/operations/queries/cache";
+import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
+import { GET_CURRENT_CHAT } from "../apollo/operations/queries/cache";
 import { cacheMutations } from "../apollo/operations/mutations/cache";
+import { userVar } from "../apollo/cache";
 import { UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE } from "../apollo/operations/mutations/chat";
 
 const useChatSubscriptions = () => {
+  const user = useReactiveVar(userVar);
   const { subscribeToMore: subscribeChatMessage } = useQuery(
     FETCH_CHAT_CONVERSATIONS,
     {
@@ -23,9 +22,6 @@ const useChatSubscriptions = () => {
     SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES,
     NOTIFY_SENDERS_RECEIVER_ONLINE_HAS_RECEIVED_MESSAGES,
   } = chatSubscriptions;
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
   const {
     data: { currentChat },
   } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-only" });
@@ -54,7 +50,7 @@ const useChatSubscriptions = () => {
             message,
           } = subscriptionData.data.sentMessageChatSubscription;
           const { sender } = message;
-        
+
           setMessagesStorage(sender, message, scope, false);
           //update Delivered status
           const messageStatus =
@@ -112,8 +108,8 @@ const useChatSubscriptions = () => {
       if (unsubscribeSubscribeReceiverHasSeenAllMessages) {
         unsubscribeSubscribeReceiverHasSeenAllMessages();
       }
-      if(unsubscribeNotifySendersReceiverOnlineHasReceivedMessages){
-        unsubscribeNotifySendersReceiverOnlineHasReceivedMessages()
+      if (unsubscribeNotifySendersReceiverOnlineHasReceivedMessages) {
+        unsubscribeNotifySendersReceiverOnlineHasReceivedMessages();
       }
     };
   }, [subscribeChatMessage, user, currentChat]);

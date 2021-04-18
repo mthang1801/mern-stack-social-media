@@ -570,11 +570,12 @@ export const userController = {
   },
   removeFriend: async (req, friendId, pubsub, removeFriendSubscription) => {
     try {
-      const currentUserId = getAuthUser(req);
+      const currentUserId = getAuthUser(req);      
       const currentUser = await User.findOne({
         _id: currentUserId,
         friends: friendId,
       });
+      console.log(currentUser)
       if (!currentUser) {
         throw new AuthenticationError("User not found");
       }

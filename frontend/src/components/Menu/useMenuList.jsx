@@ -1,10 +1,10 @@
 import {useState, useEffect} from 'react'
 import useLanguage from "../Global/useLanguage"
 import {useLocation} from "react-router-dom"
-import {useQuery} from "@apollo/client"
-import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache"
+import {useReactiveVar} from "@apollo/client"
+import {userVar} from "../../apollo/cache"
 const useMenuList = () => {
-  const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"});
+  const user = useReactiveVar(userVar);
 
   const location = useLocation();  
   const { lang, i18n } = useLanguage();

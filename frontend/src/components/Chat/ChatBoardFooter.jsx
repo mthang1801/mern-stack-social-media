@@ -29,10 +29,10 @@ import {
 } from "../../apollo/operations/mutations/chat";
 import { cacheMutations } from "../../apollo/operations/mutations/";
 import {
-  GET_CURRENT_CHAT,
-  GET_CURRENT_USER,
+  GET_CURRENT_CHAT,  
 } from "../../apollo/operations/queries/cache";
-import { useMutation, useQuery } from "@apollo/client";
+import {userVar} from "../../apollo/cache"
+import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
 import generateBase64Image from "../../utils/generateBase64Image";
 import useLanguage from "../Global/useLanguage"
 const ChatBoardFooter = () => {
@@ -46,9 +46,7 @@ const ChatBoardFooter = () => {
   const {i18n, lang} = useLanguage();
   const {chatInputPlaceholder} = i18n.store.data[lang].translation.chat;
   //useQuery
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-and-network" });
+  const user = useReactiveVar(userVar);
   const {
     data: { currentChat },
   } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-and-network" });

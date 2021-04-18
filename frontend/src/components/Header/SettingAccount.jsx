@@ -10,14 +10,14 @@ import { AiOutlineSetting } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { MdLanguage } from "react-icons/md";
 import ButoonColorMode from "../Controls/ButtonColorMode";
-import {GET_CURRENT_USER} from "../../apollo/operations/queries/cache";
-import {useQuery} from "@apollo/client"
+import {userVar} from "../../apollo/cache";
+import {useReactiveVar} from "@apollo/client"
 import {logout} from "../Auth/Auth.utility"
 const SettingAccount = ({ className }) => {
   const [togglePopup, setTogglePopup] = useState(false);
   const { colorMode } = useThemeUI();
   const settingRef = useRef(false);
-  const {data : {user}} = useQuery(GET_CURRENT_USER, {fetchPolicy : "cache-first"})
+  const user = useReactiveVar(userVar);
   useEffect(() => {
     function handleClickOutsidePopup(e) {
       if (settingRef.current && !settingRef.current.contains(e.target)) {

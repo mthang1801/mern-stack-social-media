@@ -6,13 +6,13 @@ const Notifications = ({notifications}) => {
    
   return (
     <LazyLoad>
-      {notifications.map((notification) => (
+      {notifications.length ? notifications.map((notification) => (
         <NotificationItem
           key={`notification-${notification._id}`}
           notifications={notifications}
           notification={notification}
         />
-      ))}
+      )): null}
     </LazyLoad>
   );
 };

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import {
   ContactItemWrapper,
   ContactInfo,
@@ -13,25 +13,26 @@ import useLanguage from "../Global/useLanguage";
 import { BsChatDots, BsCameraVideo, BsThreeDotsVertical } from "react-icons/bs";
 import { MdStarBorder } from "react-icons/md";
 import { IoMdCall } from "react-icons/io";
-
-import {
-  GET_CURRENT_USER,
+import {setCurrentUser} from "../../apollo/user/user.caches"
+import {  
   GET_CURRENT_PERSONAL_USER,
   GET_SENT_REQUESTS_TO_ADD_FRIEND,
   GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
-  GET_FRIENDS
+  GET_FRIENDS,
 } from "../../apollo/operations/queries/cache";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import { userMutations } from "../../apollo/operations/mutations/user";
-import { useQuery, useMutation } from "@apollo/client";
-
+import {
+  REJECT_REQUEST_TO_ADD_FRIEND,
+  ACCEPT_REQUEST_TO_ADD_FRIEND,
+  CANCEL_REQUEST_TO_ADD_FRIEND,
+} from "../../apollo/user/user.types";
+import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
+import {userVar} from "../../apollo/cache"
 
 const ContactItem = ({ userContact, type }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });  
+  const user = useReactiveVar(userVar);
   const {
     data: { friends },
   } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-first" });
@@ -43,20 +44,18 @@ const ContactItem = ({ userContact, type }) => {
   } = useQuery(GET_SENT_REQUESTS_TO_ADD_FRIEND, { fetchPolicy: "cache-first" });
   const {
     data: { receivedRequestsToAddFriend },
-  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, { fetchPolicy: "cache-first" });
-  const [cancelRequestToAddFriend] = useMutation(
-    userMutations.CANCEL_REQUEST_TO_ADD_FRIEND
-  );
-  const [rejectRequestToAddFriend] = useMutation(userMutations.REJECT_REQUEST_TO_ADD_FRIEND);
-  const [acceptRequestToAddFriend] = useMutation(userMutations.ACCEPT_REQUEST_TO_ADD_FRIEND);
-  const {
-    setCurrentUser,
+  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
+    fetchPolicy: "cache-first",
+  });
+  const [cancelRequestToAddFriend] = useMutation(CANCEL_REQUEST_TO_ADD_FRIEND);
+  const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
+  const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
+  const {    
     setCurrentPersonalUser,
     setReceivedRequestsToAddFriend,
     setSentRequestsToAddFriend,
-    setFriends
+    setFriends,
   } = cacheMutations;
-
 
   //function to handle when user click button request
   const updateMutationOnChange = (sender, receiver) => {
@@ -84,40 +83,44 @@ const ContactItem = ({ userContact, type }) => {
   const onCancelRequestToAddFriend = () => {
     const filterUsersReceivedRequest = sentRequestsToAddFriend.filter(
       (userReceivedRequest) => userReceivedRequest._id !== userContact._id
-    );   
+    );
     cancelRequestToAddFriend({
       variables: { receiverId: userContact._id },
     }).then(({ data }) => {
-      const { sender, receiver } = data.cancelRequestToAddFriend;     
+      const { sender, receiver } = data.cancelRequestToAddFriend;
       setSentRequestsToAddFriend(filterUsersReceivedRequest);
       updateMutationOnChange(sender, receiver);
     });
   };
-   //Handle accept request to add friend
-   const onAcceptRequestToAddFriend = () => {
-     const filterUsersSentRequest = receivedRequestsToAddFriend.filter(userSentRequest => userSentRequest._id !== userContact._id);
+  //Handle accept request to add friend
+  const onAcceptRequestToAddFriend = () => {
+    const filterUsersSentRequest = receivedRequestsToAddFriend.filter(
+      (userSentRequest) => userSentRequest._id !== userContact._id
+    );
     acceptRequestToAddFriend({
       variables: { senderId: userContact._id },
     }).then(({ data }) => {
       const { sender, receiver } = data.acceptRequestToAddFriend;
       //remove user at recived requests to head of friends list
       setReceivedRequestsToAddFriend(filterUsersSentRequest);
-      setFriends([{...userContact}, ...friends])
-      updateMutationOnChange(sender, receiver);    
+      setFriends([{ ...userContact }, ...friends]);
+      updateMutationOnChange(sender, receiver);
     });
   };
 
   //Handle reject to add friend
   const onRejectRequestToAddFriend = () => {
-    const filterUsersSentRequest = receivedRequestsToAddFriend.filter(userSentRequest => userSentRequest._id !== userContact._id);    
-    
+    const filterUsersSentRequest = receivedRequestsToAddFriend.filter(
+      (userSentRequest) => userSentRequest._id !== userContact._id
+    );
+
     rejectRequestToAddFriend({
       variables: { senderId: userContact._id },
     })
       .then(({ data }) => {
         const { sender, receiver } = data.rejectRequestToAddFriend;
-        setReceivedRequestsToAddFriend(filterUsersSentRequest)
-        updateMutationOnChange(sender, receiver);        
+        setReceivedRequestsToAddFriend(filterUsersSentRequest);
+        updateMutationOnChange(sender, receiver);
       })
       .catch((err) => console.log(err));
   };

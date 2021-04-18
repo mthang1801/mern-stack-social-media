@@ -19,9 +19,16 @@ import { RiMessengerLine } from "react-icons/ri";
 import { IoMdUndo } from "react-icons/io";
 
 import { FcCheckmark, FcCancel } from "react-icons/fc";
-import { userMutations } from "../../apollo/operations/mutations";
 import { cacheMutations } from "../../apollo/operations/mutations";
-
+import {
+  ACCEPT_REQUEST_TO_ADD_FRIEND,
+  SEND_REQUEST_TO_ADD_FRIEND,
+  REJECT_REQUEST_TO_ADD_FRIEND,
+  CANCEL_REQUEST_TO_ADD_FRIEND,
+  FOLLOW_USER,
+  UNFOLLOW_USER,
+  REMOVE_FRIEND,
+} from "../../apollo/user/user.types";
 import Button from "@material-ui/core/Button";
 import { useQuery, useMutation } from "@apollo/client";
 import {
@@ -38,7 +45,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "./styles/PersonalHeadingContact.styles";
-
+import {setCurrentUser} from "../../apollo/user/user.caches"
 const PersonalContact = () => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
@@ -51,29 +58,20 @@ const PersonalContact = () => {
     data: { dialog },
   } = useQuery(GET_DIALOG, { fetchPolicy: "cache-first" });
   //Mutations
-  const [sendRequestToAddFriend] = useMutation(
-    userMutations.SEND_REQUEST_TO_ADD_FRIEND
-  );
-  const [rejectRequestToAddFriend] = useMutation(
-    userMutations.REJECT_REQUEST_TO_ADD_FRIEND
-  );
-  const [cancelRequestToAddFriend] = useMutation(
-    userMutations.CANCEL_REQUEST_TO_ADD_FRIEND
-  );
-  const [followUser] = useMutation(userMutations.FOLLOW_USER);
-  const [unFollowUser] = useMutation(userMutations.UNFOLLOW_USER);
-  const [acceptRequestToAddFriend] = useMutation(
-    userMutations.ACCEPT_REQUEST_TO_ADD_FRIEND
-  );
-  const [removeFriend] = useMutation(userMutations.REMOVE_FRIEND);
-  const {
-    setCurrentUser,
+  const [sendRequestToAddFriend] = useMutation(SEND_REQUEST_TO_ADD_FRIEND);
+  const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
+  const [cancelRequestToAddFriend] = useMutation(CANCEL_REQUEST_TO_ADD_FRIEND);
+  const [followUser] = useMutation(FOLLOW_USER);
+  const [unFollowUser] = useMutation(UNFOLLOW_USER);
+  const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
+  const [removeFriend] = useMutation(REMOVE_FRIEND);
+  const {    
     setCurrentPersonalUser,
     setLatestNotification,
     removeNewNotification,
     decreaseNumberNotificationsUnseen,
     removeNotificationItemFromNotificationsList,
-    setDialog
+    setDialog,
   } = cacheMutations;
   //user Query
   const {
@@ -198,7 +196,7 @@ const PersonalContact = () => {
         setRelationship("stranger");
       }
     }
-  }, [user, currentPersonalUser]);  
+  }, [user, currentPersonalUser]);
   // Handle add friend
   const onSendRequestToAddFriend = (e) => {
     sendRequestToAddFriend({

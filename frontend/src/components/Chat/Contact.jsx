@@ -6,11 +6,10 @@ import {
   PopupSettings,
 } from "./styles/Chat.styles";
 import {
-  GET_CURRENT_USER,
   GET_FRIENDS,
 } from "../../apollo/operations/queries/cache";
-import { FETCH_FRIENDS } from "../../apollo/operations/queries/user";
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import { userVar } from "../../apollo/cache";
 import Search from "./Search";
 import { useThemeUI } from "theme-ui";
 import { cacheMutations } from "../../apollo/operations/mutations";
@@ -20,9 +19,7 @@ export const ContactContext = createContext({});
 
 const Contact = () => {
   //useQuery
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+  const user = useReactiveVar(userVar);
   const { setCurrentChat } = cacheMutations;
 
   const {

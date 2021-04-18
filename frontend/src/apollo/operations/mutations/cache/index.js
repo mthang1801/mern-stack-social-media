@@ -8,7 +8,6 @@ import createSetPersonalPosts from "./post/setPersonalPosts";
 import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost";
 
 //User
-import createSetCurrentUser from "./user/setCurrentUser";
 import createSetCurrentPersonalUser from "./user/setCurrentPersonalUser";
 import createClearCurrentChat from "./user/clearCurrentChat";
 import createAddPostsToCurrentPersonalUser from "./user/addPostsToCurrentPersonalUser";
@@ -78,8 +77,7 @@ const mutations = {
   setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),      
   //Comment  
   addCommentToOwnerPost: createAddCommentToOwnerPost(setPersonalPostsVar),  
-  //User
-  setCurrentUser: createSetCurrentUser(userVar),
+  //User  
   setCurrentPersonalUser: createSetCurrentPersonalUser(
     setCurrentPersonalUserVar
   ),

@@ -1,10 +1,9 @@
 import React, { lazy, useEffect, useState } from "react";
 import Layout from "../containers/Layout";
-import {
-  GET_CURRENT_USER,
-  GET_MESSAGES_STORAGE,
-} from "../apollo/operations/queries/cache";
-import { useQuery, useMutation } from "@apollo/client";
+import { GET_MESSAGES_STORAGE } from "../apollo/operations/queries/cache";
+import { userVar } from "../apollo/cache";
+
+import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
 import CardRequestAuth from "../components/Card/CardRequestAuth";
 import {
   RequestAuthScreen,
@@ -26,9 +25,7 @@ const ChatContacts = lazy(() => import("../components/Chat/Contact"));
 
 const ChatsPage = ({ match }) => {
   //use Query
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-first" });
+  const user = useReactiveVar(userVar);
   const {
     data: { messagesStorage },
   } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-first" });
@@ -44,20 +41,26 @@ const ChatsPage = ({ match }) => {
   ] = useMutation(
     UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED
   );
-  const { setInitialMessagesStorage, setNumberOfConversations } = cacheMutations;
+  const {
+    setInitialMessagesStorage,
+    setNumberOfConversations,
+  } = cacheMutations;
   //useState
-  
+
   useChatSubscriptions();
 
   useEffect(() => {
     let _isMounted = true;
-    if (!Object.keys(messagesStorage).length && user) {  
-      //fetch conversations 
+    if (!Object.keys(messagesStorage).length && user) {
+      //fetch conversations
       let personalMessagesHaveReceiverSentStatus = new Set();
       fetchChatConversations().then(({ data }) => {
-        if (_isMounted) {          
-          const { conversations, numberOfConversations } = data.fetchChatConversations;
-          let storage = {};          
+        if (_isMounted) {
+          const {
+            conversations,
+            numberOfConversations,
+          } = data.fetchChatConversations;
+          let storage = {};
           conversations.forEach((conversation) => {
             if (conversation.scope === "PERSONAL") {
               storage[conversation.profile._id] = { ...conversation };
@@ -71,10 +74,10 @@ const ChatsPage = ({ match }) => {
                 );
               }
             }
-          });          
-          
+          });
+
           setInitialMessagesStorage({ ...storage });
-          //update those conversations to received when user online if he/she has offlined before       
+          //update those conversations to received when user online if he/she has offlined before
           if (personalMessagesHaveReceiverSentStatus.size) {
             updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched({
               variables: {
@@ -86,8 +89,8 @@ const ChatsPage = ({ match }) => {
         }
       });
     }
-    return () => _isMounted = false ;
-  }, []);  
+    return () => (_isMounted = false);
+  }, []);
   if (!user)
     return (
       <Layout>

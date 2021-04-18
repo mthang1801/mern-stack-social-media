@@ -10,28 +10,29 @@ import {
   AvatarContainer,
   FormComment,
   PostInfo,
-  CommentCounter
+  CommentCounter,
 } from "./styles/PostCardFooter.styles";
 import useLanguage from "../Global/useLanguage";
 import { BiLike } from "react-icons/bi";
 import { useThemeUI } from "theme-ui";
-import { useQuery, useMutation } from "@apollo/client";
-import { GET_CURRENT_USER } from "../../apollo/operations/queries/cache";
+import { useMutation, useReactiveVar } from "@apollo/client";
+import { userVar } from "../../apollo/cache";
 import { LIKE_POST, REMOVE_LIKE_POST } from "../../apollo/post/post.types";
 
 import LazyLoad from "react-lazyload";
-import {updateLikePost, updateRemoveLikePost} from "../../apollo/post/post.caches"
+import {
+  updateLikePost,
+  updateRemoveLikePost,
+} from "../../apollo/post/post.caches";
 import CommentEditor from "./CommentEditor";
 const PostCardFooter = ({ post, fetchComments }) => {
   const { i18n, lang } = useLanguage();
   const { controls } = i18n.store.data[lang].translation.post;
   const { colorMode } = useThemeUI();
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, { fetchPolicy: "cache-only" });
+  const user = useReactiveVar(userVar);
   const [likePost] = useMutation(LIKE_POST);
   const [removeLikePost] = useMutation(REMOVE_LIKE_POST);
-  const [showCommentEditor, setShowCommentEditor] = useState(false);  
+  const [showCommentEditor, setShowCommentEditor] = useState(false);
   const onLikePost = () => {
     likePost({ variables: { postId: post._id } })
       .then(({ data }) => {
@@ -53,12 +54,11 @@ const PostCardFooter = ({ post, fetchComments }) => {
   };
 
   const onClickComment = () => {
-    if(!showCommentEditor){
+    if (!showCommentEditor) {
       fetchComments();
-    setShowCommentEditor(true);
+      setShowCommentEditor(true);
     }
-    
-};
+  };
   return (
     <Wrapper>
       <Controls theme={colorMode}>
@@ -88,32 +88,37 @@ const PostCardFooter = ({ post, fetchComments }) => {
         </Button>
       </Controls>
       <PostInfo>
-      {post.likes.length ? (
-        <CounterLike>
-          <LikeButton>
-            <BiLike />
-          </LikeButton>
-          <span>{post.likes.length}</span>
-        </CounterLike>
-      ) : null}
-        {post.comments.length + post.responses.length > 0 ? <CommentCounter onClick={onClickComment}>{controls.countComments(post.comments.length + post.responses.length)}</CommentCounter> : null}
+        {post.likes.length ? (
+          <CounterLike>
+            <LikeButton>
+              <BiLike />
+            </LikeButton>
+            <span>{post.likes.length}</span>
+          </CounterLike>
+        ) : null}
+        {post.comments.length + post.responses.length > 0 ? (
+          <CommentCounter onClick={onClickComment}>
+            {controls.countComments(
+              post.comments.length + post.responses.length
+            )}
+          </CommentCounter>
+        ) : null}
       </PostInfo>
-      
+
       {showCommentEditor && (
         <>
-        <Comments>
-          <UserComment>
-            <AvatarContainer>
-              <LazyLoad>
-                <img src={user.avatar} alt={user.avatar} />
-              </LazyLoad>
-            </AvatarContainer>
-            <FormComment theme={colorMode}>
-              <CommentEditor post={post} />
-            </FormComment>
-          </UserComment>
-        </Comments>
-       
+          <Comments>
+            <UserComment>
+              <AvatarContainer>
+                <LazyLoad>
+                  <img src={user.avatar} alt={user.avatar} />
+                </LazyLoad>
+              </AvatarContainer>
+              <FormComment theme={colorMode}>
+                <CommentEditor post={post} />
+              </FormComment>
+            </UserComment>
+          </Comments>
         </>
       )}
     </Wrapper>

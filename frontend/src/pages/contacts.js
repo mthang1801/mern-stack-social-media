@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../containers/Layout";
-import { useQuery } from "@apollo/client";
+import { useQuery , useReactiveVar} from "@apollo/client";
+import {userVar} from "../apollo/cache"
 import {
-  GET_CURRENT_USER,
   GET_FRIENDS,
 } from "../apollo/operations/queries/cache";
 import {
   FETCH_LIST_CONTACT,
-  FETCH_FRIENDS,  
-} from "../apollo/operations/queries/user";
+  FETCH_USER_FRIENDS_DATA,  
+} from "../apollo/user/user.types";
 import { cacheMutations } from "../apollo/operations/mutations";
 import MainBody from "../components/Body/MainBody";
 import { MainContent, MainContentFullSize, ContactTitle } from "./styles/pages.styles";
@@ -22,18 +22,14 @@ const FriendsPage = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [fetched, setFetched] = useState(false);
   const { i18n, lang } = useLanguage();
-  const {
-    data: { user },
-  } = useQuery(GET_CURRENT_USER, {
-    fetchPolicy: "cache-first",
-  });
+  const user = useReactiveVar(userVar);
   const {
     data: { friends },
   } = useQuery(GET_FRIENDS, {
     fetchPolicy: "cache-first",
   });
  
-  const { refetch: fetchFriends } = useQuery(FETCH_FRIENDS, {
+  const { refetch: fetchFriends } = useQuery(FETCH_USER_FRIENDS_DATA, {
     fetchPolicy: "cache-and-network",
     skip: true,
   });
