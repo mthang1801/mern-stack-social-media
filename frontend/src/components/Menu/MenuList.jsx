@@ -2,11 +2,11 @@ import React from 'react'
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import {useThemeUI} from "theme-ui"
-import {useQuery} from "@apollo/client"
-import {GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN} from "../../apollo/operations/queries/cache"
+import {useReactiveVar} from "@apollo/client"
+import {countNumberOfNotificationUnseenVar} from "../../apollo/cache"
 const MobileMenuList = ({aside, title, list}) => {  
   const {colorMode} = useThemeUI()
-  const {data: {countNumberNotificationsUnseen}} = useQuery(GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN, {fetchPolicy : "cache-first"})
+  const countNumberNotificationsUnseen = useReactiveVar(countNumberOfNotificationUnseenVar)
   if(!list || !list.length || !title) return null  
   return (
     <Wrapper aside={!!aside} theme={colorMode}>

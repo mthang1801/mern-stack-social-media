@@ -1,29 +1,23 @@
 import { InMemoryCache, makeVar } from "@apollo/client";
 import {
   PostStatus,
-  Posts,
-  Notifications,
-  CountNumberNotificationsUnseen,
-  NewNotifications,
   LatestNotification,
   CurrentPersonalUser,
-  PersonalPosts,
-  OpenFriendsList,
+  PersonalPosts,  
   Friends,
   SentRequestsToAddFriends,
   ReceivedRequestsToAddFriend,
   MessagesStorage,
   CurrentChat,
   NumberOfConversations,
-  Dialog,
 } from "./models";
 import { initialState } from "./initialState";
 //Cache
 const toggleMenuVar = makeVar(initialState.toggleMenu);
-const setDialogVar = makeVar(Dialog);
+const dialogVar = makeVar(initialState.alertDialog);
 //Post
 const setPostStatusVar = makeVar(PostStatus);
-const postsVar = makeVar(Posts);
+const postsVar = makeVar(initialState.posts);
 const setPersonalPostsVar = makeVar(PersonalPosts);
 //User
 const userVar = makeVar(initialState.user);
@@ -31,12 +25,12 @@ const setCurrentPersonalUserVar = makeVar(CurrentPersonalUser);
 const setSentRequestsToAddFriendVar = makeVar(SentRequestsToAddFriends);
 const setReceivedRequestsToAddFriendVar = makeVar(ReceivedRequestsToAddFriend);
 //Notification
-const setNotificationsVar = makeVar(Notifications);
-const setCountNumberNotificationsUnseenVar = makeVar(
-  CountNumberNotificationsUnseen
+const notificationsVar = makeVar(initialState.notifications);
+const countNumberOfNotificationUnseenVar = makeVar(
+  initialState.countNumberOfNotificationUnseen
 );
-const setNewNotificationsVar = makeVar(NewNotifications);
-const setLatestNotificationVar = makeVar(LatestNotification);
+const newNotificationsVar = makeVar(initialState.newNotifications);
+const latestNotificationVar = makeVar(initialState.latestNotification);
 //Friends
 const toggleFriendsBoardVar = makeVar(initialState.toggleFriendsBoard);
 const setFriendsVar = makeVar(Friends);
@@ -53,7 +47,7 @@ const cache = new InMemoryCache({
           read: () => toggleMenuVar(),
         },
         dialog: {
-          read: () => setDialogVar(),
+          read: () => dialogVar(),
         },
         //current User
         user: {
@@ -88,17 +82,17 @@ const cache = new InMemoryCache({
         },
         //notification
         notifications: {
-          read: () => setNotificationsVar(),
+          read: () => notificationsVar(),
         },
         newNotifications: {
-          read: () => setNewNotificationsVar(),
+          read: () => newNotificationsVar(),
         },
         //if has new notification, open popup immediately
         latestNotification: {
-          read: () => setLatestNotificationVar(),
+          read: () => latestNotificationVar(),
         },
         countNumberNotificationsUnseen: {
-          read: () => setCountNumberNotificationsUnseenVar(),
+          read: () => countNumberOfNotificationUnseenVar(),
         },
         //Chat
         currentChat: {
@@ -121,10 +115,10 @@ export {
   setPostStatusVar,
   userVar,
   postsVar,
-  setNotificationsVar,
-  setCountNumberNotificationsUnseenVar,
-  setNewNotificationsVar,
-  setLatestNotificationVar,
+  notificationsVar,
+  countNumberOfNotificationUnseenVar,
+  newNotificationsVar,
+  latestNotificationVar,
   setCurrentPersonalUserVar,
   setPersonalPostsVar,
   toggleFriendsBoardVar,
@@ -134,5 +128,5 @@ export {
   setMessagesStorageVar,
   setCurrentChatVar,
   setNumberOfConversationsVar,
-  setDialogVar,
+  dialogVar,
 };

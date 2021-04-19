@@ -1,10 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
-import {
-  notificationMutations,
-  cacheMutations,
-} from "../../apollo/operations/mutations";
+import { cacheMutations } from "../../apollo/operations/mutations";
+import { UPDATE_USER_HAS_SEEN_NOTIFICATION } from "../../apollo/notification/notification.types";
 import { AcceptButton, DenyButton } from "../Custom/CustomMaterialButton";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import useLanguage from "../Global/useLanguage";
@@ -24,7 +22,14 @@ import {
   ACCEPT_REQUEST_TO_ADD_FRIEND,
   REJECT_REQUEST_TO_ADD_FRIEND,
 } from "../../apollo/user/user.types";
-import {setCurrentUser} from "../../apollo/user/user.caches"
+import { setCurrentUser } from "../../apollo/user/user.caches";
+import {
+  removeNewNotification,
+  decreaseCountNumberNotificationsUnseen,
+  removeNotificationItemFromNotificationsList,
+  setLatestNotification,
+  updateNotificationHasSeen,
+} from "../../apollo/notification/notification.caches";
 const NotificationItem = ({ notification }) => {
   //Query
   const {
@@ -37,18 +42,8 @@ const NotificationItem = ({ notification }) => {
     },
   } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, { fetchPolicy: "cache-first" });
   //Mutations
-  const {
-    updateNotificationHasSeen,
-    decreaseNumberNotificationsUnseen,    
-    setCurrentPersonalUser,
-    removeNotificationItemFromNotificationsList,
-    setLatestNotification,
-    removeNewNotification,
-    updateHasSeenLatestMessage,
-  } = cacheMutations;
-  const [updateToHasSeen] = useMutation(
-    notificationMutations.UPDATE_USER_HAS_SEEN_NOTIFICATION
-  );
+  const { setCurrentPersonalUser } = cacheMutations;
+  const [updateToHasSeen] = useMutation(UPDATE_USER_HAS_SEEN_NOTIFICATION);
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
   const { lang } = useLanguage();
@@ -56,7 +51,7 @@ const NotificationItem = ({ notification }) => {
     updateToHasSeen({ variables: { notificationId: notification._id } }).then(
       ({ data }) => {
         if (data.updateUserHasSeenNotification) {
-          decreaseNumberNotificationsUnseen();
+          decreaseCountNumberNotificationsUnseen();
           updateNotificationHasSeen(notification._id);
         }
       }
@@ -72,7 +67,7 @@ const NotificationItem = ({ notification }) => {
         setLatestNotification(null);
       }
       removeNewNotification(removedNotification._id);
-      decreaseNumberNotificationsUnseen();
+      decreaseCountNumberNotificationsUnseen();
       removeNotificationItemFromNotificationsList(removedNotification);
       setCurrentUser({
         ...user,

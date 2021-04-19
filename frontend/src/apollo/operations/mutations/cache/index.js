@@ -13,18 +13,7 @@ import createClearCurrentChat from "./user/clearCurrentChat";
 import createAddPostsToCurrentPersonalUser from "./user/addPostsToCurrentPersonalUser";
 import createAddPostItemToCurrentPersonalUser from "./user/addPostItemToCurrentPersonalUser";
 import createUpdatePostInCurrentPersonalUser from "./user/updatePostInCurrentPersonalUser";
-//Notifications
-import createSetNotifications from "./notifications/setNotifications";
-import createSetCountNumberNotificationsUnseen from "./notifications/setCountNumberNotificationsUnseen";
-import createSetNewNotifications from "./notifications/setNewNotifications";
-import createRemoveNewNotification from "./notifications/removeNewNotification";
-import createSetLatestNotification from "./notifications/setLatestNotification";
-import createAddNotificationItemToNotificationsList from "./notifications/addNotificationItemToNotificationsList";
-import createRemoveNotificationItemFromNotificationsList from "./notifications/removeNotificationItemFromNotificationsList";
-import createIncreaseCountNumberNotificationsUnseen from "./notifications/increaseCountNumberNotificationsUnseen";
-import createDecreaseCountNumberNotificationsUnseen from "./notifications/decreaseCountNumberNotificationsUnseen";
-import createUpdateNotificationItemInNotificationsList from "./notifications/updateNotificationItemInNotificationsList";
-import createUpdateNotificationHasSeen from "./notifications/updateNotificationHasSeen";
+
 //Friends
 import createSetOpenFriendsList from "./friends/setOpenFriendsList";
 import createSetFriends from "./friends/setFriends";
@@ -49,14 +38,7 @@ import createUpdateUserOnlineOfflineMessagesStorage from "./chat/updateUserOnlin
 
 import {
   toggleMenuVar,
-  setDialogVar,
-  setPostStatusVar,
-  userVar,
-  postsVar,
-  setNotificationsVar,
-  setCountNumberNotificationsUnseenVar,
-  setNewNotificationsVar,
-  setLatestNotificationVar,
+  dialogVar,    
   setCurrentPersonalUserVar,
   setPersonalPostsVar,
   toggleFriendsBoardVar,
@@ -71,8 +53,8 @@ import {
 const mutations = {
   //Controls
   toggleButtonMenu: createToggleButtonMenu(toggleMenuVar),
-  setDialog: createSetDialog(setDialogVar),
-  clearDialog: createClearDialog(setDialogVar),
+  setDialog: createSetDialog(dialogVar),
+  clearDialog: createClearDialog(dialogVar),
   //Post  
   setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),      
   //Comment  
@@ -89,33 +71,7 @@ const mutations = {
   ),
   updatePostInCurrentPersonalUser: createUpdatePostInCurrentPersonalUser(
     setCurrentPersonalUserVar
-  ),
-  //Notifications
-  setNotifications: createSetNotifications(setNotificationsVar),
-  addNotificationItemToNotificationsList: createAddNotificationItemToNotificationsList(
-    setNotificationsVar
-  ),
-  updateNotificationItemInNotificationsList: createUpdateNotificationItemInNotificationsList(
-    setNotificationsVar
-  ),
-  removeNotificationItemFromNotificationsList: createRemoveNotificationItemFromNotificationsList(
-    setNotificationsVar
-  ),
-  updateNotificationHasSeen: createUpdateNotificationHasSeen(
-    setNotificationsVar
-  ),
-  setNewNotifications: createSetNewNotifications(setNewNotificationsVar),
-  removeNewNotification: createRemoveNewNotification(setNewNotificationsVar),
-  setLatestNotification: createSetLatestNotification(setLatestNotificationVar),
-  setCountNumberNotificationsUnseen: createSetCountNumberNotificationsUnseen(
-    setCountNumberNotificationsUnseenVar
-  ),
-  increaseNumberNotificationsUnseen: createIncreaseCountNumberNotificationsUnseen(
-    setCountNumberNotificationsUnseenVar
-  ),
-  decreaseNumberNotificationsUnseen: createDecreaseCountNumberNotificationsUnseen(
-    setCountNumberNotificationsUnseenVar
-  ),
+  ), 
 
   //Friends
   setOpenFriendsList: createSetOpenFriendsList(toggleFriendsBoardVar),

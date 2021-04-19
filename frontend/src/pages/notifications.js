@@ -3,22 +3,19 @@ import Layout from "../containers/Layout";
 import styled from "styled-components";
 import Notifications from "../components/Notification/Notifications";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import { userVar } from "../apollo/cache";
-import { GET_NOTIFICATIONS } from "../apollo/operations/queries/cache";
+import { userVar, notificationsVar } from "../apollo/cache";
 import CardRequestAuth from "../components/Card/CardRequestAuth";
 import { cacheMutations } from "../apollo/operations/mutations";
 import MainBody from "../components/Body/MainBody";
-import { FETCH_NOTIFICATIONS } from "../apollo/operations/queries/notification";
+import { FETCH_NOTIFICATIONS } from "../apollo/notification/notification.types";
 
 const NotificationsPage = () => {
   const user = useReactiveVar(userVar);
+  const notifications = useReactiveVar(notificationsVar);
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
     skip: true,
-  });
-  const {
-    data: { notifications },
-  } = useQuery(GET_NOTIFICATIONS, { fetchPolicy: "cache-first" });
+  }); 
   const { setNotifications } = cacheMutations;
   const [fetchNotificationsMore, setFetchNotificationsMore] = useState(false);
   useEffect(() => {

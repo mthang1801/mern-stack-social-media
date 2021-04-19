@@ -13,9 +13,9 @@ import useLanguage from "../Global/useLanguage";
 import { BsArrowReturnRight } from "react-icons/bs";
 import { Response } from "./styles/CommentItem.styles";
 import ResponseEditor from "./ResponseEditor";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import { GET_DIALOG } from "../../apollo/operations/queries/cache";
+import { dialogVar } from "../../apollo/cache";
 import {
   REMOVE_COMMENT,
   LIKE_COMMENT,
@@ -43,9 +43,7 @@ const CommentItem = ({ comment, user }) => {
   const { dialog: dialogAlert } = i18n.store.data[lang].translation;
   const [focusResponseEditor, setFocusResponseEditor] = useState(false);
   const { setDialog } = cacheMutations;
-  const {
-    data: { dialog },
-  } = useQuery(GET_DIALOG);
+  const dialog = useReactiveVar(dialogVar);
   const [likeComment] = useMutation(LIKE_COMMENT);
   const [RemoveLikeComment] = useMutation(REMOVE_LIKE_COMMENT);
   const [removeResponse] = useMutation(REMOVE_RESPONSE);

@@ -3,24 +3,20 @@ import {
   Wrapper,
   SenderAvatar,
   NotificationContent,
-  SenderName,
 } from "./styles/FlashPopUpNotification.styles";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
-import { GET_LATEST_NOTIFICATION } from "../../apollo/operations/queries/cache";
-import { useQuery } from "@apollo/client";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import {latestNotificationVar} from "../../apollo/cache";
+import { useReactiveVar } from "@apollo/client";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import { notificationContent } from "../../utils/notificationContent";
+import { setLatestNotification } from "../../apollo/notification/notification.caches";
 const FlashPopUpNotification = ({ onClick }) => {
-  const { setLatestNotification } = cacheMutations;
-  const {
-    data: { latestNotification },
-  } = useQuery(GET_LATEST_NOTIFICATION, { fetchPolicy: "cache-only" });
+  const latestNotification = useReactiveVar(latestNotificationVar)
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
-
+  console.log(latestNotification)
   const { message } = i18n.store.data[lang].translation.notifications;
   useEffect(() => {
     let timer;
@@ -37,7 +33,7 @@ const FlashPopUpNotification = ({ onClick }) => {
     onClick();
     setLatestNotification(null);
   };
-  
+
   return (
     <Wrapper show={latestNotification} theme={colorMode} onClick={onClickPopup}>
       {latestNotification ? (
@@ -48,7 +44,7 @@ const FlashPopUpNotification = ({ onClick }) => {
               effect="blur"
             ></LazyLoadImage>
           </SenderAvatar>
-          <NotificationContent>            
+          <NotificationContent>
             <span
               dangerouslySetInnerHTML={{
                 __html: notificationContent(latestNotification, lang),

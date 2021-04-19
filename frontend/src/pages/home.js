@@ -15,7 +15,7 @@ import Posts from "../components/Post/Posts";
 import useHomePostsSubscription from "../hooks/useHomePostsSubscription"
 import LazyLoad from "react-lazyload"
 import {userVar, toggleFriendsBoardVar, postsVar} from "../apollo/cache"
-import {setToggleFriendsBoard} from "../apollo/controls/controls.actions"
+import {setToggleFriendsBoard} from "../apollo/controls/controls.caches"
 import {FETCH_POSTS} from "../apollo/post/post.queries"
 import {addFetchedPostToCache} from "../apollo/post/post.caches"
 

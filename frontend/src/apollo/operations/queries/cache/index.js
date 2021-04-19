@@ -1,11 +1,6 @@
-import { GET_TOGGLE_BUTTON_MENU } from "./controls/getToggleButtonMenu";
-import {GET_DIALOG} from "./controls/getDialog"
+
 import { GET_POST_STATUS } from "./post/getPostStatus";
 import { GET_POSTS } from "./post/getPosts";
-import { GET_NOTIFICATIONS } from "./notifications/getNotifications";
-import { GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN } from "./notifications/getCountNumberNotificationsUnseen";
-import { GET_NEW_NOTIFICATIONS } from "./notifications/getNewNotifications";
-import { GET_LATEST_NOTIFICATION } from "./notifications/getLatestNotification";
 import { GET_CURRENT_PERSONAL_USER } from "./user/getCurrentPersonalUser";
 import { GET_PERSONAL_POSTS } from "./post/getPersonalPosts";
 import { GET_OPEN_FRIENDS_LIST } from "./friends/getOpenFriendsList";
@@ -22,14 +17,8 @@ import { GET_HEADER_CACHE_DATA } from "./components/getHeader";
 import { GET_USE_POST_SUBSCRIPTION_CACHE_DATA } from "./components/getUsePostsSubscription";
 import { GET_PERSONAL_USER_CACHE_DATA } from "./components/getPersonalUser";
 
-export { GET_TOGGLE_BUTTON_MENU };
-export { GET_DIALOG };
 export { GET_POST_STATUS };
 export { GET_POSTS };
-export { GET_NOTIFICATIONS };
-export { GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN };
-export { GET_NEW_NOTIFICATIONS };
-export { GET_LATEST_NOTIFICATION };
 export { GET_CURRENT_PERSONAL_USER };
 export { GET_PERSONAL_POSTS };
 export { GET_OPEN_FRIENDS_LIST };
@@ -46,15 +35,9 @@ export { GET_HEADER_CACHE_DATA };
 export { GET_USE_POST_SUBSCRIPTION_CACHE_DATA };
 export { GET_PERSONAL_USER_CACHE_DATA };
 
-export const cacheQueries = {
-  GET_TOGGLE_BUTTON_MENU,
-  GET_DIALOG,
+export const cacheQueries = {    
   GET_POST_STATUS,
   GET_POSTS,
-  GET_NOTIFICATIONS,
-  GET_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-  GET_NEW_NOTIFICATIONS,
-  GET_LATEST_NOTIFICATION,
   GET_CURRENT_PERSONAL_USER,
   GET_PERSONAL_POSTS,
   GET_OPEN_FRIENDS_LIST,

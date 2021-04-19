@@ -14,13 +14,11 @@ import {
   Friends,
   MessagesStorage,
 } from "../../apollo/models";
-import {userVar, postsVar} from "../../apollo/cache"
+import {userVar, postsVar, countNumberOfNotificationUnseenVar, notificationsVar, newNotificationsVar} from "../../apollo/cache"
 import { initialState } from "../../apollo/initialState";
 import {setCurrentUser} from "../../apollo/user/user.caches"
 const clearCache = () => {
   const {    
-    setCountNumberNotificationsUnseen,
-    setNotifications,
     setNewNotifications,
     clearCurrentChat,
     setFriends,
@@ -28,9 +26,9 @@ const clearCache = () => {
   } = cacheMutations;
   userVar(initialState.user);
   postsVar(initialState.posts);
-  setCountNumberNotificationsUnseen(CountNumberNotificationsUnseen);
-  setNotifications(Notifications);
-  setNewNotifications(NewNotifications);
+  countNumberOfNotificationUnseenVar(initialState.countNumberOfNotificationUnseen);
+  notificationsVar(initialState.notifications);
+  newNotificationsVar(initialState.newNotifications);
   clearCurrentChat();
   setFriends(Friends);
   clearMessageStorage();

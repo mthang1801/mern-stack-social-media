@@ -3,15 +3,16 @@ import Header from "../components/Header/Header";
 import MenuList from "../components/Menu/MenuList";
 import styled from "styled-components";
 import classNames from "classnames";
-import {useToggleMenu} from "../apollo/controls/controls.actions"
+import {toggleMenuVar} from "../apollo/cache"
 import useMenuList from "../components/Menu/useMenuList";
 import { useThemeUI } from "theme-ui";
 import AlertDialogSlide from "../components/UI/AlertDialogSlide";
 import LazyLoad from "react-lazyload"
+import {useReactiveVar} from "@apollo/client"
 
-const Layout = ({ children, className, ...props }) => {  
-  const toggleMenu = useToggleMenu();  
+const Layout = ({ children, className, ...props }) => {    
   const { menu, explores } = useMenuList();
+  const toggleMenu = useReactiveVar(toggleMenuVar)
   const { colorMode } = useThemeUI();
   return (
     <div className={className} theme={colorMode} {...props}>

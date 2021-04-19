@@ -1,4 +1,10 @@
-import { gql } from "@apollo/client";
+import {gql} from "@apollo/client"
+
+export const FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN = gql`
+  query {
+    countNotificationsUnseen
+  }
+`
 
 export const FETCH_NOTIFICATIONS = gql`
   query FetchNotifications($skip : Int, $limit: Int) {

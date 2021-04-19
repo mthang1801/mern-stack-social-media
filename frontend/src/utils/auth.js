@@ -1,25 +1,22 @@
 import { client } from "../apollo/client";
 import { cacheMutations } from "../apollo/operations/mutations";
-import {initialState} from "../apollo/initialState"
-import {postsVar, userVar} from "../apollo/cache"
+import { initialState } from "../apollo/initialState";
 import {
-  User,
-  Posts,
-  Notifications,
-  NewNotifications,
-  CountNumberNotificationsUnseen,
-} from "../apollo/models";
+  postsVar,
+  userVar,
+  countNumberOfNotificationUnseenVar,
+  notificationsVar,
+  newNotificationsVar,
+} from "../apollo/cache";
+
 const clearCache = () => {
-  const {    
-    setCountNumberNotificationsUnseen,
-    setNotifications,
-    setNewNotifications,    
-  } = cacheMutations;
-  userVar(initialState.user);  
+  userVar(initialState.user);
   postsVar(initialState.posts);
-  setCountNumberNotificationsUnseen(CountNumberNotificationsUnseen);
-  setNotifications(Notifications);
-  setNewNotifications(NewNotifications);
+  countNumberOfNotificationUnseenVar(
+    initialState.countNumberOfNotificationUnseen
+  );
+  notificationsVar(initialState.notifications);
+  newNotificationsVar(initialState.newNotifications);
 };
 
 const logout = async () => {

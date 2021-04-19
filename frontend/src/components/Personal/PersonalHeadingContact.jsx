@@ -30,10 +30,13 @@ import {
   REMOVE_FRIEND,
 } from "../../apollo/user/user.types";
 import Button from "@material-ui/core/Button";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
+
+import {
+  dialogVar,
+} from "../../apollo/cache";
 import {
   GET_PERSONAL_USER_CACHE_DATA,
-  GET_DIALOG,
 } from "../../apollo/operations/queries/cache";
 import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache/components/getNotifications";
 import { useThemeUI } from "theme-ui";
@@ -45,7 +48,14 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "./styles/PersonalHeadingContact.styles";
-import {setCurrentUser} from "../../apollo/user/user.caches"
+import { setCurrentUser } from "../../apollo/user/user.caches";
+import { setAlertDialog } from "../../apollo/controls/controls.caches";
+import {
+  removeNewNotification,
+  decreaseCountNumberNotificationsUnseen,
+  removeNotificationItemFromNotificationsList,
+  setLatestNotification,
+} from "../../apollo/notification/notification.caches";
 const PersonalContact = () => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
@@ -54,9 +64,7 @@ const PersonalContact = () => {
   const {
     data: { notifications, latestNotification },
   } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, { fetchPolicy: "cache-first" });
-  const {
-    data: { dialog },
-  } = useQuery(GET_DIALOG, { fetchPolicy: "cache-first" });
+  const dialog = useReactiveVar(dialogVar);
   //Mutations
   const [sendRequestToAddFriend] = useMutation(SEND_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
@@ -65,14 +73,7 @@ const PersonalContact = () => {
   const [unFollowUser] = useMutation(UNFOLLOW_USER);
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
   const [removeFriend] = useMutation(REMOVE_FRIEND);
-  const {    
-    setCurrentPersonalUser,
-    setLatestNotification,
-    removeNewNotification,
-    decreaseNumberNotificationsUnseen,
-    removeNotificationItemFromNotificationsList,
-    setDialog,
-  } = cacheMutations;
+  const { setCurrentPersonalUser } = cacheMutations;
   //user Query
   const {
     data: { user, currentPersonalUser },
@@ -98,7 +99,7 @@ const PersonalContact = () => {
           updateMutationOnChange(sender, receiver, notification);
         })
         .then(() => {
-          setDialog({ agree: false, title: "", content: "", data: null });
+          setAlertDialog({ agree: false, title: "", content: "", data: null });
         });
     }
   }, [dialog, currentPersonalUser]);
@@ -112,7 +113,7 @@ const PersonalContact = () => {
         setLatestNotification(null);
       }
       removeNewNotification(removedNotification._id);
-      decreaseNumberNotificationsUnseen();
+      decreaseCountNumberNotificationsUnseen();
       removeNotificationItemFromNotificationsList(removedNotification);
       setCurrentUser({
         ...user,
@@ -341,7 +342,7 @@ const PersonalContact = () => {
   );
 
   const onClickRemoveFriend = () => {
-    setDialog({
+    setAlertDialog({
       title: `Remove friend`,
       content: `Are you sure to remove ${currentPersonalUser?.name}`,
       data: { type: "remove contact", userId: currentPersonalUser._id },

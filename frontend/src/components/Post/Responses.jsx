@@ -5,18 +5,17 @@ import {
   LIKE_RESPONSE,
   REMOVE_LIKE_RESPONSE,
 } from "../../apollo/post/post.types";
-import { cacheMutations } from "../../apollo/operations/mutations";
 import {
   addLikeResponse,
   removeLikeResponse as removeLikeResponseInCache,
 } from "../../apollo/post/post.caches";
+import {setAlertDialog} from "../../apollo/controls/controls.caches"
 import useLanguage from "../Global/useLanguage";
 const Responses = ({ responses, user, onClickResponse }) => {
   const [likeResponse] = useMutation(LIKE_RESPONSE);
   const [removeLikeResponse] = useMutation(REMOVE_LIKE_RESPONSE);
   const { i18n, lang } = useLanguage();
-  const { dialog: dialogAlert } = i18n.store.data[lang].translation;
-  const { setDialog } = cacheMutations;
+  const { dialog: dialogAlert } = i18n.store.data[lang].translation;  
 
   const onLikeResponse = useCallback((response) => {
     likeResponse({ variables: { responseId: response._id } }).then(
@@ -49,7 +48,7 @@ const Responses = ({ responses, user, onClickResponse }) => {
   }, []);
 
   const onClickRemoveResponse = useCallback((response) => {
-    setDialog({
+    setAlertDialog({
       agree: false,
       title: dialogAlert.removeComment.title,
       content: dialogAlert.removeComment.content,

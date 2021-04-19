@@ -2,13 +2,19 @@ import { useEffect } from "react";
 import { FETCH_CURRENT_USER } from "../apollo/user/user.types";
 import { cacheMutations } from "../apollo/operations/mutations/cache";
 import { useQuery } from "@apollo/client";
-import subscriptions from "../apollo/operations/subscriptions";
 import { GET_CONTACT_CACHE_DATA } from "../apollo/operations/queries/cache";
 import {
   REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   REMOVE_FRIEND_SUBSCRIPTION,
 } from "../apollo/user/user.subscriptions";
+import {
+  removeNewNotification,
+  decreaseCountNumberNotificationsUnseen,
+  removeNotificationItemFromNotificationsList,
+  setLatestNotification
+} from "../apollo/notification/notification.caches";
 import { setCurrentUser } from "../apollo/user/user.caches";
+
 const useContactSubscription = () => {
   const {
     data: {
@@ -23,11 +29,7 @@ const useContactSubscription = () => {
   const {
     setReceivedRequestsToAddFriend,
     setCurrentPersonalUser,
-    setFriends,
-    setLatestNotification,
-    removeNewNotification,
-    decreaseNumberNotificationsUnseen,
-    removeNotificationItemFromNotificationsList,
+    setFriends,    
   } = cacheMutations;
   const { subscribeToMore: subscribeUser } = useQuery(FETCH_CURRENT_USER, {
     skip: true,
@@ -47,7 +49,7 @@ const useContactSubscription = () => {
         setLatestNotification(null);
       }
       removeNewNotification(removedNotification._id);
-      decreaseNumberNotificationsUnseen();
+      decreaseCountNumberNotificationsUnseen();
       removeNotificationItemFromNotificationsList(removedNotification);
       setCurrentUser({
         ...user,

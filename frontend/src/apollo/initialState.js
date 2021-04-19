@@ -3,5 +3,9 @@ export const initialState = {
   posts : [],
   toggleMenu: true,
   alertDialog: { agree: false, title: "", content: "", data: null },
-  toggleFriendsBoard : false
+  toggleFriendsBoard : false,
+  notifications : [],
+  countNumberOfNotificationUnseen : 0,
+  newNotifications : new Set(),
+  latestNotification : null
 };

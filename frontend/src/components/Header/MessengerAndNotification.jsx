@@ -9,21 +9,22 @@ import {
 import { IoMdNotifications } from "react-icons/io";
 import Button from "../Controls/ButtonDefaultCircle";
 import NotificationsBoard from "./NotificationsBoard";
-import useNotificationsPostSubscription from "../../hooks/useNotificationsPostSubscription"
+import useNotificationsPostSubscription from "../../hooks/useNotificationsPostSubscription";
 import { useQuery } from "@apollo/client";
 import { GET_HEADER_CACHE_DATA } from "../../apollo/operations/queries/cache";
-import { FETCH_NOTIFICATIONS } from "../../apollo/operations/queries/notification";
-import { cacheMutations } from "../../apollo/operations/mutations";
+import { FETCH_NOTIFICATIONS } from "../../apollo/notification/notification.types";
 import { Scrollbars } from "react-custom-scrollbars";
 import FlashPopUpNotification from "../Notification/FlashPopUpNotification";
-
+import {
+  setLatestNotification,
+  setNotifications,
+} from "../../apollo/notification/notification.caches";
 const Control = () => {
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
   const [loadingNotificationsMore, setLoadingNotificationsMore] = useState(
     false
-  );    
-  const notificationRef = useRef(false);  
-  const { setLatestNotification, setNotifications } = cacheMutations;
+  );
+  const notificationRef = useRef(false);
 
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
@@ -34,27 +35,23 @@ const Control = () => {
   } = useQuery(GET_HEADER_CACHE_DATA, { fetchPolicy: "cache-and-network" });
 
   useNotificationsPostSubscription();
-  
+
   useEffect(() => {
     function handleClickOutsideNotificationBoard(e) {
-      if (
-        openNotificationBoard
-      ) {
+      if (openNotificationBoard) {
         setOpenNotificationBoard(false);
       }
     }
     window.addEventListener("click", handleClickOutsideNotificationBoard);
     return () =>
       window.removeEventListener("click", handleClickOutsideNotificationBoard);
-  }, [notificationRef.current , openNotificationBoard]);
+  }, [notificationRef.current, openNotificationBoard]);
 
-
-  const handleClickNotification = useCallback(async () => { 
+  const handleClickNotification = useCallback(async () => {
     setLoadingNotificationsMore(false);
     setOpenNotificationBoard((prevStatus) => !prevStatus);
     setLatestNotification(null);
   });
-
 
   const getMoreNotifications = (e) => {
     const { target } = e;
@@ -77,15 +74,14 @@ const Control = () => {
       );
     }
     return () => (_isMounted = false);
-  }, [loadingNotificationsMore]);  
-
+  }, [loadingNotificationsMore]);
 
   const onOpenNotificationBoard = useCallback(() => {
-    setOpenNotificationBoard(true);    
-  },[]);
+    setOpenNotificationBoard(true);
+  }, []);
 
   return (
-    <Wrapper>     
+    <Wrapper>
       <Notification ref={notificationRef}>
         <FlashPopUpNotification onClick={onOpenNotificationBoard} />
         <Button onClick={handleClickNotification}>
@@ -97,7 +93,7 @@ const Control = () => {
           ) : null}
         </Button>
         {user && (
-          <NotificationBoard  open={openNotificationBoard}>
+          <NotificationBoard open={openNotificationBoard}>
             <Scrollbars
               autoHide
               autoHideTimeout={1000}
@@ -106,7 +102,7 @@ const Control = () => {
               autoHeightMax={200}
               onScroll={getMoreNotifications}
             >
-              <NotificationsBoard notifications={notifications}/>
+              <NotificationsBoard notifications={notifications} />
             </Scrollbars>
           </NotificationBoard>
         )}

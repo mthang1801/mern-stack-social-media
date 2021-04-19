@@ -8,7 +8,7 @@ import SettingAccount from "./SettingAccount";
 import Button from "../Controls/ButtonDefaultCircle";
 import { FaArrowLeft } from "react-icons/fa";
 import ButtonMenu from "../Controls/ButtonMenu";
-import {toggleMenu} from "../../apollo/controls/controls.actions"
+import {toggleMenu} from "../../apollo/controls/controls.caches"
 
 import classNames from "classnames";
 import { userVar } from "../../apollo//cache";

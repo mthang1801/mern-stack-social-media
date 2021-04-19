@@ -1,28 +1,27 @@
-import React, {} from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {useQuery} from "@apollo/client"
-import {GET_DIALOG} from "../../apollo/operations/queries/cache";
-import {cacheMutations} from "../../apollo/operations/mutations/cache"
+import React from "react";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { useReactiveVar } from "@apollo/client";
+import { dialogVar } from "../../apollo/cache";
+import { setAlertDialog } from "../../apollo/controls/controls.caches";
+function AlertDialogSlide() {
+  const dialog = useReactiveVar(dialogVar);
+  const { title, content } = dialog;
 
-function AlertDialogSlide() {    
-  const {data : {dialog}} = useQuery(GET_DIALOG);
-  const {title, content} = dialog; 
-  const {setDialog} = cacheMutations
-  const handleClose = () => {       
-    setDialog({title : "", content: "", agree : false, data: null});
+  const handleClose = () => {
+    setAlertDialog({ title: "", content: "", agree: false, data: null });
   };
   const handleAgree = () => {
-    setDialog({...dialog, agree : true, title: "", content: "" });
-  }
+    setAlertDialog({ ...dialog, agree: true, title: "", content: "" });
+  };
   return (
     <div>
       <Dialog
-        open={title && content}                
+        open={title && content}
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
@@ -46,4 +45,4 @@ function AlertDialogSlide() {
   );
 }
 
-export default React.memo(AlertDialogSlide)
+export default React.memo(AlertDialogSlide);
