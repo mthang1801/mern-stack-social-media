@@ -8,11 +8,7 @@ import createSetPersonalPosts from "./post/setPersonalPosts";
 import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost";
 
 //User
-import createSetCurrentPersonalUser from "./user/setCurrentPersonalUser";
 import createClearCurrentChat from "./user/clearCurrentChat";
-import createAddPostsToCurrentPersonalUser from "./user/addPostsToCurrentPersonalUser";
-import createAddPostItemToCurrentPersonalUser from "./user/addPostItemToCurrentPersonalUser";
-import createUpdatePostInCurrentPersonalUser from "./user/updatePostInCurrentPersonalUser";
 
 //Friends
 import createSetOpenFriendsList from "./friends/setOpenFriendsList";
@@ -39,10 +35,10 @@ import createUpdateUserOnlineOfflineMessagesStorage from "./chat/updateUserOnlin
 import {
   toggleMenuVar,
   dialogVar,    
-  setCurrentPersonalUserVar,
+  currentPersonalUserVar,
   setPersonalPostsVar,
   toggleFriendsBoardVar,
-  setFriendsVar,
+  friendsVar,
   setSentRequestsToAddFriendVar,
   setReceivedRequestsToAddFriendVar,
   setMessagesStorageVar,
@@ -59,30 +55,18 @@ const mutations = {
   setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),      
   //Comment  
   addCommentToOwnerPost: createAddCommentToOwnerPost(setPersonalPostsVar),  
-  //User  
-  setCurrentPersonalUser: createSetCurrentPersonalUser(
-    setCurrentPersonalUserVar
-  ),
-  addPostsToCurrentPersonalUser: createAddPostsToCurrentPersonalUser(
-    setCurrentPersonalUserVar
-  ),
-  addPostItemToCurrentPersonalUser: createAddPostItemToCurrentPersonalUser(
-    setCurrentPersonalUserVar
-  ),
-  updatePostInCurrentPersonalUser: createUpdatePostInCurrentPersonalUser(
-    setCurrentPersonalUserVar
-  ), 
+  //User 
 
   //Friends
   setOpenFriendsList: createSetOpenFriendsList(toggleFriendsBoardVar),
-  setFriends: createSetFriends(setFriendsVar),
+  setFriends: createSetFriends(friendsVar),
   setSentRequestsToAddFriend: createSetSentRequestsToAddFriend(
     setSentRequestsToAddFriendVar
   ),
   setReceivedRequestsToAddFriend: createSetReceivedRequestsToAddFriend(
     setReceivedRequestsToAddFriendVar
   ),
-  setMoreFriends: createSetMoreFriends(setFriendsVar),
+  setMoreFriends: createSetMoreFriends(friendsVar),
   //Messages Storage
   setInitialMessagesStorage: createSetInitialMessagesStorage(
     setMessagesStorageVar
@@ -109,7 +93,7 @@ const mutations = {
   setNumberOfConversations: createSetNumberOfConversations(
     setNumberOfConversationsVar
   ),
-  updateUserOnlineOffline: createUpdateUserOnlineOffline(setFriendsVar),
+  updateUserOnlineOffline: createUpdateUserOnlineOffline(friendsVar),
   updateUserOnlineOfflineMessagesStorage: createUpdateUserOnlineOfflineMessagesStorage(
     setMessagesStorageVar
   ),

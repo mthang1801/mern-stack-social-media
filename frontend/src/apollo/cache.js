@@ -1,10 +1,8 @@
 import { InMemoryCache, makeVar } from "@apollo/client";
 import {
   PostStatus,
-  LatestNotification,
   CurrentPersonalUser,
-  PersonalPosts,  
-  Friends,
+  PersonalPosts, 
   SentRequestsToAddFriends,
   ReceivedRequestsToAddFriend,
   MessagesStorage,
@@ -21,7 +19,7 @@ const postsVar = makeVar(initialState.posts);
 const setPersonalPostsVar = makeVar(PersonalPosts);
 //User
 const userVar = makeVar(initialState.user);
-const setCurrentPersonalUserVar = makeVar(CurrentPersonalUser);
+const currentPersonalUserVar = makeVar(initialState.currentPersonalUser);
 const setSentRequestsToAddFriendVar = makeVar(SentRequestsToAddFriends);
 const setReceivedRequestsToAddFriendVar = makeVar(ReceivedRequestsToAddFriend);
 //Notification
@@ -33,7 +31,7 @@ const newNotificationsVar = makeVar(initialState.newNotifications);
 const latestNotificationVar = makeVar(initialState.latestNotification);
 //Friends
 const toggleFriendsBoardVar = makeVar(initialState.toggleFriendsBoard);
-const setFriendsVar = makeVar(Friends);
+const friendsVar = makeVar(initialState.friends);
 //Chat
 const setMessagesStorageVar = makeVar(MessagesStorage);
 const setCurrentChatVar = makeVar(CurrentChat);
@@ -61,7 +59,7 @@ const cache = new InMemoryCache({
           read: () => setReceivedRequestsToAddFriendVar(),
         },
         currentPersonalUser: {
-          read: () => setCurrentPersonalUserVar(),
+          read: () => currentPersonalUserVar(),
         },
         //post
         postStatus: {
@@ -75,7 +73,7 @@ const cache = new InMemoryCache({
         },
         //Friends
         friends: {
-          read: () => setFriendsVar(),
+          read: () => friendsVar(),
         },
         toggleFriendsBoard: {
           read: () => toggleFriendsBoardVar(),
@@ -119,10 +117,10 @@ export {
   countNumberOfNotificationUnseenVar,
   newNotificationsVar,
   latestNotificationVar,
-  setCurrentPersonalUserVar,
+  currentPersonalUserVar,
   setPersonalPostsVar,
   toggleFriendsBoardVar,
-  setFriendsVar,
+  friendsVar,
   setSentRequestsToAddFriendVar,
   setReceivedRequestsToAddFriendVar,
   setMessagesStorageVar,

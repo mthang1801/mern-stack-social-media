@@ -1,5 +1,6 @@
 export const initialState = {
   user: null,
+  currentPersonalUser : null, 
   posts : [],
   toggleMenu: true,
   alertDialog: { agree: false, title: "", content: "", data: null },
@@ -7,5 +8,6 @@ export const initialState = {
   notifications : [],
   countNumberOfNotificationUnseen : 0,
   newNotifications : new Set(),
-  latestNotification : null
+  latestNotification : null,
+  friends : []
 };

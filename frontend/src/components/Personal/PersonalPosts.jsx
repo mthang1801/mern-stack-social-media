@@ -4,16 +4,15 @@ import Posts from "../Post/Posts";
 import PostEditor from "../Post/PostEditor/PostEditor";
 import { useQuery } from "@apollo/client";
 import { GET_PERSONAL_USER_CACHE_DATA } from "../../apollo/operations/queries/cache";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import { FETCH_POSTS } from "../../apollo/post/post.queries";
+import { addPostsToCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
 import IntroductionBox from "./IntroductionBox";
 
 const PersonalPosts = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const {
     data: { user, currentPersonalUser },
-  } = useQuery(GET_PERSONAL_USER_CACHE_DATA, { fetchPolicy: "cache-first" });
-  const {addPostsToCurrentPersonalUser} = cacheMutations
+  } = useQuery(GET_PERSONAL_USER_CACHE_DATA, { fetchPolicy: "cache-first" });  
   const {
     data: fetchedPostsData,
     loading,

@@ -8,13 +8,19 @@ import { EditorState, convertToRaw } from "draft-js";
 import useLanguage from "../../Global/useLanguage";
 import _ from "lodash";
 import { useMutation, useQuery } from "@apollo/client";
-import {EDIT_POST, CREATE_POST} from "../../../apollo/post/post.types";
-import { cacheMutations } from "../../../apollo/operations/mutations/cache";
+import { EDIT_POST, CREATE_POST } from "../../../apollo/post/post.types";
 import { GET_PERSONAL_USER_CACHE_DATA } from "../../../apollo/operations/queries/cache";
 import { Prompt } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import {pushNewPostToPostsList, updatePost} from "../../../apollo/post/post.caches"
+import {
+  pushNewPostToPostsList,
+  updatePost,
+} from "../../../apollo/post/post.caches";
+import {
+  addPostItemToCurrentPersonalUser,
+  updatePostInCurrentPersonalUser,
+} from "../../../apollo/user/currentPersonalUser.caches";
 const PostEditor = ({
   editedEditorState,
   isEdited,
@@ -24,7 +30,7 @@ const PostEditor = ({
 }) => {
   const {
     data: { user, currentPersonalUser },
-  } = useQuery(GET_PERSONAL_USER_CACHE_DATA);  
+  } = useQuery(GET_PERSONAL_USER_CACHE_DATA);
   const [postStatus, setPostStatus] = useState("PUBLIC");
   const [editorState, setEditorState] = useState(() =>
     editedEditorState ? editedEditorState : EditorState.createEmpty()
@@ -38,10 +44,6 @@ const PostEditor = ({
   const { post } = i18n.store.data[lang].translation;
   const [createPost, { loading: createPostLoading }] = useMutation(CREATE_POST);
   const [editPost] = useMutation(EDIT_POST);
-  const {
-    addPostItemToCurrentPersonalUser,   
-    updatePostInCurrentPersonalUser,
-  } = cacheMutations;
   const handleSetPostStatus = useCallback((status) => {
     setPostStatus(status);
   }, []);
@@ -127,7 +129,7 @@ const PostEditor = ({
       status: postStatus,
     };
     if (isEdited && postEdited) {
-      console.log("edited Post")
+      console.log("edited Post");
       editPost({ variables: { postId: postEdited._id, ...postData } })
         .then(({ data }) => {
           if (openEdited) {
@@ -155,7 +157,7 @@ const PostEditor = ({
             ?.setAttribute("contenteditable", true);
         });
     } else {
-      console.log("create new post")
+      console.log("create new post");
       createPost({
         variables: {
           text,
@@ -172,9 +174,9 @@ const PostEditor = ({
           if (onOpenDialog) {
             handleCloseDialog();
             setEditorState(EditorState.createEmpty());
-          }                    
-          const { createPost } = data;                  
-          pushNewPostToPostsList(createPost)
+          }
+          const { createPost } = data;
+          pushNewPostToPostsList(createPost);
           if (user?._id === currentPersonalUser?._id) {
             addPostItemToCurrentPersonalUser(createPost);
           }

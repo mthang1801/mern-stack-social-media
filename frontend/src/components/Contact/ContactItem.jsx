@@ -28,7 +28,7 @@ import {
 } from "../../apollo/user/user.types";
 import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
 import {userVar} from "../../apollo/cache"
-
+import {} from "../../apollo/user/currentPersonalUser.caches"
 const ContactItem = ({ userContact, type }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
