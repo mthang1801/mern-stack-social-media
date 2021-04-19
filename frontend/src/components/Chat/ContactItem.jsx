@@ -11,9 +11,9 @@ import { usePopupContactActions } from "./hook/usePopupActions";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
 import { cacheMutations } from "../../apollo/operations/mutations";
 import { GET_MESSAGES_STORAGE } from "../../apollo/operations/queries/cache";
-import { FETCH_SINGLE_CHAT_CONVERSATION } from "../../apollo/operations/queries/chat/fetchSingleChatConversation";
+import { FETCH_SINGLE_CHAT_CONVERSATION } from "../../apollo/chat/chat.types";
 import { useQuery } from "@apollo/client";
-
+import {setCurrentChat} from "../../apollo/chat/chat.caches"
 const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
   const {
@@ -22,7 +22,7 @@ const ContactItem = ({ friend }) => {
   const { setPopupPosition, setShowPopup } = usePopupContactActions();
   const { colorMode } = useThemeUI();
   const {
-    setCurrentChat,
+    
     addNewConversationToMessagesStorage,
   } = cacheMutations;
   const { refetch: fetchSingleChatConversation } = useQuery(

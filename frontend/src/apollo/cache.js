@@ -1,7 +1,5 @@
 import { InMemoryCache, makeVar } from "@apollo/client";
 import {
-  PostStatus,
-  CurrentPersonalUser,
   PersonalPosts, 
   SentRequestsToAddFriends,
   ReceivedRequestsToAddFriend,
@@ -14,14 +12,13 @@ import { initialState } from "./initialState";
 const toggleMenuVar = makeVar(initialState.toggleMenu);
 const dialogVar = makeVar(initialState.alertDialog);
 //Post
-const setPostStatusVar = makeVar(PostStatus);
 const postsVar = makeVar(initialState.posts);
 const setPersonalPostsVar = makeVar(PersonalPosts);
 //User
 const userVar = makeVar(initialState.user);
 const currentPersonalUserVar = makeVar(initialState.currentPersonalUser);
-const setSentRequestsToAddFriendVar = makeVar(SentRequestsToAddFriends);
-const setReceivedRequestsToAddFriendVar = makeVar(ReceivedRequestsToAddFriend);
+const sentRequestsToAddFriendVar = makeVar(initialState.sentRequestToAddFriend);
+const receivedRequestsToAddFriendVar = makeVar(initialState.receivedRequestsToAddFriend);
 //Notification
 const notificationsVar = makeVar(initialState.notifications);
 const countNumberOfNotificationUnseenVar = makeVar(
@@ -33,9 +30,9 @@ const latestNotificationVar = makeVar(initialState.latestNotification);
 const toggleFriendsBoardVar = makeVar(initialState.toggleFriendsBoard);
 const friendsVar = makeVar(initialState.friends);
 //Chat
-const setMessagesStorageVar = makeVar(MessagesStorage);
-const setCurrentChatVar = makeVar(CurrentChat);
-const setNumberOfConversationsVar = makeVar(NumberOfConversations);
+const messagesStorageVar = makeVar(initialState.messagesStorage);
+const currentChatVar = makeVar(initialState.currentChat);
+const numberOfConversationsVar = makeVar(initialState.numberOfConversations);
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -53,18 +50,15 @@ const cache = new InMemoryCache({
         },
         //other user
         sentRequestsToAddFriend: {
-          read: () => setSentRequestsToAddFriendVar(),
+          read: () => sentRequestsToAddFriendVar(),
         },
         receivedRequestsToAddFriend: {
-          read: () => setReceivedRequestsToAddFriendVar(),
+          read: () => receivedRequestsToAddFriendVar(),
         },
         currentPersonalUser: {
           read: () => currentPersonalUserVar(),
         },
-        //post
-        postStatus: {
-          read: () => setPostStatusVar(),
-        },
+        //post       
         posts: {
           read: () => postsVar(),
         },
@@ -94,13 +88,13 @@ const cache = new InMemoryCache({
         },
         //Chat
         currentChat: {
-          read: () => setCurrentChatVar(),
+          read: () => currentChatVar(),
         },
         messagesStorage: {
-          read: () => setMessagesStorageVar(),
+          read: () => messagesStorageVar(),
         },
         numberOfConversations: {
-          read: () => setNumberOfConversationsVar(),
+          read: () => numberOfConversationsVar(),
         },
       },
     },
@@ -110,7 +104,6 @@ const cache = new InMemoryCache({
 export {
   cache,
   toggleMenuVar,
-  setPostStatusVar,
   userVar,
   postsVar,
   notificationsVar,
@@ -121,10 +114,10 @@ export {
   setPersonalPostsVar,
   toggleFriendsBoardVar,
   friendsVar,
-  setSentRequestsToAddFriendVar,
-  setReceivedRequestsToAddFriendVar,
-  setMessagesStorageVar,
-  setCurrentChatVar,
-  setNumberOfConversationsVar,
+  sentRequestsToAddFriendVar,
+  receivedRequestsToAddFriendVar,
+  messagesStorageVar,
+  currentChatVar,
+  numberOfConversationsVar,
   dialogVar,
 };

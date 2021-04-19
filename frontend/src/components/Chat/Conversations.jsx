@@ -6,13 +6,13 @@ import {
   PopupSettings,
 } from "./styles/Chat.styles";
 import { userVar } from "../../apollo/cache";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
-import { useQuery, useReactiveVar } from "@apollo/client";
+
+import { useReactiveVar } from "@apollo/client";
 import Search from "./Search";
 import ListConversations from "./ListConversations";
 import { useThemeUI } from "theme-ui";
 import ChatBoard from "./ChatBoard";
-
+import {setCurrentChat} from "../../apollo/chat/chat.caches"
 export const MessagesContext = createContext({});
 const Conversations = () => {
   //query
@@ -26,7 +26,6 @@ const Conversations = () => {
     left: -10000,
     top: -10000,
   });
-  const {setCurrentChat} = cacheMutations
   const { colorMode } = useThemeUI();
   const popupRef = useRef(null);
 

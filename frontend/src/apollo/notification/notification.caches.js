@@ -5,6 +5,7 @@ import {
   latestNotificationVar,
 } from "../cache";
 import _ from "lodash";
+import { initialState } from "../initialState";
 export const addNotificationItemToNotificationsList = (newNotification) => {
   let notifications = [...notificationsVar()];
   return notificationsVar([
@@ -90,3 +91,8 @@ export const updateNotificationItemInNotificationsList = (notification) => {
   ]);
   return notificationsVar(sortNotificationByUpdatedAt);
 };
+
+export const resetCountNumberOfNotificationUnseenVar = () => countNumberOfNotificationUnseenVar(initialState.countNumberOfNotificationUnseen);
+export const clearNewNotificationsVar = () => newNotificationsVar(initialState.newNotifications)
+export const clearLatestNotification = () => latestNotificationVar(initialState.latestNotification);
+export const clearNotifications = () => notificationsVar(initialState.notifications);

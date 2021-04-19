@@ -71,7 +71,7 @@ const useNotificationsPostSubscription = () => {
     fetchPolicy: "cache-first",
   });
   //mutations
-  const { setCurrentPersonalUser, setPersonalPosts } = cacheMutations;
+  const { setCurrentPersonalUser } = cacheMutations;
 
   useEffect(() => {
     let _isMounted = true;
@@ -242,23 +242,7 @@ const useNotificationsPostSubscription = () => {
             const { likePostSubscription } = subscriptionData.data;
             if (likePostSubscription) {
               updatedAddNotification(likePostSubscription);
-
-              if (personalPosts[user._id]) {
-                const personalPostsByUserId = personalPosts[user._id].map(
-                  (_post) => {
-                    if (_post._id === likePostSubscription.post._id) {
-                      let _p = { ..._post };
-                      _p.likes = [
-                        ..._p.likes,
-                        likePostSubscription.creator._id,
-                      ];
-                      return _p;
-                    }
-                    return { ..._post };
-                  }
-                );
-                setPersonalPosts(personalPostsByUserId);
-              }
+             
             }
           }
         },

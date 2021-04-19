@@ -1,4 +1,5 @@
-import { userVar, postsVar } from "../cache";
+import { postsVar } from "../cache";
+import { initialState } from "../initialState";
 
 export const addFetchedPostToCache = (fetchedPosts) => {
   const posts = [...postsVar()];
@@ -314,3 +315,5 @@ export const updateRemoveLikePost = (postId, userId) => {
   })
   return postsVar(updatedPosts);
 }
+
+export const clearPosts = () => postsVar(initialState.posts)

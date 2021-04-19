@@ -12,8 +12,8 @@ import { usePopupMessagesActions } from "./hook/usePopupActions";
 import { useThemeUI } from "theme-ui";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
 import { convertFromRaw, EditorState } from "draft-js";
-import { UPDATE_HAVE_SEEN_ALL_MESSAGES } from "../../apollo/operations/mutations/chat";
-
+import { UPDATE_HAVE_SEEN_ALL_MESSAGES } from "../../apollo/chat/chat.types";
+import {setCurrentChat} from "../../apollo/chat/chat.caches"
 import { useMutation } from "@apollo/client";
 const MessageItem = ({
   conversation,
@@ -25,7 +25,7 @@ const MessageItem = ({
   const [showSetting, setShowSettings] = useState(false);
   const { setPopupPosition, setShowPopup } = usePopupMessagesActions();
   const { colorMode } = useThemeUI();
-  const { setCurrentChat, updateHasSeenLatestMessage } = cacheMutations;
+  const { updateHasSeenLatestMessage } = cacheMutations;
   const [updateHaveSeenAllMessages] = useMutation(
     UPDATE_HAVE_SEEN_ALL_MESSAGES
   );

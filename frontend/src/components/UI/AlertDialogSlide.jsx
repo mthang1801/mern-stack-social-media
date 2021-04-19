@@ -7,13 +7,13 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { useReactiveVar } from "@apollo/client";
 import { dialogVar } from "../../apollo/cache";
-import { setAlertDialog } from "../../apollo/controls/controls.caches";
+import { setAlertDialog, clearAlertDialog } from "../../apollo/controls/controls.caches";
 function AlertDialogSlide() {
   const dialog = useReactiveVar(dialogVar);
   const { title, content } = dialog;
 
   const handleClose = () => {
-    setAlertDialog({ title: "", content: "", agree: false, data: null });
+    clearAlertDialog()
   };
   const handleAgree = () => {
     setAlertDialog({ ...dialog, agree: true, title: "", content: "" });

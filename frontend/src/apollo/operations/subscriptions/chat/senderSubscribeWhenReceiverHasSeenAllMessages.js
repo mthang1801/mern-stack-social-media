@@ -9,3 +9,4 @@ export const SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES = gql`
     }
   }
 `
+

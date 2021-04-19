@@ -8,15 +8,14 @@ import CardRequestAuth from "../components/Card/CardRequestAuth";
 import { cacheMutations } from "../apollo/operations/mutations";
 import MainBody from "../components/Body/MainBody";
 import { FETCH_NOTIFICATIONS } from "../apollo/notification/notification.types";
-
+import {setNotifications} from "../apollo/notification/notification.caches"
 const NotificationsPage = () => {
   const user = useReactiveVar(userVar);
   const notifications = useReactiveVar(notificationsVar);
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
     skip: true,
-  }); 
-  const { setNotifications } = cacheMutations;
+  });   
   const [fetchNotificationsMore, setFetchNotificationsMore] = useState(false);
   useEffect(() => {
     let _mounted = true;

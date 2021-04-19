@@ -1,4 +1,5 @@
 import { userVar } from "../cache";
+import { initialState } from "../initialState";
 
 export const addFetchedFriendsToFriendsData = (fetchedFriends) => {
   const user = { ...userVar() };
@@ -19,3 +20,5 @@ export const setUserFriendsData = friends => {
   return userVar({...user});
 }
 
+
+export const clearUser = () => userVar(initialState.user)

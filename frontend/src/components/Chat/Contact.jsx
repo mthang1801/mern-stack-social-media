@@ -12,16 +12,15 @@ import { useQuery, useReactiveVar } from "@apollo/client";
 import { userVar } from "../../apollo/cache";
 import Search from "./Search";
 import { useThemeUI } from "theme-ui";
-import { cacheMutations } from "../../apollo/operations/mutations";
+import { setCurrentChat } from "../../apollo/chat/chat.caches";
 import ListContacts from "./ListContacts";
 import ChatBoard from "./ChatBoard";
+
 export const ContactContext = createContext({});
 
 const Contact = () => {
   //useQuery
   const user = useReactiveVar(userVar);
-  const { setCurrentChat } = cacheMutations;
-
   const {
     data: { friends },
   } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-only" });

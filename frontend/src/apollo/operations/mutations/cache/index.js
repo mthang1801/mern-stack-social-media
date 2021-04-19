@@ -1,15 +1,3 @@
-//Controls
-import createToggleButtonMenu from "./controls/toggleButtonMenu";
-import createSetDialog from "./controls/setDialog";
-import createClearDialog from "./controls/clearDialog";
-//Post
-import createSetPersonalPosts from "./post/setPersonalPosts";
-//Comment
-import createAddCommentToOwnerPost from "./post/addCommentToOwnerPost";
-
-//User
-import createClearCurrentChat from "./user/clearCurrentChat";
-
 //Friends
 import createSetOpenFriendsList from "./friends/setOpenFriendsList";
 import createSetFriends from "./friends/setFriends";
@@ -24,78 +12,50 @@ import createUpdateHasSeenLatestMessage from "./messagesStorage/updateHasSeenLat
 import createClearMessageStorage from "./messagesStorage/clearMessageStorage";
 import createUpdateMessagesStorageWhenReceiverSeenAllMessages from "./messagesStorage/updateMessagesStorageWhenReceiverSeenAllMessages";
 import createUpdateMoreMessages from "./messagesStorage/updateMoreMessages";
-import createSetCurrentChat from "./chat/setCurrentChat";
 import createUpdateMessagesStorageToReceivedWhenUserOnline from "./messagesStorage/updateMessagesStorageToReceivedWhenUserOnline";
 import createAddNewConversationToMessagesStorage from "./messagesStorage/addNewConversationToMessagesStorage";
-//Chat
-import createSetNumberOfConversations from "./chat/setNumberOfConversations";
-import createUpdateUserOnlineOffline from "./chat/updateUserOnlineOffline";
-import createUpdateUserOnlineOfflineMessagesStorage from "./chat/updateUserOnlineOfflineMessagesStorage";
 
-import {
-  toggleMenuVar,
-  dialogVar,    
-  currentPersonalUserVar,
-  setPersonalPostsVar,
+
+import {  
   toggleFriendsBoardVar,
   friendsVar,
-  setSentRequestsToAddFriendVar,
-  setReceivedRequestsToAddFriendVar,
-  setMessagesStorageVar,
-  setCurrentChatVar,
-  setNumberOfConversationsVar,
+  sentRequestsToAddFriendVar,
+  receivedRequestsToAddFriendVar,
+  messagesStorageVar,
+  currentChatVar,  
 } from "../../../cache";
 
 const mutations = {
-  //Controls
-  toggleButtonMenu: createToggleButtonMenu(toggleMenuVar),
-  setDialog: createSetDialog(dialogVar),
-  clearDialog: createClearDialog(dialogVar),
-  //Post  
-  setPersonalPosts: createSetPersonalPosts(setPersonalPostsVar),      
-  //Comment  
-  addCommentToOwnerPost: createAddCommentToOwnerPost(setPersonalPostsVar),  
-  //User 
 
   //Friends
   setOpenFriendsList: createSetOpenFriendsList(toggleFriendsBoardVar),
   setFriends: createSetFriends(friendsVar),
   setSentRequestsToAddFriend: createSetSentRequestsToAddFriend(
-    setSentRequestsToAddFriendVar
+    sentRequestsToAddFriendVar
   ),
   setReceivedRequestsToAddFriend: createSetReceivedRequestsToAddFriend(
-    setReceivedRequestsToAddFriendVar
+    receivedRequestsToAddFriendVar
   ),
   setMoreFriends: createSetMoreFriends(friendsVar),
   //Messages Storage
   setInitialMessagesStorage: createSetInitialMessagesStorage(
-    setMessagesStorageVar
+    messagesStorageVar
   ),
-  setMessagesStorage: createSetMessagesStorage(setMessagesStorageVar),
-  updateMessagesStorage: createUpdateMessagesStorage(setMessagesStorageVar),
+  setMessagesStorage: createSetMessagesStorage(messagesStorageVar),
+  updateMessagesStorage: createUpdateMessagesStorage(messagesStorageVar),
   updateHasSeenLatestMessage: createUpdateHasSeenLatestMessage(
-    setMessagesStorageVar
+    messagesStorageVar
   ),
-  clearMessageStorage: createClearMessageStorage(setMessagesStorageVar),
+  clearMessageStorage: createClearMessageStorage(messagesStorageVar),
   updateMessagesStorageWhenReceiverSeenAllMessages: createUpdateMessagesStorageWhenReceiverSeenAllMessages(
-    setMessagesStorageVar
+    messagesStorageVar
   ),
-  updateMoreMessages: createUpdateMoreMessages(setMessagesStorageVar),
+  updateMoreMessages: createUpdateMoreMessages(messagesStorageVar),
   updateMessagesStorageToReceivedWhenUserOnline: createUpdateMessagesStorageToReceivedWhenUserOnline(
-    setMessagesStorageVar
+    messagesStorageVar
   ),
   addNewConversationToMessagesStorage: createAddNewConversationToMessagesStorage(
-    setMessagesStorageVar
-  ),
-  //Chat
-  setCurrentChat: createSetCurrentChat(setCurrentChatVar),
-  clearCurrentChat: createClearCurrentChat(setCurrentChatVar),
-  setNumberOfConversations: createSetNumberOfConversations(
-    setNumberOfConversationsVar
-  ),
-  updateUserOnlineOffline: createUpdateUserOnlineOffline(friendsVar),
-  updateUserOnlineOfflineMessagesStorage: createUpdateUserOnlineOfflineMessagesStorage(
-    setMessagesStorageVar
+    messagesStorageVar
   ),
 };
 

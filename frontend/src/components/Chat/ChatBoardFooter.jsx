@@ -26,13 +26,11 @@ import { useThemeUI } from "theme-ui";
 import {
   SEND_MESSAGE_CHAT_TEXT,
   SEND_MESSAGE_CHAT_FILE,
-} from "../../apollo/operations/mutations/chat";
+} from "../../apollo/chat/chat.types";
 import { cacheMutations } from "../../apollo/operations/mutations/";
-import {
-  GET_CURRENT_CHAT,  
-} from "../../apollo/operations/queries/cache";
-import {userVar} from "../../apollo/cache"
-import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
+
+import {userVar,currentChatVar } from "../../apollo/cache"
+import { useMutation,useReactiveVar } from "@apollo/client";
 import generateBase64Image from "../../utils/generateBase64Image";
 import useLanguage from "../Global/useLanguage"
 const ChatBoardFooter = () => {
@@ -47,9 +45,7 @@ const ChatBoardFooter = () => {
   const {chatInputPlaceholder} = i18n.store.data[lang].translation.chat;
   //useQuery
   const user = useReactiveVar(userVar);
-  const {
-    data: { currentChat },
-  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-and-network" });
+  const currentChat = useReactiveVar(currentChatVar)
   //useMutation
   const [sendMessageChatText] = useMutation(SEND_MESSAGE_CHAT_TEXT);
   const [sendMessageChatFile] = useMutation(SEND_MESSAGE_CHAT_FILE);

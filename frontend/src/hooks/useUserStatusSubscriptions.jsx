@@ -1,15 +1,13 @@
 import { useEffect } from "react";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "../apollo/cache";
-import { cacheMutations } from "../apollo/operations/mutations/cache";
+
 import io from "socket.io-client";
 import _ from "lodash";
+import {updateUserOnlineOffline, updateUserOnlineOfflineMessagesStorage} from "../apollo/chat/chat.caches"
 const useUserStatusSubscriptions = () => {
   const user = useReactiveVar(userVar); 
-  const {
-    updateUserOnlineOffline,
-    updateUserOnlineOfflineMessagesStorage,
-  } = cacheMutations;
+ 
   useEffect(() => {
     const socket = io("http://localhost:5000");
 

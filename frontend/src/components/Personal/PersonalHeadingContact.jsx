@@ -49,7 +49,7 @@ import {
   DropdownItem,
 } from "./styles/PersonalHeadingContact.styles";
 import { setCurrentUser } from "../../apollo/user/user.caches";
-import { setAlertDialog } from "../../apollo/controls/controls.caches";
+import { setAlertDialog, clearAlertDialog } from "../../apollo/controls/controls.caches";
 import {
   removeNewNotification,
   decreaseCountNumberNotificationsUnseen,
@@ -99,7 +99,7 @@ const PersonalContact = () => {
           updateMutationOnChange(sender, receiver, notification);
         })
         .then(() => {
-          setAlertDialog({ agree: false, title: "", content: "", data: null });
+          clearAlertDialog();
         });
     }
   }, [dialog, currentPersonalUser]);

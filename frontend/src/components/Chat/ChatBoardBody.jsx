@@ -8,7 +8,7 @@ import {
   GET_MESSAGES_STORAGE,  
 } from "../../apollo/operations/queries/cache";
 import {userVar} from "../../apollo/cache"
-import { FETCH_MESSAGES } from "../../apollo/operations/queries/chat";
+import { FETCH_MESSAGES } from "../../apollo/chat/chat.types";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
 
 const ChatBoardBody = () => {
@@ -44,7 +44,7 @@ const ChatBoardBody = () => {
 
   useEffect(() => {
     let timer;
-    if(messagesStorage[currentChat?._id]?.latestMessage.sender._id === user._id ){
+    if(messagesStorage[currentChat?._id]?.latestMessage?.sender?._id === user._id ){
       timer = setTimeout(() => {
         if (chatBoardBodyRef.current) {
           chatBoardBodyRef.current.scrollIntoView({
@@ -114,7 +114,8 @@ const ChatBoardBody = () => {
     }
     return () => (_isMounted = false);
   }, [loadMoreMessages]);
-
+  console.log(currentChat)
+  console.log(messagesStorage)
   return (
     <Wrapper
       theme={colorMode}
@@ -123,7 +124,7 @@ const ChatBoardBody = () => {
     >
       {currentChat &&
       messagesStorage[currentChat._id] &&
-      messagesStorage[currentChat._id].messages.length &&
+      messagesStorage[currentChat._id]?.messages?.length &&
       user
         ? messagesStorage[currentChat._id].messages.map((message, idx) => {
             return (
