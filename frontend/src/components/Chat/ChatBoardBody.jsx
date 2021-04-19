@@ -10,7 +10,7 @@ import {
 import {userVar} from "../../apollo/cache"
 import { FETCH_MESSAGES } from "../../apollo/chat/chat.types";
 import { cacheMutations } from "../../apollo/operations/mutations/cache";
-
+import {updateMoreMessages} from "../../apollo/chat/chat.caches"
 const ChatBoardBody = () => {
   //useState
   const [loadMoreMessages, setLoadMoreMessages] = useState(false);
@@ -26,8 +26,7 @@ const ChatBoardBody = () => {
     fetchPolicy: "cache-and-network",
     skip: true,
   });
-  const chatBoardBodyRef = createRef(null);
-  const { updateMoreMessages } = cacheMutations;
+  const chatBoardBodyRef = createRef(null);  
   const [shouldScrollIntoView, setShouldScrollIntoView] = useState(true);
   const { colorMode } = useThemeUI();
   useEffect(() => {

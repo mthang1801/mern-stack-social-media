@@ -27,7 +27,7 @@ import {
   SEND_MESSAGE_CHAT_TEXT,
   SEND_MESSAGE_CHAT_FILE,
 } from "../../apollo/chat/chat.types";
-import { cacheMutations } from "../../apollo/operations/mutations/";
+import { setMessagesStorage } from "../../apollo/chat/chat.caches";
 
 import {userVar,currentChatVar } from "../../apollo/cache"
 import { useMutation,useReactiveVar } from "@apollo/client";
@@ -49,7 +49,7 @@ const ChatBoardFooter = () => {
   //useMutation
   const [sendMessageChatText] = useMutation(SEND_MESSAGE_CHAT_TEXT);
   const [sendMessageChatFile] = useMutation(SEND_MESSAGE_CHAT_FILE);
-  const { setMessagesStorage } = cacheMutations;
+  
   const editorRef = useRef(null);
 
   const {

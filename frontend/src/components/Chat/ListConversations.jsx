@@ -9,10 +9,9 @@ import {userVar} from "../../apollo/cache"
 import ConversationItem from "./ConversationItem";
 import _ from "lodash";
 import { usePopupMessagesActions } from "./hook/usePopupActions";
-import { FETCH_CHAT_CONVERSATIONS } from "../../apollo/chat/chat.types";
+import { FETCH_CHAT_CONVERSATIONS, UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../../apollo/chat/chat.types";
 import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
-import { UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../../apollo/chat/chat.types";
-import { cacheMutations } from "../../apollo/operations/mutations";
+import { setInitialMessagesStorage } from "../../apollo/chat/chat.caches";
 const ListConversations = () => {
   //use Query
   const {
@@ -37,7 +36,6 @@ const ListConversations = () => {
   ] = useMutation(
     UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED
   );
-  const { setInitialMessagesStorage } = cacheMutations;
   const { setShowPopup } = usePopupMessagesActions();
   useEffect(() => {
     const _convertStorageToArray = Object.values(messagesStorage);

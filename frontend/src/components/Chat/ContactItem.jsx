@@ -9,11 +9,11 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useThemeUI } from "theme-ui";
 import { usePopupContactActions } from "./hook/usePopupActions";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
-import { cacheMutations } from "../../apollo/operations/mutations";
+
 import { GET_MESSAGES_STORAGE } from "../../apollo/operations/queries/cache";
 import { FETCH_SINGLE_CHAT_CONVERSATION } from "../../apollo/chat/chat.types";
 import { useQuery } from "@apollo/client";
-import {setCurrentChat} from "../../apollo/chat/chat.caches"
+import {setCurrentChat, addNewConversationToMessagesStorage} from "../../apollo/chat/chat.caches"
 const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
   const {
@@ -21,10 +21,6 @@ const ContactItem = ({ friend }) => {
   } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-only" });
   const { setPopupPosition, setShowPopup } = usePopupContactActions();
   const { colorMode } = useThemeUI();
-  const {
-    
-    addNewConversationToMessagesStorage,
-  } = cacheMutations;
   const { refetch: fetchSingleChatConversation } = useQuery(
     FETCH_SINGLE_CHAT_CONVERSATION,
     {

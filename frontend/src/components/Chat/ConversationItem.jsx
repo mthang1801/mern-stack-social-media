@@ -6,15 +6,15 @@ import {
   ConversationControls,
 } from "./styles/ConversationItem.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { cacheMutations } from "../../apollo/operations/mutations";
 import Moment from "react-moment";
 import { usePopupMessagesActions } from "./hook/usePopupActions";
 import { useThemeUI } from "theme-ui";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
 import { convertFromRaw, EditorState } from "draft-js";
 import { UPDATE_HAVE_SEEN_ALL_MESSAGES } from "../../apollo/chat/chat.types";
-import {setCurrentChat} from "../../apollo/chat/chat.caches"
+import {setCurrentChat, updateHasSeenLatestMessage} from "../../apollo/chat/chat.caches"
 import { useMutation } from "@apollo/client";
+
 const MessageItem = ({
   conversation,
   latestMessage,
@@ -25,7 +25,6 @@ const MessageItem = ({
   const [showSetting, setShowSettings] = useState(false);
   const { setPopupPosition, setShowPopup } = usePopupMessagesActions();
   const { colorMode } = useThemeUI();
-  const { updateHasSeenLatestMessage } = cacheMutations;
   const [updateHaveSeenAllMessages] = useMutation(
     UPDATE_HAVE_SEEN_ALL_MESSAGES
   );
