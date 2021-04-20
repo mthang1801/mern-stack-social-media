@@ -4,7 +4,7 @@ import ContactItem from "./ContactItem";
 import { usePopupContactActions } from "./hook/usePopupActions";
 import { useQuery } from "@apollo/client";
 import { FETCH_USER_FRIENDS_DATA } from "../../apollo/user/user.types";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import { setFriends } from "../../apollo/user/user.caches";
 const ListContacts = ({ data }) => {
   const { setShowPopup } = usePopupContactActions();
   const [loadContactMore, setLoadContactMore] = useState(false);
@@ -12,7 +12,6 @@ const ListContacts = ({ data }) => {
     skip: true,
     fetchPolicy: "cache-and-network",
   });
-  const { setFriends } = cacheMutations;
   const onScrollListContacts = (e) => {
     e.preventDefault();
     const { clientHeight, scrollHeight, scrollTop } = e.target;

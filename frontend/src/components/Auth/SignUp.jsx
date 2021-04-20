@@ -19,7 +19,6 @@ import FacebookLogin from "./GoogleAuth";
 import GoogleLogin from "./FacebookAuth";
 import { useMutation } from "@apollo/client";
 import { SIGNUP } from "../../apollo/user/user.types";
-import {cacheMutations} from "../../apollo/operations/mutations";
 import {login} from "./Auth.utility"
 const INITIAL_STATE = {
   controls: {

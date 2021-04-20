@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ListConversationsWrapper } from "./styles/ListConversations.styles";
-import {
-  GET_MESSAGES_STORAGE,
-  GET_CURRENT_CHAT,  
-  GET_NUMBER_OF_CONVERSATIONS,
-} from "../../apollo/operations/queries/cache";
-import {userVar} from "../../apollo/cache"
+import {userVar, messagesStorageVar, currentChatVar, numberOfConversationsVar} from "../../apollo/cache"
 import ConversationItem from "./ConversationItem";
 import _ from "lodash";
 import { usePopupMessagesActions } from "./hook/usePopupActions";
@@ -14,16 +9,11 @@ import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
 import { setInitialMessagesStorage } from "../../apollo/chat/chat.caches";
 const ListConversations = () => {
   //use Query
-  const {
-    data: { currentChat },
-  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-only" });
+  const currentChat = useReactiveVar(currentChatVar);
+  const messagesStorage = useReactiveVar(messagesStorageVar);
+  const numberOfConversations = useReactiveVar(numberOfConversationsVar)
   const user = useReactiveVar(userVar);
-  const {
-    data: { messagesStorage },
-  } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-only" });
-  const {
-    data: { numberOfConversations },
-  } = useQuery(GET_NUMBER_OF_CONVERSATIONS, { fetchPolicy: "cache-only" });
+  
   const { refetch: fetchMoreConversations } = useQuery(
     FETCH_CHAT_CONVERSATIONS,
     { fetchPolicy: "cache-and-network", skip: true }

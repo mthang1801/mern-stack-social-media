@@ -1,26 +1,18 @@
 import React, { useEffect } from "react";
-import {  
-  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
-} from "../../apollo/operations/queries/cache";
 import {
   FETCH_USERS_RECEIVED_REQUESTS_TO_ADD_FRIEND,  
 } from "../../apollo/user/user.types";
-import {userVar} from "../../apollo/cache"
+import {userVar, receivedRequestsToAddFriendVar} from "../../apollo/cache"
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { useThemeUI } from "theme-ui";
 import { ContactWrapper, Title, LinkReadMore } from "./Contact.styles";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import { setReceivedRequestsToAddFriend } from "../../apollo/user/user.caches";
 import useLanguage from "../Global/useLanguage";
 import ContactItem from "./ContactItem";
-import subscriptions from "../../apollo/operations/subscriptions";
 import _ from "lodash"
 const SentRequestsToAddFriend = () => {
   const user  = useReactiveVar(userVar);
-  const {
-    data: { receivedRequestsToAddFriend },
-  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
-    fetchPolicy: "cache-first",
-  });
+  const receivedRequestsToAddFriend = useReactiveVar(receivedRequestsToAddFriendVar)
   const { refetch: fetchUsersReceivedRequestToAddFriend } = useQuery(
     FETCH_USERS_RECEIVED_REQUESTS_TO_ADD_FRIEND,
     {
@@ -28,8 +20,6 @@ const SentRequestsToAddFriend = () => {
       skip: true,
     }
   );
-
-  const { setReceivedRequestsToAddFriend } = cacheMutations;
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
 

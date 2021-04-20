@@ -1,44 +1,37 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../containers/Layout";
-import { useQuery , useReactiveVar} from "@apollo/client";
-import {userVar} from "../apollo/cache"
-import {
-  GET_FRIENDS,
-} from "../apollo/operations/queries/cache";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import { userVar, friendsVar } from "../apollo/cache";
 import {
   FETCH_LIST_CONTACT,
-  FETCH_USER_FRIENDS_DATA,  
+  FETCH_USER_FRIENDS_DATA,
 } from "../apollo/user/user.types";
-import { cacheMutations } from "../apollo/operations/mutations";
+import {
+  setFriends,
+  setSentRequestsToAddFriend,
+  setReceivedRequestsToAddFriend,
+} from "../apollo/user/user.caches";
 import MainBody from "../components/Body/MainBody";
-import { MainContent, MainContentFullSize, ContactTitle } from "./styles/pages.styles";
+import {
+  MainContent,
+  MainContentFullSize,
+  ContactTitle,
+} from "./styles/pages.styles";
 import SentRequestsToAddFriend from "../components/Contact/SentRequestsToAddFriend";
 import ReceivedRequestsToAddFriend from "../components/Contact/ReceivedRequestsToAddFriend";
 import FriendsList from "../components/Contact/FriendsList";
 import useLanguage from "../components/Global/useLanguage";
-
 
 const FriendsPage = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [fetched, setFetched] = useState(false);
   const { i18n, lang } = useLanguage();
   const user = useReactiveVar(userVar);
-  const {
-    data: { friends },
-  } = useQuery(GET_FRIENDS, {
-    fetchPolicy: "cache-first",
-  });
- 
+  const friends = useReactiveVar(friendsVar);
   const { refetch: fetchFriends } = useQuery(FETCH_USER_FRIENDS_DATA, {
     fetchPolicy: "cache-and-network",
     skip: true,
   });
-  
-  const {
-    setFriends,
-    setSentRequestsToAddFriend,
-    setReceivedRequestsToAddFriend,
-  } = cacheMutations;
 
   const { refetch: fetchListContact } = useQuery(FETCH_LIST_CONTACT, {
     skip: true,
@@ -52,8 +45,8 @@ const FriendsPage = () => {
         user?.friends.length
       ) {
         fetchListContact().then(({ data }) => {
-          setFetched(true); 
-          console.log("fetched")         
+          setFetched(true);
+          console.log("fetched");
           const {
             sentRequests,
             receivedRequests,

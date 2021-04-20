@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import PersonalHeading from "../components/Personal/PersonalHeading";
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import {
-  GET_CURRENT_PERSONAL_USER,
-} from "../apollo/operations/queries/cache";
+  currentPersonalUserVar,
+} from "../apollo/cache";
 import { FETCH_PERSONAL_USER } from "../apollo/user/user.types";
 import Layout from "../containers/Layout";
-import { cacheMutations } from "../apollo/operations/mutations";
+import { setCurrentPersonalUser } from "../apollo/user/currentPersonalUser.caches";
 import PersonalPosts from "../components/Personal/PersonalPosts";
 
-const PersonalPage = (props) => {
-  const { setCurrentPersonalUser } = cacheMutations;
+const PersonalPage = (props) => {  
   const { slug } = props.match.params; 
-  const {data : {currentPersonalUser}} = useQuery(GET_CURRENT_PERSONAL_USER)
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar)
   const {refetch : fetchCurrentPersonalUser} = useQuery(FETCH_PERSONAL_USER, {skip : true})  
   const [fetched, setFetched] = useState(false);
   useEffect(() => {

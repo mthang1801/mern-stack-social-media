@@ -5,7 +5,6 @@ import Notifications from "../components/Notification/Notifications";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { userVar, notificationsVar } from "../apollo/cache";
 import CardRequestAuth from "../components/Card/CardRequestAuth";
-import { cacheMutations } from "../apollo/operations/mutations";
 import MainBody from "../components/Body/MainBody";
 import { FETCH_NOTIFICATIONS } from "../apollo/notification/notification.types";
 import {setNotifications} from "../apollo/notification/notification.caches"

@@ -1,27 +1,18 @@
-import React, { useState, useEffect, createRef, useCallback } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import { Wrapper } from "./styles/ChatBoardBody.styles";
 import Bubble from "./Bubble";
 import { useThemeUI } from "theme-ui";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import {
-  GET_CURRENT_CHAT,
-  GET_MESSAGES_STORAGE,  
-} from "../../apollo/operations/queries/cache";
-import {userVar} from "../../apollo/cache"
+import {userVar, currentChatVar, messagesStorageVar} from "../../apollo/cache"
 import { FETCH_MESSAGES } from "../../apollo/chat/chat.types";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import {updateMoreMessages} from "../../apollo/chat/chat.caches"
 const ChatBoardBody = () => {
   //useState
   const [loadMoreMessages, setLoadMoreMessages] = useState(false);
   //useQuery
-  const {
-    data: { currentChat },
-  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-first" }); 
+  const currentChat = useReactiveVar(currentChatVar);
   const user = useReactiveVar(userVar);
-  const {
-    data: { messagesStorage },
-  } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-first" });
+  const messagesStorage = useReactiveVar(messagesStorageVar);  
   const { refetch: fetchMoreMessages } = useQuery(FETCH_MESSAGES, {
     fetchPolicy: "cache-and-network",
     skip: true,

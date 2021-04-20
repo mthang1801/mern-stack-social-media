@@ -1,16 +1,14 @@
 import React from 'react'
 import {Wrapper, User, Avatar,UserInfo, Controls, LinkItem } from "./styles/ChatBoardHeading.styles"
-import { useQuery } from "@apollo/client";
-import { GET_CURRENT_CHAT } from "../../apollo/operations/queries/cache";
+import { useReactiveVar } from "@apollo/client";
+import { currentChatVar } from "../../apollo/cache";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {MdLocalPhone} from "react-icons/md";
 import {BsCameraVideo} from "react-icons/bs";
 import {FaPhotoVideo, FaRegFileAlt} from "react-icons/fa";
 import Moment from "react-moment"
 const ChatBoardHeading = () => {
-  const {
-    data: { currentChat },
-  } = useQuery(GET_CURRENT_CHAT);
+  const currentChat = useReactiveVar(currentChatVar);
   
   if (!currentChat || !Object.keys(currentChat).length) return null;
   return (

@@ -1,5 +1,4 @@
 import { client } from "../apollo/client";
-import { cacheMutations } from "../apollo/operations/mutations";
 import { initialState } from "../apollo/initialState";
 import {
   postsVar,

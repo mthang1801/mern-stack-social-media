@@ -19,7 +19,7 @@ import { RiMessengerLine } from "react-icons/ri";
 import { IoMdUndo } from "react-icons/io";
 
 import { FcCheckmark, FcCancel } from "react-icons/fc";
-import { cacheMutations } from "../../apollo/operations/mutations";
+import { setCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
 import {
   ACCEPT_REQUEST_TO_ADD_FRIEND,
   SEND_REQUEST_TO_ADD_FRIEND,
@@ -34,11 +34,11 @@ import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
 
 import {
   dialogVar,
+  notificationsVar,
+  latestNotificationVar,
+  userVar,
+  currentPersonalUserVar,
 } from "../../apollo/cache";
-import {
-  GET_PERSONAL_USER_CACHE_DATA,
-} from "../../apollo/operations/queries/cache";
-import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache/components/getNotifications";
 import { useThemeUI } from "theme-ui";
 import {
   PersonalContactContainer,
@@ -49,7 +49,10 @@ import {
   DropdownItem,
 } from "./styles/PersonalHeadingContact.styles";
 import { setCurrentUser } from "../../apollo/user/user.caches";
-import { setAlertDialog, clearAlertDialog } from "../../apollo/controls/controls.caches";
+import {
+  setAlertDialog,
+  clearAlertDialog,
+} from "../../apollo/controls/controls.caches";
 import {
   removeNewNotification,
   decreaseCountNumberNotificationsUnseen,
@@ -61,10 +64,11 @@ const PersonalContact = () => {
   const [openResponse, setOpenResponse] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openUserInteraction, setOpenUserInteraction] = useState(false);
-  const {
-    data: { notifications, latestNotification },
-  } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, { fetchPolicy: "cache-first" });
   const dialog = useReactiveVar(dialogVar);
+  const notifications = useReactiveVar(notificationsVar);
+  const latestNotification = useReactiveVar(latestNotificationVar);
+  const user = useReactiveVar(userVar);
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
   //Mutations
   const [sendRequestToAddFriend] = useMutation(SEND_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
@@ -73,11 +77,6 @@ const PersonalContact = () => {
   const [unFollowUser] = useMutation(UNFOLLOW_USER);
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
   const [removeFriend] = useMutation(REMOVE_FRIEND);
-  const { setCurrentPersonalUser } = cacheMutations;
-  //user Query
-  const {
-    data: { user, currentPersonalUser },
-  } = useQuery(GET_PERSONAL_USER_CACHE_DATA);
 
   //color theme
   const { colorMode } = useThemeUI();

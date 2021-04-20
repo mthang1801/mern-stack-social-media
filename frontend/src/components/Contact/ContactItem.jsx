@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   ContactItemWrapper,
   ContactInfo,
@@ -10,52 +10,36 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import Button from "../Controls/ButtonDefault";
 import { useThemeUI } from "theme-ui";
 import useLanguage from "../Global/useLanguage";
-import { BsChatDots, BsCameraVideo, BsThreeDotsVertical } from "react-icons/bs";
+import { BsChatDots, BsCameraVideo } from "react-icons/bs";
 import { MdStarBorder } from "react-icons/md";
 import { IoMdCall } from "react-icons/io";
-import {setCurrentUser} from "../../apollo/user/user.caches"
-import {  
-  GET_CURRENT_PERSONAL_USER,
-  GET_SENT_REQUESTS_TO_ADD_FRIEND,
-  GET_RECEIVED_REQUESTS_TO_ADD_FRIEND,
-  GET_FRIENDS,
-} from "../../apollo/operations/queries/cache";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
+import {
+  setCurrentUser,
+  setReceivedRequestsToAddFriend,
+  setSentRequestsToAddFriend,
+  setFriends,
+} from "../../apollo/user/user.caches";
+import { setCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
+import {currentPersonalUserVar, sentRequestsToAddFriendVar, receivedRequestsToAddFriendVar, friendsVar} from "../../apollo/cache"
 import {
   REJECT_REQUEST_TO_ADD_FRIEND,
   ACCEPT_REQUEST_TO_ADD_FRIEND,
   CANCEL_REQUEST_TO_ADD_FRIEND,
 } from "../../apollo/user/user.types";
-import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
-import {userVar} from "../../apollo/cache"
-import {} from "../../apollo/user/currentPersonalUser.caches"
+import { useMutation, useReactiveVar } from "@apollo/client";
+import { userVar } from "../../apollo/cache";
+
 const ContactItem = ({ userContact, type }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const user = useReactiveVar(userVar);
-  const {
-    data: { friends },
-  } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-first" });
-  const {
-    data: { currentPersonalUser },
-  } = useQuery(GET_CURRENT_PERSONAL_USER, { fetchPolicy: "cache-first" });
-  const {
-    data: { sentRequestsToAddFriend },
-  } = useQuery(GET_SENT_REQUESTS_TO_ADD_FRIEND, { fetchPolicy: "cache-first" });
-  const {
-    data: { receivedRequestsToAddFriend },
-  } = useQuery(GET_RECEIVED_REQUESTS_TO_ADD_FRIEND, {
-    fetchPolicy: "cache-first",
-  });
+  const friends = useReactiveVar(friendsVar);
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar)
+  const sentRequestsToAddFriend = useReactiveVar(sentRequestsToAddFriendVar)
+  const receivedRequestsToAddFriend = useReactiveVar(receivedRequestsToAddFriendVar)
   const [cancelRequestToAddFriend] = useMutation(CANCEL_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
-  const {    
-    setCurrentPersonalUser,
-    setReceivedRequestsToAddFriend,
-    setSentRequestsToAddFriend,
-    setFriends,
-  } = cacheMutations;
 
   //function to handle when user click button request
   const updateMutationOnChange = (sender, receiver) => {

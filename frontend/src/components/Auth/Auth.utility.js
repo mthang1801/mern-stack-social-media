@@ -3,7 +3,6 @@ import {
   restartWebsocketConnection,
   closeWebsocketConnection,
 } from "../../apollo/client";
-import { cacheMutations } from "../../apollo/operations/mutations";
 import {
   User,
   Posts,
@@ -16,14 +15,11 @@ import {
 } from "../../apollo/models";
 import {userVar, postsVar, countNumberOfNotificationUnseenVar, notificationsVar, newNotificationsVar} from "../../apollo/cache"
 import { initialState } from "../../apollo/initialState";
-import {setCurrentUser, clearUser} from "../../apollo/user/user.caches"
+import {setCurrentUser, clearUser, clearFriends} from "../../apollo/user/user.caches"
 import {clearPosts} from "../../apollo/post/post.caches"
 import {clearCurrentChat, clearMessageStorage} from "../../apollo/chat/chat.caches"
 import {clearLatestNotification, clearNewNotificationsVar, clearNotifications, resetCountNumberOfNotificationUnseenVar} from "../../apollo/notification/notification.caches"
-const clearCache = () => {
-  const {        
-    setFriends,
-  } = cacheMutations;
+const clearCache = () => {  
   clearUser();
   clearPosts();
   resetCountNumberOfNotificationUnseenVar();
@@ -31,7 +27,7 @@ const clearCache = () => {
   clearNewNotificationsVar();
   clearLatestNotification();
   clearCurrentChat();
-  setFriends(Friends);
+  clearFriends();
   clearMessageStorage();
 };
 

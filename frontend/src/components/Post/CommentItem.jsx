@@ -14,7 +14,6 @@ import { BsArrowReturnRight } from "react-icons/bs";
 import { Response } from "./styles/CommentItem.styles";
 import ResponseEditor from "./ResponseEditor";
 import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
-import { cacheMutations } from "../../apollo/operations/mutations/cache";
 import { dialogVar } from "../../apollo/cache";
 import {
   REMOVE_COMMENT,
@@ -33,7 +32,7 @@ import {
   removeLikeComment,
   removeResponse as removeResponseInCache,
 } from "../../apollo/post/post.caches";
-
+import {setAlertDialog} from "../../apollo/controls/controls.caches"
 const CommentItem = ({ comment, user }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
@@ -41,8 +40,7 @@ const CommentItem = ({ comment, user }) => {
   const [dataResponse, setDataResponse] = useState("");
   const { controls } = i18n.store.data[lang].translation.comment;
   const { dialog: dialogAlert } = i18n.store.data[lang].translation;
-  const [focusResponseEditor, setFocusResponseEditor] = useState(false);
-  const { setDialog } = cacheMutations;
+  const [focusResponseEditor, setFocusResponseEditor] = useState(false);  
   const dialog = useReactiveVar(dialogVar);
   const [likeComment] = useMutation(LIKE_COMMENT);
   const [RemoveLikeComment] = useMutation(REMOVE_LIKE_COMMENT);
@@ -50,7 +48,7 @@ const CommentItem = ({ comment, user }) => {
   const { refetch: fetchResponses } = useQuery(FETCH_RESPONSES, { skip: true });
   const [response, setResponse] = useState(comment);
   const onClickRemoveComment = () => {
-    setDialog({
+    setAlertDialog({
       agree: false,
       title: dialogAlert.removeComment.title,
       content: dialogAlert.removeComment.content,

@@ -1,35 +1,33 @@
 import { useEffect } from "react";
-import chatSubscriptions from "../apollo/operations/subscriptions/chat";
 import {
   FETCH_CHAT_CONVERSATIONS,
   UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE,
 } from "../apollo/chat/chat.types";
 import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
-import { GET_CURRENT_CHAT } from "../apollo/operations/queries/cache";
-import { userVar } from "../apollo/cache";
+import { userVar, currentChatVar } from "../apollo/cache";
 import {
   setMessagesStorage,
   updateMessagesStorage,
   updateMessagesStorageWhenReceiverSeenAllMessages,
   updateMessagesStorageToReceivedWhenUserOnline,
 } from "../apollo/chat/chat.caches";
-import { SENT_MESSAGE_CHAT_SUBSCRIPTION,
+import {
+  SENT_MESSAGE_CHAT_SUBSCRIPTION,
   NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT,
   SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES,
-  NOTIFY_SENDERS_RECEIVER_ONLINE_HAS_RECEIVED_MESSAGES,} from "../apollo/chat/chat.types"
+  NOTIFY_SENDERS_RECEIVER_ONLINE_HAS_RECEIVED_MESSAGES,
+} from "../apollo/chat/chat.types";
 
 const useChatSubscriptions = () => {
   const user = useReactiveVar(userVar);
+  const currentChat = useReactiveVar(currentChatVar)
   const { subscribeToMore: subscribeChatMessage } = useQuery(
     FETCH_CHAT_CONVERSATIONS,
     {
       skip: true,
       fetchPolicy: "cache-and-network",
     }
-  );
-  const {
-    data: { currentChat },
-  } = useQuery(GET_CURRENT_CHAT, { fetchPolicy: "cache-only" });
+  );  
 
   const [updatePersonalReceiverWhenReceivedNewMessage] = useMutation(
     UPDATE_PERSONAL_RECEIVER_WHEN_RECEIVED_NEW_MESSAGE

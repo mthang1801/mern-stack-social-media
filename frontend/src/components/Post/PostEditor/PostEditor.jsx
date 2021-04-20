@@ -7,9 +7,9 @@ import { useThemeUI } from "theme-ui";
 import { EditorState, convertToRaw } from "draft-js";
 import useLanguage from "../../Global/useLanguage";
 import _ from "lodash";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useReactiveVar } from "@apollo/client";
 import { EDIT_POST, CREATE_POST } from "../../../apollo/post/post.types";
-import { GET_PERSONAL_USER_CACHE_DATA } from "../../../apollo/operations/queries/cache";
+import { userVar, currentPersonalUserVar } from "../../../apollo/cache";
 import { Prompt } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -28,9 +28,8 @@ const PostEditor = ({
   openEdited,
   setOpenEdited,
 }) => {
-  const {
-    data: { user, currentPersonalUser },
-  } = useQuery(GET_PERSONAL_USER_CACHE_DATA);
+  const user = useReactiveVar(userVar);
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
   const [postStatus, setPostStatus] = useState("PUBLIC");
   const [editorState, setEditorState] = useState(() =>
     editedEditorState ? editedEditorState : EditorState.createEmpty()

@@ -1,8 +1,13 @@
 import { useEffect } from "react";
 import { FETCH_CURRENT_USER } from "../apollo/user/user.types";
-import { cacheMutations } from "../apollo/operations/mutations/cache";
-import { useQuery } from "@apollo/client";
-import { GET_CONTACT_CACHE_DATA } from "../apollo/operations/queries/cache";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import {
+  userVar,
+  receivedRequestsToAddFriendVar,
+  currentPersonalUserVar,
+  friendsVar,
+  latestNotificationVar,
+} from "../apollo/cache";
 import {
   REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   REMOVE_FRIEND_SUBSCRIPTION,
@@ -11,26 +16,20 @@ import {
   removeNewNotification,
   decreaseCountNumberNotificationsUnseen,
   removeNotificationItemFromNotificationsList,
-  setLatestNotification
+  setLatestNotification,
 } from "../apollo/notification/notification.caches";
 import { setCurrentUser } from "../apollo/user/user.caches";
+import { setCurrentPersonalUser } from "../apollo/user/currentPersonalUser.caches";
 
 const useContactSubscription = () => {
-  const {
-    data: {
-      user,
-      receivedRequestsToAddFriend,
-      currentPersonalUser,
-      friends,
-      latestNotification,
-      notifications,
-    },
-  } = useQuery(GET_CONTACT_CACHE_DATA);
-  const {
-    setReceivedRequestsToAddFriend,
-    setCurrentPersonalUser,
-    setFriends,    
-  } = cacheMutations;
+  const user = useReactiveVar(userVar);
+  const receivedRequestsToAddFriend = useReactiveVar(
+    receivedRequestsToAddFriendVar
+  );
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
+  const friends = useReactiveVar(friendsVar);
+  const latestNotification = useReactiveVar(latestNotificationVar);
+
   const { subscribeToMore: subscribeUser } = useQuery(FETCH_CURRENT_USER, {
     skip: true,
   });
@@ -105,27 +104,6 @@ const useContactSubscription = () => {
           updateSubscriptionOnChange(sender, receiver);
         },
       });
-
-      // unsubscribeCancelRequestToAddFriend = subscribeUser({
-      //   document:
-      //     subscriptions.userSubscription
-      //       .CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-      //   variables: { userId: user._id },
-      //   updateQuery: (_, { subscriptionData }) => {
-      //     const {
-      //       sender,
-      //       receiver,
-      //     } = subscriptionData.data.cancelRequestToAddFriendSubscription;
-
-      //     // remove sender from received requests
-      //     setReceivedRequestsToAddFriend(
-      //       receivedRequestsToAddFriend.filter(
-      //         (senderRequest) => senderRequest._id !== sender._id
-      //       )
-      //     );
-      //     updateSubscriptionOnChange(sender, receiver);
-      //   },
-      // });
 
       unsubscribeRemoveFriend = subscribeUser({
         document: REMOVE_FRIEND_SUBSCRIPTION,

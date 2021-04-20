@@ -1,14 +1,14 @@
 import React from 'react'
-import { GET_FRIENDS} from "../../apollo/operations/queries/cache"
+
 import {useQuery, useReactiveVar} from "@apollo/client";
-import {userVar} from "../../apollo/cache"
+import {userVar, friendsVar} from "../../apollo/cache"
 import {useThemeUI} from "theme-ui"
 import {ContactWrapper, Title} from "./Contact.styles"
 import useLanguage from "../Global/useLanguage"
 import ContactItem from "./ContactItem"
 const SentRequestsToAddFriend = () => {
   const user = useReactiveVar(userVar);
-  const {data : {friends}} = useQuery(GET_FRIENDS, {fetchPolicy : "cache-first"});
+  const friends = useReactiveVar(friendsVar);
   const {colorMode} = useThemeUI();
   const {i18n, lang} = useLanguage()
   if(!user || !friends.length) return null ; 

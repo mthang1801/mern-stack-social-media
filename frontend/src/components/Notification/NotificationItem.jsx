@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useMutation } from "@apollo/client";
-import { cacheMutations } from "../../apollo/operations/mutations";
+import { useMutation, useReactiveVar } from "@apollo/client";
 import { UPDATE_USER_HAS_SEEN_NOTIFICATION } from "../../apollo/notification/notification.types";
 import { AcceptButton, DenyButton } from "../Custom/CustomMaterialButton";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -16,13 +15,14 @@ import {
   Controls,
 } from "./styles/NotificationItem.styles";
 import { notificationContent } from "../../utils/notificationContent";
-import { GET_NOTIFICATIONS_CACHE_DATA } from "../../apollo/operations/queries/cache/components/getNotifications";
+import {  notificationsVar, userVar, countNumberOfNotificationUnseenVar, currentPersonalUserVar, receivedRequestsToAddFriendVar, latestNotificationVar, newNotificationsVar} from "../../apollo/cache";
 import { useThemeUI } from "theme-ui";
 import {
   ACCEPT_REQUEST_TO_ADD_FRIEND,
   REJECT_REQUEST_TO_ADD_FRIEND,
 } from "../../apollo/user/user.types";
 import { setCurrentUser } from "../../apollo/user/user.caches";
+import { setCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
 import {
   removeNewNotification,
   decreaseCountNumberNotificationsUnseen,
@@ -30,19 +30,16 @@ import {
   setLatestNotification,
   updateNotificationHasSeen,
 } from "../../apollo/notification/notification.caches";
+
 const NotificationItem = ({ notification }) => {
   //Query
-  const {
-    data: {
-      user,
-      newNotifications,
-      currentPersonalUser,
-      latestNotification,
-      notifications,
-    },
-  } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, { fetchPolicy: "cache-first" });
+  const user = useReactiveVar(userVar);
+  const newNotifications = useReactiveVar(newNotificationsVar)
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar)
+  const latestNotification = useReactiveVar(latestNotificationVar)
+  const notifications = useReactiveVar(notificationsVar)
   //Mutations
-  const { setCurrentPersonalUser } = cacheMutations;
+  
   const [updateToHasSeen] = useMutation(UPDATE_USER_HAS_SEEN_NOTIFICATION);
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);

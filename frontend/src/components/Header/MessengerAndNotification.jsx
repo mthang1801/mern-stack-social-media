@@ -10,8 +10,8 @@ import { IoMdNotifications } from "react-icons/io";
 import Button from "../Controls/ButtonDefaultCircle";
 import NotificationsBoard from "./NotificationsBoard";
 import useNotificationsPostSubscription from "../../hooks/useNotificationsPostSubscription";
-import { useQuery } from "@apollo/client";
-import { GET_HEADER_CACHE_DATA } from "../../apollo/operations/queries/cache";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import { userVar, notificationsVar, countNumberOfNotificationUnseenVar } from "../../apollo/cache";
 import { FETCH_NOTIFICATIONS } from "../../apollo/notification/notification.types";
 import { Scrollbars } from "react-custom-scrollbars";
 import FlashPopUpNotification from "../Notification/FlashPopUpNotification";
@@ -30,9 +30,9 @@ const Control = () => {
     fetchPolicy: "cache-and-network",
     skip: true,
   });
-  const {
-    data: { user, notifications, countNumberNotificationsUnseen },
-  } = useQuery(GET_HEADER_CACHE_DATA, { fetchPolicy: "cache-and-network" });
+  const user = useReactiveVar(userVar);
+  const notifications = useReactiveVar(notificationsVar);
+  const countNumberNotificationsUnseen = useReactiveVar(countNumberOfNotificationUnseenVar)
 
   useNotificationsPostSubscription();
 

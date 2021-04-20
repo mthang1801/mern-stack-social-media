@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Wrapper, LeftSide, RightSide } from "./styles/PersonalPosts.styles";
 import Posts from "../Post/Posts";
 import PostEditor from "../Post/PostEditor/PostEditor";
-import { useQuery } from "@apollo/client";
-import { GET_PERSONAL_USER_CACHE_DATA } from "../../apollo/operations/queries/cache";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import { currentPersonalUserVar, userVar } from "../../apollo/cache";
 import { FETCH_POSTS } from "../../apollo/post/post.queries";
 import { addPostsToCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
 import IntroductionBox from "./IntroductionBox";
 
 const PersonalPosts = () => {
   const [loadingMore, setLoadingMore] = useState(false);
-  const {
-    data: { user, currentPersonalUser },
-  } = useQuery(GET_PERSONAL_USER_CACHE_DATA, { fetchPolicy: "cache-first" });  
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
+  const user = useReactiveVar(userVar);
   const {
     data: fetchedPostsData,
     loading,
@@ -23,8 +22,8 @@ const PersonalPosts = () => {
       skip: 0,
       limit: +process.env.REACT_APP_POSTS_PER_PAGE,
     },
-    onCompleted: (data) => {      
-      console.log(data)
+    onCompleted: (data) => {
+      console.log(data);
       if (data) {
         addPostsToCurrentPersonalUser(data.fetchPosts);
       }
@@ -43,7 +42,8 @@ const PersonalPosts = () => {
         } = document.documentElement;
         if (
           scrollTop + clientHeight > 0.8 * scrollHeight &&
-          currentPersonalUser.posts.length > currentPersonalUser.postsData?.length
+          currentPersonalUser.posts.length >
+            currentPersonalUser.postsData?.length
         ) {
           setLoadingMore(true);
         }
@@ -76,7 +76,7 @@ const PersonalPosts = () => {
       }).then(() => setLoadingMore(false));
     }
   }, [loadingMore, currentPersonalUser]);
-  
+
   if (!fetchedPostsData) return null;
   if (loading) return <div>Loading...</div>;
   return (
@@ -86,7 +86,7 @@ const PersonalPosts = () => {
       </LeftSide>
       <RightSide>
         {user?._id === currentPersonalUser?._id && <PostEditor />}
-        {currentPersonalUser?.postsData?.length? (
+        {currentPersonalUser?.postsData?.length ? (
           <Posts posts={currentPersonalUser.postsData} />
         ) : null}
       </RightSide>

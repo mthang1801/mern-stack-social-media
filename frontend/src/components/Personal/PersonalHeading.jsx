@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
-import {GET_PERSONAL_USER_CACHE_DATA
-} from "../../apollo/operations/queries/cache";
+import { useReactiveVar } from "@apollo/client";
+import {userVar, currentPersonalUserVar
+} from "../../apollo/cache";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   Container,
@@ -18,7 +18,8 @@ import { useThemeUI } from "theme-ui";
 import PersonalHeadingContact from "./PersonalHeadingContact"
 
 const PersonalHeading = () => {
-  const {data : {user,currentPersonalUser}} =useQuery(GET_PERSONAL_USER_CACHE_DATA, {fetchPolicy : "cache-first"})
+  const user  = useReactiveVar(userVar);
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const [menus, setMenus] = useState([]);

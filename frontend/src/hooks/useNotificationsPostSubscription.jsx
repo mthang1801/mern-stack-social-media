@@ -1,11 +1,18 @@
-import React, { useEffect } from "react";
-import { useQuery } from "@apollo/client";
-import { GET_NOTIFICATIONS_CACHE_DATA } from "../apollo/operations/queries/cache";
+import { useEffect } from "react";
+import { useQuery, useReactiveVar } from "@apollo/client";
+import {
+  countNumberOfNotificationUnseenVar,
+  userVar,
+  currentPersonalUserVar,
+  notificationsVar,
+  receivedRequestsToAddFriendVar,
+  latestNotificationVar,
+} from "../apollo/cache";
 import {
   FETCH_NOTIFICATIONS,
   FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
 } from "../apollo/notification/notification.types";
-import { cacheMutations } from "../apollo/operations/mutations";
+import { setCurrentPersonalUser } from "../apollo/user/currentPersonalUser.caches";
 import {
   addLikeResponse,
   removeLikeResponse,
@@ -57,22 +64,12 @@ const useNotificationsPostSubscription = () => {
       fetchPolicy: "cache-and-network",
     }
   );
-  const {
-    data: {
-      countNumberNotificationsUnseen,
-      user,
-      notifications,
-      currentPersonalUser,
-      receivedRequestsToAddFriend,
-      personalPosts,
-      latestNotification,
-    },
-  } = useQuery(GET_NOTIFICATIONS_CACHE_DATA, {
-    fetchPolicy: "cache-first",
-  });
-  //mutations
-  const { setCurrentPersonalUser } = cacheMutations;
-
+  const  countNumberNotificationsUnseen = useReactiveVar(countNumberOfNotificationUnseenVar)
+  const user = useReactiveVar(userVar)
+  const notifications = useReactiveVar(notificationsVar)
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar)
+  const receivedRequestsToAddFriend = useReactiveVar(receivedRequestsToAddFriendVar)
+  const latestNotification = useReactiveVar(latestNotificationVar)
   useEffect(() => {
     let _isMounted = true;
     if (countNumberNotificationsUnseen === null) {
@@ -242,7 +239,6 @@ const useNotificationsPostSubscription = () => {
             const { likePostSubscription } = subscriptionData.data;
             if (likePostSubscription) {
               updatedAddNotification(likePostSubscription);
-             
             }
           }
         },

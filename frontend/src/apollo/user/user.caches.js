@@ -1,4 +1,9 @@
-import { userVar } from "../cache";
+import {
+  userVar,
+  friendsVar,
+  receivedRequestsToAddFriendVar,
+  sentRequestsToAddFriendVar,
+} from "../cache";
 import { initialState } from "../initialState";
 
 export const addFetchedFriendsToFriendsData = (fetchedFriends) => {
@@ -7,18 +12,32 @@ export const addFetchedFriendsToFriendsData = (fetchedFriends) => {
     ? [...user.friendsData, ...fetchedFriends]
     : [...fetchedFriends];
   return userVar(user);
-  
 };
 
-export const setCurrentUser = user => userVar(user);
+export const setCurrentUser = (user) => userVar(user);
 
-export const setUserFriendsData = friends => {
-  const user = {...userVar()};
-  if(user.contact?.friendsData){
+export const setUserFriendsData = (friends) => {
+  const user = { ...userVar() };
+  if (user.contact?.friendsData) {
     user.contact.friendsData = [...friends];
   }
-  return userVar({...user});
-}
+  return userVar({ ...user });
+};
+
+export const clearUser = () => userVar(initialState.user);
+
+export const setFriends = (friendsList) => friendsVar([...friendsList]);
+
+export const setMoreFriends = (friends) => {
+  const prevFriends = [...friendsVar()];
+  return friendsVar([...prevFriends, ...friends]);
+};
+
+export const setReceivedRequestsToAddFriend = (senderRequest) =>
+  receivedRequestsToAddFriendVar([...senderRequest]);
+
+export const setSentRequestsToAddFriend = (receiversRequest) =>
+  sentRequestsToAddFriendVar([...receiversRequest]);
 
 
-export const clearUser = () => userVar(initialState.user)
+export const clearFriends = () => friendsVar(initialState.friends)

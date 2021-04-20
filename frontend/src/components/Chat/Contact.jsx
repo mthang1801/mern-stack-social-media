@@ -5,11 +5,8 @@ import {
   RightSide,
   PopupSettings,
 } from "./styles/Chat.styles";
-import {
-  GET_FRIENDS,
-} from "../../apollo/operations/queries/cache";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import { userVar } from "../../apollo/cache";
+import { userVar, friendsVar } from "../../apollo/cache";
 import Search from "./Search";
 import { useThemeUI } from "theme-ui";
 import { setCurrentChat } from "../../apollo/chat/chat.caches";
@@ -21,10 +18,8 @@ export const ContactContext = createContext({});
 const Contact = () => {
   //useQuery
   const user = useReactiveVar(userVar);
-  const {
-    data: { friends },
-  } = useQuery(GET_FRIENDS, { fetchPolicy: "cache-only" });
-  
+  const friends = useReactiveVar(friendsVar);
+
   //useState
   const [search, setSearch] = useState("");
   const [contactData, setContactData] = useState([]);
@@ -50,14 +45,14 @@ const Contact = () => {
     }
   }, [search, friends]);
 
-  useEffect(() => {    
+  useEffect(() => {
     setContactData([...friends]);
-    setOriginData([...friends]);    
+    setOriginData([...friends]);
   }, [friends]);
 
   useEffect(() => {
     setCurrentChat(null);
-  },[])
+  }, []);
 
   useEffect(() => {
     function handleClickDotsSetting(e) {
@@ -89,7 +84,7 @@ const Contact = () => {
 
   const onChangeSearch = React.useCallback((e) => {
     setSearch(e.target.value);
-  },[])
+  }, []);
   if (!user) return null;
   return (
     <ContactContext.Provider value={{ setShowPopup, setPopupPosition }}>
@@ -97,7 +92,7 @@ const Contact = () => {
         ref={popupRef}
         show={showPopup}
         left={popupPosition.left}
-        top={popupPosition.top+50}
+        top={popupPosition.top + 50}
       >
         <span>Mark as favorite</span>
         <hr />

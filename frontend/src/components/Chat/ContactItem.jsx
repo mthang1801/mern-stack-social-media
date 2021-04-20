@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState } from "react";
 import {
   ContactItemWrapper,
   Avatar,
@@ -10,15 +10,16 @@ import { useThemeUI } from "theme-ui";
 import { usePopupContactActions } from "./hook/usePopupActions";
 import ThreeDotsSetting from "../UI/ThreeDotsSetting";
 
-import { GET_MESSAGES_STORAGE } from "../../apollo/operations/queries/cache";
+import { messagesStorageVar } from "../../apollo/cache";
 import { FETCH_SINGLE_CHAT_CONVERSATION } from "../../apollo/chat/chat.types";
-import { useQuery } from "@apollo/client";
-import {setCurrentChat, addNewConversationToMessagesStorage} from "../../apollo/chat/chat.caches"
+import { useQuery, useReactiveVar } from "@apollo/client";
+import {
+  setCurrentChat,
+  addNewConversationToMessagesStorage,
+} from "../../apollo/chat/chat.caches";
 const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
-  const {
-    data: { messagesStorage },
-  } = useQuery(GET_MESSAGES_STORAGE, { fetchPolicy: "cache-only" });
+  const messagesStorage = useReactiveVar(messagesStorageVar);
   const { setPopupPosition, setShowPopup } = usePopupContactActions();
   const { colorMode } = useThemeUI();
   const { refetch: fetchSingleChatConversation } = useQuery(
@@ -52,8 +53,8 @@ const ContactItem = ({ friend }) => {
         );
       }
     }
-    setCurrentChat({...friend, scope: "PERSONAL"});
-  };  
+    setCurrentChat({ ...friend, scope: "PERSONAL" });
+  };
   return (
     <ContactItemWrapper
       theme={colorMode}

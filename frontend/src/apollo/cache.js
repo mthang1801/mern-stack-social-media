@@ -1,11 +1,6 @@
 import { InMemoryCache, makeVar } from "@apollo/client";
 import {
   PersonalPosts, 
-  SentRequestsToAddFriends,
-  ReceivedRequestsToAddFriend,
-  MessagesStorage,
-  CurrentChat,
-  NumberOfConversations,
 } from "./models";
 import { initialState } from "./initialState";
 //Cache
@@ -13,7 +8,6 @@ const toggleMenuVar = makeVar(initialState.toggleMenu);
 const dialogVar = makeVar(initialState.alertDialog);
 //Post
 const postsVar = makeVar(initialState.posts);
-const setPersonalPostsVar = makeVar(PersonalPosts);
 //User
 const userVar = makeVar(initialState.user);
 const currentPersonalUserVar = makeVar(initialState.currentPersonalUser);
@@ -62,9 +56,6 @@ const cache = new InMemoryCache({
         posts: {
           read: () => postsVar(),
         },
-        personalPosts: {
-          read: () => setPersonalPostsVar(),
-        },
         //Friends
         friends: {
           read: () => friendsVar(),
@@ -111,7 +102,6 @@ export {
   newNotificationsVar,
   latestNotificationVar,
   currentPersonalUserVar,
-  setPersonalPostsVar,
   toggleFriendsBoardVar,
   friendsVar,
   sentRequestsToAddFriendVar,
