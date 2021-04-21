@@ -25,11 +25,10 @@ import {
   updateRemoveLikePost,
 } from "../../apollo/post/post.caches";
 import CommentEditor from "./CommentEditor";
-const PostCardFooter = ({ post, fetchComments }) => {
+const PostCardFooter = ({ post, fetchComments, user }) => {
   const { i18n, lang } = useLanguage();
   const { controls } = i18n.store.data[lang].translation.post;
-  const { colorMode } = useThemeUI();
-  const user = useReactiveVar(userVar);
+  const { colorMode } = useThemeUI();  
   const [likePost] = useMutation(LIKE_POST);
   const [removeLikePost] = useMutation(REMOVE_LIKE_POST);
   const [showCommentEditor, setShowCommentEditor] = useState(false);
@@ -59,6 +58,13 @@ const PostCardFooter = ({ post, fetchComments }) => {
       setShowCommentEditor(true);
     }
   };
+  const onClickLikePost = () => {
+    if(user){
+      return post.likes.includes(user._id) ? onUnlikePost() : onLikePost()
+    }
+    alert("Please login before comment")
+    
+  }
   return (
     <Wrapper>
       <Controls theme={colorMode}>
@@ -66,12 +72,12 @@ const PostCardFooter = ({ post, fetchComments }) => {
 
         <Button
           theme={colorMode}
-          liked={post.likes.includes(user._id)}
-          onClick={post.likes.includes(user._id) ? onUnlikePost : onLikePost}
+          liked={post.likes.includes(user?._id)}
+          onClick={onClickLikePost}
         >
           <span>{controls.like.icon()}</span>
           <span>
-            {post.likes.includes(user._id)
+            {post.likes.includes(user?._id)
               ? controls.liked.name
               : controls.like.name}
           </span>
@@ -105,7 +111,7 @@ const PostCardFooter = ({ post, fetchComments }) => {
         ) : null}
       </PostInfo>
 
-      {showCommentEditor && (
+      {showCommentEditor && user && (
         <>
           <Comments>
             <UserComment>

@@ -119,7 +119,8 @@ const SignUp = withSignUpMutation(
         this.clearForm();        
       }
       if(prevProps.data !== this.props.data && this.props.data )  {
-        const { user, token, tokenExpire} = this.props.data.createUser;                    
+        const { user, token, tokenExpire} = this.props.data.createUser;  
+        console.log(user)                  
         this.unsubcribeLogin = await login(user, token, tokenExpire)
         this.clearForm() ;
       }

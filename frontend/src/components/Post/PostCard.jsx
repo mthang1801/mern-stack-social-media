@@ -69,7 +69,7 @@ const PostCard = ({ post }) => {
       />
       <PostCardHeader post={post} user={user} setIsEdited={setIsEdited} />
       <PostCardBody post={post} />
-      <PostCardFooter post={post} fetchComments={onFetchComments} />
+      <PostCardFooter post={post} user={user} fetchComments={onFetchComments} />
       {loading && <div>Loading...</div>}
       {post.commentsData && <Comments comments={post.commentsData} />}
       {post.commentsData?.length < post.comments.length && (

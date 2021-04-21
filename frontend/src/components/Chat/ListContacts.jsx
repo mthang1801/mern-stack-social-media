@@ -3,7 +3,7 @@ import { Wrapper } from "./styles/ListContacts.styles";
 import ContactItem from "./ContactItem";
 import { usePopupContactActions } from "./hook/usePopupActions";
 import { useQuery } from "@apollo/client";
-import { FETCH_USER_FRIENDS_DATA } from "../../apollo/user/user.types";
+import { FETCH_USER_FRIENDS_DATA } from "../../apollo/contact/contact.types";
 import { setFriends } from "../../apollo/user/user.caches";
 const ListContacts = ({ data }) => {
   const { setShowPopup } = usePopupContactActions();

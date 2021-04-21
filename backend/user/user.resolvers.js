@@ -20,7 +20,7 @@ export const userResolvers = {
       return userController.fetchFriends(
         req,
         args.skip,
-        args.limit,
+        args.limit,        
         (args.userId = null)
       );
     },
@@ -28,15 +28,15 @@ export const userResolvers = {
     fetchListContact: (_, args, { req }, info) => {
       return userController.fetchListContact(req);
     },
-    fetchUsersSentRequestToAddFriend: (_, args, { req }, info) => {
-      return userController.fetchUsersSentRequestToAddFriend(
+    fetchSentRequestToAddFriend: (_, args, { req }, info) => {
+      return userController.fetchSentRequestToAddFriend(
         req,
         args.skip,
         args.limit
       );
     },
-    fetchUsersReceivedRequestToAddFriend: (_, args, { req }, info) => {
-      return userController.fetchUsersReceivedRequestToAddFriend(
+    fetchReceivedRequestToAddFriend: (_, args, { req }, info) => {
+      return userController.fetchReceivedRequestToAddFriend(
         req,
         args.skip || 0,
         args.limit || +process.env.CONTACT_USERS_PER_PAGE
@@ -140,11 +140,12 @@ export const userResolvers = {
           pubsub.asyncIterator(
             subscriptionActions.ACCEPT_REQUEST_TO_ADD_FRIEND
           ),
-        (payload, { userId }) =>{          
-          return payload.acceptRequestToAddFriendSubscription.receiver.toString() ===
-          userId.toString()
+        (payload, { userId }) => {
+          return (
+            payload.acceptRequestToAddFriendSubscription.receiver.toString() ===
+            userId.toString()
+          );
         }
-          
       ),
     },
 

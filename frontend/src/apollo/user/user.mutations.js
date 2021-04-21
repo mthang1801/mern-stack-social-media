@@ -5,7 +5,12 @@ export const ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
     acceptRequestToAddFriend(senderId: $senderId) {
       sender {
         _id
+        name
         slug
+        avatar
+        email
+        isOnline
+        offlinedAt
         following        
         followed
         sentRequestToAddFriend     
@@ -14,7 +19,12 @@ export const ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
       }
       receiver {
         _id
-        slug        
+        name
+        slug     
+        avatar
+        email
+        isOnline
+        offlinedAt   
         following        
         followed
         sentRequestToAddFriend     
@@ -174,7 +184,16 @@ export const SIGNUP = gql`
       user{
         _id
         name
+        nickname
+        slug
         email
+        friends
+        notifications
+        avatar
+        following
+        followed
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
       }
       token
       tokenExpire

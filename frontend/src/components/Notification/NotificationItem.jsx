@@ -100,11 +100,15 @@ const NotificationItem = ({ notification }) => {
   const onAcceptRequestToAddFriend = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    
     acceptRequestToAddFriend({
       variables: { senderId: notification.creator._id },
     }).then(({ data }) => {
+      console.log(data)
       const { sender, receiver, notification } = data.acceptRequestToAddFriend;
       updateMutationOnChange(sender, receiver, notification);
+    }).catch(err => {
+      console.log(err)
     });
   };
 

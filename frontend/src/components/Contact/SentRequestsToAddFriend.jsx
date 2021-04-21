@@ -1,39 +1,34 @@
-import React  from "react";
-import { FETCH_USERS_SENT_REQUEST_TO_ADD_FRIEND } from "../../apollo/user/user.types";
-import { useQuery, useReactiveVar } from "@apollo/client";
-import {userVar, sentRequestsToAddFriendVar} from "../../apollo/cache"
+import React, {useEffect}  from "react";
+import { FETCH_SENT_REQUEST_TO_ADD_FRIEND } from "../../apollo/user/user.types";
+import { useQuery} from "@apollo/client";
 import { useThemeUI } from "theme-ui";
-import { setSentRequestsToAddFriend } from "../../apollo/user/user.caches";
+import { fetchMoreSentRequestsToAddFriend } from "../../apollo/contact/contact.caches";
 import { ContactWrapper, Title, LinkReadMore } from "./Contact.styles";
 import useLanguage from "../Global/useLanguage";
 import ContactItem from "./ContactItem";
-const SentRequestsToAddFriend = () => {
-  const user = useReactiveVar(userVar);
-  const sentRequestsToAddFriend = useReactiveVar(sentRequestsToAddFriendVar)
+const SentRequestsToAddFriend = ({user,sentRequestsToAddFriend}) => {
+  
   const {
     refetch: fetchUsersSentRequestsToAddFriend,
-  } = useQuery(FETCH_USERS_SENT_REQUEST_TO_ADD_FRIEND, {
+  } = useQuery(FETCH_SENT_REQUEST_TO_ADD_FRIEND, {
     fetchPolicy: "cache-and-network",
     skip: true,
   });
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();  
-  const getMoreUsersSentRequestToAddFriend = () => {
+
+  const getMoreSentRequestToAddFriend = () => {
     const skip = sentRequestsToAddFriend.length;
-    const limit = +process.env.REACT_APP_CONTACT_USER_PER_PAGE;
+    const limit = +process.env.REACT_APP_USERS_CONTACT_PER_LOAD;
     if (fetchUsersSentRequestsToAddFriend) {
       fetchUsersSentRequestsToAddFriend({ skip, limit }).then(({ data }) => {
-        if (data?.fetchUsersSentRequestToAddFriend?.length) {         
-          setSentRequestsToAddFriend([
-            ...sentRequestsToAddFriend,
-            ...data.fetchUsersSentRequestToAddFriend,
-          ]);
+        if (data?.fetchSentRequestToAddFriend?.length) {         
+          fetchMoreSentRequestsToAddFriend(data.fetchSentRequestToAddFriend)
         }
       });
     }
   };
  
-  if (!user || !user?.sentRequestToAddFriend.length || !sentRequestsToAddFriend.length) return null;
   return (
     <ContactWrapper theme={colorMode}>
       <Title theme={colorMode}>
@@ -48,7 +43,7 @@ const SentRequestsToAddFriend = () => {
             role="button"
             tabIndex={0}
             aria-label="button"
-            onClick={getMoreUsersSentRequestToAddFriend}
+            onClick={getMoreSentRequestToAddFriend}
           >
             {i18n.store.data[lang].translation.contacts.getMore}
           </span>

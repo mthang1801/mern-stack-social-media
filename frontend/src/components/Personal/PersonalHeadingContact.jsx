@@ -59,15 +59,14 @@ import {
   removeNotificationItemFromNotificationsList,
   setLatestNotification,
 } from "../../apollo/notification/notification.caches";
-const PersonalContact = () => {
+const PersonalContact = ({user}) => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openUserInteraction, setOpenUserInteraction] = useState(false);
   const dialog = useReactiveVar(dialogVar);
   const notifications = useReactiveVar(notificationsVar);
-  const latestNotification = useReactiveVar(latestNotificationVar);
-  const user = useReactiveVar(userVar);
+  const latestNotification = useReactiveVar(latestNotificationVar);  
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
   //Mutations
   const [sendRequestToAddFriend] = useMutation(SEND_REQUEST_TO_ADD_FRIEND);
@@ -85,21 +84,22 @@ const PersonalContact = () => {
   const settingRef = useRef(false);
   const interactionRef = useRef(false);
   //track dialog
+  console.log(dialog)
   useEffect(() => {
     if (
       dialog &&
       dialog?.data?.type === "remove contact" &&
       dialog?.data?.userId === currentPersonalUser._id &&
       dialog?.agree
-    ) {
+    ) {      
       removeFriend({ variables: { friendId: currentPersonalUser._id } })
         .then(({ data }) => {
+          clearAlertDialog();
           const { sender, receiver, notification } = data.removeFriend;
           updateMutationOnChange(sender, receiver, notification);
-        })
-        .then(() => {
-          clearAlertDialog();
-        });
+          
+        }).catch(err => clearAlertDialog());
+        
     }
   }, [dialog, currentPersonalUser]);
   //function to handle when user click button request
@@ -135,15 +135,8 @@ const PersonalContact = () => {
         receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
       });
     }
-    if (currentPersonalUser && currentPersonalUser._id === receiver._id) {
-      console.log({
-        ...currentPersonalUser,
-        friends: [...receiver.friends],
-        followed: [...receiver.followed],
-        following: [...receiver.following],
-        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
-        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-      });
+    if (currentPersonalUser?._id === receiver._id) {
+     
       setCurrentPersonalUser({
         ...currentPersonalUser,
         friends: [...receiver.friends],
@@ -154,6 +147,7 @@ const PersonalContact = () => {
       });
     }
   };
+  console.log(user)
   //track user click event
   useEffect(() => {
     function trackUserClickEvent(e) {

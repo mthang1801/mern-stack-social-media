@@ -24,7 +24,7 @@ const PersonalHeading = () => {
   const { i18n, lang } = useLanguage();
   const [menus, setMenus] = useState([]);
   const [activeLink, setActiveLink] = useState(null);
-  
+
   useEffect(() => {
     setMenus(i18n.store.data[lang].translation.personalMenus);
   }, [lang]);
@@ -70,7 +70,7 @@ const PersonalHeading = () => {
               ))
             : null}
         </PersonalMenus>
-        {user && <PersonalHeadingContact/>}
+        {user && <PersonalHeadingContact user={user}/>}
       </Footer>
     </Container>
   );

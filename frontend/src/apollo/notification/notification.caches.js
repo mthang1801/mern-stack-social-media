@@ -16,7 +16,7 @@ export const addNotificationItemToNotificationsList = (newNotification) => {
 
 export const decreaseCountNumberNotificationsUnseen = () => {
   const currentNumber = countNumberOfNotificationUnseenVar();
-  return countNumberOfNotificationUnseenVar(currentNumber - 1);
+  return countNumberOfNotificationUnseenVar(Math.min(initialState.countNumberOfNotificationUnseen,currentNumber - 1));
 };
 
 export const increaseCountNumberNotificationsUnseen = () => {

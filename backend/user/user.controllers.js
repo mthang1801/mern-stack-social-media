@@ -91,24 +91,26 @@ export const userController = {
     const currentUserId = getAuthUser(req);
     const currentUser = await User.findById(currentUserId)
       .populate({
+        path: "friends",
+        options: {
+          collation: { locale: "en" },
+          sort: { isOnline: -1, slug: 1 },
+          skip: 0,
+          limit: +process.env.CONTACT_USERS_PER_PAGE,
+        },
+      })
+      .populate({
         path: "sentRequestToAddFriend",
         options: { limit: +process.env.CONTACT_USERS_PER_PAGE },
       })
       .populate({
         path: "receivedRequestToAddFriend",
         options: { limit: +process.env.CONTACT_USERS_PER_PAGE },
-      })
-      .populate({
-        path: "friends",
-        options: {
-          limit: +process.env.CONTACT_FRIENDS_PER_PAGE,
-          sort: { isOnline: 1, name: 1 },
-          collation: { locale: "en" },
-        },
       });
     if (!currentUser) {
       throw new AuthenticationError("User not found");
     }
+
     return {
       sentRequests: currentUser.sentRequestToAddFriend,
       receivedRequests: currentUser.receivedRequestToAddFriend,
@@ -116,6 +118,7 @@ export const userController = {
     };
   },
   fetchFriends: async (req, skip, limit, userId) => {
+    console.log(skip, limit);
     console.time("fetchFriend");
     const currentUserId = getAuthUser(req, false);
     if (userId) {
@@ -124,12 +127,12 @@ export const userController = {
     }
     const friendsList = await User.find(
       { friends: currentUserId },
-      { name: 1, slug: 1, avatar: 1, isOnline: 1, offlinedAt: 1 }
+      { name: 1, slug: 1, avatar: 1, isOnline: 1, offlinedAt: 1, email: 1 }
     )
       .collation({ locale: "en" })
-      .sort({ isOnline: -1, name: 1 })
-      .skip(+skip)
-      .limit(+limit);
+      .sort({ isOnline: -1, slug: 1 })
+      .skip(skip)
+      .limit(limit);
     console.timeEnd("fetchFriend");
     return friendsList;
   },
@@ -338,7 +341,7 @@ export const userController = {
       throw new ApolloError("Cancel Request Failed");
     }
   },
-  fetchUsersSentRequestToAddFriend: async (req, skip, limit) => {
+  fetchSentRequestToAddFriend: async (req, skip, limit) => {
     const currentUserId = await getAuthUser(req);
     const currentUser = await User.findById(currentUserId).populate({
       path: "sentRequestToAddFriend",
@@ -346,7 +349,7 @@ export const userController = {
     });
     return currentUser.sentRequestToAddFriend;
   },
-  fetchUsersReceivedRequestToAddFriend: async (req, skip, limit) => {
+  fetchReceivedRequestToAddFriend: async (req, skip, limit) => {
     const currentUserId = await getAuthUser(req);
     const currentUser = await User.findById(currentUserId).populate({
       path: "receivedRequestToAddFriend",
@@ -362,11 +365,16 @@ export const userController = {
   ) => {
     try {
       const currentUserId = getAuthUser(req);
+      console.log(senderId, currentUserId);
       const currentUser = await User.findOne({
         _id: currentUserId,
         receivedRequestToAddFriend: senderId,
       });
       if (!currentUser) {
+        await User.findOneAndUpdate(
+          { _id: senderId, sentRequestToAddFriend: currentUserId },
+          { $pull: { sentRequestToAddFriend: currentUserId } }
+        );
         throw new UserInputError("Accept request failed");
       }
       const sender = await User.findOne({
@@ -374,6 +382,10 @@ export const userController = {
         sentRequestToAddFriend: currentUserId,
       });
       if (!sender) {
+        await User.findOneAndUpdate(
+          { _id: currentUserId, receivedRequestToAddFriend: senderId },
+          { $pull: { receivedRequestToAddFriend: senderId } }
+        );
         throw new UserInputError("Accept request failed");
       }
       const session = await mongoose.startSession();
@@ -506,7 +518,7 @@ export const userController = {
       await pubsub.publish(rejectRequestToAddFriendSubscription, {
         rejectRequestToAddFriendSubscription: {
           sender: sender,
-          receiver: currentUser,          
+          receiver: currentUser,
         },
       });
 
@@ -570,12 +582,13 @@ export const userController = {
   },
   removeFriend: async (req, friendId, pubsub, removeFriendSubscription) => {
     try {
-      const currentUserId = getAuthUser(req);      
+      console.log(friendId)
+      const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
         friends: friendId,
       });
-      console.log(currentUser)
+      
       if (!currentUser) {
         throw new AuthenticationError("User not found");
       }

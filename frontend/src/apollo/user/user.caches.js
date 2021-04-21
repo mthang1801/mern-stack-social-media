@@ -4,6 +4,7 @@ import {
   receivedRequestsToAddFriendVar,
   sentRequestsToAddFriendVar,
 } from "../cache";
+import _ from "lodash";
 import { initialState } from "../initialState";
 
 export const addFetchedFriendsToFriendsData = (fetchedFriends) => {
@@ -39,5 +40,42 @@ export const setReceivedRequestsToAddFriend = (senderRequest) =>
 export const setSentRequestsToAddFriend = (receiversRequest) =>
   sentRequestsToAddFriendVar([...receiversRequest]);
 
+export const setFriendsToCacheData = (friendsList) => {
+  const user = { ...userVar() };
+  user.friendsCacheData = user.friendsCacheData
+    ? [...user.friendsCacheData, ...friendsList]
+    : [...friendsList];
+  user.friendsCacheData = _.unionBy(user.friendsCacheData, "_id");
+  return userVar(user);
+};
 
-export const clearFriends = () => friendsVar(initialState.friends)
+export const setReceivedRequestsToAddFriendCacheData = (receiversRequest) => {
+  const user = { ...userVar() };
+  user.receivedRequestsToAddFriendCacheData = user.receivedRequestsToAddFriendCacheData
+    ? [...user.receivedRequestsToAddFriendCacheData, ...receiversRequest]
+    : [...receiversRequest];
+  return userVar(user);
+};
+
+export const setSentRequestsToAddFriendCacheData = (senderRequests) => {
+  const user = { ...userVar() };
+  user.sentRequestsToAddFriendCacheData = user.sentRequestsToAddFriendCacheData
+    ? [...user.sentRequestsToAddFriendCacheData, ...senderRequests]
+    : [...senderRequests];
+  return userVar(user);
+};
+
+export const moveReceivedRequestToFriendCacheData = (sender) => {
+  const user = { ...userVar() };
+  console.log(sender);
+  user.receivedRequestsToAddFriendCacheData = user.receivedRequestsToAddFriendCacheData.filter(
+    (receivedRequestUser) => receivedRequestUser._id !== sender._id
+  );
+  user.friendsCacheData = user.friendsCacheData
+    ? [{ ...sender }, ...user.friendsCacheData]
+    : [{ ...sender }];
+    console.log(user)
+  return userVar(user);
+};
+
+export const clearFriends = () => friendsVar(initialState.friends);

@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../containers/Layout";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import { userVar, friendsVar } from "../apollo/cache";
+import { userVar, friendsVar, contactVar } from "../apollo/cache";
 import {
   FETCH_LIST_CONTACT,
   FETCH_USER_FRIENDS_DATA,
-} from "../apollo/user/user.types";
+} from "../apollo/contact/contact.types";
 import {
-  setFriends,
-  setSentRequestsToAddFriend,
-  setReceivedRequestsToAddFriend,
-} from "../apollo/user/user.caches";
+  FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND, 
+  FETCH_SENT_REQUEST_TO_ADD_FRIEND
+} from "../apollo/user/user.types";
+
+import {
+  setContactList,
+  fetchMoreFriendsToContact,
+  fetchMoreSentRequestsToAddFriend,
+  fetchMoreReceivedRequestsToAddFriend
+} from "../apollo/contact/contact.caches";
 import MainBody from "../components/Body/MainBody";
 import {
   MainContent,
@@ -27,74 +33,67 @@ const FriendsPage = () => {
   const [fetched, setFetched] = useState(false);
   const { i18n, lang } = useLanguage();
   const user = useReactiveVar(userVar);
-  const friends = useReactiveVar(friendsVar);
-  const { refetch: fetchFriends } = useQuery(FETCH_USER_FRIENDS_DATA, {
-    fetchPolicy: "cache-and-network",
-    skip: true,
-  });
+  // const friends = useReactiveVar(friendsVar);
+  const contact = useReactiveVar(contactVar);
 
   const { refetch: fetchListContact } = useQuery(FETCH_LIST_CONTACT, {
     skip: true,
   });
-
+  const {refetch : fetchReceivedRequestsToAddFriend} = useQuery(FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND, {skip : true})
+  const {refetch : fetchSentRequestToAddFriend} = useQuery(FETCH_SENT_REQUEST_TO_ADD_FRIEND, {skip: true})
   useEffect(() => {
-    if (!fetched) {
+    if (!fetched && user) {
       if (
         user?.sentRequestToAddFriend.length ||
         user?.receivedRequestToAddFriend.length ||
         user?.friends.length
       ) {
-        fetchListContact().then(({ data }) => {
-          setFetched(true);
-          console.log("fetched");
-          const {
-            sentRequests,
-            receivedRequests,
-            friends: friendsList,
-          } = data.fetchListContact;
-          if (sentRequests.length) {
-            setSentRequestsToAddFriend([...sentRequests]);
-          }
-          if (receivedRequests.length) {
-            setReceivedRequestsToAddFriend([...receivedRequests]);
-          }
-          if (!friends.length) {
-            setFriends([...friendsList]);
-          }
-        });
+        fetchListContact()
+          .then(({ data }) => {
+            setFetched(true);
+            const {
+              sentRequests,
+              receivedRequests,
+              friends,
+            } = data.fetchListContact;
+            
+            setContactList(friends, receivedRequests, sentRequests);           
+          })
+          .catch((err) => {
+            setFetched(true);
+            console.log(err);
+          });
       }
     }
   }, [user, fetched, setFetched]);
-
+  
   useEffect(() => {
-    window.addEventListener("scroll", async (e) => {
-      const docEl = document.documentElement;
-      if (docEl.clientHeight + docEl.scrollTop > docEl.scrollHeight * 0.8) {
-        setLoadingMore(true);
+    let _isMounted = true ; 
+    if(fetched){
+      const limit = +process.env.REACT_APP_USERS_CONTACT_PER_LOAD;
+      if(contact.sentRequestsToAddFriend.length <= 1 && user.sentRequestToAddFriend.length > 1){
+        const skip = contact.sentRequestsToAddFriend.length ; 
+       
+        fetchSentRequestToAddFriend({ skip, limit }).then(({ data }) => {
+          if (data?.fetchSentRequestToAddFriend?.length && _isMounted ) {         
+            fetchMoreSentRequestsToAddFriend(data.fetchSentRequestToAddFriend)
+          }
+        });
       }
-    });
-    return () =>
-      window.removeEventListener("scroll", async (e) => {
-        const docEl = document.documentElement;
-        if (docEl.clientHeight + docEl.scrollTop > docEl.scrollHeight * 0.8) {
-          setLoadingMore(true);
-        }
-      });
-  }, []);
-
-  useEffect(() => {
-    if (loadingMore) {
-      const skip = friends.length;
-      const limit = +process.env.REACT_APP_FRIENDS_PER_LOAD;
-      fetchFriends({ skip, limit }).then(({ data }) => {
-        if (data?.fetchFriends?.length) {
-          setFriends([...friends, ...data.fetchFriends]);
-          setLoadingMore(false);
-        }
-      });
+      if(contact.receivedRequestsToAddFriend.length <= 1 && user.receivedRequestToAddFriend.length > 1){
+        const skip = contact.receivedRequestsToAddFriend.length ; 
+        fetchReceivedRequestsToAddFriend({skip, limit}).then(({data}) => {
+          if(data?.fetchReceivedRequestToAddFriend?.length && _isMounted){
+            fetchMoreReceivedRequestsToAddFriend(data.fetchReceivedRequestToAddFriend)
+          }
+        })
+      }
     }
-  }, [loadingMore]);
-
+    
+   
+    return () => _isMounted = false ;
+  },[fetched, contact, user, fetchSentRequestToAddFriend])
+  
   return (
     <Layout>
       <MainBody>
@@ -103,9 +102,23 @@ const FriendsPage = () => {
             <ContactTitle>
               {i18n.store.data[lang].translation.contacts.title}
             </ContactTitle>
-            <SentRequestsToAddFriend />
-            <ReceivedRequestsToAddFriend />
-            <FriendsList />
+            {user && contact.sentRequestsToAddFriend.length ? (
+              <SentRequestsToAddFriend
+                user={user}
+                sentRequestsToAddFriend={contact.sentRequestsToAddFriend}
+              />
+            ) : null}
+            {user && contact.receivedRequestsToAddFriend.length ? (
+              <ReceivedRequestsToAddFriend
+                user={user}
+                receivedRequestsToAddFriend={
+                  contact.receivedRequestsToAddFriend
+                }
+              />
+            ) : null}
+            {user && contact.friends.length ? (
+              <FriendsList user={user} friends={contact.friends} />
+            ) : null}
           </MainContentFullSize>
         </MainContent>
       </MainBody>

@@ -8,7 +8,7 @@ import {
 import { useThemeUI } from "theme-ui";
 import { userVar } from "../../apollo/cache";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import {FETCH_USER_FRIENDS_DATA} from "../../apollo/user/user.types";
+import {FETCH_USER_FRIENDS_DATA} from "../../apollo/contact/contact.types";
 import { addFetchedFriendsToFriendsData } from "../../apollo/user/user.caches";
 import FriendItem from "./FriendItem";
 import { Scrollbars } from "react-custom-scrollbars";

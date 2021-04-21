@@ -15,4 +15,9 @@ export const initialState = {
   friends : [],
   sentRequestToAddFriend : [],
   receivedRequestsToAddFriend : [],  
+  contact : {
+    friends : [], 
+    sentRequestsToAddFriend : [], 
+    receivedRequestsToAddFriend : []
+  }
 };

@@ -27,6 +27,8 @@ const friendsVar = makeVar(initialState.friends);
 const messagesStorageVar = makeVar(initialState.messagesStorage);
 const currentChatVar = makeVar(initialState.currentChat);
 const numberOfConversationsVar = makeVar(initialState.numberOfConversations);
+//Contact
+const contactVar = makeVar(initialState.contact)
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -87,6 +89,10 @@ const cache = new InMemoryCache({
         numberOfConversations: {
           read: () => numberOfConversationsVar(),
         },
+        //Contact
+        contact : {
+          read : () => contactVar()
+        }
       },
     },
   },
@@ -110,4 +116,5 @@ export {
   currentChatVar,
   numberOfConversationsVar,
   dialogVar,
+  contactVar
 };

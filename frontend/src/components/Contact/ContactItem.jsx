@@ -19,8 +19,13 @@ import {
   setSentRequestsToAddFriend,
   setFriends,
 } from "../../apollo/user/user.caches";
+import {moveReceivedRequestToFriend, removeSentRequestToAddFriend} from "../../apollo/contact/contact.caches"
 import { setCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
-import {currentPersonalUserVar, sentRequestsToAddFriendVar, receivedRequestsToAddFriendVar, friendsVar} from "../../apollo/cache"
+import {
+  currentPersonalUserVar,
+  sentRequestsToAddFriendVar,
+  receivedRequestsToAddFriendVar
+} from "../../apollo/cache";
 import {
   REJECT_REQUEST_TO_ADD_FRIEND,
   ACCEPT_REQUEST_TO_ADD_FRIEND,
@@ -33,10 +38,12 @@ const ContactItem = ({ userContact, type }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const user = useReactiveVar(userVar);
-  const friends = useReactiveVar(friendsVar);
-  const currentPersonalUser = useReactiveVar(currentPersonalUserVar)
-  const sentRequestsToAddFriend = useReactiveVar(sentRequestsToAddFriendVar)
-  const receivedRequestsToAddFriend = useReactiveVar(receivedRequestsToAddFriendVar)
+  
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
+  const sentRequestsToAddFriend = useReactiveVar(sentRequestsToAddFriendVar);
+  const receivedRequestsToAddFriend = useReactiveVar(
+    receivedRequestsToAddFriendVar
+  );
   const [cancelRequestToAddFriend] = useMutation(CANCEL_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
@@ -64,31 +71,26 @@ const ContactItem = ({ userContact, type }) => {
   };
 
   //Handle cancel request to add friend
-  const onCancelRequestToAddFriend = () => {
-    const filterUsersReceivedRequest = sentRequestsToAddFriend.filter(
-      (userReceivedRequest) => userReceivedRequest._id !== userContact._id
-    );
+  const onCancelRequestToAddFriend = () => {       
     cancelRequestToAddFriend({
       variables: { receiverId: userContact._id },
     }).then(({ data }) => {
       const { sender, receiver } = data.cancelRequestToAddFriend;
-      setSentRequestsToAddFriend(filterUsersReceivedRequest);
-      updateMutationOnChange(sender, receiver);
+      removeSentRequestToAddFriend(receiver);
+      updateMutationOnChange(sender, receiver);      
     });
   };
   //Handle accept request to add friend
   const onAcceptRequestToAddFriend = () => {
-    const filterUsersSentRequest = receivedRequestsToAddFriend.filter(
-      (userSentRequest) => userSentRequest._id !== userContact._id
-    );
     acceptRequestToAddFriend({
       variables: { senderId: userContact._id },
     }).then(({ data }) => {
-      const { sender, receiver } = data.acceptRequestToAddFriend;
+      console.log(data)
+      const { sender, receiver } = data.acceptRequestToAddFriend;      
       //remove user at recived requests to head of friends list
-      setReceivedRequestsToAddFriend(filterUsersSentRequest);
-      setFriends([{ ...userContact }, ...friends]);
-      updateMutationOnChange(sender, receiver);
+      
+      moveReceivedRequestToFriend(sender);
+      updateMutationOnChange(receiver, sender);
     });
   };
 

@@ -161,9 +161,9 @@ export const schemaType = gql`
   }
 
   type ListContact {
-    sentRequests: [User!]!
-    receivedRequests: [User!]!
-    friends: [User!]!
+    sentRequests: [User]!
+    receivedRequests: [User]!
+    friends: [User]!
   }
 
   type AddChatResult {
