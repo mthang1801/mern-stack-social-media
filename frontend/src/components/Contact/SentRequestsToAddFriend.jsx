@@ -1,5 +1,5 @@
 import React, {useEffect}  from "react";
-import { FETCH_SENT_REQUEST_TO_ADD_FRIEND } from "../../apollo/user/user.types";
+import { FETCH_SENT_REQUEST_TO_ADD_FRIEND } from "../../apollo/contact/contact.types";
 import { useQuery} from "@apollo/client";
 import { useThemeUI } from "theme-ui";
 import { fetchMoreSentRequestsToAddFriend } from "../../apollo/contact/contact.caches";

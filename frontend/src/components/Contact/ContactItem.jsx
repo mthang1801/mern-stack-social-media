@@ -13,24 +13,26 @@ import useLanguage from "../Global/useLanguage";
 import { BsChatDots, BsCameraVideo } from "react-icons/bs";
 import { MdStarBorder } from "react-icons/md";
 import { IoMdCall } from "react-icons/io";
+import { setCurrentUser } from "../../apollo/user/user.caches";
 import {
-  setCurrentUser,
-  setReceivedRequestsToAddFriend,
-  setSentRequestsToAddFriend,
-  setFriends,
-} from "../../apollo/user/user.caches";
-import {moveReceivedRequestToFriend, removeSentRequestToAddFriend} from "../../apollo/contact/contact.caches"
+  moveReceivedRequestToFriend,
+  removeSentRequestToAddFriend,
+  removeReceivedRequestToAddFriend,
+} from "../../apollo/contact/contact.caches";
 import { setCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
 import {
+  removeNotificationWhenUserRejectToAddFriend,
+  removeNotificationItemFromNotificationsList,
+} from "../../apollo/notification/notification.caches";
+import {
   currentPersonalUserVar,
-  sentRequestsToAddFriendVar,
-  receivedRequestsToAddFriendVar
+  receivedRequestsToAddFriendVar,
 } from "../../apollo/cache";
 import {
   REJECT_REQUEST_TO_ADD_FRIEND,
   ACCEPT_REQUEST_TO_ADD_FRIEND,
   CANCEL_REQUEST_TO_ADD_FRIEND,
-} from "../../apollo/user/user.types";
+} from "../../apollo/contact/contact.types";
 import { useMutation, useReactiveVar } from "@apollo/client";
 import { userVar } from "../../apollo/cache";
 
@@ -38,46 +40,35 @@ const ContactItem = ({ userContact, type }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const user = useReactiveVar(userVar);
-  
+
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
-  const sentRequestsToAddFriend = useReactiveVar(sentRequestsToAddFriendVar);
-  const receivedRequestsToAddFriend = useReactiveVar(
-    receivedRequestsToAddFriendVar
-  );
+
   const [cancelRequestToAddFriend] = useMutation(CANCEL_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
 
   //function to handle when user click button request
-  const updateMutationOnChange = (sender, receiver) => {
+  const updateMutationOnChange = (sender, receiver) => {    
     setCurrentUser({
       ...user,
-      friends: [...sender.friends],
-      following: [...sender.following],
-      followed: [...sender.followed],
-      sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-      receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
+      ...sender
     });
-    if (currentPersonalUser && currentPersonalUser._id === userContact._id) {
+    if (currentPersonalUser && currentPersonalUser._id === receiver._id) {
       setCurrentPersonalUser({
         ...currentPersonalUser,
-        friends: [...receiver.friends],
-        following: [...receiver.following],
-        followed: [...receiver.followed],
-        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
+        ...receiver
       });
     }
   };
 
   //Handle cancel request to add friend
-  const onCancelRequestToAddFriend = () => {       
+  const onCancelRequestToAddFriend = () => {
     cancelRequestToAddFriend({
       variables: { receiverId: userContact._id },
     }).then(({ data }) => {
       const { sender, receiver } = data.cancelRequestToAddFriend;
       removeSentRequestToAddFriend(receiver);
-      updateMutationOnChange(sender, receiver);      
+      updateMutationOnChange(sender, receiver);
     });
   };
   //Handle accept request to add friend
@@ -85,10 +76,9 @@ const ContactItem = ({ userContact, type }) => {
     acceptRequestToAddFriend({
       variables: { senderId: userContact._id },
     }).then(({ data }) => {
-      console.log(data)
-      const { sender, receiver } = data.acceptRequestToAddFriend;      
+      const { sender, receiver, notification } = data.acceptRequestToAddFriend;      
       //remove user at recived requests to head of friends list
-      
+      removeNotificationItemFromNotificationsList(notification);
       moveReceivedRequestToFriend(sender);
       updateMutationOnChange(receiver, sender);
     });
@@ -96,17 +86,19 @@ const ContactItem = ({ userContact, type }) => {
 
   //Handle reject to add friend
   const onRejectRequestToAddFriend = () => {
-    const filterUsersSentRequest = receivedRequestsToAddFriend.filter(
-      (userSentRequest) => userSentRequest._id !== userContact._id
-    );
-
     rejectRequestToAddFriend({
       variables: { senderId: userContact._id },
     })
       .then(({ data }) => {
-        const { sender, receiver } = data.rejectRequestToAddFriend;
-        setReceivedRequestsToAddFriend(filterUsersSentRequest);
-        updateMutationOnChange(sender, receiver);
+        const {
+          sender,
+          receiver,
+          notification,
+        } = data.rejectRequestToAddFriend;       
+        
+        removeReceivedRequestToAddFriend(sender);
+        removeNotificationWhenUserRejectToAddFriend(notification);
+        updateMutationOnChange(receiver, sender);
       })
       .catch((err) => console.log(err));
   };

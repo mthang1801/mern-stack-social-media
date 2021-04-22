@@ -14,6 +14,11 @@ import {
 } from "../apollo/notification/notification.types";
 import { setCurrentPersonalUser } from "../apollo/user/currentPersonalUser.caches";
 import {
+  addUserToReceivedRequestToAddFriend,
+  removeUserFromReceivedRequestToAddFriend,
+  moveSentRequestToFriend
+} from "../apollo/contact/contact.caches";
+import {
   addLikeResponse,
   removeLikeResponse,
   updateCommentLikes,
@@ -64,12 +69,16 @@ const useNotificationsPostSubscription = () => {
       fetchPolicy: "cache-and-network",
     }
   );
-  const  countNumberNotificationsUnseen = useReactiveVar(countNumberOfNotificationUnseenVar)
-  const user = useReactiveVar(userVar)
-  const notifications = useReactiveVar(notificationsVar)
-  const currentPersonalUser = useReactiveVar(currentPersonalUserVar)
-  const receivedRequestsToAddFriend = useReactiveVar(receivedRequestsToAddFriendVar)
-  const latestNotification = useReactiveVar(latestNotificationVar)
+  const countNumberNotificationsUnseen = useReactiveVar(
+    countNumberOfNotificationUnseenVar
+  );
+  const user = useReactiveVar(userVar);
+  const notifications = useReactiveVar(notificationsVar);
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
+  const receivedRequestsToAddFriend = useReactiveVar(
+    receivedRequestsToAddFriendVar
+  );
+  const latestNotification = useReactiveVar(latestNotificationVar);
   useEffect(() => {
     let _isMounted = true;
     if (countNumberNotificationsUnseen === null) {
@@ -95,11 +104,11 @@ const useNotificationsPostSubscription = () => {
     receiver = null
   ) => {
     setLatestNotification(newNotification);
-    setNewNotifications(newNotification._id);
+    setNewNotifications(newNotification._id)
     if (sender && receiver) {
       setCurrentUser({
         ...user,
-        ...receiver,
+        ...receiver,        
       });
 
       if (currentPersonalUser && currentPersonalUser._id === sender._id) {
@@ -115,8 +124,7 @@ const useNotificationsPostSubscription = () => {
       )
     ) {
       updateNotificationItemInNotificationsList(newNotification);
-    } else {
-      increaseCountNumberNotificationsUnseen();
+    } else {     
       addNotificationItemToNotificationsList(newNotification);
     }
   };
@@ -124,9 +132,7 @@ const useNotificationsPostSubscription = () => {
   const updatedRemoveNotification = (removedNotification, sender, receiver) => {
     if (latestNotification?._id === removedNotification._id) {
       setLatestNotification(null);
-    }
-    removeNewNotification(removedNotification._id);
-    decreaseCountNumberNotificationsUnseen();
+    }       
     removeNotificationItemFromNotificationsList(removedNotification);
     if (sender && receiver) {
       setCurrentUser({
@@ -140,7 +146,7 @@ const useNotificationsPostSubscription = () => {
         });
       }
       return;
-    }
+    }    
     setCurrentUser({
       ...user,
       notifications: [
@@ -178,6 +184,8 @@ const useNotificationsPostSubscription = () => {
             } = subscriptionData.data;
             const { receiver, sender } = notification?.fieldIdentity;
             if (sender && receiver) {
+              console.log(sender, receiver, notification)
+              addUserToReceivedRequestToAddFriend(sender);              
               updatedAddNotification(notification, sender, receiver);
             }
           }
@@ -191,11 +199,10 @@ const useNotificationsPostSubscription = () => {
           if (subscriptionData) {
             const {
               cancelRequestToAddFriendSubscription: notification,
-            } = subscriptionData.data;
-
-            console.log(subscriptionData);
+            } = subscriptionData.data;            
             const { sender, receiver } = notification.fieldIdentity;
             if (sender && receiver) {
+              removeUserFromReceivedRequestToAddFriend(sender);
               updatedRemoveNotification(notification, sender, receiver);
             }
           }
@@ -210,7 +217,8 @@ const useNotificationsPostSubscription = () => {
             const {
               acceptRequestToAddFriendSubscription: notification,
             } = subscriptionData.data;
-            const { sender, receiver } = notification.fieldIdentity;
+            const { sender, receiver } = notification.fieldIdentity;            
+            moveSentRequestToFriend(sender)
             updatedAddNotification(notification, sender, receiver);
           }
         },

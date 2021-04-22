@@ -20,7 +20,8 @@ export const userResolvers = {
       return userController.fetchFriends(
         req,
         args.skip,
-        args.limit,        
+        args.limit,
+        (args.except = []),
         (args.userId = null)
       );
     },

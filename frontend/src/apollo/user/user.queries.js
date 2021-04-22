@@ -40,30 +40,6 @@ export const FETCH_PERSONAL_USER = gql`
   }
 `;
 
-export const FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND = gql`
-  query ($skip : Int, $limit : Int){
-    fetchReceivedRequestToAddFriend(skip : $skip, limit: $limit){
-      _id
-      name
-      slug
-      avatar
-    }
-  }
-`
-
-
-export const FETCH_SENT_REQUEST_TO_ADD_FRIEND = gql`
-  query($skip: Int, $limit: Int) {
-    fetchSentRequestToAddFriend(skip: $skip, limit: $limit) {
-      _id
-      name
-      slug
-      avatar
-    }
-  }
-`;
-
-
 export const LOGIN = gql`
   query LoginUser($email: String!, $password: String!) {
     loginUser(data: { email: $email, password: $password }) {

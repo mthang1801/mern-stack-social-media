@@ -94,18 +94,24 @@ export const userController = {
         path: "friends",
         options: {
           collation: { locale: "en" },
-          sort: { isOnline: -1, slug: 1 },
+          sort: { isOnline: -1, slug : 1 },
           skip: 0,
           limit: +process.env.CONTACT_USERS_PER_PAGE,
         },
       })
       .populate({
         path: "sentRequestToAddFriend",
-        options: { limit: +process.env.CONTACT_USERS_PER_PAGE },
+        options: {
+          sort: { createdAt: -1 },
+          limit: +process.env.CONTACT_USERS_PER_PAGE,
+        },
       })
       .populate({
         path: "receivedRequestToAddFriend",
-        options: { limit: +process.env.CONTACT_USERS_PER_PAGE },
+        options: {
+          sort: { createdAt: -1 },
+          limit: +process.env.CONTACT_USERS_PER_PAGE,
+        },
       });
     if (!currentUser) {
       throw new AuthenticationError("User not found");
@@ -117,8 +123,7 @@ export const userController = {
       friends: currentUser.friends,
     };
   },
-  fetchFriends: async (req, skip, limit, userId) => {
-    console.log(skip, limit);
+  fetchFriends: async (req, skip, limit,except, userId) => {    
     console.time("fetchFriend");
     const currentUserId = getAuthUser(req, false);
     if (userId) {
@@ -126,11 +131,11 @@ export const userController = {
       return [];
     }
     const friendsList = await User.find(
-      { friends: currentUserId },
+      { _id : {$nin : except}, friends: currentUserId },
       { name: 1, slug: 1, avatar: 1, isOnline: 1, offlinedAt: 1, email: 1 }
     )
       .collation({ locale: "en" })
-      .sort({ isOnline: -1, slug: 1 })
+      .sort({ isOnline: -1, slug : 1 })
       .skip(skip)
       .limit(limit);
     console.timeEnd("fetchFriend");
@@ -152,6 +157,13 @@ export const userController = {
       });
 
       if (!currentUser) {
+        await User.findByIdAndUpdate(receiverId, {
+          $pull: {
+            friends: currentUserId,
+            sentRequestToAddFriend: currentUserId,
+            receivedRequestToAddFriend: currentUserId,
+          },
+        });
         await User.findByIdAndUpdate(currentUserId, {
           $pull: {
             friends: receiverId,
@@ -174,6 +186,13 @@ export const userController = {
             friends: currentUserId,
             sentRequestToAddFriend: currentUserId,
             receivedRequestToAddFriend: currentUserId,
+          },
+        });
+        await User.findByIdAndUpdate(currentUserId, {
+          $pull: {
+            friends: receiverId,
+            sentRequestToAddFriend: receiverId,
+            receivedRequestToAddFriend: receiverId,
           },
         });
         raiseError("Add Friend failed", 400);
@@ -303,18 +322,6 @@ export const userController = {
         { new: true }
       );
 
-      const updatedReceiver = await User.findByIdAndUpdate(
-        receiverId,
-        {
-          $pull: {
-            receivedRequestToAddFriend: currentUserId,
-            followed: currentUserId,
-            notifications: notification?._id,
-          },
-        },
-        { new: true }
-      );
-
       const removedNotification = await Notification.findOneAndDelete({
         field: fields.CONTACT,
         content: contents.SENT_REQUEST_TO_ADD_FRIEND,
@@ -324,6 +331,20 @@ export const userController = {
         .populate({ path: "creator", select: "slug name avatar" })
         .populate({ path: "fieldIdentity.sender" })
         .populate({ path: "fieldIdentity.receiver" });
+
+      const updatedReceiver = await User.findByIdAndUpdate(
+        receiverId,
+        {
+          $pull: {
+            receivedRequestToAddFriend: currentUserId,
+            followed: currentUserId,
+            notifications: removedNotification?._id,
+          },
+        },
+        { new: true }
+      );
+
+
       if (removedNotification) {
         await pubsub.publish(cancelRequestToAddFriendSubscription, {
           cancelRequestToAddFriendSubscription: removedNotification._doc,
@@ -345,15 +366,16 @@ export const userController = {
     const currentUserId = await getAuthUser(req);
     const currentUser = await User.findById(currentUserId).populate({
       path: "sentRequestToAddFriend",
-      options: { skip: +skip, limit: +limit },
+      options: { sort: {createdAt : -1}, skip: +skip, limit: +limit },
     });
     return currentUser.sentRequestToAddFriend;
   },
   fetchReceivedRequestToAddFriend: async (req, skip, limit) => {
     const currentUserId = await getAuthUser(req);
+    
     const currentUser = await User.findById(currentUserId).populate({
       path: "receivedRequestToAddFriend",
-      options: { skip: +skip, limit: +limit },
+      options: { sort: {createdAt : -1}, skip: +skip, limit: +limit },
     });
     return currentUser.receivedRequestToAddFriend;
   },
@@ -364,8 +386,7 @@ export const userController = {
     acceptRequestToAddFriendSubscription
   ) => {
     try {
-      const currentUserId = getAuthUser(req);
-      console.log(senderId, currentUserId);
+      const currentUserId = getAuthUser(req);      
       const currentUser = await User.findOne({
         _id: currentUserId,
         receivedRequestToAddFriend: senderId,
@@ -398,7 +419,10 @@ export const userController = {
           "fieldIdentity.sender": senderId,
           "fieldIdentity.receiver": currentUserId,
         }
-      );
+      )
+        .populate({ path: "creator", select: "slug name avatar" })
+        .populate({ path: "fieldIdentity.sender" })
+        .populate({ path: "fieldIdentity.receiver" });
 
       const updatedCurrentUser = await User.findByIdAndUpdate(
         currentUserId,
@@ -484,48 +508,97 @@ export const userController = {
     rejectRequestToAddFriendSubscription
   ) => {
     try {
+      console.log(senderId)
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
         receivedRequestToAddFriend: senderId,
       });
       if (!currentUser) {
+        await User.findByIdAndUpdate(
+          { _id: senderId, sentRequestToAddFriend: currentUserId },
+          {
+            $pull: {
+              receivedRequestToAddFriend: currentUserId,
+              friends: currentUserId,
+              sentRequestToAddFriend: currentUserId,
+            },
+          }
+        );
+        await User.findByIdAndUpdate(
+          { _id: currentUserId, sentRequestToAddFriend: senderId },
+          {
+            $pull: {
+              receivedRequestToAddFriend: senderId,
+              friends: senderId,
+              sentRequestToAddFriend: senderId,
+            },
+          }
+        );
         raiseError("Reject failed");
       }
       const sender = await User.findOne({
         _id: senderId,
         sentRequestToAddFriend: currentUserId,
-      });
+      });      
       if (!sender) {
+        await User.findByIdAndUpdate(
+          { _id: senderId, sentRequestToAddFriend: currentUserId },
+          {
+            $pull: {
+              receivedRequestToAddFriend: currentUserId,
+              friends: currentUserId,
+              sentRequestToAddFriend: currentUserId,
+            },
+          }
+        );
+        await User.findByIdAndUpdate(
+          { _id: currentUserId, sentRequestToAddFriend: senderId },
+          {
+            $pull: {
+              receivedRequestToAddFriend: senderId,
+              friends: senderId,
+              sentRequestToAddFriend: senderId,
+            },
+          }
+        );
         raiseError("Reject request failed");
       }
       const session = await mongoose.startSession();
       session.startTransaction();
       currentUser.receivedRequestToAddFriend.pull(senderId);
-      await currentUser.save();
+      
       sender.sentRequestToAddFriend.pull(currentUserId);
       await sender.save();
       //update notification
-      const notification = await Notification.findOneAndDelete({
+      const removedNotification = await Notification.findOneAndDelete({
         field: fields.CONTACT,
         content: contents.SENT_REQUEST_TO_ADD_FRIEND,
         "fieldIdentity.sender": senderId,
         "fieldIdentity.receiver": currentUserId,
-      });
+      })
+        .populate({ path: "creator", select: "name slug avatar" })
+        .populate({ path: "fieldIdentity.sender" })
+        .populate({ path: "fieldIdentity.receiver" });
+      if(removedNotification){
+        currentUser.notifications.pull(removedNotification._id)
+      }
+      
+      await currentUser.save();
       await session.commitTransaction();
       session.endSession();
 
       await pubsub.publish(rejectRequestToAddFriendSubscription, {
         rejectRequestToAddFriendSubscription: {
           sender: sender,
-          receiver: currentUser,
+          receiver: currentUser,          
         },
       });
 
       return {
         sender: sender,
         receiver: currentUser,
-        notification,
+        notification : removedNotification,
       };
     } catch (error) {
       console.log(error);
@@ -582,13 +655,13 @@ export const userController = {
   },
   removeFriend: async (req, friendId, pubsub, removeFriendSubscription) => {
     try {
-      console.log(friendId)
+      console.log(friendId);
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
         friends: friendId,
       });
-      
+
       if (!currentUser) {
         throw new AuthenticationError("User not found");
       }

@@ -25,9 +25,12 @@ import {
   SEND_REQUEST_TO_ADD_FRIEND,
   REJECT_REQUEST_TO_ADD_FRIEND,
   CANCEL_REQUEST_TO_ADD_FRIEND,
+ 
+  REMOVE_FRIEND,
+} from "../../apollo/contact/contact.types";
+import {
   FOLLOW_USER,
   UNFOLLOW_USER,
-  REMOVE_FRIEND,
 } from "../../apollo/user/user.types";
 import Button from "@material-ui/core/Button";
 import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
@@ -59,14 +62,14 @@ import {
   removeNotificationItemFromNotificationsList,
   setLatestNotification,
 } from "../../apollo/notification/notification.caches";
-const PersonalContact = ({user}) => {
+const PersonalContact = ({ user }) => {
   const [relationship, setRelationship] = useState("stranger");
   const [openResponse, setOpenResponse] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openUserInteraction, setOpenUserInteraction] = useState(false);
   const dialog = useReactiveVar(dialogVar);
   const notifications = useReactiveVar(notificationsVar);
-  const latestNotification = useReactiveVar(latestNotificationVar);  
+  const latestNotification = useReactiveVar(latestNotificationVar);
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
   //Mutations
   const [sendRequestToAddFriend] = useMutation(SEND_REQUEST_TO_ADD_FRIEND);
@@ -84,22 +87,21 @@ const PersonalContact = ({user}) => {
   const settingRef = useRef(false);
   const interactionRef = useRef(false);
   //track dialog
-  console.log(dialog)
+  console.log(dialog);
   useEffect(() => {
     if (
       dialog &&
       dialog?.data?.type === "remove contact" &&
       dialog?.data?.userId === currentPersonalUser._id &&
       dialog?.agree
-    ) {      
+    ) {
       removeFriend({ variables: { friendId: currentPersonalUser._id } })
         .then(({ data }) => {
           clearAlertDialog();
           const { sender, receiver, notification } = data.removeFriend;
           updateMutationOnChange(sender, receiver, notification);
-          
-        }).catch(err => clearAlertDialog());
-        
+        })
+        .catch((err) => clearAlertDialog());
     }
   }, [dialog, currentPersonalUser]);
   //function to handle when user click button request
@@ -110,9 +112,7 @@ const PersonalContact = ({user}) => {
     ) {
       if (latestNotification?._id === removedNotification._id) {
         setLatestNotification(null);
-      }
-      removeNewNotification(removedNotification._id);
-      decreaseCountNumberNotificationsUnseen();
+      }     
       removeNotificationItemFromNotificationsList(removedNotification);
       setCurrentUser({
         ...user,
@@ -147,7 +147,7 @@ const PersonalContact = ({user}) => {
       });
     }
   };
-  console.log(user)
+  console.log(user);
   //track user click event
   useEffect(() => {
     function trackUserClickEvent(e) {

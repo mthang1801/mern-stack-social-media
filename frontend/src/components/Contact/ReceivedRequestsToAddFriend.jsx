@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import { FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND } from "../../apollo/user/user.types";
-import { userVar, receivedRequestsToAddFriendVar } from "../../apollo/cache";
-import { useQuery, useReactiveVar } from "@apollo/client";
+import { FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND } from "../../apollo/contact/contact.types";
+import { useQuery } from "@apollo/client";
 import { useThemeUI } from "theme-ui";
 import { ContactWrapper, Title, LinkReadMore } from "./Contact.styles";
 import { fetchMoreReceivedRequestsToAddFriend } from "../../apollo/contact/contact.caches";

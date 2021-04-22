@@ -489,6 +489,8 @@ export const SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
         sender {
           _id
           name
+          avatar
+          email
           slug
           following
           followed
@@ -499,13 +501,14 @@ export const SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
         receiver {
           _id
           name
+          avatar
+          email
           slug
           following
           followed
           friends
           receivedRequestToAddFriend
-          sentRequestToAddFriend
-          notifications
+          sentRequestToAddFriend          
         }
       }
       creator {

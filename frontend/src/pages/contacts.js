@@ -9,11 +9,10 @@ import {
 import {
   FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND, 
   FETCH_SENT_REQUEST_TO_ADD_FRIEND
-} from "../apollo/user/user.types";
+} from "../apollo/contact/contact.types";
 
 import {
   setContactList,
-  fetchMoreFriendsToContact,
   fetchMoreSentRequestsToAddFriend,
   fetchMoreReceivedRequestsToAddFriend
 } from "../apollo/contact/contact.caches";
@@ -33,6 +32,7 @@ const FriendsPage = () => {
   const [fetched, setFetched] = useState(false);
   const { i18n, lang } = useLanguage();
   const user = useReactiveVar(userVar);
+  console.log(user)
   // const friends = useReactiveVar(friendsVar);
   const contact = useReactiveVar(contactVar);
 

@@ -18,7 +18,7 @@ const SentRequestsToAddFriend = ({user, friends}) => {
  
     let existedFriendsId = [];
     friends.forEach(friend => existedFriendsId.push(friend._id));  
-    fetchUserFriends({skip, limit}).then(({data}) => {
+    fetchUserFriends({skip, limit, except : existedFriendsId}).then(({data}) => {
       if(data){
         fetchMoreFriendsToContact(data.fetchFriends);
       }

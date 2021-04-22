@@ -3,26 +3,34 @@ import {
   countNumberOfNotificationUnseenVar,
   newNotificationsVar,
   latestNotificationVar,
+  userVar,
 } from "../cache";
 import _ from "lodash";
+
 import { initialState } from "../initialState";
-export const addNotificationItemToNotificationsList = (newNotification) => {
-  let notifications = [...notificationsVar()];
-  return notificationsVar([
-    { ...newNotification, new: true },
-    ...notifications,
-  ]);
-};
 
 export const decreaseCountNumberNotificationsUnseen = () => {
   const currentNumber = countNumberOfNotificationUnseenVar();
-  return countNumberOfNotificationUnseenVar(Math.min(initialState.countNumberOfNotificationUnseen,currentNumber - 1));
+  return countNumberOfNotificationUnseenVar(
+    Math.min(initialState.countNumberOfNotificationUnseen, currentNumber - 1)
+  );
 };
 
 export const increaseCountNumberNotificationsUnseen = () => {
   const currentNumber = countNumberOfNotificationUnseenVar();
   return countNumberOfNotificationUnseenVar(currentNumber + 1);
 };
+
+export const addNotificationItemToNotificationsList = (newNotification) => {
+  let notifications = [...notificationsVar()];
+  increaseCountNumberNotificationsUnseen()
+  return notificationsVar([
+    { ...newNotification, new: true },
+    ...notifications,
+  ]);
+};
+
+
 
 export const removeNewNotification = (notificationId) => {
   const newNotifications = newNotificationsVar();
@@ -40,24 +48,33 @@ export const removeNewNotification = (notificationId) => {
 export const removeNotificationItemFromNotificationsList = (
   removedNotification
 ) => {
-  let notifications = [...notificationsVar()];
-  const updatedNotifications = notifications.filter(
-    (notification) => notification._id !== removedNotification._id
-  );
+  let notifications = [...notificationsVar()];  
+  removeNewNotification(removedNotification._id);
+  const user = {...userVar()};
+  user.notifications = user.notifications.filter(notification => notification._id !== removedNotification._id);
+  userVar(user);
+  const updatedNotifications = notifications.filter((notification) => {
+    if (notification._id === removedNotification._id) {
+      if (!removedNotification.hasSeen) {
+        decreaseCountNumberNotificationsUnseen()
+      }
+      return false;
+    }
+    return true;
+  });
+  
   return notificationsVar(updatedNotifications);
 };
-
 
 export const setCountNumberNotificationsUnseen = (num) =>
   countNumberOfNotificationUnseenVar(num);
 
 export const setLatestNotification = (notification) => {
-  if(notification){
+  if (notification) {
     return latestNotificationVar({ ...notification });
-  }else{
+  } else {
     return latestNotificationVar(null);
   }
-  
 };
 
 export const setNewNotifications = (notificationId) =>
@@ -88,11 +105,40 @@ export const updateNotificationItemInNotificationsList = (notification) => {
   });
   const sortNotificationByUpdatedAt = _.sortBy(updatedNotification, [
     (o) => -o.updatedAt,
-  ]);
+  ]);  
   return notificationsVar(sortNotificationByUpdatedAt);
 };
 
-export const resetCountNumberOfNotificationUnseenVar = () => countNumberOfNotificationUnseenVar(initialState.countNumberOfNotificationUnseen);
-export const clearNewNotificationsVar = () => newNotificationsVar(initialState.newNotifications)
-export const clearLatestNotification = () => latestNotificationVar(initialState.latestNotification);
-export const clearNotifications = () => notificationsVar(initialState.notifications);
+export const resetCountNumberOfNotificationUnseenVar = () =>
+  countNumberOfNotificationUnseenVar(
+    initialState.countNumberOfNotificationUnseen
+  );
+export const clearNewNotificationsVar = () =>
+  newNotificationsVar(initialState.newNotifications);
+export const clearLatestNotification = () =>
+  latestNotificationVar(initialState.latestNotification);
+export const clearNotifications = () =>
+  notificationsVar(initialState.notifications);
+
+export const removeNotificationWhenUserRejectToAddFriend = (
+  removedNotification
+) => {  
+  const notifications = [...notificationsVar()];  
+  const updatedNotifications = notifications.filter((notification) => {
+    if (
+      notification?.field === removedNotification.field &&
+      notification?.content === removedNotification.content &&
+      notification?.fieldIdentity?.sender?._id ===
+        removedNotification.fieldIdentity.sender._id &&
+      notification?.fieldIdentity?.receiver?._id ===
+        removedNotification.fieldIdentity.receiver._id
+    ) {
+      if(!notification.hasSeen){
+        decreaseCountNumberNotificationsUnseen();
+      }
+      return false;
+    }
+    return true;
+  });
+  return notificationsVar(updatedNotifications);
+};
