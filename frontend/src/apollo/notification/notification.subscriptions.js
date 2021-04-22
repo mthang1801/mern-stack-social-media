@@ -53,16 +53,31 @@ export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
       fieldIdentity {
         sender {
           _id
+          name
+          slug
+          email
+          avatar
+          isOnline
+          offlinedAt
           following
+          followed
           friends
           sentRequestToAddFriend
+          receivedRequestToAddFriend
         }
         receiver {
           _id
+          name
+          slug
+          email
+          avatar
+          isOnline
+          offlinedAt
+          following
           followed
           friends
+          sentRequestToAddFriend
           receivedRequestToAddFriend
-          notifications
         }
       }
       creator {
@@ -508,7 +523,7 @@ export const SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
           followed
           friends
           receivedRequestToAddFriend
-          sentRequestToAddFriend          
+          sentRequestToAddFriend
         }
       }
       creator {

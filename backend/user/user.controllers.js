@@ -322,7 +322,25 @@ export const userController = {
         { new: true }
       );
 
-      const removedNotification = await Notification.findOneAndDelete({
+      const sentRequestNotification = await Notification.findOne({
+        field: fields.CONTACT,
+        content: contents.SENT_REQUEST_TO_ADD_FRIEND,
+        "fieldIdentity.sender": currentUserId,
+        "fieldIdentity.receiver": receiverId,
+      })        
+
+      const updatedReceiver = await User.findByIdAndUpdate(
+        receiverId,
+        {
+          $pull: {
+            receivedRequestToAddFriend: currentUserId,
+            followed: currentUserId,
+            notifications: sentRequestNotification?._id,
+          },
+        },
+        { new: true }
+      );
+      const removedSentRequestNotification = await Notification.findOneAndDelete({
         field: fields.CONTACT,
         content: contents.SENT_REQUEST_TO_ADD_FRIEND,
         "fieldIdentity.sender": currentUserId,
@@ -332,22 +350,11 @@ export const userController = {
         .populate({ path: "fieldIdentity.sender" })
         .populate({ path: "fieldIdentity.receiver" });
 
-      const updatedReceiver = await User.findByIdAndUpdate(
-        receiverId,
-        {
-          $pull: {
-            receivedRequestToAddFriend: currentUserId,
-            followed: currentUserId,
-            notifications: removedNotification?._id,
-          },
-        },
-        { new: true }
-      );
 
 
-      if (removedNotification) {
+      if (removedSentRequestNotification) {
         await pubsub.publish(cancelRequestToAddFriendSubscription, {
-          cancelRequestToAddFriendSubscription: removedNotification._doc,
+          cancelRequestToAddFriendSubscription: removedSentRequestNotification._doc,
         });
       }
 
@@ -507,8 +514,7 @@ export const userController = {
     pubsub,
     rejectRequestToAddFriendSubscription
   ) => {
-    try {
-      console.log(senderId)
+    try {      
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
@@ -654,8 +660,7 @@ export const userController = {
     };
   },
   removeFriend: async (req, friendId, pubsub, removeFriendSubscription) => {
-    try {
-      console.log(friendId);
+    try {      
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findOne({
         _id: currentUserId,
