@@ -17,11 +17,14 @@ import {
   decreaseCountNumberNotificationsUnseen,
   removeNotificationItemFromNotificationsList,
   setLatestNotification,
-  removeNotificationWhenUserRejectToAddFriend
+  removeNotificationWhenUserRejectToAddFriend,
 } from "../apollo/notification/notification.caches";
 import { setCurrentUser } from "../apollo/user/user.caches";
 import { setCurrentPersonalUser } from "../apollo/user/currentPersonalUser.caches";
-import {removeSentRequestToAddFriend, removeFriendsFromContact} from "../apollo/contact/contact.caches"
+import {
+  removeSentRequestToAddFriend,
+  removeFriendsFromContact,
+} from "../apollo/contact/contact.caches";
 
 const useContactSubscription = () => {
   const user = useReactiveVar(userVar);
@@ -37,51 +40,19 @@ const useContactSubscription = () => {
   });
 
   //function to handle when subscription called
-  const updateSubscriptionOnChange = (
-    sender,
-    receiver,
-    removedNotification
-  ) => {
-    if (
-      removedNotification &&
-      user.notifications.includes(removedNotification._id)
-    ) {
-      if (latestNotification?._id === removedNotification._id) {
-        setLatestNotification(null);
-      }      
-      removeNotificationItemFromNotificationsList(removedNotification);
-      setCurrentUser({
-        ...user,
-        ...receiver,
-        notifications: [
-          ...user.notifications.filter(
-            (_id) => _id !== removedNotification._id
-          ),
-        ],
-
-      });
-    } else {
-      setCurrentUser({
-        ...user,
-        friends: [...receiver.friends],
-        following: [...receiver.following],
-        followed: [...receiver.followed],
-        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-        receivedRequestsToAddFriend: [...receiver.receivedRequestToAddFriend],
-      });
-    }
+  const updateSubscriptionOnChange = (sender, receiver) => {
+    setCurrentUser({
+      ...user,
+      ...sender,
+    });
 
     if (
       currentPersonalUser &&
-      currentPersonalUser._id.toString() === sender._id.toString()
+      currentPersonalUser._id.toString() === receiver._id.toString()
     ) {
       setCurrentPersonalUser({
         ...currentPersonalUser,
-        friends: [...sender.friends],
-        following: [...sender.following],
-        followed: [...sender.followed],
-        receivedRequestsToAddFriend: [...sender.receivedRequestToAddFriend],
-        sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
+        ...receiver,
       });
     }
   };
@@ -96,10 +67,9 @@ const useContactSubscription = () => {
         updateQuery: (_, { subscriptionData }) => {
           const {
             sender,
-            receiver,
-            notification
-          } = subscriptionData.data.rejectRequestToAddFriendSubscription;          
-          removeSentRequestToAddFriend(receiver);          
+            receiver,            
+          } = subscriptionData.data.rejectRequestToAddFriendSubscription;
+          removeSentRequestToAddFriend(receiver);        
           updateSubscriptionOnChange(sender, receiver);
         },
       });
@@ -113,10 +83,10 @@ const useContactSubscription = () => {
             receiver,
             notification,
           } = subscriptionData.data.removeFriendSubscription;
-          console.log(subscriptionData)
-          // removeFriendsFromContact(sender);
-          // removeNotificationItemFromNotificationsList(notification)
-          updateSubscriptionOnChange(sender, receiver, notification);
+          console.log(subscriptionData);
+          removeFriendsFromContact(sender);
+          removeNotificationItemFromNotificationsList(notification)
+          updateSubscriptionOnChange(receiver, sender);
         },
       });
     }

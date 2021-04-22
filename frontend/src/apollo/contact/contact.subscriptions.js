@@ -11,6 +11,7 @@ subscription($userId: ID!) {
       sentRequestToAddFriend      
       followed        
       receivedRequestToAddFriend   
+      notifications
     }
     receiver {
       _id
@@ -19,11 +20,9 @@ subscription($userId: ID!) {
       following        
       sentRequestToAddFriend   
       followed        
-      receivedRequestToAddFriend        
-    }
-    notification{
-      _id
-    }
+      receivedRequestToAddFriend       
+      notifications 
+    }  
   }
 }
 `;
@@ -41,6 +40,7 @@ export const REMOVE_FRIEND_SUBSCRIPTION = gql`
         sentRequestToAddFriend
         receivedRequestToAddFriend
         friends
+        notifications
       }
       receiver {
         _id
@@ -51,49 +51,10 @@ export const REMOVE_FRIEND_SUBSCRIPTION = gql`
         sentRequestToAddFriend
         receivedRequestToAddFriend
         friends
+        notifications
       }
       notification{
-        _id
-        field
-        content
-        hasSeen
-        isQuestion
-        url
-        questionType{
-          yesNoQuestion
-        }
-        fieldIdentity {
-          sender {
-            _id
-            name
-            slug
-            following
-            followed
-            friends
-            sentRequestToAddFriend
-            receivedRequestToAddFriend
-          }
-          receiver {
-            _id
-            name
-            slug
-            following
-            followed
-            friends
-            receivedRequestToAddFriend
-            sentRequestToAddFriend
-            notifications
-          }
-        }
-        creator {
-          _id
-          name
-          slug
-          avatar
-        }
-        receiver
-        updatedAt
-        createdAt     
+        _id             
       }
     }
   }

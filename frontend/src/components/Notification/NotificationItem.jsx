@@ -16,21 +16,20 @@ import {
 } from "./styles/NotificationItem.styles";
 import { notificationContent } from "../../utils/notificationContent";
 import {
-  notificationsVar,
   userVar,
   currentPersonalUserVar,
-  latestNotificationVar,
   newNotificationsVar,
 } from "../../apollo/cache";
 import { useThemeUI } from "theme-ui";
-import { ACCEPT_REQUEST_TO_ADD_FRIEND,REJECT_REQUEST_TO_ADD_FRIEND } from "../../apollo/contact/contact.types";
+import {
+  ACCEPT_REQUEST_TO_ADD_FRIEND,
+  REJECT_REQUEST_TO_ADD_FRIEND,
+} from "../../apollo/contact/contact.types";
 import { setCurrentUser } from "../../apollo/user/user.caches";
 import { setCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
 import {
-  removeNewNotification,
   decreaseCountNumberNotificationsUnseen,
-  removeNotificationItemFromNotificationsList,
-  setLatestNotification,
+  removeNotificationItemFromNotificationsList,  
   updateNotificationHasSeen,
   removeNotificationWhenUserRejectToAddFriend,
 } from "../../apollo/notification/notification.caches";
@@ -41,8 +40,6 @@ const NotificationItem = ({ notification }) => {
   const user = useReactiveVar(userVar);
   const newNotifications = useReactiveVar(newNotificationsVar);
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
-  const latestNotification = useReactiveVar(latestNotificationVar);
-  const notifications = useReactiveVar(notificationsVar);
   //Mutations
 
   const [updateToHasSeen] = useMutation(UPDATE_USER_HAS_SEEN_NOTIFICATION);
@@ -64,20 +61,12 @@ const NotificationItem = ({ notification }) => {
   const updateMutationOnChange = (sender, receiver) => {
     setCurrentUser({
       ...user,
-      friends: [...sender.friends],
-      following: [...sender.following],
-      followed: [...sender.followed],
-      sentRequestToAddFriend: [...sender.sentRequestToAddFriend],
-      receivedRequestToAddFriend: [...sender.receivedRequestToAddFriend],
+      ...sender,
     });
     if (currentPersonalUser && currentPersonalUser._id === receiver._id) {
       setCurrentPersonalUser({
         ...currentPersonalUser,
-        friends: [...receiver.friends],
-        following: [...receiver.following],
-        followed: [...receiver.followed],
-        sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
-        receivedRequestToAddFriend: [...receiver.receivedRequestToAddFriend],
+        ...receiver,
       });
     }
   };
@@ -95,13 +84,12 @@ const NotificationItem = ({ notification }) => {
           receiver,
           notification,
         } = data.acceptRequestToAddFriend;
+        //remove user at recived requests to head of friends list
         removeNotificationItemFromNotificationsList(notification);
         moveReceivedRequestToFriend(sender);
         updateMutationOnChange(receiver, sender);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
   };
 
   const onRejectRequestToAddFriend = (e) => {
@@ -109,13 +97,19 @@ const NotificationItem = ({ notification }) => {
     e.stopPropagation();
     rejectRequestToAddFriend({
       variables: { senderId: notification.creator._id },
-    }).then(({ data }) => {
-      const { sender, receiver, notification } = data.rejectRequestToAddFriend;
-      // when reject, receiver is current User, sender is creator
-      removeReceivedRequestToAddFriend(sender);
-      removeNotificationWhenUserRejectToAddFriend(notification);
-      updateMutationOnChange(sender, receiver);
-    }).catch(err => console.log(err));
+    })
+      .then(({ data }) => {
+        const {
+          sender,
+          receiver,
+          notification,
+        } = data.rejectRequestToAddFriend;
+
+        removeReceivedRequestToAddFriend(sender);
+        removeNotificationWhenUserRejectToAddFriend(notification);
+        updateMutationOnChange(receiver, sender);
+      })
+      .catch((err) => console.log(err));
   };
   const { colorMode } = useThemeUI();
   if (!user) return null;

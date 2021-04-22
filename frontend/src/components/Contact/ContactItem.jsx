@@ -81,7 +81,7 @@ const ContactItem = ({ userContact, type }) => {
       removeNotificationItemFromNotificationsList(notification);
       moveReceivedRequestToFriend(sender);
       updateMutationOnChange(receiver, sender);
-    });
+    }).catch(err => console.log(err));
   };
 
   //Handle reject to add friend

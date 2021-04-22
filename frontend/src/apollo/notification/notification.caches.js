@@ -50,6 +50,10 @@ export const removeNotificationItemFromNotificationsList = (
 ) => {
   let notifications = [...notificationsVar()];  
   removeNewNotification(removedNotification._id);
+  const latestNotification = latestNotificationVar();
+  if(latestNotification?._id === removeNewNotification._id){
+    latestNotificationVar(initialState.latestNotification);
+  }
   const user = {...userVar()};
   user.notifications = user.notifications.filter(notification => notification._id !== removedNotification._id);
   userVar(user);
@@ -123,7 +127,11 @@ export const clearNotifications = () =>
 export const removeNotificationWhenUserRejectToAddFriend = (
   removedNotification
 ) => {  
-  const notifications = [...notificationsVar()];  
+  const notifications = [...notificationsVar()];
+  const latestNotification = latestNotificationVar();
+  if(latestNotification?._id === removedNotification._id){
+    latestNotificationVar(initialState.latestNotification);
+  }
   const updatedNotifications = notifications.filter((notification) => {
     if (
       notification?.field === removedNotification.field &&
