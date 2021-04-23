@@ -16,7 +16,7 @@ import {
   fetchMoreSentRequestsToAddFriend,
   fetchMoreReceivedRequestsToAddFriend
 } from "../apollo/contact/contact.caches";
-import MainBody from "../components/Body/MainBody";
+import MainBody from "../containers/MainBody";
 import {
   MainContent,
   MainContentFullSize,

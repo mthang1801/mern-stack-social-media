@@ -18,14 +18,18 @@ import FlashPopUpNotification from "../Notification/FlashPopUpNotification";
 import {
   setLatestNotification,
   setNotifications,
+  addNotificationsToNotifcationsList
 } from "../../apollo/notification/notification.caches";
+import {useThemeUI} from "theme-ui"
 const Control = () => {
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
+  const [fetchedNotifications, setFetchedNotifications] = useState(false);
+  const [loadingFetchNotifications, setLoadingFetchNotifications] = useState(false);
   const [loadingNotificationsMore, setLoadingNotificationsMore] = useState(
     false
   );
   const notificationRef = useRef(false);
-
+  const {colorMode} = useThemeUI()
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
     skip: true,
@@ -55,30 +59,52 @@ const Control = () => {
 
   const getMoreNotifications = (e) => {
     const { target } = e;
-    if (target.clientHeight + target.scrollTop > target.scrollHeight * 0.75) {
+    if (target.clientHeight + target.scrollTop > target.scrollHeight * 0.75 && !loadingNotificationsMore) {
       setLoadingNotificationsMore(true);
     }
   };
   useEffect(() => {
     let _isMounted = true;
-    if (loadingNotificationsMore && fetchNotifications) {
+    if (loadingNotificationsMore && fetchNotifications && notifications.length < user.notifications.length) {
       const skip = notifications.length;
       const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
+      console.log(skip, limit)
       fetchNotifications({ skip, limit }).then(
         ({ data: { fetchNotifications } }) => {
-          if (_isMounted) {
-            setNotifications([...notifications, ...fetchNotifications]);
+          if (_isMounted && fetchNotifications) {
+            addNotificationsToNotifcationsList(fetchNotifications);
             setLoadingNotificationsMore(false);
           }
         }
-      );
+      ).catch(err => {
+        setLoadingNotificationsMore(false);
+      });
     }
     return () => (_isMounted = false);
-  }, [loadingNotificationsMore]);
+  }, [loadingNotificationsMore, user, notifications, fetchNotifications]);
 
   const onOpenNotificationBoard = useCallback(() => {
     setOpenNotificationBoard(true);
   }, []);
+
+  useEffect(() => {
+    let _isMounted = true; 
+    if(!fetchedNotifications && openNotificationBoard && !notifications.length){
+      setLoadingFetchNotifications(true);
+      fetchNotifications().then(({data}) => {
+        if(data && _isMounted){
+          setNotifications(data.fetchNotifications);
+        }
+        setLoadingFetchNotifications(false);
+        setFetchedNotifications(true);        
+      }).catch(err => {
+        console.log(err);
+        setLoadingFetchNotifications(false);
+        setFetchedNotifications(true);  
+      })
+    }
+    return () => _isMounted = false ;
+  }, [fetchedNotifications, openNotificationBoard, notifications])
 
   return (
     <Wrapper>
@@ -92,8 +118,8 @@ const Control = () => {
             </UnseenNotification>
           ) : null}
         </Button>
-        {user && (
-          <NotificationBoard open={openNotificationBoard}>
+        
+          <NotificationBoard open={openNotificationBoard} theme={colorMode}>
             <Scrollbars
               autoHide
               autoHideTimeout={1000}
@@ -102,10 +128,10 @@ const Control = () => {
               autoHeightMax={200}
               onScroll={getMoreNotifications}
             >
-              <NotificationsBoard notifications={notifications} />
+              <NotificationsBoard notifications={notifications} loading={loadingFetchNotifications}  />
             </Scrollbars>
           </NotificationBoard>
-        )}
+        
       </Notification>
     </Wrapper>
   );

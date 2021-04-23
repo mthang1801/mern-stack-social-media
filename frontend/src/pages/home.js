@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback} from "react";
 import Layout from "../containers/Layout";
 import PostEditor from "../components/Post/PostEditor/PostEditor";
 import HomeSidebar from "../components/Sidebar/HomeSidebar";
-import MainBody from "../components/Body/MainBody";
+import MainBody from "../containers/MainBody";
 import FriendsBoard from "../components/Sidebar/FriendsBoard";
 import {useReactiveVar, useQuery} from "@apollo/client"
 import ButtonToggleFriendsList from "../components/Controls/ButtonToggleFriendsList";
@@ -23,6 +23,7 @@ const Home = () => {
   const user =  useReactiveVar(userVar);
   const toggleFriendsBoard = useReactiveVar(toggleFriendsBoardVar);
   const posts = useReactiveVar(postsVar);
+  const [fetched, setFetched] = useState(false);
   const [loading, setLoading] = useState();
   const [fetchMore, setFetchMore] = useState(false);
   useHomePostsSubscription();
@@ -33,17 +34,19 @@ const Home = () => {
   });
   useEffect(() => {
     let _isMounted = true;
-    if (!posts.length && user) {
+    if (!posts.length && user && !fetched) {
       setLoading(true);
+      setFetched(true);
       fetchPosts().then(({ data }) => {
         if (data && _isMounted) {
           addFetchedPostToCache(data.fetchPosts);
           setLoading(false);          
         }
       });
+      
     }
     return () => (_isMounted = false);
-  }, [user, posts]);
+  }, [user, posts, fetched]);
 
   
 

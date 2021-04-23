@@ -20,12 +20,7 @@ export const FETCH_NOTIFICATIONS = gql`
         avatar
         slug
       }
-      fieldIdentity{
-        post {
-          _id
-          shortenText
-        }
-      }      
+      
       url
       isQuestion
       questionType{

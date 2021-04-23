@@ -31,12 +31,11 @@ export const NotificationBoard = styled.div`
   right: -100%;
   z-index: ${({open}) => open ? 1 : -1 };
   transition: var(--mainTransition);
-  width: 350px;
-  height: ${({open}) => open ? "600px" : 0} ;
-  max-height : 30rem;
-  overflow: auto;
-  visibility: ${({open}) => open ? "visible" : "hidden"};
-  opacity: ${({open}) => open ? 1 : 0};  
-  border-radius : 1rem;  
- 
+  width : 360px ; 
+  height : ${({open}) => open ? "400px" : "0"};
+  border : 1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};
+  overflow : auto;
+  visibility : ${({open}) => open ? "visible" : "hidden"} ; 
+  opacity : ${({open}) => open ? 1 : 0};   
+  border-radius : 0.5rem;  
 ` 

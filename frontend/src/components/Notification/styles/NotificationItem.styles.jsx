@@ -1,39 +1,48 @@
-
 import styled from "styled-components";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 export const Wrapper = styled.section`
-  background-color : ${({hasSeen, theme}) => theme ==="dark" ? hasSeen ? "var(--color-card-dark)" : "var(--color-card-dark-secondary)" : hasSeen ? "var(--color-card-default)" :"var(--color-card-default-secondary)"};
-  &:hover{
-    background-color : ${({theme}) => theme === "dark" ? "var(--color-hover-dark)" : "var(--color-hover-default)"} ;
+  background-color: ${({ hasSeen, theme }) =>
+    theme === "dark"
+      ? hasSeen
+        ? "var(--color-notification-hasSeen-dark)"
+        : "var( --color-notification-notSeen-dark)"
+      : hasSeen
+      ? "var( --color-notification-hasSeen-default)"
+      : "var( --color-notification-notSeen-dark)"};
+  &:hover {
+    background-color: ${({ theme }) =>
+      theme === "dark"
+        ? "var(--color-hover-dark)"
+        : "var(--color-hover-default)"};
   }
 `;
 
 export const LinkWrapper = styled(Link)`
-  display : flex;
-  padding :0.4rem 0.8rem;
-  font-size : 0.9rem;
-`
+  display: flex;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+`;
 
 export const AvatarContainer = styled.div`
-  width : 2.5rem;
-  height : 2.5rem;
-  & img{
-    width : 100%; 
-    height :100%; 
-    border-radius : 50%;
-  }  
-` 
+  width: 2.5rem;
+  height: 2.5rem;
+  & img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+`;
 
-export const NotificationContent =styled.article`
-  margin-left : 0.5rem;
-  flex : 1 ; 
-  display : flex; 
-  flex-direction : column;
-`
+export const NotificationContent = styled.article`
+  margin-left: 0.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
 
 export const Controls = styled.div`
-  padding : 0.75rem 1.25rem;
-`
+  padding: 0.75rem 1.25rem;
+`;
 
 const ButtonsGroup = styled.div`
   display: flex;

@@ -108,6 +108,11 @@ export default createGlobalStyle`
   --color-border-dark : #616161;   
   --color-border-default : #e0e0e0;
 
+  --color-notification-hasSeen-dark : #292929;
+  --color-notification-notSeen-dark :#1a1818;
+  --color-notification-hasSeen-default :#f2f2f2;
+  --color-notification-notSeen-default : #d4d4d4;
+
   --fontFamily-sans: Montserrat, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";

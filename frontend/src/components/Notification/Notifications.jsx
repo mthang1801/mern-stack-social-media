@@ -17,10 +17,5 @@ const Notifications = ({notifications}) => {
   );
 };
 
-const NoNotifications = styled.div`
-  text-align: center;
-  padding: 3rem;
-  font-size: 1.1em;
-`;
-
 export default React.memo(Notifications);
+

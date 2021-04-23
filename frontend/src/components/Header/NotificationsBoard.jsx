@@ -1,43 +1,42 @@
 import React, { memo } from "react";
-import styled from "styled-components";
+import {
+  Wrapper,
+  Title,
+  Header,
+  Body,
+} from "./styles/NotificationsBoard.styles";
 import Button from "../Controls/ButtonDefaultCircle";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { useThemeUI } from "theme-ui";
 import Notifications from "../Notification/Notifications";
-const NotificationsBoard = ({ notifications }) => {
+import NotificationItem from "../Notification/NotificationItem";
+const NotificationsBoard = ({ notifications, loading }) => {
   const { colorMode } = useThemeUI();
   return (
     <Wrapper theme={colorMode}>
-      <div className="board-header">
-        <h4>Notifications</h4>
+      <Header>
+        <Title>Notifications</Title>
         <Button variant="outlined">
           <BiDotsHorizontalRounded />
         </Button>
-      </div>
-      {notifications?.length ? (
-        <div className="board-body">
-          <Notifications notifications={notifications} />
-        </div>
-      ) : null}
+      </Header>
+      <Body>
+        {loading ? (
+          <div>Loading</div>
+        ) : notifications.length ? (
+          notifications.map((notification) => (
+            <NotificationItem
+              key={`home-page-notification-${notification._id}`}
+              notifications={notifications}
+              notification={notification}
+            />
+          ))
+        ) : (
+          <div>No notifications</div>
+        )}
+      </Body>
     </Wrapper>
   );
 };
-
-const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: ${({ theme }) =>
-    theme === "dark" ? "var(--color-card-dark)" : "var(--white)"};
-  border-radius: 0.5rem;
-  box-shadow: var(--mediumShadow);
-  color: inherit;
-  border: 1px solid
-    ${({ theme }) => (theme === "dark" ? "var(--dark)" : "var(--light)")};
-  .board-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0.75rem;
-  }
-`;
 
 export default memo(NotificationsBoard);

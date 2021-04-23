@@ -1,133 +1,94 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../containers/Layout";
-import styled from "styled-components";
-import Notifications from "../components/Notification/Notifications";
+import {
+  Wrapper,
+  NotificationsContent,
+  OtherContents,
+} from "./styles/notifications.styles";
+import NotificationItem from "../components/Notification/NotificationItem";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { userVar, notificationsVar } from "../apollo/cache";
 import CardRequestAuth from "../components/Card/CardRequestAuth";
-import MainBody from "../components/Body/MainBody";
+import InfiniteScroll from "react-infinite-scroll-component";
+import MainBody from "../containers/MainBody";
 import { FETCH_NOTIFICATIONS } from "../apollo/notification/notification.types";
-import {setNotifications} from "../apollo/notification/notification.caches"
+import { addNotificationsToNotifcationsList, setNotifications } from "../apollo/notification/notification.caches";
 const NotificationsPage = () => {
   const user = useReactiveVar(userVar);
   const notifications = useReactiveVar(notificationsVar);
+  const [fetchedNotifications, setFetchedNotifications] = useState(false);
+  const [loadingNotifications, setLoadingNotifications] = useState(true);
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
     skip: true,
-  });   
-  const [fetchNotificationsMore, setFetchNotificationsMore] = useState(false);
+  });  
+
   useEffect(() => {
-    let _mounted = true;
-    if (user && fetchNotifications) {
-      if (!notifications.length) {
-        fetchNotifications({
-          variables: {
-            skip: 0,
-            limit: +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE,
-          },
-        }).then(({ data }) => {
-          if (data && data.fetchNotifications && _mounted) {
-            setNotifications([...data.fetchNotifications]);
+    if (
+      !fetchedNotifications &&
+      user?.notifications?.length && !notifications.length
+    ) {
+      fetchNotifications()
+        .then(({ data }) => {
+          console.log(data);
+          if (data) {
+            setNotifications(data.fetchNotifications);
+            setLoadingNotifications(false);
+            setFetchedNotifications(true);
           }
+        })
+        .catch(() => {
+          setLoadingNotifications(false);
+          setFetchedNotifications(true);
         });
-      } else if (fetchNotificationsMore) {
-        const skip = notifications.length;
-        const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
-        fetchNotifications({ skip, limit }).then(
-          ({ data: { fetchNotifications } }) => {
-            if (_mounted) {
-              setNotifications([...notifications, ...fetchNotifications]);
-              setFetchNotificationsMore(false);
-            }
-          }
-        );
-      }
+    } else if (!fetchedNotifications && notifications.length) {
+      setFetchedNotifications(true);
+      setLoadingNotifications(false);
     }
+  }, [fetchedNotifications, user,user?.notifications?.length && notifications]);
 
-    return () => (_mounted = false);
-  }, [
-    user,
-    notifications,
-    fetchNotifications,
-    setFetchNotificationsMore,
-    fetchNotificationsMore,
-  ]);
-
-  useEffect(() => {
-    function setLoadmoreOnScroll() {
-      const {
-        scrollHeight,
-        scrollTop,
-        clientHeight,
-      } = document.documentElement;
-      if (clientHeight + scrollTop > scrollHeight * 0.75) {
-        setFetchNotificationsMore(true);
+  const fetchMoreNotifications = () => {
+    const skip = notifications.length; 
+    const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
+    fetchNotifications({skip, limit}).then(({data})=> {
+      if(data){
+        addNotificationsToNotifcationsList(data.fetchNotifications)
       }
-    }
-    window.addEventListener("scroll", (e) => {
-      setLoadmoreOnScroll();
-    });
-    return () =>
-      window.removeEventListener("scroll", () => {
-        setLoadmoreOnScroll();
-      });
-  }, []);
+    })
+  }
 
   return (
     <Layout>
       <MainBody>
-        <MainContent>
-          <div className="notifications">
-            {user ? (
-              <Notifications notifications={notifications} />
+        <Wrapper>
+          <NotificationsContent>
+            {loadingNotifications ? (
+              <div>Loading Notifications 1...</div>
+            ) : user ? (
+              <InfiniteScroll
+                dataLength={notifications.length}
+                hasMore={notifications.length < user.notifications.length}
+                loader={<div>Loading Notifications...</div>}
+                next={fetchMoreNotifications}
+                scrollThreshold={0.85}
+              >
+                {notifications.map((notification) => (
+                  <NotificationItem
+                    key={`notification-${notification._id}`}
+                    notifications={notifications}
+                    notification={notification}
+                  />
+                ))}
+              </InfiniteScroll>
             ) : (
               <CardRequestAuth />
             )}
-          </div>
-          <div className="sidebar"></div>
-        </MainContent>
+          </NotificationsContent>
+          <OtherContents></OtherContents>
+        </Wrapper>
       </MainBody>
     </Layout>
   );
 };
 
-const MainContent = styled.div`
-  display: flex;
-  margin: auto;
-  padding: 1.5rem 0;
-  .notifications {
-    width: 100%;
-  }
-  .sidebar {
-    display: none;
-  }
-  @media screen and (min-width: 768px) {
-    .notifications {
-      width: calc(100% - 320px);
-      padding: 0 1rem;
-    }
-    .sidebar {
-      display: block;
-      width: 320px;
-      padding: 0 1rem;
-    }
-  }
-  @media screen and (min-width: 992px) {
-    padding: 0;
-    .notifications {
-      width: 50%;
-    }
-    .sidebar {
-      width: 50%;
-    }
-  }
-  @media screen and (min-width: 1920px) {
-    .notifications {
-      width: 55%;
-    }
-    .sidebar {
-      width: 45%;
-    }
-  }
-`;
 export default NotificationsPage;
