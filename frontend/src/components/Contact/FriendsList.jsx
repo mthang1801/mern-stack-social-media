@@ -5,7 +5,7 @@ import useLanguage from "../Global/useLanguage"
 import ContactItem from "./ContactItem"
 import InfiniteScroll from "react-infinite-scroll-component"
 import {FETCH_USER_FRIENDS_DATA} from "../../apollo/contact/contact.types"
-import {fetchMoreFriendsToContact} from "../../apollo/contact/contact.caches"
+import {pushFriendsListToContact} from "../../apollo/contact/contact.caches"
 import { useQuery } from '@apollo/client'
 import _ from "lodash"
 const SentRequestsToAddFriend = ({user, friends}) => {  
@@ -20,7 +20,7 @@ const SentRequestsToAddFriend = ({user, friends}) => {
     friends.forEach(friend => existedFriendsId.push(friend._id));  
     fetchUserFriends({skip, limit, except : existedFriendsId}).then(({data}) => {
       if(data){
-        fetchMoreFriendsToContact(data.fetchFriends);
+        pushFriendsListToContact(data.fetchFriends);
       }
     })
   }

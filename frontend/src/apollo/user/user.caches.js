@@ -78,4 +78,4 @@ export const moveReceivedRequestToFriendCacheData = (sender) => {
   return userVar(user);
 };
 
-export const clearFriends = () => friendsVar(initialState.friends);
+

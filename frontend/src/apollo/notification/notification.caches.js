@@ -21,6 +21,12 @@ export const increaseCountNumberNotificationsUnseen = () => {
   return countNumberOfNotificationUnseenVar(currentNumber + 1);
 };
 
+export const setCountNumberNotificationsUnseen = (num) => {
+  if(Number.isInteger(num)){    
+    return countNumberOfNotificationUnseenVar(num)
+  }  
+}
+
 export const addNotificationItemToNotificationsList = (newNotification) => {
   let notifications = [...notificationsVar()];
   increaseCountNumberNotificationsUnseen()
@@ -76,9 +82,6 @@ export const removeNotificationItemFromNotificationsList = (
   
   return notificationsVar(updatedNotifications);
 };
-
-export const setCountNumberNotificationsUnseen = (num) =>
-  countNumberOfNotificationUnseenVar(num);
 
 export const setLatestNotification = (notification) => {
   if (notification) {

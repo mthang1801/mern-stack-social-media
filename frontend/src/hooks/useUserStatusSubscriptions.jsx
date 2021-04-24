@@ -4,7 +4,8 @@ import { userVar } from "../apollo/cache";
 
 import io from "socket.io-client";
 import _ from "lodash";
-import {updateUserOnlineOffline, updateUserOnlineOfflineMessagesStorage} from "../apollo/chat/chat.caches"
+import {updateUserOnlineOfflineMessagesStorage} from "../apollo/chat/chat.caches"
+import {updateUserOnlineOffline} from "../apollo/contact/contact.caches"
 const useUserStatusSubscriptions = () => {
   const user = useReactiveVar(userVar); 
  
@@ -24,7 +25,7 @@ const useUserStatusSubscriptions = () => {
         isOnline: true,
       });
       socket.on("server-send-user-online", (data) => {
-        updateUserOnlineOffline(data);
+        updateUserOnlineOffline(data);        
         updateUserOnlineOfflineMessagesStorage(data._id);
       });
       socket.on("server-send-user-is-offline", (userId) => {

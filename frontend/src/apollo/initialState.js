@@ -9,7 +9,7 @@ export const initialState = {
   alertDialog: { agree: false, title: "", content: "", data: null },
   toggleFriendsBoard : false,
   notifications : [],
-  countNumberOfNotificationUnseen : 0,
+  countNumberOfNotificationUnseen : null,
   newNotifications : new Set(),
   latestNotification : null,
   friends : [],

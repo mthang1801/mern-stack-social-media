@@ -1,2 +1,0 @@
-const Notifications = [];
-export {Notifications}

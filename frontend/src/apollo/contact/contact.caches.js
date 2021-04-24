@@ -1,5 +1,7 @@
+import { AiOutlineConsoleSql } from "react-icons/ai";
 import {contactVar, userVar} from "../cache"
-
+import { initialState } from "../initialState";
+import _ from "lodash"
 export const setContactList = (friends, receivedRequestsToAddFriend, sentRequestsToAddFriend) => {  
   const contact = {...contactVar()};
   if(friends) contact.friends = [...friends];
@@ -8,9 +10,10 @@ export const setContactList = (friends, receivedRequestsToAddFriend, sentRequest
   return contactVar(contact);
 }
 
-export const fetchMoreFriendsToContact = friends => {
+export const pushFriendsListToContact = friends => {
   const contact = {...contactVar()};
   contact.friends = [...contact.friends, ...friends]
+  console.log(contact);
   return contactVar(contact);
 }
 
@@ -69,3 +72,37 @@ export const removeFriendsFromContact = friend => {
   contact.friends = contact.friends.filter(_friend => _friend._id !== friend._id);
   return contactVar(contact);
 }
+
+export const clearContact = () => contactVar(initialState.contact)
+
+export const updateUserOnlineOffline = (user, isOnline = true) => {
+  let contact = {...contactVar()};
+  if (typeof isOnline === "boolean") {
+    if (isOnline) {
+      //update user is online
+      if (
+        contact.friends.find((friend) => friend._id.toString() === user._id.toString())
+      ) {
+        contact.friends = contact.friends.filter(
+          (friend) => friend._id.toString() !== user._id.toString()
+        );
+        contact.friends = [{...user}, ...contact.friends];
+      }
+      return contactVar(contact);
+    }
+    //update user is Offline
+    const { _id } = user;
+    if (_id) {
+      contact.friends = contact.friends.map((friend) => {
+        let updatedFriends = { ...friend };
+        if (updatedFriends._id.toString() === _id.toString()) {
+          updatedFriends.isOnline = false;
+          updatedFriends.offlinedAt = new Date();
+        }
+        return { ...updatedFriends };
+      });
+      contact.friends = _.orderBy(contact.friends, [function(item){return item.isOnline}, function(item){return item.slug}], ["desc", "asc"])
+      return contactVar(contact);
+    }
+  }
+};

@@ -1,7 +1,5 @@
 import { InMemoryCache, makeVar } from "@apollo/client";
-import {
-  PersonalPosts, 
-} from "./models";
+
 import { initialState } from "./initialState";
 //Cache
 const toggleMenuVar = makeVar(initialState.toggleMenu);

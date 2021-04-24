@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 
 export const LinkItem = styled(Link)`
   display: flex;
-  padding: 0.3rem 0.7rem;
-  align-items: center;
+  padding: 0.3rem 1.5rem;
+  align-items : center;
+  justify-content : space-between;
   &:hover {
     opacity: 1;
     background-color: ${({ theme }) =>
@@ -46,3 +47,16 @@ export const ImageContainer = styled.div`
   }
 `}
 `;
+
+export const ActiveStatus = styled.div`
+  width : 0.6rem ;
+  height : 0.6rem ; 
+  border-radius : 50%; 
+  background-color : green;
+`
+
+export const UserInfo = styled.div`
+flex: 1;
+display  :flex;
+align-items: center;
+`

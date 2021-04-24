@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../containers/Layout";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import { userVar, friendsVar, contactVar } from "../apollo/cache";
+import { userVar, contactVar } from "../apollo/cache";
 import {
-  FETCH_LIST_CONTACT,
-  FETCH_USER_FRIENDS_DATA,
+  FETCH_LIST_CONTACT
 } from "../apollo/contact/contact.types";
 import {
   FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND, 
@@ -31,9 +30,7 @@ const FriendsPage = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [fetched, setFetched] = useState(false);
   const { i18n, lang } = useLanguage();
-  const user = useReactiveVar(userVar);
-  console.log(user)
-  // const friends = useReactiveVar(friendsVar);
+  const user = useReactiveVar(userVar);    
   const contact = useReactiveVar(contactVar);
 
   const { refetch: fetchListContact } = useQuery(FETCH_LIST_CONTACT, {

@@ -12,13 +12,14 @@ import NotificationsBoard from "./NotificationsBoard";
 import useNotificationsPostSubscription from "../../hooks/useNotificationsPostSubscription";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { userVar, notificationsVar, countNumberOfNotificationUnseenVar } from "../../apollo/cache";
-import { FETCH_NOTIFICATIONS } from "../../apollo/notification/notification.types";
+import { FETCH_NOTIFICATIONS, FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN } from "../../apollo/notification/notification.types";
 import { Scrollbars } from "react-custom-scrollbars";
 import FlashPopUpNotification from "../Notification/FlashPopUpNotification";
 import {
   setLatestNotification,
   setNotifications,
-  addNotificationsToNotifcationsList
+  addNotificationsToNotifcationsList,
+  setCountNumberNotificationsUnseen
 } from "../../apollo/notification/notification.caches";
 import {useThemeUI} from "theme-ui"
 const Control = () => {
@@ -30,6 +31,7 @@ const Control = () => {
   );
   const notificationRef = useRef(false);
   const {colorMode} = useThemeUI()
+  const {refetch : fetchNumberNotificationsUnseen} = useQuery(FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,{skip : true});
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
     fetchPolicy: "cache-and-network",
     skip: true,
@@ -39,6 +41,19 @@ const Control = () => {
   const countNumberNotificationsUnseen = useReactiveVar(countNumberOfNotificationUnseenVar)
 
   useNotificationsPostSubscription();
+
+  useEffect(() => {
+    if(!countNumberNotificationsUnseen){
+      fetchNumberNotificationsUnseen().then(({data}) => {
+        if(data){
+          setCountNumberNotificationsUnseen(data.countNotificationsUnseen);
+        }
+      }).catch(err => {
+        console.log(err);
+        setCountNumberNotificationsUnseen(0);
+      })
+    }
+  },[fetchNumberNotificationsUnseen, countNumberNotificationsUnseen])
 
   useEffect(() => {
     function handleClickOutsideNotificationBoard(e) {

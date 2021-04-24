@@ -124,7 +124,7 @@ export const userController = {
     };
   },
   fetchFriends: async (req, skip, limit,except, userId) => {    
-    console.time("fetchFriend");
+    console.time("fetchFriend");    
     const currentUserId = getAuthUser(req, false);
     if (userId) {
       //do something

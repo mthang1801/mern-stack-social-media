@@ -6,10 +6,10 @@ import {
   FriendsListTitle,
 } from "./Sidebar.styles";
 import { useThemeUI } from "theme-ui";
-import { userVar } from "../../apollo/cache";
+import { userVar, contactVar } from "../../apollo/cache";
 import { useQuery, useReactiveVar } from "@apollo/client";
-import {FETCH_USER_FRIENDS_DATA} from "../../apollo/contact/contact.types";
-import { addFetchedFriendsToFriendsData } from "../../apollo/user/user.caches";
+import { FETCH_USER_FRIENDS_DATA } from "../../apollo/contact/contact.types";
+import { pushFriendsListToContact } from "../../apollo/contact/contact.caches";
 import FriendItem from "./FriendItem";
 import { Scrollbars } from "react-custom-scrollbars";
 import useLanguage from "../Global/useLanguage";
@@ -19,34 +19,31 @@ const FriendsList = ({ show }) => {
   const { colorMode } = useThemeUI();
   const [openSearch, setOpenSearch] = useState(false);
   const user = useReactiveVar(userVar);
+  const contact = useReactiveVar(contactVar);
   const inputRef = useRef(null);
   const { i18n, lang } = useLanguage();
   const [loading, setLoading] = useState(false);
-
   const [fetched, setFetched] = useState(false);
-  const { refetch: fetchUserFriends } = useQuery(
-    FETCH_USER_FRIENDS_DATA,
-    {
-      fetchPolicy: "no-cache",
-      notifyOnNetworkStatusChange: true,
-      skip: true,
-    }
-  );
+  const { refetch: fetchUserFriends } = useQuery(FETCH_USER_FRIENDS_DATA, {
+    fetchPolicy: "no-cache",
+    notifyOnNetworkStatusChange: true,
+    skip: true,
+  });
 
   useEffect(() => {
     let _isMounted = true;
-    if (!user.friendsData && !fetched && show) {
+    if (!contact.friends.length && !fetched && show) {
       setLoading(true);
       fetchUserFriends().then(({ data }) => {
         if (data && _isMounted) {
-          addFetchedFriendsToFriendsData(data.fetchFriends);
+          pushFriendsListToContact(data.fetchFriends)
           setLoading(false);
           setFetched(true);
         }
       });
     }
     return () => (_isMounted = false);
-  }, [fetchUserFriends, user, fetched, show]);
+  }, [fetchUserFriends, contact, fetched, show]);
 
   useEffect(() => {
     if (openSearch) {
@@ -58,6 +55,7 @@ const FriendsList = ({ show }) => {
     setOpenSearch(true);
   };
 
+  console.log(contact)
   return (
     <Scrollbars
       autoHide
@@ -84,8 +82,8 @@ const FriendsList = ({ show }) => {
           </FriendsListSearch>
         </TitleContacts>
         {loading && <div>Loading Friends</div>}
-        {user.friendsData &&
-          user.friendsData.map((friend) => (
+        {contact.friends &&
+          contact.friends.map((friend) => (
             <FriendItem key={friend._id} data={friend} />
           ))}
       </FriendsListWrapper>

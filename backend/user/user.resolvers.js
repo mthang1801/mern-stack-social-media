@@ -19,8 +19,8 @@ export const userResolvers = {
     fetchFriends: (_, args, { req }, info) => {
       return userController.fetchFriends(
         req,
-        args.skip,
-        args.limit,
+        args.skip || 0,
+        args.limit || +process.env.CONTACT_FRIENDS_PER_PAGE,
         (args.except = []),
         (args.userId = null)
       );

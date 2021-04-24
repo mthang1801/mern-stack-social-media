@@ -10,6 +10,7 @@ export const CustomFormContainer = styled.form`
   border-radius : 10px;
   box-shadow : 0 3px 6px rgba(0,0,0,0.15);
   background-color : var(--light);
+  color : black;  
   display : flex ; 
   flex-direction : column ; 
   align-items : center;    
@@ -44,8 +45,7 @@ export const Title = styled.h2`
   font-size : 2em;
 `
 
-export const SubTitle = styled.span`
-  color : #505050;
+export const SubTitle = styled.span`  
   font-size : .95em;
 `
 

@@ -4,21 +4,13 @@ import { useQuery, useReactiveVar } from "@apollo/client";
 import {
   userVar,
   receivedRequestsToAddFriendVar,
-  currentPersonalUserVar,
-  friendsVar,
-  latestNotificationVar,
+  currentPersonalUserVar,    
 } from "../apollo/cache";
 import {
   REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   REMOVE_FRIEND_SUBSCRIPTION,
 } from "../apollo/contact/contact.subscriptions";
-import {
-  removeNewNotification,
-  decreaseCountNumberNotificationsUnseen,
-  removeNotificationItemFromNotificationsList,
-  setLatestNotification,
-  removeNotificationWhenUserRejectToAddFriend,
-} from "../apollo/notification/notification.caches";
+import { removeNotificationItemFromNotificationsList } from "../apollo/notification/notification.caches";
 import { setCurrentUser } from "../apollo/user/user.caches";
 import { setCurrentPersonalUser } from "../apollo/user/currentPersonalUser.caches";
 import {
@@ -31,10 +23,8 @@ const useContactSubscription = () => {
   const receivedRequestsToAddFriend = useReactiveVar(
     receivedRequestsToAddFriendVar
   );
-  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
-  const friends = useReactiveVar(friendsVar);
-  const latestNotification = useReactiveVar(latestNotificationVar);
-
+  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);  
+  
   const { subscribeToMore: subscribeUser } = useQuery(FETCH_CURRENT_USER, {
     skip: true,
   });
@@ -102,7 +92,7 @@ const useContactSubscription = () => {
         unsubscribeRemoveFriend();
       }
     };
-  }, [subscribeUser, user, receivedRequestsToAddFriend, friends]);
+  }, [subscribeUser, user, receivedRequestsToAddFriend]);
 };
 
 export default useContactSubscription;

@@ -1,2 +1,0 @@
-const Posts = [];
-export {Posts}
