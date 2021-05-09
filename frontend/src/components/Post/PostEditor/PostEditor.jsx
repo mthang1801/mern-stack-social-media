@@ -20,7 +20,7 @@ import {
 import {
   addPostItemToCurrentPersonalUser,
   updatePostInCurrentPersonalUser,
-} from "../../../apollo/user/currentPersonalUser.caches";
+} from "../../../apollo/post/post.caches";
 const PostEditor = ({
   editedEditorState,
   isEdited,

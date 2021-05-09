@@ -5,7 +5,7 @@ import PostEditor from "../Post/PostEditor/PostEditor";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { currentPersonalUserVar, userVar } from "../../apollo/cache";
 import { FETCH_POSTS } from "../../apollo/post/post.queries";
-import { addPostsToCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
+import { addPostsToCurrentPersonalUser } from "../../apollo/post/post.caches";
 import IntroductionBox from "./IntroductionBox";
 
 const PersonalPosts = () => {

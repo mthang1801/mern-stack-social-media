@@ -23,7 +23,10 @@ import {
   removeLikeResponse,
   updateCommentLikes,
 } from "../apollo/post/post.caches";
-import { userLikePostInCurrentPersonalUser, userRemoveLikePostInCurrentPersonalUser } from "../apollo/user/currentPersonalUser.caches";
+import {
+  userLikePostInCurrentPersonalUser,
+  userRemoveLikePostInCurrentPersonalUser,
+} from "../apollo/post/post.caches";
 import {
   ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
@@ -244,7 +247,9 @@ const useNotificationsPostSubscription = () => {
               updatedAddNotification(likePostSubscription);
             }
             //update user like in personal user
-            userLikePostInCurrentPersonalUser(likePostSubscription.fieldIdentity.post)
+            userLikePostInCurrentPersonalUser(
+              likePostSubscription.fieldIdentity.post
+            );
           }
         },
       });

@@ -31,6 +31,7 @@ import {
   removeComment as removeCommentFromPostCache,
   removeLikeComment,
   removeResponse as removeResponseInCache,
+  addResponsesToCommentInPersonalUser
 } from "../../apollo/post/post.caches";
 import {setAlertDialog} from "../../apollo/controls/controls.caches"
 const CommentItem = ({ comment, user }) => {
@@ -133,6 +134,7 @@ const CommentItem = ({ comment, user }) => {
       ({ data }) => {
         if (data.fetchResponses) {
           addResponsesToComment(comment.post, comment._id, data.fetchResponses);
+          addResponsesToCommentInPersonalUser(comment.post, comment._id, data.fetchResponses)
           if (!showResponse) {
             setShowResponse(true);
             setFocusResponseEditor(true);
@@ -147,6 +149,8 @@ const CommentItem = ({ comment, user }) => {
     fetchResponses({ commentId: comment._id, skip }).then(({ data }) => {
       if (data.fetchResponses) {
         addResponsesToComment(comment.post, comment._id, data.fetchResponses);
+        addResponsesToCommentInPersonalUser(comment.post, comment._id, data.fetchResponses);
+        
         if (!showResponse) {
           setShowResponse(true);
           setFocusResponseEditor(true);
