@@ -15,8 +15,7 @@ import { setLatestNotification } from "../../apollo/notification/notification.ca
 const FlashPopUpNotification = ({ onClick }) => {
   const latestNotification = useReactiveVar(latestNotificationVar)
   const { colorMode } = useThemeUI();
-  const { i18n, lang } = useLanguage();
-  console.log(latestNotification)
+  const { i18n, lang } = useLanguage();  
   const { message } = i18n.store.data[lang].translation.notifications;
   useEffect(() => {
     let timer;

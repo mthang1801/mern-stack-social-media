@@ -37,3 +37,34 @@ export const updatePostInCurrentPersonalUser = (editedPost) => {
     return currentPersonalUserVar({ ...currentUser, postsData: updatedPosts });
   }
 };
+
+export const userLikePostInCurrentPersonalUser = likedPost => { 
+  let currentUser = {...currentPersonalUserVar()};
+  if(currentUser.postsData?.some(post => post._id === likedPost._id)){
+    const updatedPosts = currentUser.postsData.map(post => {
+      let _post = {...post};
+      if(_post._id === likedPost._id){
+        return {..._post, ...likedPost}
+      }
+      return {..._post}
+    })
+    return currentPersonalUserVar({...currentUser, postsData: updatedPosts})
+  }  
+}
+
+export const userRemoveLikePostInCurrentPersonalUser = (userId, postId) => {  
+  let currentUser = {...currentPersonalUserVar()};  
+  console.log(userId, postId)
+  if(currentUser.postsData?.some(post => post._id === postId)){
+    
+    const updatedPosts = currentUser.postsData.map(post => {
+      let _post = {...post};
+      if(_post._id === postId){
+        return {..._post, likes : _post.likes.filter(like => like !== userId)}
+      }
+      return {..._post}
+    })
+    console.log(updatedPosts)
+    return currentPersonalUserVar({...currentUser, postsData: updatedPosts})
+  }  
+}

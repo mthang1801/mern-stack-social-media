@@ -8,7 +8,7 @@ import { FETCH_PERSONAL_USER } from "../apollo/user/user.types";
 import Layout from "../containers/Layout";
 import { setCurrentPersonalUser } from "../apollo/user/currentPersonalUser.caches";
 import PersonalPosts from "../components/Personal/PersonalPosts";
-
+import useCurrentUserSubscription from "../hooks/useCurrentUserSubscription"
 const PersonalPage = (props) => {  
   const { slug } = props.match.params; 
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar)

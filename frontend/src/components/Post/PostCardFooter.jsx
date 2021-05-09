@@ -62,14 +62,13 @@ const PostCardFooter = ({ post, fetchComments, user }) => {
     if(user){
       return post.likes.includes(user._id) ? onUnlikePost() : onLikePost()
     }
-    alert("Please login before comment")
-    
+    alert("Please login before comment")    
   }
+  
   return (
     <Wrapper>
       <Controls theme={colorMode}>
         {/* Like */}
-
         <Button
           theme={colorMode}
           liked={post.likes.includes(user?._id)}

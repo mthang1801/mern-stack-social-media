@@ -136,8 +136,8 @@ export const LIKE_COMMENT_SUBSCRIPTION = gql`
 `;
 
 export const LIKE_POST_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
-    likePostSubscription(userId: $userId) {
+  subscription {
+    likePostSubscription {
       _id
       field
       content
@@ -150,7 +150,12 @@ export const LIKE_POST_SUBSCRIPTION = gql`
       fieldIdentity {
         post {
           _id
-          shortenText
+          text
+          rawText
+          shortenText          
+          likes
+          status
+          createdAt
         }
       }
       url
@@ -417,8 +422,8 @@ export const REMOVE_LIKE_COMMENT_SUBSCRIPTION = gql`
 `;
 
 export const REMOVE_LIKE_POST_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
-    removeLikePostSubscription(userId: $userId) {
+  subscription {
+    removeLikePostSubscription {
       _id
       field
       content
@@ -431,7 +436,7 @@ export const REMOVE_LIKE_POST_SUBSCRIPTION = gql`
       fieldIdentity {
         post {
           _id
-          shortenText
+          shortenText          
         }
       }
       url

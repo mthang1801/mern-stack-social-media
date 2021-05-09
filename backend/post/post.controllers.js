@@ -298,6 +298,8 @@ export const postControllers = {
       if (!post || post.likes.includes(currentUserId)) {
         return false;
       }
+      post.likes.push(currentUserId);
+      await post.save();
       //create notification to notify user like post author
       //Firstly, check notification has existed
       const checkNotificationExisted = await Notification.findOne({
@@ -305,6 +307,7 @@ export const postControllers = {
         content: contents.LIKED,
         creator: currentUserId,
       });
+      
       if (!checkNotificationExisted) {
         const newNotification = new Notification({
           field: fields.POST,
@@ -322,7 +325,7 @@ export const postControllers = {
         });
         //save notification
         await (await newNotification.save())
-          .populate({ path: "fieldIdentity.post", select: "shrotenText" })
+          .populate({ path: "fieldIdentity.post"})
           .populate({ path: "creator", select: "name avatar slug" })
           .execPopulate();
 
@@ -330,8 +333,7 @@ export const postControllers = {
           likePostSubscription: newNotification._doc,
         });
       }
-      post.likes.push(currentUserId);
-      await post.save();
+      
       return true;
     } catch (error) {
       throw new ApolloError(error.message);
@@ -347,15 +349,17 @@ export const postControllers = {
     //find notification user liked post and remove it
     const notification = await Notification.findOneAndDelete({
       field: fields.POST,
+      content : contents.LIKED,
       "fieldIdentity.post": postId,
       creator: currentUserId,
     })
-      .populate({ path: "fieldIdentity.post", select: "shrotenText" })
+      .populate({ path: "fieldIdentity.post"})
       .populate({ path: "creator", select: "name avatar slug" });
     if (notification) {
       await User.findByIdAndUpdate(notification.receiver, {
         $pull: { notifications: notification._id },
       });
+      console.log(notification)
       await pubsub.publish(removeLikePostSubscription, {
         removeLikePostSubscription: notification._doc,
       });

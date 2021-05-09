@@ -3,6 +3,7 @@ import { initialState } from "../initialState";
 
 export const addFetchedPostToCache = (fetchedPosts) => {
   const posts = [...postsVar()];
+  console.log(fetchedPosts)
   if (!Array.isArray(fetchedPosts)) {
     return false;
   }

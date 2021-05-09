@@ -9,7 +9,7 @@ import {
 import { IoMdNotifications } from "react-icons/io";
 import Button from "../Controls/ButtonDefaultCircle";
 import NotificationsBoard from "./NotificationsBoard";
-import useNotificationsPostSubscription from "../../hooks/useNotificationsPostSubscription";
+import useNotificationsSubscription from "../../hooks/useNotificationsSubscription";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { userVar, notificationsVar, countNumberOfNotificationUnseenVar } from "../../apollo/cache";
 import { FETCH_NOTIFICATIONS, FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN } from "../../apollo/notification/notification.types";
@@ -40,7 +40,7 @@ const Control = () => {
   const notifications = useReactiveVar(notificationsVar);
   const countNumberNotificationsUnseen = useReactiveVar(countNumberOfNotificationUnseenVar)
 
-  useNotificationsPostSubscription();
+  useNotificationsSubscription();
 
   useEffect(() => {
     if(!countNumberNotificationsUnseen){
@@ -82,8 +82,7 @@ const Control = () => {
     let _isMounted = true;
     if (loadingNotificationsMore && fetchNotifications && notifications.length < user.notifications.length) {
       const skip = notifications.length;
-      const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
-      console.log(skip, limit)
+      const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;      
       fetchNotifications({ skip, limit }).then(
         ({ data: { fetchNotifications } }) => {
           if (_isMounted && fetchNotifications) {
@@ -98,13 +97,15 @@ const Control = () => {
     return () => (_isMounted = false);
   }, [loadingNotificationsMore, user, notifications, fetchNotifications]);
 
-  const onOpenNotificationBoard = useCallback(() => {
-    setOpenNotificationBoard(true);
-  }, []);
+  useEffect(() => {}, [openNotificationBoard])
+
+  const onOpenNotificationBoard = () => {
+    setOpenNotificationBoard(true);    
+  }
 
   useEffect(() => {
     let _isMounted = true; 
-    if(!fetchedNotifications && openNotificationBoard && !notifications.length){
+    if(!fetchedNotifications && openNotificationBoard && notifications.length < +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE){
       setLoadingFetchNotifications(true);
       fetchNotifications().then(({data}) => {
         if(data && _isMounted){

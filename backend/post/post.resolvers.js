@@ -19,7 +19,7 @@ export const postResolvers = {
         req,
         args.data,
         pubsub,
-        subscriptionActions.NOTIFY_MENTIONED_USERS_IN_POST,      
+        subscriptionActions.NOTIFY_MENTIONED_USERS_IN_POST
       ),
     editPost: (_, args, { req }, info) =>
       postControllers.editPost(
@@ -62,39 +62,27 @@ export const postResolvers = {
       ),
     },
     likePostSubscription: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.LIKE_POST_SUBSCRIPTION),
-        (payload, { userId }) => {
-          return (
-            payload.likePostSubscription.receiver.toString() ===
-            userId.toString()
-          );
-        }
-      ),
+      subscribe: () =>
+        pubsub.asyncIterator(subscriptionActions.LIKE_POST_SUBSCRIPTION),
     },
     removeLikePostSubscription: {
-      subscribe: withFilter(
-        () =>
-          pubsub.asyncIterator(
-            subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION
-          ),
-        (payload, { userId }) => {
-          return (
-            payload.removeLikePostSubscription.receiver.toString() ===
-            userId.toString()
-          );
-        }
-      ),
+      subscribe: () =>
+        pubsub.asyncIterator(subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION),
     },
     editPostSubscription: {
       subscribe: () =>
         pubsub.asyncIterator(subscriptionActions.EDIT_POST_SUBSCRIPTION),
     },
-    removeMentionedNotificationSubscription : {
-      subscribe : withFilter(
-        () => pubsub.asyncIterator(subscriptionActions.REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST), 
-        (payload, {userId}) => payload.removeMentionedNotificationSubscription.receiver.toString() === userId.toString()
-      )
-    }
+    removeMentionedNotificationSubscription: {
+      subscribe: withFilter(
+        () =>
+          pubsub.asyncIterator(
+            subscriptionActions.REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST
+          ),
+        (payload, { userId }) =>
+          payload.removeMentionedNotificationSubscription.receiver.toString() ===
+          userId.toString()
+      ),
+    },
   },
 };

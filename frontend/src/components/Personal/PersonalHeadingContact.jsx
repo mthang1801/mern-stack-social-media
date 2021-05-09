@@ -86,8 +86,7 @@ const PersonalContact = ({ user }) => {
   const responseRef = useRef(false);
   const settingRef = useRef(false);
   const interactionRef = useRef(false);
-  //track dialog
-  console.log(dialog);
+
   useEffect(() => {
     if (
       dialog &&
@@ -146,8 +145,7 @@ const PersonalContact = ({ user }) => {
         sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
       });
     }
-  };
-  console.log(user);
+  };  
   //track user click event
   useEffect(() => {
     function trackUserClickEvent(e) {

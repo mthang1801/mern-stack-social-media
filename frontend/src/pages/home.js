@@ -32,23 +32,19 @@ const Home = () => {
     fetchPolicy: "no-cache",
     skip: true,
   });
-  useEffect(() => {
-    let _isMounted = true;
+  useEffect(() => {    
     if (!posts.length && user && !fetched) {
       setLoading(true);
       setFetched(true);
-      fetchPosts().then(({ data }) => {
-        if (data && _isMounted) {
-          addFetchedPostToCache(data.fetchPosts);
-          setLoading(false);          
+      fetchPosts().then(({ data }) => {                
+        if (data) {          
+          addFetchedPostToCache(data.fetchPosts);         
         }
+        setLoading(false);          
       });
       
     }
-    return () => (_isMounted = false);
   }, [user, posts, fetched]);
-
-  
 
   useEffect(() => {
     let isScrolling;
@@ -88,6 +84,7 @@ const Home = () => {
   const handleOpenFriendsList = useCallback(() => {    
     setToggleFriendsBoard();
   }, []);  
+  
   return (
     <Layout>
       <MainBody>
@@ -95,7 +92,7 @@ const Home = () => {
           <MainContentLeftSide>
             {user && <LazyLoad once><PostEditor /></LazyLoad>}
             {loading && <div>Loading post</div>}
-            {posts.length ? <LazyLoad><Posts posts={posts} /></LazyLoad> : null}
+            {posts.length ? <LazyLoad><Posts posts={posts} /></LazyLoad>: null}
           </MainContentLeftSide>
           <MainContentRightSide>
             <HomeSidebar user={user} />
