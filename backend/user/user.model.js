@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
     default : "/images/avatar-default.png"
   },
   google : {
-    uid : String     
+    uid : String,    
   },
   facebook : {
     uid : String 

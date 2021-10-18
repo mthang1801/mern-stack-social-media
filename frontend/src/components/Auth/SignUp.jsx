@@ -10,8 +10,10 @@ import {
   Title,
   SubTitle,
   ErrorMessage,
+  TextForm,
+  ValidTextField
 } from "./AuthForm";
-import CustomInput from "../Custom/CustomInput";
+import {AiFillCheckCircle} from "react-icons/ai"
 import CustomButton from "../Custom/CustomButton";
 import { withRouter } from "react-router-dom";
 import GoogleRecaptcha from "./GoogleRecapcha";
@@ -20,6 +22,9 @@ import GoogleLogin from "./FacebookAuth";
 import { useMutation } from "@apollo/client";
 import { SIGNUP } from "../../apollo/user/user.types";
 import {login} from "./Auth.utility"
+import TextField from "@material-ui/core/TextField"
+import Button from "@material-ui/core/Button"
+import CircularProgress from "@material-ui/core/CircularProgress"
 const INITIAL_STATE = {
   controls: {
     name: {
@@ -78,7 +83,7 @@ const INITIAL_STATE = {
     },
   },
   formIsValid: false,
-  loaded: false,
+  captcha_loaded: false,
   disabled: true,
   title: "",
 };
@@ -104,7 +109,7 @@ const SignUp = withSignUpMutation(
     timer = null ;
     componentDidMount() {
       this.timer = setTimeout(() => {
-        this.setState({ loaded: true });
+        this.setState({ captcha_loaded: true });
       }, 0);
     }
     componentWillUnmount(){
@@ -129,7 +134,7 @@ const SignUp = withSignUpMutation(
     clearForm = () => {
       this.setState({...INITIAL_STATE});      
       setTimeout(() => {
-        this.setState({ loaded: true });
+        this.setState({ captcha_loaded: true });
       }, 0);
     }
     
@@ -215,22 +220,19 @@ const SignUp = withSignUpMutation(
     };
 
     render() {      
-      const { formIsValid, loaded, disabled } = this.state;
+      const { formIsValid, captcha_loaded, disabled } = this.state;
       let formInputArray = [];
       Object.keys(this.state.controls).forEach((controlItem) => {
         formInputArray.push(this.state.controls[controlItem]);
       });
       const { error, loading } = this.props;   
-         
-      if(!loaded) return <div>Loading...</div>
       return (
         <CustomFormContainer onSubmit={this.handleSubmitSignUpForm}>
           <FormHeader>
             <Title>Sign Up</Title>
             <SubTitle>Sign up your account via email and password.</SubTitle>
           </FormHeader>
-          {error && <ErrorMessage>{error.message}</ErrorMessage>}
-          {loading && <h2>Loading...</h2>}
+          {error && <ErrorMessage>{error.message}</ErrorMessage>}          
           <FlashForm>
             <FacebookLogin />
             <GoogleLogin />
@@ -246,33 +248,42 @@ const SignUp = withSignUpMutation(
                 validation,
                 validationErrors,
                 value,
-              }) => (
-                <CustomInput
+              }) => (            
+                <TextForm valid={valid && touched}>
+                <TextField
+                  size="small"
                   key={name}
                   type={type}
+                  variant="outlined"
                   name={name}
                   value={value}
+                  error={!valid && touched}
                   label={label}
                   onChange={(e) => this.handleChange(e, name)}
-                  require={validation.required}
-                  touched={touched}
-                  valid={valid}
-                  validationErrors={validationErrors}
+                  required={validation.required}       
+                  helperText={validationErrors}           
                 />
+                {valid && touched ?  <ValidTextField>
+                  <AiFillCheckCircle/>
+                </ValidTextField> : null }
+               
+                </TextForm>  
               )
             )}
-            {loaded && (
+            
+            {captcha_loaded && (
               <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />
             )}
-            <CustomButton
+            <Button
               variant="outlined"
-              size="small"
-              color="#0d47a1"
-              bgColor="blue"
-              disabled={!formIsValid || disabled}
+              size="medium"
+              color="primary"
+              disabled={!formIsValid || disabled }
+              type="submit"
             >
-              Submit
-            </CustomButton>
+              <span>Submit</span>
+              {loading && <CircularProgress size={12} style={{marginLeft : "0.5rem"}}/>}
+            </Button>
           </FormGroups>
           <FormActions>
             <Option>

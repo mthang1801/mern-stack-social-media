@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import GoogleLogin from 'react-google-login';
 import useLanguage from "../Global/useLanguage"
+
 const GGAuth = ({loginGoogle}) => {
   const [loginName, setLoginName] = useState("");
   const {i18n, lang} = useLanguage()
@@ -27,7 +28,6 @@ const GGAuth = ({loginGoogle}) => {
   />
   )
 }
-// const mapDispatchToProps = dispatch => ({
-//   loginGoogle : (id,name, email) => dispatch(loginGoogleStart(id, name, email))
-// })
+
 export default GGAuth
+

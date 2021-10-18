@@ -10,9 +10,10 @@ import {
   Option,
   FlashForm,
   ErrorMessage,
+  TextForm
 } from "./AuthForm";
-import CustomInput from "../Custom/CustomInput";
-import CustomButton from "../Custom/CustomButton";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from "@material-ui/core/Button"
 import { withRouter } from "react-router-dom";
 import GoogleRecaptcha from "./GoogleRecapcha";
 import FacebookAuth from "./GoogleAuth";
@@ -20,6 +21,7 @@ import GoogleAuth from "./FacebookAuth";
 import { LOGIN } from "../../apollo/user/user.types";
 import { useLazyQuery } from "@apollo/client";
 import {login} from "./Auth.utility"
+import TextField from "@material-ui/core/TextField"
 function withLoginQuery(WrappedComponent) {
   return function QueryWrapper(props) {
     const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN, {fetchPolicy : "cache-and-network"});         
@@ -46,15 +48,16 @@ const SignIn = withLoginQuery(
       email: "",
       password: "",
       disabled: true,
-      loaded: false,
       captcha_value: null,
+      loading : false, 
+      captcha_loaded: false,
     };
 
     timer = null;
-    componentDidMount() {
+    componentDidMount() {      
       this.timer = setTimeout(() => {
-        this.setState({ loaded: true });
-      }, 1000);
+        this.setState({ captcha_loaded: true });
+      }, 50);
       if (this.signInRef.current) {
         window.scrollTo({
           top: this.signInRef.current.offsetTop,
@@ -94,32 +97,32 @@ const SignIn = withLoginQuery(
         email: "",
         password: "",
         disabled : true,
-        loaded : false 
+        captcha_loaded : false 
       });
       setTimeout(() => {
-        this.setState({ loaded: true });
+        this.setState({ captcha_loaded: true });
       }, 10);
     };
 
     onSubmitSigninForm = async (e) => {
       e.preventDefault();
+      this.setState({loading : true})
       const { email, password } = this.state;
       if (!email || !password) {
-        this.setState({ error: "Email và mật khẩu không được để trống" });
+        this.setState({ error: "Email và mật khẩu không được để trống", loading: false });
         return;
       }
       this.props.loginUser({ variables: { email, password } });
+      this.setState({loading : false});
     };
-    handleChangeGoogleRecaptcha = (value) => {
-      console.log(value)
+    handleChangeGoogleRecaptcha = (value) => {      
       this.setState({ captcha_value: value, disabled: false });
       if (value === null) this.setState({ disabled: true });
     };
 
     render() {
-      const { email, password, disabled, loaded } = this.state;
-      const { authPath, error } = this.props;
-      if (!loaded) return <div>Loading...</div>;
+      const { email, password, disabled, loading,captcha_loaded } = this.state;
+      const { authPath, error } = this.props;          
       return (
         <CustomFormContainer
           onSubmit={this.onSubmitSigninForm}
@@ -135,15 +138,22 @@ const SignIn = withLoginQuery(
             <GoogleAuth />
           </FlashForm>
           <FormGroups>
-            <CustomInput
-              type="text"
-              name="email"
-              value={email}
-              label="Email"
-              onChange={this.handleChange}
-              required
-            />
-            <CustomInput
+            <TextForm>
+              <TextField 
+                variant="outlined"
+                size="small"
+                type="text"
+                name="email"
+                value={email}
+                label="Email"
+                onChange={this.handleChange}
+                required
+              />
+            </TextForm>       
+            <TextForm>
+            <TextField
+            variant="outlined"
+            size="small"
               type="password"
               name="password"
               value={password}
@@ -152,19 +162,21 @@ const SignIn = withLoginQuery(
               required
               autocomplete="on"
             />
-            {loaded && (
-              <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />
-            )}
-            <CustomButton
+            </TextForm>    
+            
+            {captcha_loaded && <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />}
+            
+            <Button
               variant="outlined"
-              size="small"
-              color="#0d47a1"
-              bgColor="blue"
-              disabled={disabled}
+              size="medium"              
+              disabled={disabled || loading}
+              color="primary"              
               style={{ marginTop: "1rem" }}
+              type="submit"
             >
-              Sign In
-            </CustomButton>
+              <span>Sign In</span>
+              {loading && <CircularProgress size={14} style={{marginLeft: "1rem"}}/>}
+            </Button>
           </FormGroups>
           <FormActions>
             <Option>
