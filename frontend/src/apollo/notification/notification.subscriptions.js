@@ -1,7 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     acceptRequestToAddFriendSubscription(userId: $userId) {
       _id
       field
@@ -42,7 +42,7 @@ export const ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
 `;
 
 export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     cancelRequestToAddFriendSubscription(userId: $userId) {
       _id
       field
@@ -152,7 +152,7 @@ export const LIKE_POST_SUBSCRIPTION = gql`
           _id
           text
           rawText
-          shortenText          
+          shortenText
           likes
           status
           createdAt
@@ -204,7 +204,7 @@ export const LIKE_RESPONSE_SUBSCRIPTION = gql`
 `;
 
 export const NOTIFY_MENTIONED_USERS_IN_COMMENT_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     notifyMentionUsersInComment(userId: $userId) {
       _id
       field
@@ -231,7 +231,7 @@ export const NOTIFY_MENTIONED_USERS_IN_COMMENT_SUBSCRIPTION = gql`
 `;
 
 export const NOTIFY_MENTIONED_USERS_IN_POST = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     notifyMentionedUsersInPost(userId: $userId) {
       _id
       field
@@ -256,7 +256,7 @@ export const NOTIFY_MENTIONED_USERS_IN_POST = gql`
 `;
 
 export const NOTIFY_MENTIONED_USERS_IN_RESPONSE = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     notifyMentionedUsersInResponse(userId: $userId) {
       _id
       field
@@ -287,7 +287,7 @@ export const NOTIFY_MENTIONED_USERS_IN_RESPONSE = gql`
 `;
 
 export const NOTIFFY_USER_COMMENT_POST_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     notifyUserCommentPostSubscription(userId: $userId) {
       _id
       field
@@ -313,7 +313,7 @@ export const NOTIFFY_USER_COMMENT_POST_SUBSCRIPTION = gql`
 `;
 
 export const NOTIFY_USER_RESPONSE_COMMENT_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     notifyUserResponseCommentSubscription(userId: $userId) {
       _id
       field
@@ -436,7 +436,7 @@ export const REMOVE_LIKE_POST_SUBSCRIPTION = gql`
       fieldIdentity {
         post {
           _id
-          shortenText          
+          shortenText
         }
       }
       url
@@ -485,7 +485,7 @@ export const REMOVE_LIKE_RESPONSE_SUBSCRIPTION = gql`
 `;
 
 export const REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     removeMentionedNotificationSubscription(userId: $userId) {
       _id
       receiver
@@ -494,7 +494,7 @@ export const REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST = gql`
 `;
 
 export const SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     sentRequestToAddFriendSubscription(userId: $userId) {
       _id
       field

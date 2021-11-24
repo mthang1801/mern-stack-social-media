@@ -1,16 +1,16 @@
-import React from "react";
-import styled from "styled-components";
-import useMenuList from "../Menu/useMenuList"
-import MenuList from "../Menu/MenuList";
-import { Scrollbars } from "react-custom-scrollbars";
+import React from 'react';
+import styled from 'styled-components';
+import useMenuList from '../Menu/useMenuList';
+import MenuList from '../Menu/MenuList';
+import { Scrollbars } from 'react-custom-scrollbars';
 const Aside = () => {
-  const {menu, explores, namePage} = useMenuList()
+  const { menu, explores, namePage } = useMenuList();
   return (
     <Wrapper>
       <Scrollbars
         autoHide
         autoHideTimeout={1000}
-        autoHideDuration={200}        
+        autoHideDuration={200}
         autoHeightMin={0}
         autoHeightMax={200}
       >

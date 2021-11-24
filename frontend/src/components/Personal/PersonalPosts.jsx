@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Wrapper, LeftSide, RightSide } from "./styles/PersonalPosts.styles";
-import Posts from "../Post/Posts";
-import PostEditor from "../Post/PostEditor/PostEditor";
-import { useQuery, useReactiveVar } from "@apollo/client";
-import { currentPersonalUserVar, userVar } from "../../apollo/cache";
-import { FETCH_POSTS } from "../../apollo/post/post.queries";
-import { addPostsToCurrentPersonalUser } from "../../apollo/post/post.caches";
-import IntroductionBox from "./IntroductionBox";
+import React, { useEffect, useState } from 'react';
+import { Wrapper, LeftSide, RightSide } from './styles/PersonalPosts.styles';
+import Posts from '../Post/Posts';
+import PostEditor from '../Post/PostEditor/PostEditor';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { currentPersonalUserVar, userVar } from '../../apollo/cache';
+import { FETCH_POSTS } from '../../apollo/post/post.queries';
+import { addPostsToCurrentPersonalUser } from '../../apollo/post/post.caches';
+import IntroductionBox from './IntroductionBox';
+import constant from '../../constant/constant';
 
 const PersonalPosts = () => {
   const [loadingMore, setLoadingMore] = useState(false);
@@ -20,9 +21,9 @@ const PersonalPosts = () => {
     variables: {
       userId: currentPersonalUser._id,
       skip: 0,
-      limit: +process.env.REACT_APP_POSTS_PER_PAGE,
+      limit: constant.REACT_APP_POSTS_PER_PAGE,
     },
-    onCompleted: (data) => {      
+    onCompleted: (data) => {
       if (data) {
         addPostsToCurrentPersonalUser(data.fetchPosts);
       }
@@ -34,11 +35,8 @@ const PersonalPosts = () => {
     function trackUserScroll(e) {
       clearTimeout(isScrolling);
       isScrolling = setTimeout(() => {
-        const {
-          scrollHeight,
-          scrollTop,
-          clientHeight,
-        } = document.documentElement;
+        const { scrollHeight, scrollTop, clientHeight } =
+          document.documentElement;
         if (
           scrollTop + clientHeight > 0.8 * scrollHeight &&
           currentPersonalUser.posts.length >
@@ -48,9 +46,9 @@ const PersonalPosts = () => {
         }
       }, 66);
     }
-    window.addEventListener("scroll", trackUserScroll);
+    window.addEventListener('scroll', trackUserScroll);
     return () => {
-      window.removeEventListener("scroll", trackUserScroll);
+      window.removeEventListener('scroll', trackUserScroll);
       if (isScrolling) {
         clearTimeout(isScrolling);
       }
@@ -60,7 +58,7 @@ const PersonalPosts = () => {
   useEffect(() => {
     if (loadingMore && currentPersonalUser.postsData) {
       const skip = currentPersonalUser.postsData.length;
-      const limit = +process.env.REACT_APP_POSTS_PER_PAGE;
+      const limit = constant.REACT_APP_POSTS_PER_PAGE;
       fetchMorePostsData({
         variables: {
           userId: currentPersonalUser._id,

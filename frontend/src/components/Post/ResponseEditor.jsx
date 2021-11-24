@@ -4,20 +4,20 @@ import React, {
   useCallback,
   useRef,
   useEffect,
-} from "react";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-import Editor from "@draft-js-plugins/editor";
-import draftToHtml from "draftjs-to-html";
-import _ from "lodash";
-import { useQuery, useMutation } from "@apollo/client";
-import useDraftEditorPlugin from "./useDraftEditorPlugin";
-import { SEARCH_FRIENDS } from "../../apollo/user/user.types";
-import { Wrapper } from "./PostEditor/styles/PostEditorBody.styles";
-import { CommentInput, CommentControls } from "./styles/CommentEditor.styles";
-import { useThemeUI } from "theme-ui";
-import useLanguage from "../Global/useLanguage";
-import {CREATE_RESPONSE} from "../../apollo/post/post.types";
-import {addNewResponseToComment} from "../../apollo/post/post.caches"
+} from 'react';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import Editor from '@draft-js-plugins/editor';
+import draftToHtml from 'draftjs-to-html';
+import _ from 'lodash';
+import { useQuery, useMutation } from '@apollo/client';
+import useDraftEditorPlugin from './useDraftEditorPlugin';
+import { SEARCH_FRIENDS } from '../../apollo/user/user.types';
+import { Wrapper } from './PostEditor/styles/PostEditorBody.styles';
+import { CommentInput, CommentControls } from './styles/CommentEditor.styles';
+import { useThemeUI } from 'theme-ui';
+import useLanguage from '../Global/useLanguage';
+import { CREATE_RESPONSE } from '../../apollo/post/post.types';
+import { addNewResponseToComment } from '../../apollo/post/post.caches';
 const CommentEditor = ({
   comment,
   response,
@@ -30,7 +30,7 @@ const CommentEditor = ({
     comment.author._id === user._id || !dataResponse
       ? EditorState.createEmpty()
       : EditorState.createWithContent(convertFromRaw(JSON.parse(dataResponse)))
-  );  
+  );
 
   useEffect(() => {
     let timer;
@@ -73,10 +73,10 @@ const CommentEditor = ({
   const [openMention, setOpenMention] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const { refetch: searchFriends } = useQuery(SEARCH_FRIENDS, {
-    fetchPolicy: "network-only",
+    fetchPolicy: 'network-only',
     skip: true,
   });
-  const [createResponse] = useMutation(CREATE_RESPONSE);  
+  const [createResponse] = useMutation(CREATE_RESPONSE);
   const { colorMode } = useThemeUI();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const [showControls, setShowControls] = useState(false);
@@ -95,12 +95,8 @@ const CommentEditor = ({
       setSuggestions([]);
     }
   }, []);
-  const {
-    plugins,
-    MentionSuggestions,
-    EmojiSelect,
-    EmojiSuggestions,
-  } = useDraftEditorPlugin();
+  const { plugins, MentionSuggestions, EmojiSelect, EmojiSuggestions } =
+    useDraftEditorPlugin();
 
   useEffect(() => {
     let timer;
@@ -126,10 +122,10 @@ const CommentEditor = ({
         setShowControls(false);
       }
     }
-    window.addEventListener("click", trackUserClickCommentControls);
+    window.addEventListener('click', trackUserClickCommentControls);
 
     return () =>
-      window.removeEventListener("click", trackUserClickCommentControls);
+      window.removeEventListener('click', trackUserClickCommentControls);
   }, [responseRef, showControls]);
 
   const onSubmitComment = (e) => {
@@ -151,12 +147,12 @@ const CommentEditor = ({
 
       const rawText = JSON.stringify(rawEditorState);
       const shortenText = draftToHtml(rawEditorState)
-        .split("</p>")[0]
-        .replace(/<p>|&nbsp;/g, "");
+        .split('</p>')[0]
+        .replace(/<p>|&nbsp;/g, '');
       document
         .querySelector(`[data-target=response-input-${comment._id}]`)
-        .querySelector("[contenteditable=true]")
-        ?.setAttribute("contenteditable", false);
+        .querySelector('[contenteditable=true]')
+        ?.setAttribute('contenteditable', false);
       const textData = document.querySelector(
         `[data-target=response-input-${comment._id}]`
       ).innerHTML;
@@ -169,7 +165,7 @@ const CommentEditor = ({
           }
         });
       }
-      mentions = _.unionBy(mentions, "_id").map((mention) =>
+      mentions = _.unionBy(mentions, '_id').map((mention) =>
         mention._id.toString()
       );
 
@@ -187,8 +183,8 @@ const CommentEditor = ({
           .then(({ data }) => {
             document
               .querySelector(`[data-target=response-input-${comment._id}]`)
-              .querySelector("[contenteditable=false]")
-              ?.setAttribute("contenteditable", true);
+              .querySelector('[contenteditable=false]')
+              ?.setAttribute('contenteditable', true);
 
             const { createResponse } = data;
             addNewResponseToComment(comment.post, comment._id, createResponse);
@@ -196,8 +192,8 @@ const CommentEditor = ({
           .catch((err) => {
             document
               .querySelector(`[data-target=response-input-${comment._id}]`)
-              .querySelector("[contenteditable=true]")
-              ?.setAttribute("contenteditable", true);
+              .querySelector('[contenteditable=true]')
+              ?.setAttribute('contenteditable', true);
           });
       }
     }

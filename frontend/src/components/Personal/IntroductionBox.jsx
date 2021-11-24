@@ -1,40 +1,40 @@
-import React from "react";
+import React from 'react';
 import {
   BoxWrapper,
   WorkList,
   Introduce,
   Website,
-} from "./styles/IntroductionBox.styles";
-import { useReactiveVar } from "@apollo/client";
-import { currentPersonalUserVar, userVar } from "../../apollo/cache";
-import { useThemeUI } from "theme-ui";
-import { Link } from "react-router-dom";
-import { FaGlobe } from "react-icons/fa";
-import { MdWork } from "react-icons/md";
+} from './styles/IntroductionBox.styles';
+import { useReactiveVar } from '@apollo/client';
+import { currentPersonalUserVar, userVar } from '../../apollo/cache';
+import { useThemeUI } from 'theme-ui';
+import { Link } from 'react-router-dom';
+import { FaGlobe } from 'react-icons/fa';
+import { MdWork } from 'react-icons/md';
 const works = [
   {
-    job_name: "Data Engineer",
-    company_name: "iTech Corp",
-    company_location: "HCM city",
+    job_name: 'Data Engineer',
+    company_name: 'iTech Corp',
+    company_location: 'HCM city',
     company_coordinates_href:
-      "https://www.latlong.net/c/?lat=12.554564&long=107.080476",
-    company_href: "http://google.com",
+      'https://www.latlong.net/c/?lat=12.554564&long=107.080476',
+    company_href: 'http://google.com',
   },
   {
-    job_name: "Data Scientist",
-    company_name: "Samsung",
-    company_location: "HCM city",
+    job_name: 'Data Scientist',
+    company_name: 'Samsung',
+    company_location: 'HCM city',
     company_coordinates_href:
-      "https://www.latlong.net/c/?lat=12.554564&long=107.080476",
-    company_href: "http://google.com",
+      'https://www.latlong.net/c/?lat=12.554564&long=107.080476',
+    company_href: 'http://google.com',
   },
   {
-    job_name: "Junior Developer",
-    company_name: "Freelance",
-    company_location: "HCM city",
+    job_name: 'Junior Developer',
+    company_name: 'Freelance',
+    company_location: 'HCM city',
     company_coordinates_href:
-      "https://www.latlong.net/c/?lat=12.554564&long=107.080476",
-    company_href: "http://google.com",
+      'https://www.latlong.net/c/?lat=12.554564&long=107.080476',
+    company_href: 'http://google.com',
   },
 ];
 
@@ -75,10 +75,10 @@ const IntroductionBox = () => {
       {/* Contact */}
       <p>Contact me via : 0123 456 789</p>
       <Website>
-        {" "}
+        {' '}
         <span>
           <FaGlobe />
-        </span>{" "}
+        </span>{' '}
         <Link href="https://github.com/mthang1801">
           https://github.com/mthang1801
         </Link>

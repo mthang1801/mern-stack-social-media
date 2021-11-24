@@ -1,9 +1,8 @@
-import { gql } from "@apollo/client";
-
+import { gql } from '@apollo/client';
 
 export const FETCH_POSTS = gql`
-  query ($userId : ID, $skip: Int, $limit : Int ){
-    fetchPosts(userId : $userId, skip: $skip, limit : $limit) {
+  query ($userId: ID, $skip: Int, $limit: Int) {
+    fetchPosts(userId: $userId, skip: $skip, limit: $limit) {
       _id
       text
       rawText
@@ -14,54 +13,57 @@ export const FETCH_POSTS = gql`
         avatar
         slug
         isOnline
-      }      
+      }
       author {
         _id
         name
         slug
         avatar
       }
-      files{
+      files {
         filename
         mimetype
         data
       }
-      comments       
-      responses     
-      likes      
+      comments
+      responses
+      likes
       status
       createdAt
     }
   }
 `;
 
-
-
 export const FETCH_COMMENTS = gql`
-  query FetchComments($postId : ID!, $except : [ID!], $skip : Int, $limit : Int){
-    fetchComments(postId : $postId, except : $except, skip : $skip, limit : $limit){
-      _id 
+  query FetchComments($postId: ID!, $except: [ID!], $skip: Int, $limit: Int) {
+    fetchComments(
+      postId: $postId
+      except: $except
+      skip: $skip
+      limit: $limit
+    ) {
+      _id
       text
       mentions
-      author{
+      author {
         _id
-        name 
+        name
         avatar
         slug
         isOnline
         offlinedAt
       }
       post
-      likes 
-      responses 
-      createdAt 
-      updatedAt 
+      likes
+      responses
+      createdAt
+      updatedAt
     }
   }
-`
+`;
 
 export const FETCH_RESPONSES = gql`
-  query($commentId: ID!, $skip: Int, $limit: Int) {
+  query ($commentId: ID!, $skip: Int, $limit: Int) {
     fetchResponses(commentId: $commentId, skip: $skip, limit: $limit) {
       _id
       text
@@ -79,5 +81,3 @@ export const FETCH_RESPONSES = gql`
     }
   }
 `;
-
-

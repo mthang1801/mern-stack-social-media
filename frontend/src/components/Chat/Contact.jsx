@@ -1,25 +1,25 @@
-import React, { useEffect, useState, useRef, createContext } from "react";
+import React, { useEffect, useState, useRef, createContext } from 'react';
 import {
   Wrapper,
   LeftSide,
   RightSide,
   PopupSettings,
-} from "./styles/Chat.styles";
-import { useReactiveVar } from "@apollo/client";
-import { userVar } from "../../apollo/cache";
-import Search from "./Search";
-import { useThemeUI } from "theme-ui";
-import { setCurrentChat } from "../../apollo/chat/chat.caches";
-import ListContacts from "./ListContacts";
-import ChatBoard from "./ChatBoard";
+} from './styles/Chat.styles';
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../apollo/cache';
+import Search from './Search';
+import { useThemeUI } from 'theme-ui';
+import { setCurrentChat } from '../../apollo/chat/chat.caches';
+import ListContacts from './ListContacts';
+import ChatBoard from './ChatBoard';
 
 export const ContactContext = createContext({});
 
 const Contact = () => {
   //useQuery
-  const user = useReactiveVar(userVar);  
+  const user = useReactiveVar(userVar);
   //useState
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [contactData, setContactData] = useState([]);
   const [originData, setOriginData] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -70,11 +70,11 @@ const Contact = () => {
         setShowPopup(true);
       }
     }
-    window.addEventListener("click", (e) => {
+    window.addEventListener('click', (e) => {
       handleClickDotsSetting(e);
     });
     return () =>
-      window.removeEventListener("click", (e) => {
+      window.removeEventListener('click', (e) => {
         handleClickDotsSetting(e);
       });
   });

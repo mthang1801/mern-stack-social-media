@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.div`
   margin-top: 60px;
@@ -24,10 +24,8 @@ export const AsideComponent = styled.aside`
 export const Main = styled.div`
   width: 100%;
   @media screen and (min-width: 992px) {
-    
-      margin-left: 320px;
-      padding: 1.5rem 0;
-      width: calc(100% - 320px);
-    
+    margin-left: 320px;
+    padding: 1.5rem 0;
+    width: calc(100% - 320px);
   }
 `;

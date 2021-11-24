@@ -1,17 +1,17 @@
-import getAuthUser from "../utils/getAuthUser";
+import getAuthUser from '../utils/getAuthUser';
 import {
   ApolloError,
   ValidationError,
   CheckResultAndHandleErrors,
   UserInputError,
-} from "apollo-server-express";
-import mongoose from "mongoose";
-import { Post } from "../post/post.model";
-import { Comment } from "./comment.model";
-import { User } from "../user/user.model";
-import { Notification } from "../notification/notification.model";
-import { Response } from "../response/response.model";
-import { contents, fields } from "../notification";
+} from 'apollo-server-express';
+import mongoose from 'mongoose';
+import { Post } from '../post/post.model';
+import { Comment } from './comment.model';
+import { User } from '../user/user.model';
+import { Notification } from '../notification/notification.model';
+import { Response } from '../response/response.model';
+import { contents, fields } from '../notification';
 export const commentControllers = {
   fetchComments: async (req, postId, except, skip, limit) => {
     try {
@@ -19,10 +19,10 @@ export const commentControllers = {
         except = [];
       }
       const post = await Post.findById(postId).populate({
-        path: "comments",
+        path: 'comments',
         populate: {
-          path: "author",
-          select: "name avatar slug isOnline offlinedAt",
+          path: 'author',
+          select: 'name avatar slug isOnline offlinedAt',
         },
         match: { _id: { $nin: except } },
         options: { sort: { createdAt: -1 }, skip, limit },
@@ -52,7 +52,7 @@ export const commentControllers = {
         const post = await Post.findById(postId);
 
         if (!post) {
-          throw new ApolloError("Post not found");
+          throw new ApolloError('Post not found');
         }
         const newComment = new Comment({
           text,
@@ -71,15 +71,15 @@ export const commentControllers = {
               {
                 field: fields.COMMENT,
                 content: contents.MENTIONED,
-                "fieldIdentity.post": postId,
+                'fieldIdentity.post': postId,
                 creator: currentUserId,
                 receiver: mentionId,
               },
               { updatedAt: Date.now(), hasSeen: false },
               { new: true }
             )
-              .populate({ path: "creator", select: "slug name avatar" })
-              .populate({ path: "fieldIdentity.post", select: "shortenText" });
+              .populate({ path: 'creator', select: 'slug name avatar' })
+              .populate({ path: 'fieldIdentity.post', select: 'shortenText' });
             if (!notification) {
               notification = new Notification({
                 field: fields.COMMENT,
@@ -98,11 +98,13 @@ export const commentControllers = {
                 }
 
                 await mentioner.save();
-                await (await notification.save())
-                  .populate({ path: "creator", select: "name slug avatar" })
+                await (
+                  await notification.save()
+                )
+                  .populate({ path: 'creator', select: 'name slug avatar' })
                   .populate({
-                    path: "fieldIdentity.post",
-                    select: "shortenText",
+                    path: 'fieldIdentity.post',
+                    select: 'shortenText',
                   })
                   .execPopulate();
               }
@@ -115,10 +117,12 @@ export const commentControllers = {
         }
 
         //save new comment
-        await (await newComment.save())
+        await (
+          await newComment.save()
+        )
           .populate({
-            path: "author",
-            select: "name avatar slug isOnline offlinedAt",
+            path: 'author',
+            select: 'name avatar slug isOnline offlinedAt',
           })
           .execPopulate();
 
@@ -128,15 +132,15 @@ export const commentControllers = {
             {
               field: fields.COMMENT,
               content: contents.CREATED,
-              "fieldIdentity.post": postId,
+              'fieldIdentity.post': postId,
               creator: currentUserId,
               receiver: post.author,
             },
             { updatedAt: Date.now(), hasSeen: false },
             { new: true }
           )
-            .populate({ path: "creator", select: "name slug avatar" })
-            .populate({ path: "fieldIdentity.post", select: "shortenText" });
+            .populate({ path: 'creator', select: 'name slug avatar' })
+            .populate({ path: 'fieldIdentity.post', select: 'shortenText' });
           if (!notificationForOwnerPost) {
             notificationForOwnerPost = new Notification({
               field: fields.COMMENT,
@@ -157,8 +161,8 @@ export const commentControllers = {
 
             //save notification owner Post
             await (await notificationForOwnerPost.save())
-              .populate("creator")
-              .populate({ path: "fieldIdentity.post", select: "shortenText" })
+              .populate('creator')
+              .populate({ path: 'fieldIdentity.post', select: 'shortenText' })
               .execPopulate();
           }
           await pubsub.publish(notifyUserCommentPostSubscription, {
@@ -220,8 +224,8 @@ export const commentControllers = {
   likeComment: async (req, commentId, pubsub, likeCommentSubscription) => {
     const currentUserId = getAuthUser(req);
     const comment = await Comment.findById(commentId).populate({
-      path: "author",
-      select: "slug name avatar",
+      path: 'author',
+      select: 'slug name avatar',
     });
     if (!comment || comment.likes.includes(currentUserId.toString())) {
       return false;
@@ -247,9 +251,9 @@ export const commentControllers = {
         $push: { notifications: notification._id },
       });
       await (await notification.save())
-        .populate({ path: "creator", select: "name slug avatar" })
-        .populate("fieldIdentity.post")
-        .populate({ path: "fieldIdentity.comment", select: "shortenText" })
+        .populate({ path: 'creator', select: 'name slug avatar' })
+        .populate('fieldIdentity.post')
+        .populate({ path: 'fieldIdentity.comment', select: 'shortenText' })
         .execPopulate();
     }
 
@@ -273,8 +277,8 @@ export const commentControllers = {
   ) => {
     const currentUserId = getAuthUser(req);
     const comment = await Comment.findById(commentId).populate({
-      path: "author",
-      select: "slug name avatar",
+      path: 'author',
+      select: 'slug name avatar',
     });
     if (!comment || !comment.likes.includes(currentUserId)) {
       return false;
@@ -285,14 +289,14 @@ export const commentControllers = {
     const removedNotification = await Notification.findOneAndDelete({
       field: fields.COMMENT,
       content: contents.LIKED,
-      "fieldIdentity.post": comment.post,
-      "fieldIdentity.comment": comment._id,
+      'fieldIdentity.post': comment.post,
+      'fieldIdentity.comment': comment._id,
       creator: currentUserId,
       receiver: comment.author,
     })
-      .populate({ path: "creator", select: "name avatar slug" })
-      .populate({ path: "fieldIdentity.post", select: "_id" })
-      .populate({ path: "fieldIdentity.comment", select: "_id" });
+      .populate({ path: 'creator', select: 'name avatar slug' })
+      .populate({ path: 'fieldIdentity.post', select: '_id' })
+      .populate({ path: 'fieldIdentity.comment', select: '_id' });
     let removeLikeCommentSubscriptionData = {
       comment,
     };

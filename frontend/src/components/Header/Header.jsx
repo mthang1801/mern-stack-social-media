@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import Brand from "./Brand";
-import Search from "./Search";
-import Navigation from "./Navigation";
-import MessengerAndNotification from "./MessengerAndNotification";
-import SettingAccount from "./SettingAccount";
-import Button from "../Controls/ButtonDefaultCircle";
-import { FaArrowLeft } from "react-icons/fa";
-import ButtonMenu from "../Controls/ButtonMenu";
-import {toggleMenu} from "../../apollo/controls/controls.caches"
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Brand from './Brand';
+import Search from './Search';
+import Navigation from './Navigation';
+import MessengerAndNotification from './MessengerAndNotification';
+import SettingAccount from './SettingAccount';
+import Button from '../Controls/ButtonDefaultCircle';
+import { FaArrowLeft } from 'react-icons/fa';
+import ButtonMenu from '../Controls/ButtonMenu';
+import { toggleMenu } from '../../apollo/controls/controls.caches';
 
-import classNames from "classnames";
-import { userVar } from "../../apollo//cache";
-import { useQuery, useReactiveVar } from "@apollo/client";
-import { useLocation } from "react-router-dom";
-import { useThemeUI } from "theme-ui";
-import ButtonLogin from "../Controls/ButtonLogin";
-import ButtonSignUp from "../Controls/ButtonSignUp";
+import classNames from 'classnames';
+import { userVar } from '../../apollo//cache';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { useLocation } from 'react-router-dom';
+import { useThemeUI } from 'theme-ui';
+import ButtonLogin from '../Controls/ButtonLogin';
+import ButtonSignUp from '../Controls/ButtonSignUp';
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
- const user = useReactiveVar(userVar);
+  const user = useReactiveVar(userVar);
   const { colorMode } = useThemeUI();
   const { pathname } = useLocation();
-  
+
   const NavControls = user ? (
     <div className="nav-controls">
       <div className="center">
@@ -56,17 +56,17 @@ const Header = () => {
       </div>
     </div>
   );
- 
+
   return (
     <Wrapper theme={colorMode}>
-      <div className={classNames("nav-header", { shorten: !openSearch })}>
-        <div className={classNames("nav-brand", { hide: openSearch })}>
+      <div className={classNames('nav-header', { shorten: !openSearch })}>
+        <div className={classNames('nav-brand', { hide: openSearch })}>
           <Brand />
         </div>
         <div
           className={classNames(
-            "close-search",
-            { "on-search-open": !openSearch },
+            'close-search',
+            { 'on-search-open': !openSearch },
             { hide: !openSearch }
           )}
         >
@@ -74,7 +74,7 @@ const Header = () => {
             <FaArrowLeft />
           </Button>
         </div>
-        <div className={classNames("search-bar")}>
+        <div className={classNames('search-bar')}>
           <Search
             openSearch={openSearch}
             setOpenSearch={() => setOpenSearch(true)}
@@ -90,11 +90,11 @@ const Wrapper = styled.header`
   width: 100vw;
   height: 60px;
   background-color: ${({ theme }) =>
-    theme === "dark"
-      ? "var(--color-background-dark)"
-      : "var(--color-background-default)"};
+    theme === 'dark'
+      ? 'var(--color-background-dark)'
+      : 'var(--color-background-default)'};
   border-bottom: 1px solid
-    ${({ theme }) => (theme === "dark" ? "var(--gray)" : "var(--gray-light)")};
+    ${({ theme }) => (theme === 'dark' ? 'var(--gray)' : 'var(--gray-light)')};
   position: fixed;
   top: 0;
   padding: 0 0.4rem;

@@ -9,6 +9,7 @@
     "server": "nodemon -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
     "start": "node -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
     "client": "npm start --prefix frontend",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "dev": "concurrently \"npm run client\" \"npm run server\" "
   },
   "keywords": [],
@@ -27,6 +28,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mongoose": "^5.11.13",
+    "prettier": "^2.4.1",
     "socket.io": "^4.0.0"
   },
   "devDependencies": {

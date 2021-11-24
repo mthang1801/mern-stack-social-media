@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   CommentContainer,
   UserAvatar,
@@ -9,12 +9,12 @@ import {
   ControlItem,
   LikeButton,
   LikeCounters,
-} from "./styles/CommentCard.styles";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import Moment from "react-moment";
-import { useThemeUI } from "theme-ui";
-import useLanguage from "../Global/useLanguage";
-import { BiLike } from "react-icons/bi";
+} from './styles/CommentCard.styles';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import Moment from 'react-moment';
+import { useThemeUI } from 'theme-ui';
+import useLanguage from '../Global/useLanguage';
+import { BiLike } from 'react-icons/bi';
 const CommentCard = ({
   comment,
   user,
@@ -25,7 +25,7 @@ const CommentCard = ({
 }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
-  const { controls } = i18n.store.data[lang].translation.comment;  
+  const { controls } = i18n.store.data[lang].translation.comment;
   return (
     <CommentContainer>
       <UserAvatar>

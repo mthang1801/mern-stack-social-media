@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-express";
+import { gql } from 'apollo-server-express';
 
 export const schemaType = gql`
   type User {
@@ -9,7 +9,7 @@ export const schemaType = gql`
     email: String!
     password: String
     friends: [String!]!
-    posts: [ID!]!    
+    posts: [ID!]!
     avatar: String
     comments: [Comment!]!
     responses: [Response!]
@@ -26,8 +26,8 @@ export const schemaType = gql`
   type Post {
     _id: ID!
     text: String
-    shortenText : String
-    rawText : String
+    shortenText: String
+    rawText: String
     mentions: [User!]
     status: PostStatusEnum!
     files: [File!]
@@ -47,8 +47,8 @@ export const schemaType = gql`
   type Comment {
     _id: ID!
     text: String
-    shortenText : String
-    rawText : String
+    shortenText: String
+    rawText: String
     mentions: [ID!]
     author: User!
     post: ID!
@@ -58,10 +58,10 @@ export const schemaType = gql`
     updatedAt: String
   }
   type Response {
-    _id: ID!    
+    _id: ID!
     text: String
-    shortenText : String
-    rawText : String
+    shortenText: String
+    rawText: String
     mentions: [ID!]
     author: User!
     comment: ID!
@@ -77,7 +77,6 @@ export const schemaType = gql`
     createdAt: String!
     updatedAt: String!
   }
- 
 
   type Notification {
     _id: ID!
@@ -88,21 +87,21 @@ export const schemaType = gql`
     url: String!
     hasSeen: Boolean!
     receivers: [ID!]!
-    receiver : ID! 
+    receiver: ID!
     isQuestion: Boolean!
-    questionType : QuestionType
+    questionType: QuestionType
     createdAt: String
-    updatedAt : String
+    updatedAt: String
   }
 
-  type QuestionType{
-    yesNoQuestion : Boolean
+  type QuestionType {
+    yesNoQuestion: Boolean
   }
 
   type NotificationFieldIdentity {
     post: Post
-    sender : User
-    receiver : User
+    sender: User
+    receiver: User
     comment: Comment
     response: Response
   }
@@ -157,7 +156,7 @@ export const schemaType = gql`
   type UsersContact {
     sender: User!
     receiver: User!
-    notification : Notification
+    notification: Notification
   }
 
   type ListContact {
@@ -201,12 +200,12 @@ export const schemaType = gql`
 
   type CommentSubscriptionPayload {
     comment: Comment
-    notification: Notification    
+    notification: Notification
   }
 
-  type ResponseSubscriptionPayload{
-    response : Response
-    notification: Notification    
+  type ResponseSubscriptionPayload {
+    response: Response
+    notification: Notification
   }
 
   type MessagesResult {

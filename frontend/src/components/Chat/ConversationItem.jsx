@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   ConversationItemWrapper,
   Avatar,
   ConversationOverview,
   ConversationControls,
-} from "./styles/ConversationItem.styles";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import Moment from "react-moment";
-import { usePopupMessagesActions } from "./hook/usePopupActions";
-import { useThemeUI } from "theme-ui";
-import ThreeDotsSetting from "../UI/ThreeDotsSetting";
-import { convertFromRaw, EditorState } from "draft-js";
-import { UPDATE_HAVE_SEEN_ALL_MESSAGES } from "../../apollo/chat/chat.types";
-import {setCurrentChat, updateHasSeenLatestMessage} from "../../apollo/chat/chat.caches"
-import { useMutation } from "@apollo/client";
+} from './styles/ConversationItem.styles';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import Moment from 'react-moment';
+import { usePopupMessagesActions } from './hook/usePopupActions';
+import { useThemeUI } from 'theme-ui';
+import ThreeDotsSetting from '../UI/ThreeDotsSetting';
+import { convertFromRaw, EditorState } from 'draft-js';
+import { UPDATE_HAVE_SEEN_ALL_MESSAGES } from '../../apollo/chat/chat.types';
+import {
+  setCurrentChat,
+  updateHasSeenLatestMessage,
+} from '../../apollo/chat/chat.caches';
+import { useMutation } from '@apollo/client';
 
 const MessageItem = ({
   conversation,
@@ -45,7 +48,7 @@ const MessageItem = ({
     }).then((res) => {
       updateHasSeenLatestMessage(conversation._id);
     });
-  };  
+  };
   return (
     <ConversationItemWrapper
       theme={colorMode}
@@ -59,16 +62,16 @@ const MessageItem = ({
       <ConversationOverview>
         <h4>{conversation.name}</h4>
         <small>
-          {latestMessage.messageType === "TEXT"
+          {latestMessage.messageType === 'TEXT'
             ? EditorState.createWithContent(
                 convertFromRaw(JSON.parse(latestMessage.text))
               )
                 .getCurrentContent()
                 .getPlainText()
-                .slice(0, 30) + "..."
-            : latestMessage === "PICTURE"
-            ? "sent an image"
-            : "sent an attachment"}
+                .slice(0, 30) + '...'
+            : latestMessage === 'PICTURE'
+            ? 'sent an image'
+            : 'sent an attachment'}
         </small>
       </ConversationOverview>
       <ConversationControls
@@ -77,7 +80,7 @@ const MessageItem = ({
         onMouseLeave={() => setShowSettings(false)}
         hasSeenLatestMessage={hasSeenLatestMessage}
       >
-        <div style={{ textAlign: "right" }}>
+        <div style={{ textAlign: 'right' }}>
           <Moment fromNow>{+latestMessage.createdAt}</Moment>
         </div>
         <div

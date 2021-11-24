@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 
 import {
   AiOutlineUnorderedList,
@@ -6,34 +6,30 @@ import {
   AiOutlineUsergroupDelete,
   AiOutlineEye,
   AiOutlineEyeInvisible,
-} from "react-icons/ai";
+} from 'react-icons/ai';
 import {
   BsThreeDots,
   BsExclamationSquare,
   BsQuestionSquare,
-} from "react-icons/bs";
-import { BiUserVoice, BiBlock } from "react-icons/bi";
+} from 'react-icons/bs';
+import { BiUserVoice, BiBlock } from 'react-icons/bi';
 
-import { FiUserX, FiUsers, FiUserCheck, FiUserPlus } from "react-icons/fi";
-import { RiMessengerLine } from "react-icons/ri";
-import { IoMdUndo } from "react-icons/io";
+import { FiUserX, FiUsers, FiUserCheck, FiUserPlus } from 'react-icons/fi';
+import { RiMessengerLine } from 'react-icons/ri';
+import { IoMdUndo } from 'react-icons/io';
 
-import { FcCheckmark, FcCancel } from "react-icons/fc";
-import { setCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
+import { FcCheckmark, FcCancel } from 'react-icons/fc';
+import { setCurrentPersonalUser } from '../../apollo/user/currentPersonalUser.caches';
 import {
   ACCEPT_REQUEST_TO_ADD_FRIEND,
   SEND_REQUEST_TO_ADD_FRIEND,
   REJECT_REQUEST_TO_ADD_FRIEND,
   CANCEL_REQUEST_TO_ADD_FRIEND,
- 
   REMOVE_FRIEND,
-} from "../../apollo/contact/contact.types";
-import {
-  FOLLOW_USER,
-  UNFOLLOW_USER,
-} from "../../apollo/user/user.types";
-import Button from "@material-ui/core/Button";
-import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
+} from '../../apollo/contact/contact.types';
+import { FOLLOW_USER, UNFOLLOW_USER } from '../../apollo/user/user.types';
+import Button from '@material-ui/core/Button';
+import { useQuery, useMutation, useReactiveVar } from '@apollo/client';
 
 import {
   dialogVar,
@@ -41,8 +37,8 @@ import {
   latestNotificationVar,
   userVar,
   currentPersonalUserVar,
-} from "../../apollo/cache";
-import { useThemeUI } from "theme-ui";
+} from '../../apollo/cache';
+import { useThemeUI } from 'theme-ui';
 import {
   PersonalContactContainer,
   ResponseRequests,
@@ -50,20 +46,20 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-} from "./styles/PersonalHeadingContact.styles";
-import { setCurrentUser } from "../../apollo/user/user.caches";
+} from './styles/PersonalHeadingContact.styles';
+import { setCurrentUser } from '../../apollo/user/user.caches';
 import {
   setAlertDialog,
   clearAlertDialog,
-} from "../../apollo/controls/controls.caches";
+} from '../../apollo/controls/controls.caches';
 import {
   removeNewNotification,
   decreaseCountNumberNotificationsUnseen,
   removeNotificationItemFromNotificationsList,
   setLatestNotification,
-} from "../../apollo/notification/notification.caches";
+} from '../../apollo/notification/notification.caches';
 const PersonalContact = ({ user }) => {
-  const [relationship, setRelationship] = useState("stranger");
+  const [relationship, setRelationship] = useState('stranger');
   const [openResponse, setOpenResponse] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openUserInteraction, setOpenUserInteraction] = useState(false);
@@ -90,7 +86,7 @@ const PersonalContact = ({ user }) => {
   useEffect(() => {
     if (
       dialog &&
-      dialog?.data?.type === "remove contact" &&
+      dialog?.data?.type === 'remove contact' &&
       dialog?.data?.userId === currentPersonalUser._id &&
       dialog?.agree
     ) {
@@ -111,7 +107,7 @@ const PersonalContact = ({ user }) => {
     ) {
       if (latestNotification?._id === removedNotification._id) {
         setLatestNotification(null);
-      }     
+      }
       removeNotificationItemFromNotificationsList(removedNotification);
       setCurrentUser({
         ...user,
@@ -135,7 +131,6 @@ const PersonalContact = ({ user }) => {
       });
     }
     if (currentPersonalUser?._id === receiver._id) {
-     
       setCurrentPersonalUser({
         ...currentPersonalUser,
         friends: [...receiver.friends],
@@ -145,7 +140,7 @@ const PersonalContact = ({ user }) => {
         sentRequestToAddFriend: [...receiver.sentRequestToAddFriend],
       });
     }
-  };  
+  };
   //track user click event
   useEffect(() => {
     function trackUserClickEvent(e) {
@@ -171,21 +166,21 @@ const PersonalContact = ({ user }) => {
         setOpenUserInteraction(false);
       }
     }
-    window.addEventListener("click", trackUserClickEvent);
-    return () => window.removeEventListener("click", trackUserClickEvent);
+    window.addEventListener('click', trackUserClickEvent);
+    return () => window.removeEventListener('click', trackUserClickEvent);
   });
 
   useEffect(() => {
     if (currentPersonalUser) {
       if (user && currentPersonalUser._id === user._id) {
-        setRelationship("me");
+        setRelationship('me');
       } else if (
         user &&
         currentPersonalUser.friends.includes(user._id.toString())
       ) {
-        setRelationship("friend");
+        setRelationship('friend');
       } else {
-        setRelationship("stranger");
+        setRelationship('stranger');
       }
     }
   }, [user, currentPersonalUser]);
@@ -206,11 +201,8 @@ const PersonalContact = ({ user }) => {
       variables: { senderId: currentPersonalUser._id },
     })
       .then(({ data }) => {
-        const {
-          sender,
-          receiver,
-          notification,
-        } = data.rejectRequestToAddFriend;
+        const { sender, receiver, notification } =
+          data.rejectRequestToAddFriend;
         updateMutationOnChange(receiver, sender, notification);
         setOpenResponse(false);
       })
@@ -336,7 +328,7 @@ const PersonalContact = ({ user }) => {
     setAlertDialog({
       title: `Remove friend`,
       content: `Are you sure to remove ${currentPersonalUser?.name}`,
-      data: { type: "remove contact", userId: currentPersonalUser._id },
+      data: { type: 'remove contact', userId: currentPersonalUser._id },
     });
   };
 
@@ -346,10 +338,10 @@ const PersonalContact = ({ user }) => {
         size="large"
         title={
           user.friends.includes(currentPersonalUser._id)
-            ? "Friend"
+            ? 'Friend'
             : user.following.includes(currentPersonalUser._id)
-            ? "Following"
-            : "Follow"
+            ? 'Following'
+            : 'Follow'
         }
         onClick={() => setOpenUserInteraction((prevState) => !prevState)}
       >
@@ -422,9 +414,9 @@ const PersonalContact = ({ user }) => {
 
   return (
     <PersonalContactContainer>
-      {relationship === "me"
+      {relationship === 'me'
         ? MyActionsContact
-        : relationship === "friend"
+        : relationship === 'friend'
         ? FriendActionsContact
         : StrangerActionsContact}
       {UserInteraction}

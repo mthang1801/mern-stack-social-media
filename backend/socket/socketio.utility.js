@@ -1,4 +1,4 @@
-import { User } from "../user/user.model";
+import { User } from '../user/user.model';
 
 const pushSocketIdIntoArray = async (io, clients, userId, socketId) => {
   if (clients[userId]) {
@@ -33,7 +33,7 @@ const removeSocketIdFromArray = async (io, clients, socket) => {
         (_id) => _id !== socketId && io.sockets.sockets.get(_id)?.connected
       );
       if (!clients[userId].length) {
-        socket.broadcast.emit("server-send-user-is-offline", userId);
+        socket.broadcast.emit('server-send-user-is-offline', userId);
         await User.findByIdAndUpdate(userId, {
           isOnline: false,
           offlinedAt: Date.now(),

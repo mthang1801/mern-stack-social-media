@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from "react";
-import FacebookLogin from "react-facebook-login";
-import { TiSocialFacebook } from "react-icons/ti";
-import styled from "styled-components";
-import useLanguage from "../Global/useLanguage"
+import React, { useState, useEffect } from 'react';
+import FacebookLogin from 'react-facebook-login';
+import { TiSocialFacebook } from 'react-icons/ti';
+import styled from 'styled-components';
+import useLanguage from '../Global/useLanguage';
 const FBAuth = ({ loginFacebook }) => {
-  const [loginName, setLoginName] = useState("")
-  const {lang, i18n} = useLanguage()
+  const [loginName, setLoginName] = useState('');
+  const { lang, i18n } = useLanguage();
   useEffect(() => {
-    setLoginName(i18n.store.data[lang].translation.auth.login)
-  }, [lang, i18n.store.data])
+    setLoginName(i18n.store.data[lang].translation.auth.login);
+  }, [lang, i18n.store.data]);
   const responseFacebook = (response) => {
     const { name, email, userID } = response;
     loginFacebook(userID, name, email);
@@ -47,7 +47,7 @@ const Wrapper = styled.div`
     font-weight: bold;
     justify-content: center;
     border-radius: 5px;
-    box-shadow : var(--lightShadow);
+    box-shadow: var(--lightShadow);
   }
 
   .btn-fb:hover {

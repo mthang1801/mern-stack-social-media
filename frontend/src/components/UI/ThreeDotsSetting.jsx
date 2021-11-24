@@ -1,5 +1,5 @@
-import React from 'react'
-import {Wrapper} from "./styles/ThreeDotsSetting.styles"
+import React from 'react';
+import { Wrapper } from './styles/ThreeDotsSetting.styles';
 const ThreeDotsSetting = () => {
   return (
     <Wrapper>
@@ -7,7 +7,7 @@ const ThreeDotsSetting = () => {
       <span></span>
       <span></span>
     </Wrapper>
-  )
-}
+  );
+};
 
-export default ThreeDotsSetting
+export default ThreeDotsSetting;

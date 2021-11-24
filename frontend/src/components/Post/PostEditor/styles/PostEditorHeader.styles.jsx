@@ -1,9 +1,13 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.div`
   display: flex;
   padding: 0.5rem;
-  border-bottom: 1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};
+  border-bottom: 1px solid
+    ${({ theme }) =>
+      theme === 'dark'
+        ? 'var(--color-border-dark)'
+        : 'var(--color-border-default)'};
 `;
 
 export const Information = styled.div`
@@ -41,28 +45,28 @@ export const Selected = styled.div`
   }
   border: 1px solid
     ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-border-dark)"
-        : "var(--color-border-default)"};
+      theme === 'dark'
+        ? 'var(--color-border-dark)'
+        : 'var(--color-border-default)'};
   border-radius: 1rem;
   padding: 0.15rem 0.35rem;
   background-color: ${({ status }) =>
-    status === "public"
-      ? "var(--indigo-1)"
-      : status === "friends"
-      ? "var(--green-1)"
-      : "var(--gray-light-1)"};
+    status === 'public'
+      ? 'var(--indigo-1)'
+      : status === 'friends'
+      ? 'var(--green-1)'
+      : 'var(--gray-light-1)'};
   color: ${({ status }) =>
-    status === "public" || status === "friends"
-      ? "var(--white)"
-      : "var(--black)"};
+    status === 'public' || status === 'friends'
+      ? 'var(--white)'
+      : 'var(--black)'};
   &:hover {
     background-color: ${({ status }) =>
-      status === "public"
-        ? "var(--indigo-2)"
-        : status === "friends"
-        ? "var(--green-2)"
-        : "var(--gray-light-2)"};
+      status === 'public'
+        ? 'var(--indigo-2)'
+        : status === 'friends'
+        ? 'var(--green-2)'
+        : 'var(--gray-light-2)'};
   }
 `;
 
@@ -72,12 +76,12 @@ export const DropdownStatus = styled.div`
   left: 5%;
   flex-direction: column;
   background-color: ${({ theme }) =>
-    theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
+    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
   border: 1px solid
     ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-border-dark)"
-        : "var(--color-border-default)"};
+      theme === 'dark'
+        ? 'var(--color-border-dark)'
+        : 'var(--color-border-default)'};
   border-radius: 0.3rem;
   box-shadow: var(--lightShadow);
   overflow: hidden;
@@ -106,9 +110,9 @@ export const StatusItem = styled.span`
   }
   &:hover {
     background-color: ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-hover-dark)"
-        : "var(--color-hover-default)"};
+      theme === 'dark'
+        ? 'var(--color-hover-dark)'
+        : 'var(--color-hover-default)'};
   }
 `;
 

@@ -1,20 +1,20 @@
-import { useEffect } from "react";
-import { useQuery, useReactiveVar } from "@apollo/client";
-import { FETCH_POSTS } from "../apollo/post/post.queries";
+import { useEffect } from 'react';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { FETCH_POSTS } from '../apollo/post/post.queries';
 import {
   CREATE_COMMENT_SUBSCIPTION,
   CREATE_RESPONSE_SUBSCRIPTION,
   EDIT_POST_SUBSCRIPTION,
-} from "../apollo/post/post.types";
-import { userVar } from "../apollo/cache";
+} from '../apollo/post/post.types';
+import { userVar } from '../apollo/cache';
 import {
   addCommentToPost,
   addNewResponseToComment,
   updatePost,
-} from "../apollo/post/post.caches";
+} from '../apollo/post/post.caches';
 const useHomePostsSubscription = () => {
   const { subscribeToMore: subscribePosts } = useQuery(FETCH_POSTS, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
     skip: true,
   });
   const user = useReactiveVar(userVar);
@@ -28,9 +28,8 @@ const useHomePostsSubscription = () => {
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
-            const {
-              createCommentSubscription: comment,
-            } = subscriptionData.data;
+            const { createCommentSubscription: comment } =
+              subscriptionData.data;
             if (comment.author._id !== user._id) {
               addCommentToPost(comment.post, comment);
             }
@@ -43,9 +42,8 @@ const useHomePostsSubscription = () => {
         updateQuery: (_, { subscriptionData }) => {
           console.log(subscriptionData);
           if (subscriptionData) {
-            const {
-              createResponseSubscription: response,
-            } = subscriptionData.data;
+            const { createResponseSubscription: response } =
+              subscriptionData.data;
             if (response.author._id !== user._id) {
               addNewResponseToComment(
                 response.post,

@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { fields, contents } from "./index";
+import mongoose from 'mongoose';
+import { fields, contents } from './index';
 const NotificationSchema = new mongoose.Schema(
   {
     field: {
@@ -14,40 +14,40 @@ const NotificationSchema = new mongoose.Schema(
     },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
       required: true,
     },
     fieldIdentity: {
       comment: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "comments",
+        ref: 'comments',
       },
       post: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "posts",
+        ref: 'posts',
       },
       sender: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: 'users',
       },
-      receiver :{
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "users"
+      receiver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
       },
       response: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "responses",
+        ref: 'responses',
       },
     },
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
       required: true,
     },
     receivers: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: 'users',
         required: true,
       },
     ],
@@ -74,6 +74,6 @@ const NotificationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Notification = mongoose.model("notifications", NotificationSchema);
+const Notification = mongoose.model('notifications', NotificationSchema);
 
 export { Notification };

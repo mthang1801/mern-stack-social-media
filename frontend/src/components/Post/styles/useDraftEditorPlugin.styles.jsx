@@ -1,5 +1,4 @@
-import styled from "styled-components";
-
+import styled from 'styled-components';
 
 export const HashtagLink = styled.a`
   color: #575f67;
@@ -13,8 +12,8 @@ export const HashtagLink = styled.a`
 `;
 
 export const LinkAnchor = styled.a`
-  color : var(--blue-1);
-  &:hover{
-    color : var(--blue-3);
+  color: var(--blue-1);
+  &:hover {
+    color: var(--blue-3);
   }
-`
+`;

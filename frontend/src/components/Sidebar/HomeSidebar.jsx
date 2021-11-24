@@ -1,23 +1,19 @@
-import React from 'react'
-import CardProfile from "../Card/CardProfile";
-import CardUtility from "../Card/CardUtility"
-const HomeSidebar = ({user}) => {
+import React from 'react';
+import CardProfile from '../Card/CardProfile';
+import CardUtility from '../Card/CardUtility';
+const HomeSidebar = ({ user }) => {
   const SidebarWithUserAuth = (
     <div>
-      <CardProfile user={user}/>
+      <CardProfile user={user} />
     </div>
-  )
+  );
 
   const SidebarWithoutUserAuth = (
     <div>
-      <CardUtility/>
+      <CardUtility />
     </div>
-  )
-  return (
-    <div>
-      {user ? SidebarWithUserAuth : SidebarWithoutUserAuth}
-    </div>
-  )
-}
+  );
+  return <div>{user ? SidebarWithUserAuth : SidebarWithoutUserAuth}</div>;
+};
 
-export default React.memo(HomeSidebar)
+export default React.memo(HomeSidebar);

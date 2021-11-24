@@ -1,7 +1,8 @@
-import { chatControllers } from "./chat.controllers";
-import { pubsub } from "../pubsub";
-import { withFilter } from "apollo-server-express";
-import { subscriptionActions } from "../schema";
+import { chatControllers } from './chat.controllers';
+import { pubsub } from '../pubsub';
+import { withFilter } from 'apollo-server-express';
+import { subscriptionActions } from '../schema';
+import constant from '../config/constant';
 export const chatResolvers = {
   Query: {
     fetchChatConversations: (_, args, { req }, info) =>
@@ -9,9 +10,9 @@ export const chatResolvers = {
         req,
         args.except || [],
         args.skip || 0,
-        args.limit || +process.env.NUMBER_CONVERSATIONS_LIMITATION
+        args.limit || constant.NUMBER_CONVERSATIONS_LIMITATION
       ),
-   
+
     fetchMessages: (_, args, { req }, info) =>
       chatControllers.fetchMessages(
         req,
@@ -93,9 +94,8 @@ export const chatResolvers = {
             subscriptionActions.UPDATE_RECEIVER_RECEIVED_CHAT
           ),
         (payload, { userId }) => {
-          const {
-            message,
-          } = payload.notifySenderThatReceiverHasReceivedMessageChat;
+          const { message } =
+            payload.notifySenderThatReceiverHasReceivedMessageChat;
           return message.sender._id.toString() === userId.toString();
         }
       ),
@@ -107,9 +107,8 @@ export const chatResolvers = {
             subscriptionActions.UPDATE_RECEIVER_SEEN_ALL_MESSAGES
           ),
         (payload, { userId }) => {
-          const {
-            senderId,
-          } = payload.senderSubscribeWhenReceiverHasSeenAllMessages;
+          const { senderId } =
+            payload.senderSubscribeWhenReceiverHasSeenAllMessages;
           return senderId.toString() === userId.toString();
         }
       ),

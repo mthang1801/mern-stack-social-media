@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const MentionLinkInfo = styled.div`
   position: absolute;
@@ -25,20 +25,20 @@ export const MentionLinkInfo = styled.div`
 
 export const Wrapper = styled.div`
   width: 100%;
-  margin-bottom: 1rem;  
+  margin-bottom: 1rem;
   &::after {
-    content: "";
+    content: '';
     clear: both;
     display: table;
   }
   ${MentionLinkInfo} {
-    top: ${({ index }) => (index === 0 ? "1.5rem" : "unset")};
-    bottom: ${({ index }) => (index === 0 ? "unset" : "1.5rem")};
+    top: ${({ index }) => (index === 0 ? '1.5rem' : 'unset')};
+    bottom: ${({ index }) => (index === 0 ? 'unset' : '1.5rem')};
   }
 `;
 
 export const BubbleContainer = styled.div`
-  float: ${({ me }) => (me ? "left" : "right")};
+  float: ${({ me }) => (me ? 'left' : 'right')};
   width: auto;
   min-width: 20rem;
   max-width: 75%;
@@ -63,7 +63,7 @@ export const BubbleContainer = styled.div`
 `;
 export const BubbleTimeline = styled.div`
   &::before {
-    content: "";
+    content: '';
     clear: both;
     display: table;
   }
@@ -108,7 +108,7 @@ export const Message = styled.div`
   border-radius: 0.5rem;
   word-break: break-all;
   ${({ me, messageType }) =>
-    messageType !== "TEXT" && messageType !== "ATTACHMENT"
+    messageType !== 'TEXT' && messageType !== 'ATTACHMENT'
       ? null
       : me
       ? `
@@ -152,22 +152,22 @@ export const MentionAvatar = styled.img`
 export const ImageContainer = styled.div`
   width: 100%;
   max-width: 18rem;
-  cursor : pointer;
+  cursor: pointer;
   & img {
     width: 100%;
   }
 `;
 
 export const AttachmentContainer = styled.div`
-  width: 100%; 
+  width: 100%;
   max-width: 18rem;
-  
-  & a{
-    display : block;
-    text-decoration : underline;
+
+  & a {
+    display: block;
+    text-decoration: underline;
     padding: 0.5rem;
-    overflow: hidden ; 
-    text-overflow : ellipsis; 
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
-`
+`;

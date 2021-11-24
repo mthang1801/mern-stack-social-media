@@ -1,21 +1,21 @@
-import React, { useCallback, useEffect } from "react";
-import CommentCard from "./CommentCard";
-import { useMutation, useQuery } from "@apollo/client";
+import React, { useCallback, useEffect } from 'react';
+import CommentCard from './CommentCard';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   LIKE_RESPONSE,
   REMOVE_LIKE_RESPONSE,
-} from "../../apollo/post/post.types";
+} from '../../apollo/post/post.types';
 import {
   addLikeResponse,
   removeLikeResponse as removeLikeResponseInCache,
-} from "../../apollo/post/post.caches";
-import {setAlertDialog} from "../../apollo/controls/controls.caches"
-import useLanguage from "../Global/useLanguage";
+} from '../../apollo/post/post.caches';
+import { setAlertDialog } from '../../apollo/controls/controls.caches';
+import useLanguage from '../Global/useLanguage';
 const Responses = ({ responses, user, onClickResponse }) => {
   const [likeResponse] = useMutation(LIKE_RESPONSE);
   const [removeLikeResponse] = useMutation(REMOVE_LIKE_RESPONSE);
   const { i18n, lang } = useLanguage();
-  const { dialog: dialogAlert } = i18n.store.data[lang].translation;  
+  const { dialog: dialogAlert } = i18n.store.data[lang].translation;
 
   const onLikeResponse = useCallback((response) => {
     likeResponse({ variables: { responseId: response._id } }).then(
@@ -52,7 +52,7 @@ const Responses = ({ responses, user, onClickResponse }) => {
       agree: false,
       title: dialogAlert.removeComment.title,
       content: dialogAlert.removeComment.content,
-      data: { response, role: "response" },
+      data: { response, role: 'response' },
     });
   });
   return responses.map((response) => (

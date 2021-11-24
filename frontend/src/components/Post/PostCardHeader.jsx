@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Wrapper,
   Information,
   Controls,
   Timeline,
   Small,
-} from "./styles/PostCardHeader.styles";
-import { Link } from "react-router-dom";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useThemeUI } from "theme-ui";
-import Moment from "react-moment";
-import Button from "../Controls/ButtonDefaultCircle";
-import { BsThreeDots } from "react-icons/bs";
-import useLanguage from "../Global/useLanguage";
+} from './styles/PostCardHeader.styles';
+import { Link } from 'react-router-dom';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useThemeUI } from 'theme-ui';
+import Moment from 'react-moment';
+import Button from '../Controls/ButtonDefaultCircle';
+import { BsThreeDots } from 'react-icons/bs';
+import useLanguage from '../Global/useLanguage';
 import {
   DropdownContainer,
   DropdownMenu,
   DropdownItem,
-} from "../UI/styles/Dropdown.styles";
+} from '../UI/styles/Dropdown.styles';
 const PostCardHeader = ({ post, user, setIsEdited }) => {
   const [openSetting, setOpenSetting] = useState(false);
   const { i18n, lang } = useLanguage();
@@ -26,13 +26,8 @@ const PostCardHeader = ({ post, user, setIsEdited }) => {
     status,
     heading: { settingOwnPost },
   } = i18n.store.data[lang].translation.post;
-  const {
-    pinPost,
-    savePost,
-    editPost,
-    editAudience,
-    moveToTrash,
-  } = settingOwnPost;
+  const { pinPost, savePost, editPost, editAudience, moveToTrash } =
+    settingOwnPost;
   const settingRef = useRef(null);
   const postIcon = status.find(
     (status) => status.name === post.status.toLowerCase()
@@ -45,8 +40,8 @@ const PostCardHeader = ({ post, user, setIsEdited }) => {
       }
     }
 
-    window.addEventListener("click", trackUserClickEvent);
-    return () => window.removeEventListener("click", trackUserClickEvent);
+    window.addEventListener('click', trackUserClickEvent);
+    return () => window.removeEventListener('click', trackUserClickEvent);
   });
   return (
     <Wrapper theme={colorMode}>
@@ -61,7 +56,7 @@ const PostCardHeader = ({ post, user, setIsEdited }) => {
         <Timeline>
           <Link
             to={`/${post.author.slug}`}
-            style={{ textTransform: "capitalize" }}
+            style={{ textTransform: 'capitalize' }}
           >
             {post.author.name.toLowerCase()}
           </Link>

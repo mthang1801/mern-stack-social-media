@@ -1,31 +1,32 @@
-import getAuthUser from "../utils/getAuthUser";
-import { User } from "../user/user.model";
-import { Notification } from "./notification.model";
-import { ValidationError, AuthenticationError } from "apollo-server-express";
+import getAuthUser from '../utils/getAuthUser';
+import { User } from '../user/user.model';
+import { Notification } from './notification.model';
+import { ValidationError, AuthenticationError } from 'apollo-server-express';
 export const notificationControllers = {
   fetchNotifications: async (req, skip, limit) => {
     const currentUserId = await getAuthUser(req);
-    console.log(skip, limit)
+    console.log(skip, limit);
     const currentUser = await User.findById(currentUserId).populate({
-      path: "notifications",
-      populate : {path : "creator", select: "name slug avatar"},
+      path: 'notifications',
+      populate: { path: 'creator', select: 'name slug avatar' },
       options: { sort: { createdAt: -1 }, skip, limit },
-    });        
+    });
     if (!currentUser) {
-      throw new ValidationError("User not found");
-    }        
+      throw new ValidationError('User not found');
+    }
     return currentUser.notifications;
   },
-  updateUserHasSeenNotification: async (
-    req,
-    notificationId,   
-  ) => {
+  updateUserHasSeenNotification: async (req, notificationId) => {
     const currentUserId = getAuthUser(req);
-    const notification = await Notification.findByIdAndUpdate({_id : notificationId, receiver : currentUserId}, {hasSeen : true}, {new : true});
-    if(!notification){
-      return false ; 
+    const notification = await Notification.findByIdAndUpdate(
+      { _id: notificationId, receiver: currentUserId },
+      { hasSeen: true },
+      { new: true }
+    );
+    if (!notification) {
+      return false;
     }
-    return true ; 
+    return true;
   },
   countNotificationsUnseen: async (req) => {
     const userId = await getAuthUser(req);

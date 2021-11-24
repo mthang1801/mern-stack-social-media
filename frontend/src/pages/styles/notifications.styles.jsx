@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -6,11 +6,11 @@ export const Wrapper = styled.div`
   flex-direction: column;
   @media screen and (min-width: 768px) {
     flex-direction: row;
-  }  
+  }
 `;
 
 export const NotificationsContent = styled.section`
-  width: 90%;  
+  width: 90%;
   margin: auto;
   @media screen and (min-width: 768px) {
     width: 50%;
@@ -35,5 +35,5 @@ export const OtherContents = styled.section`
   @media screen and (min-width: 1280px) {
     width: 30%;
   }
-  background-color : yellow;
+  background-color: yellow;
 `;

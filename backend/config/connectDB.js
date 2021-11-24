@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const host = process.env.DB_HOST;
 const port = process.env.DB_PORT;

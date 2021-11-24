@@ -1,42 +1,42 @@
-import {gql} from "apollo-server-express";
+import { gql } from 'apollo-server-express';
 
 export const schemaEnum = gql`
-  enum PostStatusEnum{   
+  enum PostStatusEnum {
     PUBLIC
     PRIVATE
     FRIENDS
   }
-  enum ActionEnum{
+  enum ActionEnum {
     CREATED
     UPDATED
     DELETED
     ADDED
     ACCEPTED
     REMOVED
-  }  
-  enum ContactEnum{
+  }
+  enum ContactEnum {
     ADDED
     ACCEPTED
     REMOVED
   }
-  enum PersonalChatReceiverStatusEnum{
+  enum PersonalChatReceiverStatusEnum {
     SENT
-    DELIVERED 
-    SEEN 
+    DELIVERED
+    SEEN
     DELETED
-  }  
-  enum PersonalChatSenderStatusEnum{
+  }
+  enum PersonalChatSenderStatusEnum {
     SENT
     RECALLED
     DELETED
   }
-  enum MessageTypeEnum{
+  enum MessageTypeEnum {
     TEXT
     IMAGE
     ATTACHMENT
   }
-  enum ChatScopeEnum{
+  enum ChatScopeEnum {
     PERSONAL
     GROUP
   }
-`
+`;

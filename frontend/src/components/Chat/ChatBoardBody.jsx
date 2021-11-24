@@ -1,23 +1,28 @@
-import React, { useState, useEffect, createRef } from "react";
-import { Wrapper } from "./styles/ChatBoardBody.styles";
-import Bubble from "./Bubble";
-import { useThemeUI } from "theme-ui";
-import { useQuery, useReactiveVar } from "@apollo/client";
-import {userVar, currentChatVar, messagesStorageVar} from "../../apollo/cache"
-import { FETCH_MESSAGES } from "../../apollo/chat/chat.types";
-import {updateMoreMessages} from "../../apollo/chat/chat.caches"
+import React, { useState, useEffect, createRef } from 'react';
+import { Wrapper } from './styles/ChatBoardBody.styles';
+import Bubble from './Bubble';
+import { useThemeUI } from 'theme-ui';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import {
+  userVar,
+  currentChatVar,
+  messagesStorageVar,
+} from '../../apollo/cache';
+import { FETCH_MESSAGES } from '../../apollo/chat/chat.types';
+import { updateMoreMessages } from '../../apollo/chat/chat.caches';
+import constant from '../../constant/constant';
 const ChatBoardBody = () => {
   //useState
   const [loadMoreMessages, setLoadMoreMessages] = useState(false);
   //useQuery
   const currentChat = useReactiveVar(currentChatVar);
   const user = useReactiveVar(userVar);
-  const messagesStorage = useReactiveVar(messagesStorageVar);  
+  const messagesStorage = useReactiveVar(messagesStorageVar);
   const { refetch: fetchMoreMessages } = useQuery(FETCH_MESSAGES, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
     skip: true,
   });
-  const chatBoardBodyRef = createRef(null);  
+  const chatBoardBodyRef = createRef(null);
   const [shouldScrollIntoView, setShouldScrollIntoView] = useState(true);
   const { colorMode } = useThemeUI();
   useEffect(() => {
@@ -25,7 +30,7 @@ const ChatBoardBody = () => {
     timer = setTimeout(() => {
       if (chatBoardBodyRef.current && shouldScrollIntoView) {
         chatBoardBodyRef.current.scrollIntoView({
-          behavior: "auto",
+          behavior: 'auto',
         });
       }
     }, 50);
@@ -34,19 +39,21 @@ const ChatBoardBody = () => {
 
   useEffect(() => {
     let timer;
-    if(messagesStorage[currentChat?._id]?.latestMessage?.sender?._id === user._id ){
+    if (
+      messagesStorage[currentChat?._id]?.latestMessage?.sender?._id === user._id
+    ) {
       timer = setTimeout(() => {
         if (chatBoardBodyRef.current) {
           chatBoardBodyRef.current.scrollIntoView({
-            behavior: "auto",
+            behavior: 'auto',
           });
         }
       }, 10);
     }
-    
+
     return () => clearTimeout(timer);
-  }, [currentChat,messagesStorage[currentChat?._id]?.messages, user]);
-  
+  }, [currentChat, messagesStorage[currentChat?._id]?.messages, user]);
+
   useEffect(() => {
     let isScrolling;
     function onScrollBodyBoard(e) {
@@ -66,8 +73,8 @@ const ChatBoardBody = () => {
         }
       }, 66);
     }
-    document.getElementById("body-board").addEventListener(
-      "scroll",
+    document.getElementById('body-board').addEventListener(
+      'scroll',
       function (e) {
         onScrollBodyBoard(e);
       },
@@ -75,8 +82,8 @@ const ChatBoardBody = () => {
     );
     return () => {
       clearTimeout(isScrolling);
-      document.getElementById("body-board").removeEventListener(
-        "scroll",
+      document.getElementById('body-board').removeEventListener(
+        'scroll',
         function (e) {
           onScrollBodyBoard(e);
         },
@@ -89,7 +96,7 @@ const ChatBoardBody = () => {
     let _isMounted = true;
     if (loadMoreMessages) {
       const skip = messagesStorage[currentChat._id].messages.length;
-      const limit = +process.env.REACT_APP_NUMBER_MESSAGES_PER_LOAD;
+      const limit = constant.REACT_APP_NUMBER_MESSAGES_PER_LOAD;
       const conversationId = currentChat._id;
       const scope = currentChat.scope;
       fetchMoreMessages({ conversationId, scope, skip, limit }).then(
@@ -104,8 +111,8 @@ const ChatBoardBody = () => {
     }
     return () => (_isMounted = false);
   }, [loadMoreMessages]);
-  console.log(currentChat)
-  console.log(messagesStorage)
+  console.log(currentChat);
+  console.log(messagesStorage);
   return (
     <Wrapper
       theme={colorMode}

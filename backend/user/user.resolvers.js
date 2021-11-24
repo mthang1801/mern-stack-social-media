@@ -1,7 +1,8 @@
-import { userController } from "./user.controllers";
-import { pubsub } from "../pubsub";
-import { subscriptionActions } from "../schema/index";
-import { withFilter } from "apollo-server-express";
+import { userController } from './user.controllers';
+import { pubsub } from '../pubsub';
+import { subscriptionActions } from '../schema/index';
+import { withFilter } from 'apollo-server-express';
+import constant from '../config/constant';
 export const userResolvers = {
   Query: {
     users: (_, args, ctx, info) => {
@@ -20,7 +21,7 @@ export const userResolvers = {
       return userController.fetchFriends(
         req,
         args.skip || 0,
-        args.limit || +process.env.CONTACT_FRIENDS_PER_PAGE,
+        args.limit || constant.CONTACT_FRIENDS_PER_PAGE,
         (args.except = []),
         (args.userId = null)
       );
@@ -40,7 +41,7 @@ export const userResolvers = {
       return userController.fetchReceivedRequestToAddFriend(
         req,
         args.skip || 0,
-        args.limit || +process.env.CONTACT_USERS_PER_PAGE
+        args.limit || constant.CONTACT_USERS_PER_PAGE
       );
     },
     searchFriends: (_, args, { req }, info) =>

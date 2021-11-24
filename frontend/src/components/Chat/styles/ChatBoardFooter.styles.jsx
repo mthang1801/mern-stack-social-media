@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -587,7 +587,7 @@ export const Label = styled.label`
 `;
 
 export const EmojiComponent = styled.div`
-  display: ${({ show }) => (show ? "block" : "none")};
+  display: ${({ show }) => (show ? 'block' : 'none')};
   position: absolute;
   bottom: 100%;
   left: -1rem;

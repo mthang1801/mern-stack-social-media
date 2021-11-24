@@ -1,18 +1,16 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const NOTIFY_SENDERS_RECEIVER_ONLINE_HAS_RECEIVED_MESSAGES = gql`
-  subscription($userId: ID!) {
-    notifySendersThatReceiverOnlineHasReceivedMessagesChat(userId: $userId) {      
+  subscription ($userId: ID!) {
+    notifySendersThatReceiverOnlineHasReceivedMessagesChat(userId: $userId) {
       receiver
     }
   }
 `;
 
-
-
 export const NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT = gql`
-  subscription ($userId : ID!){
-    notifySenderThatReceiverHasReceivedMessageChat(userId: $userId){
+  subscription ($userId: ID!) {
+    notifySenderThatReceiverHasReceivedMessageChat(userId: $userId) {
       action
       scope
       message {
@@ -51,21 +49,20 @@ export const NOTIFY_SENDER_THAT_RECEIVER_HAS_RECEIVED_NEW_MESSAGE_CHAT = gql`
       }
     }
   }
-`
-
+`;
 
 export const SENDER_SUBSCRIBE_WHEN_RECEIVER_HAS_SEEN_ALL_MESSAGES = gql`
-  subscription ($userId: ID!){
-    senderSubscribeWhenReceiverHasSeenAllMessages(userId: $userId){
+  subscription ($userId: ID!) {
+    senderSubscribeWhenReceiverHasSeenAllMessages(userId: $userId) {
       action
-      scope    
-      receiverId 
+      scope
+      receiverId
     }
   }
-`
+`;
 
 export const SENT_MESSAGE_CHAT_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     sentMessageChatSubscription(userId: $userId) {
       action
       scope

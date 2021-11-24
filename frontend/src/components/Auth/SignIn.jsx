@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   CustomFormContainer,
   FormHeader,
@@ -10,27 +10,29 @@ import {
   Option,
   FlashForm,
   ErrorMessage,
-  TextForm
-} from "./AuthForm";
+  TextForm,
+} from './AuthForm';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from "@material-ui/core/Button"
-import { withRouter } from "react-router-dom";
-import GoogleRecaptcha from "./GoogleRecapcha";
-import FacebookAuth from "./GoogleAuth";
-import GoogleAuth from "./FacebookAuth";
-import { LOGIN } from "../../apollo/user/user.types";
-import { useLazyQuery } from "@apollo/client";
-import {login} from "./Auth.utility"
-import TextField from "@material-ui/core/TextField"
+import Button from '@material-ui/core/Button';
+import { withRouter } from 'react-router-dom';
+import GoogleRecaptcha from './GoogleRecapcha';
+import FacebookAuth from './GoogleAuth';
+import GoogleAuth from './FacebookAuth';
+import { LOGIN } from '../../apollo/user/user.types';
+import { useLazyQuery } from '@apollo/client';
+import { login } from './Auth.utility';
+import TextField from '@material-ui/core/TextField';
 function withLoginQuery(WrappedComponent) {
   return function QueryWrapper(props) {
-    const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN, {fetchPolicy : "cache-and-network"});         
+    const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN, {
+      fetchPolicy: 'cache-and-network',
+    });
     return (
       <WrappedComponent
         data={data}
         loading={loading}
         error={error}
-        loginUser={loginUser}       
+        loginUser={loginUser}
         {...props}
       />
     );
@@ -42,62 +44,60 @@ const SignIn = withLoginQuery(
     constructor(props) {
       super(props);
       this.signInRef = React.createRef();
-      this._isMounted = true ;
+      this._isMounted = true;
     }
     state = {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       disabled: true,
       captcha_value: null,
-      loading : false, 
+      loading: false,
       captcha_loaded: false,
     };
 
     timer = null;
-    componentDidMount() {      
+    componentDidMount() {
       this.timer = setTimeout(() => {
         this.setState({ captcha_loaded: true });
       }, 50);
       if (this.signInRef.current) {
         window.scrollTo({
           top: this.signInRef.current.offsetTop,
-          behavior: "smooth",
+          behavior: 'smooth',
         });
       }
     }
-    
 
     handleChange = (e) => {
       const { name, value } = e.target;
       this.setState({ [name]: value });
-    };    
-    unsubscribeLogin ;
+    };
+    unsubscribeLogin;
     async componentDidUpdate(prevProps) {
       if (prevProps.error !== this.props.error) {
         this.clearForm();
       }
       if (prevProps.data !== this.props.data && this.props.data) {
-        const { user, token, tokenExpire } = this.props.data.loginUser;    
-        if(this._isMounted){
-          this.unsubscribeLogin = await login(user, token, tokenExpire)  
-          this.clearForm();       
-        }        
-               
+        const { user, token, tokenExpire } = this.props.data.loginUser;
+        if (this._isMounted) {
+          this.unsubscribeLogin = await login(user, token, tokenExpire);
+          this.clearForm();
+        }
       }
     }
     componentWillUnmount() {
-      clearTimeout(this.timer);      
-      this._isMounted = false 
-      if(this.unsubscribeLogin){
+      clearTimeout(this.timer);
+      this._isMounted = false;
+      if (this.unsubscribeLogin) {
         this.unsubscribeLogin();
-      }      
+      }
     }
     clearForm = () => {
       this.setState({
-        email: "",
-        password: "",
-        disabled : true,
-        captcha_loaded : false 
+        email: '',
+        password: '',
+        disabled: true,
+        captcha_loaded: false,
       });
       setTimeout(() => {
         this.setState({ captcha_loaded: true });
@@ -106,23 +106,26 @@ const SignIn = withLoginQuery(
 
     onSubmitSigninForm = async (e) => {
       e.preventDefault();
-      this.setState({loading : true})
+      this.setState({ loading: true });
       const { email, password } = this.state;
       if (!email || !password) {
-        this.setState({ error: "Email và mật khẩu không được để trống", loading: false });
+        this.setState({
+          error: 'Email và mật khẩu không được để trống',
+          loading: false,
+        });
         return;
       }
       this.props.loginUser({ variables: { email, password } });
-      this.setState({loading : false});
+      this.setState({ loading: false });
     };
-    handleChangeGoogleRecaptcha = (value) => {      
+    handleChangeGoogleRecaptcha = (value) => {
       this.setState({ captcha_value: value, disabled: false });
       if (value === null) this.setState({ disabled: true });
     };
 
     render() {
-      const { email, password, disabled, loading,captcha_loaded } = this.state;
-      const { authPath, error } = this.props;          
+      const { email, password, disabled, loading, captcha_loaded } = this.state;
+      const { authPath, error } = this.props;
       return (
         <CustomFormContainer
           onSubmit={this.onSubmitSigninForm}
@@ -139,7 +142,7 @@ const SignIn = withLoginQuery(
           </FlashForm>
           <FormGroups>
             <TextForm>
-              <TextField 
+              <TextField
                 variant="outlined"
                 size="small"
                 type="text"
@@ -149,42 +152,46 @@ const SignIn = withLoginQuery(
                 onChange={this.handleChange}
                 required
               />
-            </TextForm>       
+            </TextForm>
             <TextForm>
-            <TextField
-            variant="outlined"
-            size="small"
-              type="password"
-              name="password"
-              value={password}
-              label="Password"
-              onChange={this.handleChange}
-              required
-              autocomplete="on"
-            />
-            </TextForm>    
-            
-            {captcha_loaded && <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />}
-            
+              <TextField
+                variant="outlined"
+                size="small"
+                type="password"
+                name="password"
+                value={password}
+                label="Password"
+                onChange={this.handleChange}
+                required
+                autocomplete="on"
+              />
+            </TextForm>
+
+            {captcha_loaded && (
+              <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />
+            )}
+
             <Button
               variant="outlined"
-              size="medium"              
+              size="medium"
               disabled={disabled || loading}
-              color="primary"              
-              style={{ marginTop: "1rem" }}
+              color="primary"
+              style={{ marginTop: '1rem' }}
               type="submit"
             >
               <span>Sign In</span>
-              {loading && <CircularProgress size={14} style={{marginLeft: "1rem"}}/>}
+              {loading && (
+                <CircularProgress size={14} style={{ marginLeft: '1rem' }} />
+              )}
             </Button>
           </FormGroups>
           <FormActions>
             <Option>
-              Don't have account ?{" "}
+              Don't have account ?{' '}
               <StyledLink to={`${authPath}/signup`}>Signup account</StyledLink>
             </Option>
             <Option>
-              Forgot password ?{" "}
+              Forgot password ?{' '}
               <StyledLink to={`${authPath}/restore-account`}>
                 Get Password Again.
               </StyledLink>

@@ -1,4 +1,4 @@
-import i18n from "../i18n";
+import i18n from '../i18n';
 
 const notificationContent = (notification, lang) => {
   const {
@@ -14,15 +14,15 @@ const notificationContent = (notification, lang) => {
   content = content.toUpperCase();
 
   switch (field) {
-    case "POST":
+    case 'POST':
       switch (content) {
-        case "MENTIONED": {
+        case 'MENTIONED': {
           return postNotification.postMentioned(
             notification.creator?.name,
             notification.fieldIdentity?.post?.shortenText
           );
         }
-        case "LIKED":
+        case 'LIKED':
           return postNotification.likePost(
             notification.creator?.name,
             notification.fieldIdentity?.post?.shortenText
@@ -30,19 +30,19 @@ const notificationContent = (notification, lang) => {
         default:
           return;
       }
-    case "COMMENT":
+    case 'COMMENT':
       switch (content) {
-        case "MENTIONED":
+        case 'MENTIONED':
           return commentNotification.commentMentioned(
             notification.creator?.name,
             notification.fieldIdentity?.post?.shortenText
           );
-        case "CREATED":
+        case 'CREATED':
           return commentNotification.commentCreated(
             notification.creator?.name,
             notification.fieldIdentity?.post?.shortenText
           );
-        case "LIKED":
+        case 'LIKED':
           return commentNotification.commentLiked(
             notification.creator?.name,
             notification.fieldIdentity?.comment?.shortenText
@@ -50,21 +50,21 @@ const notificationContent = (notification, lang) => {
         default:
           return;
       }
-    case "RESPONSE":
+    case 'RESPONSE':
       switch (content) {
-        case "CREATED":
+        case 'CREATED':
           return responseNotification.responseCreated(
             notification.creator?.name,
             notification.fieldIdentity?.post?.shortenText,
             notification.fieldIdentity?.comment?.shortenText
           );
-        case "MENTIONED":
+        case 'MENTIONED':
           return responseNotification.responseMentioned(
             notification.creator?.name,
             notification.fieldIdentity?.post?.shortenText,
             notification.fieldIdentity?.comment?.shortenText
           );
-        case "LIKED":
+        case 'LIKED':
           return responseNotification.responseLiked(
             notification.creator?.name,
             notification.fieldIdentity?.post?.shortenText,
@@ -73,13 +73,13 @@ const notificationContent = (notification, lang) => {
         default:
           return;
       }
-    case "CONTACT":
+    case 'CONTACT':
       switch (content) {
-        case "SENT_REQUEST_TO_ADD_FRIEND":
+        case 'SENT_REQUEST_TO_ADD_FRIEND':
           return contactNotification.sentRequestToAddFriend(
             notification.creator?.name
           );
-        case "ACCEPT_REQUEST_TO_ADD_FRIEND":
+        case 'ACCEPT_REQUEST_TO_ADD_FRIEND':
           return contactNotification.acceptRequestToAddFriend(
             notification.creator?.name
           );
@@ -95,8 +95,8 @@ const showResponseButtons = (notification, user) => {
   const field = notification.field.toLowerCase();
   const content = notification.content.toUpperCase();
   if (
-    field === "user" &&
-    content === "ADDED" &&
+    field === 'user' &&
+    content === 'ADDED' &&
     user.receivedRequestToAddFriend.includes(notification.creator._id)
   ) {
     return true;

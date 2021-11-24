@@ -1,17 +1,17 @@
-import { en } from "./en/translation";
-import { vi } from "./vi/translation";
+import { en } from './en/translation';
+import { vi } from './vi/translation';
 
-export const listLanguages = ["en", "vi"];
+export const listLanguages = ['en', 'vi'];
 export const setLanguage = (lng) =>
   typeof window !== undefined
-    ? window.localStorage.setItem("blog-language", lng)
+    ? window.localStorage.setItem('blog-language', lng)
     : null;
 
 const getLanguage = () => {
-  if (typeof window !== "undefined") {
-    const lang = window.localStorage.getItem("blog-language");
+  if (typeof window !== 'undefined') {
+    const lang = window.localStorage.getItem('blog-language');
     if (!listLanguages.includes(lang)) {
-      return "en";
+      return 'en';
     }
     return lang;
   }
@@ -23,4 +23,4 @@ const resources = {
   vi,
 };
 
-export {resources as default, getLanguage }
+export { resources as default, getLanguage };

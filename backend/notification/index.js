@@ -1,2 +1,2 @@
-export {contents} from "./notification.contents"
-export {fields} from "./notification.fields"
+export { contents } from './notification.contents';
+export { fields } from './notification.fields';

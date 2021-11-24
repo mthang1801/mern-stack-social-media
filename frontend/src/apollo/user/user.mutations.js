@@ -1,8 +1,8 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-export const FOLLOW_USER =  gql`
-  mutation ($userId : ID!){ 
-    followUser(userId: $userId){
+export const FOLLOW_USER = gql`
+  mutation ($userId: ID!) {
+    followUser(userId: $userId) {
       sender {
         _id
         slug
@@ -23,17 +23,12 @@ export const FOLLOW_USER =  gql`
       }
     }
   }
-`
-
+`;
 
 export const SIGNUP = gql`
-  mutation SignUp($name : String!, $email: String!, $password: String!){
-    createUser(data : {
-      name : $name
-      email : $email
-      password : $password
-    }){
-      user{
+  mutation SignUp($name: String!, $email: String!, $password: String!) {
+    createUser(data: { name: $name, email: $email, password: $password }) {
+      user {
         _id
         name
         nickname
@@ -51,12 +46,11 @@ export const SIGNUP = gql`
       tokenExpire
     }
   }
-`
-
+`;
 
 export const UNFOLLOW_USER = gql`
-  mutation ($userId : ID!){
-    unFollowUser(userId: $userId){
+  mutation ($userId: ID!) {
+    unFollowUser(userId: $userId) {
       sender {
         _id
         slug
@@ -77,4 +71,4 @@ export const UNFOLLOW_USER = gql`
       }
     }
   }
-`
+`;

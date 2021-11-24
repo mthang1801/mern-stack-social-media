@@ -1,20 +1,19 @@
-import React, {useState} from "react";
-import Slider from "react-slick";
-import LightBox from "react-image-lightbox";
-import "react-image-lightbox/style.css";
-import {ImageContainer, NextArrow, PrevArrow} from "./styles/ImagesCarousel.styles"
+import React, { useState } from 'react';
+import Slider from 'react-slick';
+import LightBox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
+import {
+  ImageContainer,
+  NextArrow,
+  PrevArrow,
+} from './styles/ImagesCarousel.styles';
 
-function CustomNextArrow(props) {  
-  return (
-    <NextArrow {...props}/>
-  );
+function CustomNextArrow(props) {
+  return <NextArrow {...props} />;
 }
 
 function CustomPrevArrow(props) {
-  
-  return (
-    <PrevArrow {...props}/>  
-  );
+  return <PrevArrow {...props} />;
 }
 
 const ImagesCarousel = ({ images }) => {
@@ -30,10 +29,10 @@ const ImagesCarousel = ({ images }) => {
     lazyLoad: true,
     beforeChange: () => (dragging = true),
     afterChange: () => (dragging = false),
-    nextArrow : <CustomNextArrow/>,
-    prevArrow : <CustomPrevArrow/>
+    nextArrow: <CustomNextArrow />,
+    prevArrow: <CustomPrevArrow />,
   };
-  if(!images.length) return null
+  if (!images.length) return null;
   return (
     <>
       {openLightBox !== -1 && (

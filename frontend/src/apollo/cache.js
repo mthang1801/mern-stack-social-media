@@ -1,6 +1,6 @@
-import { InMemoryCache, makeVar } from "@apollo/client";
+import { InMemoryCache, makeVar } from '@apollo/client';
 
-import { initialState } from "./initialState";
+import { initialState } from './initialState';
 //Cache
 const toggleMenuVar = makeVar(initialState.toggleMenu);
 const dialogVar = makeVar(initialState.alertDialog);
@@ -10,7 +10,9 @@ const postsVar = makeVar(initialState.posts);
 const userVar = makeVar(initialState.user);
 const currentPersonalUserVar = makeVar(initialState.currentPersonalUser);
 const sentRequestsToAddFriendVar = makeVar(initialState.sentRequestToAddFriend);
-const receivedRequestsToAddFriendVar = makeVar(initialState.receivedRequestsToAddFriend);
+const receivedRequestsToAddFriendVar = makeVar(
+  initialState.receivedRequestsToAddFriend
+);
 //Notification
 const notificationsVar = makeVar(initialState.notifications);
 const countNumberOfNotificationUnseenVar = makeVar(
@@ -26,7 +28,7 @@ const messagesStorageVar = makeVar(initialState.messagesStorage);
 const currentChatVar = makeVar(initialState.currentChat);
 const numberOfConversationsVar = makeVar(initialState.numberOfConversations);
 //Contact
-const contactVar = makeVar(initialState.contact)
+const contactVar = makeVar(initialState.contact);
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -52,7 +54,7 @@ const cache = new InMemoryCache({
         currentPersonalUser: {
           read: () => currentPersonalUserVar(),
         },
-        //post       
+        //post
         posts: {
           read: () => postsVar(),
         },
@@ -88,9 +90,9 @@ const cache = new InMemoryCache({
           read: () => numberOfConversationsVar(),
         },
         //Contact
-        contact : {
-          read : () => contactVar()
-        }
+        contact: {
+          read: () => contactVar(),
+        },
       },
     },
   },
@@ -114,5 +116,5 @@ export {
   currentChatVar,
   numberOfConversationsVar,
   dialogVar,
-  contactVar
+  contactVar,
 };

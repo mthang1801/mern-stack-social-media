@@ -1,5 +1,5 @@
-import { toggleMenuVar, toggleFriendsBoardVar, dialogVar } from "../cache";
-import {initialState} from "../initialState"
+import { toggleMenuVar, toggleFriendsBoardVar, dialogVar } from '../cache';
+import { initialState } from '../initialState';
 export const toggleMenu = () => {
   const _toggleMenu = toggleMenuVar();
   console.log(_toggleMenu);
@@ -13,4 +13,4 @@ export const setToggleFriendsBoard = () => {
 
 export const setAlertDialog = (dialog) => dialogVar({ ...dialog });
 
-export const clearAlertDialog = () => dialogVar(initialState.alertDialog)
+export const clearAlertDialog = () => dialogVar(initialState.alertDialog);

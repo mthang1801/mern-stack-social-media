@@ -1,11 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const PersonalIntroduction = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  return <div></div>;
+};
 
-export default PersonalIntroduction
+export default PersonalIntroduction;

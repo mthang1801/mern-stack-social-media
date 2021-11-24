@@ -1,6 +1,6 @@
-import React from "react";
-import { Editor, EditorState, convertFromRaw } from "draft-js";
-import createLinkDecorator from "./Link";
+import React from 'react';
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import createLinkDecorator from './Link';
 
 export default function MyEditor() {
   const rawContentState =
@@ -30,7 +30,7 @@ export default function MyEditor() {
         readOnly
         ref={editor}
         editorState={editorState}
-        onChange={editorState => setEditorState(editorState)}
+        onChange={(editorState) => setEditorState(editorState)}
       />
     </div>
   );

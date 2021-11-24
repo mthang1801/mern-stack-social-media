@@ -1,6 +1,6 @@
-import {checkStatusConversation} from "./checkStatusConversation"
+import { checkStatusConversation } from './checkStatusConversation';
 const initSockets = (io) => {
-  checkStatusConversation(io)
-}
+  checkStatusConversation(io);
+};
 
-export {initSockets}
+export { initSockets };

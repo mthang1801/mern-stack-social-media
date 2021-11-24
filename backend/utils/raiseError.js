@@ -1,5 +1,5 @@
-export const raiseError = (message = "server error", statusCode = 500) => {
+export const raiseError = (message = 'server error', statusCode = 500) => {
   const error = new Error(message);
-  error.statusCode = statusCode; 
-  throw  error;
-}
+  error.statusCode = statusCode;
+  throw error;
+};

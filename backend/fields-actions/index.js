@@ -1,3 +1,2 @@
-export {actions} from "./actions"
-export {fields} from "./fields"
-
+export { actions } from './actions';
+export { fields } from './fields';

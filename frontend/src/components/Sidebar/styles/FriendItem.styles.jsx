@@ -1,17 +1,17 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const LinkItem = styled(Link)`
   display: flex;
   padding: 0.3rem 1.5rem;
-  align-items : center;
-  justify-content : space-between;
+  align-items: center;
+  justify-content: space-between;
   &:hover {
     opacity: 1;
     background-color: ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-background-dark)"
-        : "var(--color-background-default)"};
+      theme === 'dark'
+        ? 'var(--color-background-dark)'
+        : 'var(--color-background-default)'};
   }
 `;
 
@@ -24,9 +24,9 @@ export const ImageContainer = styled.div`
     border-radius: 50%;
     border: 1px solid
       ${({ theme }) =>
-        theme === "dark"
-          ? "var(--color-border-dark)"
-          : "var(--color-border-default)"};
+        theme === 'dark'
+          ? 'var(--color-border-dark)'
+          : 'var(--color-border-default)'};
   }
   ${({ active }) =>
     active &&
@@ -49,14 +49,14 @@ export const ImageContainer = styled.div`
 `;
 
 export const ActiveStatus = styled.div`
-  width : 0.6rem ;
-  height : 0.6rem ; 
-  border-radius : 50%; 
-  background-color : green;
-`
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: green;
+`;
 
 export const UserInfo = styled.div`
-flex: 1;
-display  :flex;
-align-items: center;
-`
+  flex: 1;
+  display: flex;
+  align-items: center;
+`;

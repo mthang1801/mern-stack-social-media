@@ -1,7 +1,8 @@
-import { commentControllers } from "./comment.controllers";
-import { pubsub } from "../pubsub";
-import { subscriptionActions } from "../schema";
-import { withFilter } from "apollo-server-express";
+import { commentControllers } from './comment.controllers';
+import { pubsub } from '../pubsub';
+import { subscriptionActions } from '../schema';
+import { withFilter } from 'apollo-server-express';
+import constant from '../config/constant';
 export const commentResolvers = {
   Query: {
     fetchComments: (_, args, { req }, info) =>
@@ -10,7 +11,7 @@ export const commentResolvers = {
         args.postId,
         args.except,
         args.skip || 0,
-        args.limit || +process.env.COMMENTS_PER_POST
+        args.limit || constant.POSTS_PER_PAGE
       ),
   },
   Mutation: {

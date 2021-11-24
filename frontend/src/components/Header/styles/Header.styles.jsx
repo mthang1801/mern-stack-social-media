@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.div`
   font-size: 1.2rem;
@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Notification = styled.div`
-  position: relative;  
+  position: relative;
 `;
 
 export const UnseenNotification = styled.div`
@@ -24,18 +24,21 @@ export const UnseenNotification = styled.div`
   font-weight: bolder;
 `;
 
-
 export const NotificationBoard = styled.div`
   position: absolute;
   top: 125%;
   right: -100%;
-  z-index: ${({open}) => open ? 1 : -1 };
+  z-index: ${({ open }) => (open ? 1 : -1)};
   transition: var(--mainTransition);
-  width : 360px ; 
-  height : ${({open}) => open ? "400px" : "0"};
-  border : 1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};
-  overflow : auto;
-  visibility : ${({open}) => open ? "visible" : "hidden"} ; 
-  opacity : ${({open}) => open ? 1 : 0};   
-  border-radius : 0.5rem;  
-` 
+  width: 360px;
+  height: ${({ open }) => (open ? '400px' : '0')};
+  border: 1px solid
+    ${({ theme }) =>
+      theme === 'dark'
+        ? 'var(--color-border-dark)'
+        : 'var(--color-border-default)'};
+  overflow: auto;
+  visibility: ${({ open }) => (open ? 'visible' : 'hidden')};
+  opacity: ${({ open }) => (open ? 1 : 0)};
+  border-radius: 0.5rem;
+`;

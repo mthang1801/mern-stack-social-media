@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const FETCH_CURRENT_USER = gql`
   query {
@@ -19,7 +19,6 @@ export const FETCH_CURRENT_USER = gql`
   }
 `;
 
-
 export const FETCH_PERSONAL_USER = gql`
   query FetchPersonalUser($slug: String!) {
     fetchPersonalUser(slug: $slug) {
@@ -31,7 +30,7 @@ export const FETCH_PERSONAL_USER = gql`
       friends
       notifications
       avatar
-      posts       
+      posts
       following
       followed
       sentRequestToAddFriend
@@ -63,9 +62,8 @@ export const LOGIN = gql`
   }
 `;
 
-
 export const SEARCH_FRIENDS = gql`
-  query($search: String!) {
+  query ($search: String!) {
     searchFriends(search: $search) {
       _id
       name
@@ -74,5 +72,3 @@ export const SEARCH_FRIENDS = gql`
     }
   }
 `;
-
-

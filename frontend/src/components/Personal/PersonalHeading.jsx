@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useReactiveVar } from "@apollo/client";
-import {userVar, currentPersonalUserVar
-} from "../../apollo/cache";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import React, { useEffect, useState } from 'react';
+import { useReactiveVar } from '@apollo/client';
+import { userVar, currentPersonalUserVar } from '../../apollo/cache';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import {
   Container,
   UserName,
@@ -10,15 +9,15 @@ import {
   BackgroundImageContainer,
   PersonalMenus,
   ProfileMenuItemLink,
-  Footer
-} from "./styles/PersonalHeading.styles";
-import BackgroundImage from "../../assets/images/background-wallpaper.jpg";
-import useLanguage from "../Global/useLanguage";
-import { useThemeUI } from "theme-ui";
-import PersonalHeadingContact from "./PersonalHeadingContact"
+  Footer,
+} from './styles/PersonalHeading.styles';
+import BackgroundImage from '../../assets/images/background-wallpaper.jpg';
+import useLanguage from '../Global/useLanguage';
+import { useThemeUI } from 'theme-ui';
+import PersonalHeadingContact from './PersonalHeadingContact';
 
 const PersonalHeading = () => {
-  const user  = useReactiveVar(userVar);
+  const user = useReactiveVar(userVar);
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
@@ -28,7 +27,7 @@ const PersonalHeading = () => {
   useEffect(() => {
     setMenus(i18n.store.data[lang].translation.personalMenus);
   }, [lang]);
-  
+
   useEffect(() => {
     if (currentPersonalUser) {
       setActiveLink(`/${currentPersonalUser.slug}/posts`);
@@ -70,7 +69,7 @@ const PersonalHeading = () => {
               ))
             : null}
         </PersonalMenus>
-        {user && <PersonalHeadingContact user={user}/>}
+        {user && <PersonalHeadingContact user={user} />}
       </Footer>
     </Container>
   );

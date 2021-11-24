@@ -1,79 +1,83 @@
-import mongoose from "mongoose";
-export const POST_STATUS_ENUM = {PUBLIC : "PUBLIC", PRIVATE :"PRIVATE", FRIENDS : "FRIENDS"}
+import mongoose from 'mongoose';
+export const POST_STATUS_ENUM = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
+  FRIENDS: 'FRIENDS',
+};
 const PostSchema = new mongoose.Schema(
-  {   
+  {
     text: {
-      type: String,      
-    },           
-    shortenText : {
-      type : String,       
-    },    
-    rawText : {
-      type : String
+      type: String,
+    },
+    shortenText: {
+      type: String,
+    },
+    rawText: {
+      type: String,
     },
     mentions: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: 'users',
         required: true,
       },
     ],
     files: [
       {
-        filename : {
-          type : String, 
-          required : true 
+        filename: {
+          type: String,
+          required: true,
         },
-        mimetype : {
-          type : String ,
-          required : true 
-        },     
-        data : {
-          type : Buffer, 
-          required : true 
-        }
-      }
+        mimetype: {
+          type: String,
+          required: true,
+        },
+        data: {
+          type: Buffer,
+          required: true,
+        },
+      },
     ],
-    usersComment : [
+    usersComment: [
       {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "users",
-        required: true
-      }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true,
+      },
     ],
-    likes : [
+    likes: [
       {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "users",
-        required: true
-      }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true,
+      },
     ],
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "comments",
+        ref: 'comments',
         required: true,
       },
     ],
-    responses : [
+    responses: [
       {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "responses", 
-        required : true 
-      }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'responses',
+        required: true,
+      },
     ],
-    author : {
-      type : mongoose.Schema.Types.ObjectId, 
-      ref : "users",
-      required : true 
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'users',
+      required: true,
     },
     status: {
       type: String,
       enum: Object.keys(POST_STATUS_ENUM),
-      default: "PUBLIC",
+      default: 'PUBLIC',
     },
   },
   { timestamps: true }
 );
 
-export const Post = mongoose.model("posts", PostSchema);
+export const Post = mongoose.model('posts', PostSchema);

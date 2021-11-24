@@ -1,27 +1,27 @@
-import React, { useState, useEffect, createContext, useRef } from "react";
+import React, { useState, useEffect, createContext, useRef } from 'react';
 import {
   Wrapper,
   LeftSide,
   RightSide,
   PopupSettings,
-} from "./styles/Chat.styles";
-import { userVar } from "../../apollo/cache";
+} from './styles/Chat.styles';
+import { userVar } from '../../apollo/cache';
 
-import { useReactiveVar } from "@apollo/client";
-import Search from "./Search";
-import ListConversations from "./ListConversations";
-import { useThemeUI } from "theme-ui";
-import ChatBoard from "./ChatBoard";
-import {setCurrentChat} from "../../apollo/chat/chat.caches"
+import { useReactiveVar } from '@apollo/client';
+import Search from './Search';
+import ListConversations from './ListConversations';
+import { useThemeUI } from 'theme-ui';
+import ChatBoard from './ChatBoard';
+import { setCurrentChat } from '../../apollo/chat/chat.caches';
 export const MessagesContext = createContext({});
 const Conversations = () => {
   //query
-  const user = useReactiveVar(userVar)
+  const user = useReactiveVar(userVar);
 
   //state
   const [showPopup, setShowPopup] = useState(false);
-  const [search, setSearch] = useState("");
-  const [originalData, setOriginalData] = useState([]);  
+  const [search, setSearch] = useState('');
+  const [originalData, setOriginalData] = useState([]);
   const [popupPosition, setPopupPosition] = useState({
     left: -10000,
     top: -10000,
@@ -30,9 +30,9 @@ const Conversations = () => {
   const popupRef = useRef(null);
 
   //empty current chat when change page
-  useEffect(()=>{
+  useEffect(() => {
     setCurrentChat(null);
-  },[])
+  }, []);
 
   useEffect(() => {
     function handleClickDotsSetting(e) {
@@ -52,11 +52,11 @@ const Conversations = () => {
         setShowPopup(true);
       }
     }
-    window.addEventListener("click", (e) => {
+    window.addEventListener('click', (e) => {
       handleClickDotsSetting(e);
     });
     return () =>
-      window.removeEventListener("click", (e) => {
+      window.removeEventListener('click', (e) => {
         handleClickDotsSetting(e);
       });
   });

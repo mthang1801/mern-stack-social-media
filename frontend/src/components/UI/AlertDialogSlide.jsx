@@ -1,22 +1,25 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { useReactiveVar } from "@apollo/client";
-import { dialogVar } from "../../apollo/cache";
-import { setAlertDialog, clearAlertDialog } from "../../apollo/controls/controls.caches";
+import React from 'react';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { useReactiveVar } from '@apollo/client';
+import { dialogVar } from '../../apollo/cache';
+import {
+  setAlertDialog,
+  clearAlertDialog,
+} from '../../apollo/controls/controls.caches';
 function AlertDialogSlide() {
   const dialog = useReactiveVar(dialogVar);
   const { title, content } = dialog;
 
   const handleClose = () => {
-    clearAlertDialog()
+    clearAlertDialog();
   };
   const handleAgree = () => {
-    setAlertDialog({ ...dialog, agree: true, title: "", content: "" });
+    setAlertDialog({ ...dialog, agree: true, title: '', content: '' });
   };
   return (
     <div>

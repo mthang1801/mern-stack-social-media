@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
 :root {
@@ -123,7 +123,7 @@ export default createGlobalStyle`
   --lightShadow: 0px 1px 1.5px 1.5px rgba(0, 0, 0, 0.1);
   --mediumShadow : 2px 3px 3px 1px rgba(0,0,0,0.2);
   --darkShadow: 4px 10px 5px 1px rgba(0, 0, 0, 0.3);    
-  font-size : ${({ rootFont }) => (rootFont ? `${rootFont}px` : "16px")}  
+  font-size : ${({ rootFont }) => (rootFont ? `${rootFont}px` : '16px')}  
 }
   *,:after, :before {
     padding: 0;
@@ -622,14 +622,14 @@ export default createGlobalStyle`
     overflow: auto;
     & > *{
       background-color : ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-card-dark)"
-        : "var(--color-card-default)"};
+        theme === 'dark'
+          ? 'var(--color-card-dark)'
+          : 'var(--color-card-default)'};
       
       color : ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-text-dark)"
-        : "var(--color-text-default)"};     
+        theme === 'dark'
+          ? 'var(--color-text-dark)'
+          : 'var(--color-text-default)'};     
     }    
   }
 `;

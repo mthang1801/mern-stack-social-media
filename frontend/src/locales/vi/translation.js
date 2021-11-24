@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 import {
   FaHome,
   FaUserFriends,
   FaShopify,
   FaGlobeAmericas,
-} from "react-icons/fa";
-import { AiOutlineGlobal, AiOutlineSave } from "react-icons/ai";
-import { ImNewspaper } from "react-icons/im";
-import { HiOutlineUserGroup } from "react-icons/hi";
+} from 'react-icons/fa';
+import { AiOutlineGlobal, AiOutlineSave } from 'react-icons/ai';
+import { ImNewspaper } from 'react-icons/im';
+import { HiOutlineUserGroup } from 'react-icons/hi';
 import {
   IoIosNotifications,
   IoMdApps,
@@ -15,170 +15,169 @@ import {
   IoMdPhotos,
   IoIosChatbubbles,
   IoMdGlobe,
-} from "react-icons/io";
-import { CgMoreO } from "react-icons/cg";
-import { MdCardMembership, MdInsertEmoticon } from "react-icons/md";
-import { BsChatDots } from "react-icons/bs";
-import { RiContactsBook2Line } from "react-icons/ri";
-import { BiLockAlt, BiLike, BiCommentDetail, BiShareAlt } from "react-icons/bi";
-import { FiEdit, FiTrash} from "react-icons/fi";
-import { VscPinned} from "react-icons/vsc";
-
+} from 'react-icons/io';
+import { CgMoreO } from 'react-icons/cg';
+import { MdCardMembership, MdInsertEmoticon } from 'react-icons/md';
+import { BsChatDots } from 'react-icons/bs';
+import { RiContactsBook2Line } from 'react-icons/ri';
+import { BiLockAlt, BiLike, BiCommentDetail, BiShareAlt } from 'react-icons/bi';
+import { FiEdit, FiTrash } from 'react-icons/fi';
+import { VscPinned } from 'react-icons/vsc';
 
 export const vi = {
   translation: {
     navigationAuth: [
       {
-        path: "/",
-        name: "Trang chủ",
+        path: '/',
+        name: 'Trang chủ',
         icon: () => <FaHome />,
       },
       {
-        path: "/explorer",
-        name: "Khám phá",
+        path: '/explorer',
+        name: 'Khám phá',
         icon: () => <AiOutlineGlobal />,
       },
       {
-        path: "/news",
-        name: "Bản tin",
+        path: '/news',
+        name: 'Bản tin',
         icon: () => <ImNewspaper />,
       },
       {
-        path: "/contacts",
-        name: "Danh bạ",
+        path: '/contacts',
+        name: 'Danh bạ',
         icon: () => <FaUserFriends />,
       },
       {
-        path: "/groups",
-        name: "Nhóm",
+        path: '/groups',
+        name: 'Nhóm',
         icon: () => <HiOutlineUserGroup />,
       },
     ],
     menuList: [
       {
-        path: "/",
-        name: "Trang chủ",
+        path: '/',
+        name: 'Trang chủ',
         icon: () => <FaHome />,
       },
       {
-        path: "/notifications",
-        name: "Thông báo",
+        path: '/notifications',
+        name: 'Thông báo',
         icon: () => <IoIosNotifications />,
       },
       {
-        path: "/contacts",
-        name: "Danh bạ",
+        path: '/contacts',
+        name: 'Danh bạ',
         icon: () => <FaUserFriends />,
       },
       {
-        path: "/chats",
-        name: "Tin nhắn",
+        path: '/chats',
+        name: 'Tin nhắn',
         icon: () => <IoIosChatbubbles />,
       },
       {
-        path: "/groups",
-        name: "Nhóm",
+        path: '/groups',
+        name: 'Nhóm',
         icon: () => <HiOutlineUserGroup />,
       },
       {
-        path: "/explores",
-        name: "Khám phá",
+        path: '/explores',
+        name: 'Khám phá',
         icon: () => <AiOutlineGlobal />,
       },
       {
-        path: "/news",
-        name: "Tin mới",
+        path: '/news',
+        name: 'Tin mới',
         icon: () => <ImNewspaper />,
       },
       {
-        path: "/more",
-        name: "Thêm",
+        path: '/more',
+        name: 'Thêm',
         icon: () => <CgMoreO />,
       },
     ],
     personalMenus: [
       {
         path: (slug) => `/${slug}/posts`,
-        name: "Bài đăng",
+        name: 'Bài đăng',
       },
       {
         path: (slug) => `/${slug}/about`,
-        name: "Giới thiệu",
+        name: 'Giới thiệu',
       },
       {
         path: (slug) => `/${slug}/friends`,
-        name: "Bạn bè",
+        name: 'Bạn bè',
       },
       {
         path: (slug) => `/${slug}/photos`,
-        name: "Hình ảnh",
+        name: 'Hình ảnh',
       },
     ],
     chatMenus: [
       {
-        path: "/chats",
-        name: "Tin nhắn",
+        path: '/chats',
+        name: 'Tin nhắn',
         icon: () => <BsChatDots />,
       },
       {
-        path: "/chats/contacts",
-        name: "Danh bạ",
+        path: '/chats/contacts',
+        name: 'Danh bạ',
         icon: () => <RiContactsBook2Line />,
       },
     ],
     explores: [
       {
-        path: "/apps",
-        name: "Apps",
+        path: '/apps',
+        name: 'Apps',
         icon: () => <IoMdApps />,
       },
       {
-        path: "/upgrade-member",
-        name: "Upgrade member",
+        path: '/upgrade-member',
+        name: 'Upgrade member',
         icon: () => <MdCardMembership />,
       },
       {
-        path: "/shop",
-        name: "Shop",
+        path: '/shop',
+        name: 'Shop',
         icon: () => <FaShopify />,
       },
       {
-        path: "/trends",
-        name: "Trends",
+        path: '/trends',
+        name: 'Trends',
         icon: () => <IoMdTrendingUp />,
       },
     ],
     statusFooter: [
       {
-        name: "Hình ảnh/ Videos",
+        name: 'Hình ảnh/ Videos',
         icon: () => <IoMdPhotos />,
       },
       {
-        name: "Cảm xúc",
+        name: 'Cảm xúc',
         icon: () => <MdInsertEmoticon />,
       },
     ],
     auth: {
-      login: "Đăng nhập",
-      signup: "Đăng ký",
-      signout: "Đăng xuất",
+      login: 'Đăng nhập',
+      signup: 'Đăng ký',
+      signout: 'Đăng xuất',
     },
-    mindText: "Bạn đang nghĩ gì?",
-    menu: "Danh mục",
+    mindText: 'Bạn đang nghĩ gì?',
+    menu: 'Danh mục',
     notifications: {
-      message: "Bạn vừa nhận được một thông báo mới",
-      postCreated: "vừa đăng một trạng thái mới.",
-      sentRequestToAddFriend: "gửi cho bạn một lời mời kết bạn.",
-      acceptRequestToAddFriend: "đã chấp nhận lời mời kết bạn của bạn.",
+      message: 'Bạn vừa nhận được một thông báo mới',
+      postCreated: 'vừa đăng một trạng thái mới.',
+      sentRequestToAddFriend: 'gửi cho bạn một lời mời kết bạn.',
+      acceptRequestToAddFriend: 'đã chấp nhận lời mời kết bạn của bạn.',
       post: {
         postMentioned: (creatorName, shortenText) =>
           `<strong>${creatorName}</strong> đã nhắc đến bạn trong bài viết <strong>${
-            shortenText ? shortenText.slice(0, 50) + "..." : ""
+            shortenText ? shortenText.slice(0, 50) + '...' : ''
           }</strong> của anh ấy`,
 
         likePost: (creatorName, shortenText) =>
           `<strong>${creatorName}</strong> đã thích bài viết <strong>${
-            shortenText ? shortenText.slice(0, 50) + "..." : ""
+            shortenText ? shortenText.slice(0, 50) + '...' : ''
           }</strong> của bạn`,
       },
       comment: {
@@ -186,115 +185,117 @@ export const vi = {
           `<strong>${creatorName}</strong> đã nhắc đến bạn trong bình luận của anh ấy`,
         commentCreated: (creatorName, shortenText) =>
           `<strong>${creatorName}</strong> đã bình luận một bài viết của bạn <strong>${
-            shortenText ? shortenText.slice(0, 50) + "..." : ""
+            shortenText ? shortenText.slice(0, 50) + '...' : ''
           }</strong>`,
         commentLiked: (creatorName, shortenText) =>
           `<strong>${creatorName}</strong> đã thích bình luận <strong>${
-            shortenText ? shortenText.slice(0, 50) + "..." : ""
+            shortenText ? shortenText.slice(0, 50) + '...' : ''
           }</strong> của bạn`,
       },
       response: {
         responseCreated: (creatorName, postShortenText, commentShortenText) =>
           `<strong>${creatorName}</strong> đã phản hồi bình luận ${
-            commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
+            commentShortenText ? commentShortenText.slice(0, 50) + '...' : ''
           } trong bài viết <strong>${
-            postShortenText ? postShortenText.slice(0, 50) + "..." : ""
+            postShortenText ? postShortenText.slice(0, 50) + '...' : ''
           }</strong>`,
         responseMentioned: (creatorName, postShortenText, commentShortenText) =>
           `<strong>${creatorName}</strong> đã nhắc đến bạn tại bình luận ${
-            commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
+            commentShortenText ? commentShortenText.slice(0, 50) + '...' : ''
           } trong bài viết <strong>${
-            postShortenText ? postShortenText.slice(0, 50) + "..." : ""
+            postShortenText ? postShortenText.slice(0, 50) + '...' : ''
           }</strong>`,
         responseLiked: (creatorName, postShortenText, commentShortenText) =>
           `<strong>${creatorName}</strong> đã thích bình luận ${
-            commentShortenText ? commentShortenText.slice(0, 50) + "..." : ""
+            commentShortenText ? commentShortenText.slice(0, 50) + '...' : ''
           } của bạn trong bài viết <strong>${
-            postShortenText ? postShortenText.slice(0, 50) + "..." : ""
+            postShortenText ? postShortenText.slice(0, 50) + '...' : ''
           }</strong>`,
       },
       contact: {
-        sentRequestToAddFriend : (senderName) => `<strong>${senderName}</strong> đã gửi cho bạn một lời kết bạn.`,
-        acceptRequestToAddFriend : (senderName) => `<strong>${senderName}</strong> đã chấp nhận lời mời kết bạn của bạn.`
+        sentRequestToAddFriend: (senderName) =>
+          `<strong>${senderName}</strong> đã gửi cho bạn một lời kết bạn.`,
+        acceptRequestToAddFriend: (senderName) =>
+          `<strong>${senderName}</strong> đã chấp nhận lời mời kết bạn của bạn.`,
       },
     },
     greeting: {
-      welcome: "Chào mừng bạn đã đến với Pul.com",
+      welcome: 'Chào mừng bạn đã đến với Pul.com',
       introduce:
-        "Pul là một nền tảng mạng xã hội được phát triển bởi cá nhân tôn trọng tiếng nói và suy nghĩ của người dùng.",
+        'Pul là một nền tảng mạng xã hội được phát triển bởi cá nhân tôn trọng tiếng nói và suy nghĩ của người dùng.',
     },
     controls: {
-      search: "Tìm kiếm",
-      openFriendsList: "Hiển thị Danh bạ",
-      closeFriendsList: "Đóng Danh bạ",
+      search: 'Tìm kiếm',
+      openFriendsList: 'Hiển thị Danh bạ',
+      closeFriendsList: 'Đóng Danh bạ',
     },
     contacts: {
-      contactsList: "Bạn bè",
-      title: "Quản lý liên lạc",
-      userSentRequest: "Yêu cầu kết bạn đến",
-      userReceivedRequest: "Lời mời kết bạn từ",
-      friendsList: "Bạn bè",
-      cancelRequest: "Hủy Yêu cầu",
-      acceptRequest: "Chấp nhận",
-      rejectRequest: "Từ chối",
-      getMore: "Lấy thêm",
+      contactsList: 'Bạn bè',
+      title: 'Quản lý liên lạc',
+      userSentRequest: 'Yêu cầu kết bạn đến',
+      userReceivedRequest: 'Lời mời kết bạn từ',
+      friendsList: 'Bạn bè',
+      cancelRequest: 'Hủy Yêu cầu',
+      acceptRequest: 'Chấp nhận',
+      rejectRequest: 'Từ chối',
+      getMore: 'Lấy thêm',
     },
     post: {
-      post: "Đăng bài viết",
-      postPlaceholder: "Chia sẻ cảm nghĩ của bạn",
-      heading : {
-        settingOwnPost : {
-          pinPost : {
-            name : "Pin the post",
-            icon : <VscPinned/>
+      post: 'Đăng bài viết',
+      postPlaceholder: 'Chia sẻ cảm nghĩ của bạn',
+      heading: {
+        settingOwnPost: {
+          pinPost: {
+            name: 'Pin the post',
+            icon: <VscPinned />,
           },
           savePost: {
-            name : "Save the post",
-            icon : <AiOutlineSave/>
+            name: 'Save the post',
+            icon: <AiOutlineSave />,
           },
-          editPost : {
-            name : "Edit Post", 
-            icon : <FiEdit/>
+          editPost: {
+            name: 'Edit Post',
+            icon: <FiEdit />,
           },
-          editAudience : {
-            name : "Edit Audience", 
-            icon : <IoMdGlobe/>
+          editAudience: {
+            name: 'Edit Audience',
+            icon: <IoMdGlobe />,
           },
-          moveToTrash : {
-            name : "Move To trash",
-            icon : <FiTrash/>
-          }
-        }
+          moveToTrash: {
+            name: 'Move To trash',
+            icon: <FiTrash />,
+          },
+        },
       },
       status: [
         {
-          name: "Công khai",
+          name: 'Công khai',
           icon: () => <FaGlobeAmericas />,
         },
         {
-          name: "Bạn bè",
+          name: 'Bạn bè',
           icon: () => <FaUserFriends />,
         },
         {
-          name: "Cá nhân",
+          name: 'Cá nhân',
           icon: () => <BiLockAlt />,
         },
       ],
       controls: {
         like: {
-          name: "Thích",
+          name: 'Thích',
           icon: () => <BiLike />,
         },
         liked: {
-          name: "Đã Thích",
+          name: 'Đã Thích',
           icon: () => <BiLike />,
         },
         comment: {
-          name: "Bình luận",
+          name: 'Bình luận',
           icon: () => <BiCommentDetail />,
         },
         share: {
-          name: "Chia sẻ",
+          name: 'Chia sẻ',
           icon: () => <BiShareAlt />,
         },
         countComments: (count) => `${count} bình luận`,
@@ -302,25 +303,25 @@ export const vi = {
     },
     comment: {
       controls: {
-        like: "Thích",
-        liked: "Đã thích",
-        response: "Trả lời",
-        remove: "Xóa",
-        loadMoreResponses: "Tải thêm bình luận",
+        like: 'Thích',
+        liked: 'Đã thích',
+        response: 'Trả lời',
+        remove: 'Xóa',
+        loadMoreResponses: 'Tải thêm bình luận',
       },
-      commentPlaceholder: "Để lại bình luận của bạn",
-      commentInputPlaceholder: "Để lại bình luận của bạn tại đây",
-      fetchMoreComments: "Xem thêm bình luận",
+      commentPlaceholder: 'Để lại bình luận của bạn',
+      commentInputPlaceholder: 'Để lại bình luận của bạn tại đây',
+      fetchMoreComments: 'Xem thêm bình luận',
     },
     chat: {
       chatInputPlaceholder: `Gửi tin nhắn tới`,
     },
     dialog: {
-      agree: "Đồng ý",
-      disagree: "Hủy bỏ",
+      agree: 'Đồng ý',
+      disagree: 'Hủy bỏ',
       removeComment: {
-        title: "Cảnh báo",
-        content: "Bạn có muốn xóa bình luận không?",
+        title: 'Cảnh báo',
+        content: 'Bạn có muốn xóa bình luận không?',
       },
     },
   },

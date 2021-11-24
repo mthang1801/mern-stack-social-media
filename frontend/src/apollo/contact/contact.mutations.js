@@ -1,25 +1,25 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
-  mutation($senderId: ID!) {
+  mutation ($senderId: ID!) {
     acceptRequestToAddFriend(senderId: $senderId) {
       sender {
-        _id      
-        name                          
+        _id
+        name
         slug
         email
         avatar
         following
-        followed        
+        followed
         sentRequestToAddFriend
         receivedRequestToAddFriend
         friends
       }
       receiver {
         _id
-        name                          
+        name
         slug
-        email 
+        email
         avatar
         following
         followed
@@ -79,38 +79,34 @@ export const ACCEPT_REQUEST_TO_ADD_FRIEND = gql`
   }
 `;
 
-
-
 export const SEND_REQUEST_TO_ADD_FRIEND = gql`
-  mutation SendRequestToAddFriendMutation($receiverId : ID!){
-    sendRequestToAddFriend(receiverId: $receiverId){
+  mutation SendRequestToAddFriendMutation($receiverId: ID!) {
+    sendRequestToAddFriend(receiverId: $receiverId) {
       sender {
         _id
-        slug                
-        following        
-        sentRequestToAddFriend    
-        followed        
-        receivedRequestToAddFriend    
+        slug
+        following
+        sentRequestToAddFriend
+        followed
+        receivedRequestToAddFriend
         friends
       }
       receiver {
         _id
-        slug       
-        following        
-        sentRequestToAddFriend     
-        followed        
-        receivedRequestToAddFriend        
+        slug
+        following
+        sentRequestToAddFriend
+        followed
+        receivedRequestToAddFriend
         friends
       }
     }
   }
 `;
 
-
-
 export const REJECT_REQUEST_TO_ADD_FRIEND = gql`
-  mutation ($senderId : ID!){
-    rejectRequestToAddFriend(senderId : $senderId){
+  mutation ($senderId: ID!) {
+    rejectRequestToAddFriend(senderId: $senderId) {
       sender {
         _id
         slug
@@ -130,8 +126,8 @@ export const REJECT_REQUEST_TO_ADD_FRIEND = gql`
         friends
         notifications
       }
-      notification{
-         _id
+      notification {
+        _id
         field
         content
         hasSeen
@@ -179,13 +175,11 @@ export const REJECT_REQUEST_TO_ADD_FRIEND = gql`
       }
     }
   }
-`
-
-
+`;
 
 export const REMOVE_FRIEND = gql`
-  mutation ($friendId : ID!){
-    removeFriend(friendId : $friendId){
+  mutation ($friendId: ID!) {
+    removeFriend(friendId: $friendId) {
       sender {
         _id
         slug
@@ -204,38 +198,34 @@ export const REMOVE_FRIEND = gql`
         receivedRequestToAddFriend
         friends
       }
-      notification{
+      notification {
         _id
       }
     }
   }
-`
-
-
-
+`;
 
 export const CANCEL_REQUEST_TO_ADD_FRIEND = gql`
-  mutation ($receiverId: ID!){
-    cancelRequestToAddFriend(receiverId : $receiverId){
+  mutation ($receiverId: ID!) {
+    cancelRequestToAddFriend(receiverId: $receiverId) {
       sender {
         _id
         slug
-        following        
-        followed  
+        following
+        followed
         receivedRequestToAddFriend
-        sentRequestToAddFriend                
+        sentRequestToAddFriend
         friends
       }
       receiver {
         _id
-        slug        
-        following        
-        followed  
+        slug
+        following
+        followed
         receivedRequestToAddFriend
-        sentRequestToAddFriend                
-        friends       
+        sentRequestToAddFriend
+        friends
       }
     }
   }
-`
-
+`;

@@ -1,14 +1,14 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { ReactTinyLink } from "react-tiny-link";
-import ImagesCarousel from "../UI/ImagesCarousel";
-import LazyLoad from "react-lazyload";
+import React, { useState, useMemo, useEffect } from 'react';
+import { ReactTinyLink } from 'react-tiny-link';
+import ImagesCarousel from '../UI/ImagesCarousel';
+import LazyLoad from 'react-lazyload';
 import {
   Wrapper,
   DraftEditor,
   HashtagLink,
   CardPreview,
-} from "./styles/PostCardBody.styles";
-const PostCardBody = ({ post }) => {  
+} from './styles/PostCardBody.styles';
+const PostCardBody = ({ post }) => {
   const [urlPreview, setUrlPreview] = useState(null);
   const images = post.files.length
     ? post.files.map((file) => ({
@@ -17,22 +17,26 @@ const PostCardBody = ({ post }) => {
       }))
     : [];
   useEffect(() => {
-    const DOMTarget = document.querySelector(`[data-target=post-${post._id}]`);   
+    const DOMTarget = document.querySelector(`[data-target=post-${post._id}]`);
     //find Preview URL
-    const urlLength = DOMTarget.querySelectorAll("[aria-label=link]").length;    
+    const urlLength = DOMTarget.querySelectorAll('[aria-label=link]').length;
     if (urlLength) {
-      const url = DOMTarget.querySelectorAll("[aria-label=link]")[urlLength - 1].getAttribute("href");
+      const url =
+        DOMTarget.querySelectorAll('[aria-label=link]')[
+          urlLength - 1
+        ].getAttribute('href');
       setUrlPreview(url);
     } else {
       setUrlPreview(null);
     }
-  }, [])
-  
+  }, []);
+
   return (
     <>
-      <DraftEditor data-target={`post-${post._id}`} dangerouslySetInnerHTML={{__html : post.text}}>
-        
-      </DraftEditor>
+      <DraftEditor
+        data-target={`post-${post._id}`}
+        dangerouslySetInnerHTML={{ __html: post.text }}
+      ></DraftEditor>
       {urlPreview && (
         <CardPreview>
           <ReactTinyLink

@@ -1,22 +1,22 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   ContactItemWrapper,
   Avatar,
   UserContactOverview,
   ContactControls,
-} from "./styles/ContactItem.styles";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useThemeUI } from "theme-ui";
-import { usePopupContactActions } from "./hook/usePopupActions";
-import ThreeDotsSetting from "../UI/ThreeDotsSetting";
+} from './styles/ContactItem.styles';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useThemeUI } from 'theme-ui';
+import { usePopupContactActions } from './hook/usePopupActions';
+import ThreeDotsSetting from '../UI/ThreeDotsSetting';
 
-import { messagesStorageVar } from "../../apollo/cache";
-import { FETCH_SINGLE_CHAT_CONVERSATION } from "../../apollo/chat/chat.types";
-import { useQuery, useReactiveVar } from "@apollo/client";
+import { messagesStorageVar } from '../../apollo/cache';
+import { FETCH_SINGLE_CHAT_CONVERSATION } from '../../apollo/chat/chat.types';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import {
   setCurrentChat,
   addNewConversationToMessagesStorage,
-} from "../../apollo/chat/chat.caches";
+} from '../../apollo/chat/chat.caches';
 const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
   const messagesStorage = useReactiveVar(messagesStorageVar);
@@ -25,7 +25,7 @@ const ContactItem = ({ friend }) => {
   const { refetch: fetchSingleChatConversation } = useQuery(
     FETCH_SINGLE_CHAT_CONVERSATION,
     {
-      fetchPolicy: "network-only",
+      fetchPolicy: 'network-only',
       skip: true,
     }
   );
@@ -43,7 +43,7 @@ const ContactItem = ({ friend }) => {
     if (!messagesStorage[friend._id]) {
       const { data } = await fetchSingleChatConversation({
         conversationId: friend._id,
-        scope: "PERSONAL",
+        scope: 'PERSONAL',
       });
       if (data) {
         const { fetchSingleChatConversation } = data;
@@ -53,7 +53,7 @@ const ContactItem = ({ friend }) => {
         );
       }
     }
-    setCurrentChat({ ...friend, scope: "PERSONAL" });
+    setCurrentChat({ ...friend, scope: 'PERSONAL' });
   };
   return (
     <ContactItemWrapper

@@ -1,5 +1,5 @@
-import { postsVar, currentPersonalUserVar } from "../cache";
-import { initialState } from "../initialState";
+import { postsVar, currentPersonalUserVar } from '../cache';
+import { initialState } from '../initialState';
 
 //#region Home Post
 export const addFetchedPostToCache = (fetchedPosts) => {
@@ -79,9 +79,10 @@ export const addLikeResponse = (postId, commentId, responseId, userId) => {
     (findCommentsDataByCommentId && !findCommentsDataByCommentId.responsesData)
   )
     return;
-  const findResponsesByResponseId = findCommentsDataByCommentId.responsesData.find(
-    (response) => response._id === responseId
-  );
+  const findResponsesByResponseId =
+    findCommentsDataByCommentId.responsesData.find(
+      (response) => response._id === responseId
+    );
   if (!findResponsesByResponseId) return;
 
   const updatedPost = posts.map((post) => {
@@ -209,9 +210,10 @@ export const removeLikeResponse = (postId, commentId, responseId, userId) => {
     (findCommentsDataByCommentId && !findCommentsDataByCommentId.responsesData)
   )
     return;
-  const findResponsesByResponseId = findCommentsDataByCommentId.responsesData.find(
-    (response) => response._id === responseId
-  );
+  const findResponsesByResponseId =
+    findCommentsDataByCommentId.responsesData.find(
+      (response) => response._id === responseId
+    );
   if (!findResponsesByResponseId) return;
 
   const updatedPost = posts.map((post) => {
@@ -433,7 +435,7 @@ export const addResponsesToCommentInPersonalUser = (
         post?.commentsData.some((comment) => comment._id === commentId)
       ) {
         const updatedComments = post.commentsData.map((comment) => {
-          const _comment = {...comment}
+          const _comment = { ...comment };
           if (_comment._id === commentId) {
             _comment.responsesData = _comment.responsesData
               ? [..._comment.responsesData, ...responses]

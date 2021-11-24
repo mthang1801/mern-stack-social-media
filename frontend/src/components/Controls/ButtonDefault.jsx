@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { useThemeUI } from "theme-ui";
-import { darken, invert } from "polished";
+import React from 'react';
+import styled from 'styled-components';
+import { useThemeUI } from 'theme-ui';
+import { darken, invert } from 'polished';
 const ButtonDefault = ({ children, ...props }) => {
   const { colorMode } = useThemeUI();
   return (
@@ -16,15 +16,15 @@ const Button = styled.button`
   align-items: center;
   justify-content: center;
   background-color: ${({ variant, color, theme }) =>
-    variant === "outlined"
-      ? "transparent"
+    variant === 'outlined'
+      ? 'transparent'
       : color
       ? `${color}`
-      : theme === "dark"
-      ? "var(--gray-dark)"
-      : "var(--light)"};
-  height: ${({ height }) => (height ? `${height}px` : "auto")};
-  width: ${({ width }) => (width ? `${width}px` : "auto")};
+      : theme === 'dark'
+      ? 'var(--gray-dark)'
+      : 'var(--light)'};
+  height: ${({ height }) => (height ? `${height}px` : 'auto')};
+  width: ${({ width }) => (width ? `${width}px` : 'auto')};
   font-size: 1rem;
   border-radius: 0.4rem;
   padding: 0.4rem 0.6rem;
@@ -33,18 +33,18 @@ const Button = styled.button`
   border: none;
   transition: var(--mainTransition);
   cursor: pointer;
-  color: ${({ color }) => (color ? invert(`${color}`) : "inherit")};
+  color: ${({ color }) => (color ? invert(`${color}`) : 'inherit')};
   &:hover {
     background-color: ${({ color, theme }) =>
       color
         ? `${darken(0.1, `${color}`)}`
-        : theme === "dark"
-        ? `${darken(0.1, "#454545")}`
-        : `${darken(0.005, "#dedede")}`};
+        : theme === 'dark'
+        ? `${darken(0.1, '#454545')}`
+        : `${darken(0.005, '#dedede')}`};
   }
 
   ${({ acceptBtn }) =>
-  acceptBtn &&
+    acceptBtn &&
     `
     background-color : #43a047 ;
     color: white;
@@ -73,7 +73,9 @@ const Button = styled.button`
     }
   `}
 
-  ${({chat}) => chat && `
+  ${({ chat }) =>
+    chat &&
+    `
   background-color : transparent ;
   color : #43a047 ; 
   font-size : 1.4rem;
@@ -82,7 +84,9 @@ const Button = styled.button`
     color : #2e7d32;    
   }
   `}
-  ${({call}) => call && `
+  ${({ call }) =>
+    call &&
+    `
   background-color : transparent ;
   color : var(--primary); 
   font-size : 1.4rem;
@@ -91,7 +95,9 @@ const Button = styled.button`
     color : #003f9c;    
   }
   `}
-  ${({videocall}) => videocall && `
+  ${({ videocall }) =>
+    videocall &&
+    `
   background-color : transparent ;
   color : #fb8c00; 
   font-size : 1.4rem;
@@ -102,7 +108,9 @@ const Button = styled.button`
   `}
 
   
-  ${({favorite}) => favorite && `
+  ${({ favorite }) =>
+    favorite &&
+    `
   background-color : transparent ;
   color : #d81b60; 
   font-size : 1.4rem;
@@ -111,7 +119,9 @@ const Button = styled.button`
     color : #ad1457 ;    
   }
   `}
-  ${({setting}) => setting && `
+  ${({ setting }) =>
+    setting &&
+    `
   background-color : transparent ;
   color : inherit; 
   opacity: 0.75;

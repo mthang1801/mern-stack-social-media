@@ -1,19 +1,16 @@
-import React, {createRef} from "react";
-import {
-  Wrapper
-} from "./styles/ChatBoard.styles";
+import React, { createRef } from 'react';
+import { Wrapper } from './styles/ChatBoard.styles';
 
-import ChatBoardHeading from "./ChatBoardHeading"
-import ChatBoardBody from "./ChatBoardBody"
-import ChatBoardFooter from "./ChatBoardFooter"
+import ChatBoardHeading from './ChatBoardHeading';
+import ChatBoardBody from './ChatBoardBody';
+import ChatBoardFooter from './ChatBoardFooter';
 
-const ChatCenter = () => {  
-  
+const ChatCenter = () => {
   return (
     <Wrapper>
-      <ChatBoardHeading/>
-      <ChatBoardBody/>
-      <ChatBoardFooter/>
+      <ChatBoardHeading />
+      <ChatBoardBody />
+      <ChatBoardFooter />
     </Wrapper>
   );
 };

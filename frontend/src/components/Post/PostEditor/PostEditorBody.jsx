@@ -4,48 +4,44 @@ import React, {
   useRef,
   useCallback,
   useEffect,
-} from "react";
+} from 'react';
 import {
   Wrapper,
   DraftEditor,
   Toolbar,
   Label,
   CardPreview,
-} from "./styles/PostEditorBody.styles";
-import { ReactTinyLink } from "react-tiny-link";
-import Editor from "@draft-js-plugins/editor";
-import useDraftEditorPlugin from "../useDraftEditorPlugin";
-import { IoIosImage } from "react-icons/io";
-import generateBase64Image from "../../../utils/generateBase64Image";
-import ImagesCarousel from "../../UI/ImagesCarousel";
-import { useQuery } from "@apollo/client";
-import { SEARCH_FRIENDS } from "../../../apollo/user/user.types";
-import useLanguage from "../../Global/useLanguage";
+} from './styles/PostEditorBody.styles';
+import { ReactTinyLink } from 'react-tiny-link';
+import Editor from '@draft-js-plugins/editor';
+import useDraftEditorPlugin from '../useDraftEditorPlugin';
+import { IoIosImage } from 'react-icons/io';
+import generateBase64Image from '../../../utils/generateBase64Image';
+import ImagesCarousel from '../../UI/ImagesCarousel';
+import { useQuery } from '@apollo/client';
+import { SEARCH_FRIENDS } from '../../../apollo/user/user.types';
+import useLanguage from '../../Global/useLanguage';
 const PostEditorBody = ({
   editorState,
   setEditorState,
   images,
   setImages,
   isEdited,
-  postEdited,  
+  postEdited,
 }) => {
   const [urlPreview, setUrlPreview] = useState(null);
   const editorRef = useRef(null);
   const [suggestions, setSuggestions] = useState([]);
   const [openMention, setOpenMention] = useState(true);
-  const {
-    refetch: searchFriends,
-    loading: searchFriendsLoading,
-  } = useQuery(SEARCH_FRIENDS, { fetchPolicy: "network-only", skip: true });
+  const { refetch: searchFriends, loading: searchFriendsLoading } = useQuery(
+    SEARCH_FRIENDS,
+    { fetchPolicy: 'network-only', skip: true }
+  );
   const { i18n, lang } = useLanguage();
   const { postPlaceholder } = i18n.store.data[lang].translation.post;
 
-  const {
-    plugins,
-    MentionSuggestions,
-    EmojiSelect,
-    EmojiSuggestions,
-  } = useDraftEditorPlugin();
+  const { plugins, MentionSuggestions, EmojiSelect, EmojiSuggestions } =
+    useDraftEditorPlugin();
 
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const onSearchChange = useCallback(({ value }) => {
@@ -64,19 +60,19 @@ const PostEditorBody = ({
     if (isEdited && postEdited) {
       elementId = `edited-post-body-${postEdited._id}`;
     } else {
-      elementId = "post-editor-body";
+      elementId = 'post-editor-body';
     }
     let urlLength;
 
     urlLength = document
       .getElementById(elementId)
-      .querySelectorAll("[aria-label=link]").length;
+      .querySelectorAll('[aria-label=link]').length;
 
     if (urlLength) {
       const url = document
         .getElementById(elementId)
-        .querySelectorAll("[aria-label=link]")
-        [urlLength - 1].getAttribute("href");
+        .querySelectorAll('[aria-label=link]')
+        [urlLength - 1].getAttribute('href');
       setUrlPreview(url);
     } else {
       setUrlPreview(null);
@@ -86,11 +82,11 @@ const PostEditorBody = ({
   const onChangeImages = async (e) => {
     const length = e.target.files.length;
     const fileData = e.target.files;
-    const matches = ["image/png", "image/gif", "image/jpg", "image/jpeg"];
+    const matches = ['image/png', 'image/gif', 'image/jpg', 'image/jpeg'];
     let listImages = [];
     for (let i = 0; i < length; i++) {
       if (!matches.includes(fileData[i].type)) {
-        alert("invalid image");
+        alert('invalid image');
         return;
       }
       listImages.push(fileData[i]);
@@ -110,8 +106,10 @@ const PostEditorBody = ({
     <>
       <DraftEditor
         onClick={() => editorRef.current?.focus()}
-        id={isEdited ? `edited-post-body-${postEdited._id}` : "post-editor-body"}
-        style={{ alignItems: "flex-start" }}
+        id={
+          isEdited ? `edited-post-body-${postEdited._id}` : 'post-editor-body'
+        }
+        style={{ alignItems: 'flex-start' }}
       >
         <Editor
           editorState={editorState}

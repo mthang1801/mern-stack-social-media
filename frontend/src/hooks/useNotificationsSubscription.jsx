@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useQuery, useReactiveVar } from "@apollo/client";
+import { useEffect } from 'react';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import {
   countNumberOfNotificationUnseenVar,
   userVar,
@@ -7,26 +7,26 @@ import {
   notificationsVar,
   receivedRequestsToAddFriendVar,
   latestNotificationVar,
-} from "../apollo/cache";
+} from '../apollo/cache';
 import {
   FETCH_NOTIFICATIONS,
   FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-} from "../apollo/notification/notification.types";
-import { setCurrentPersonalUser } from "../apollo/user/currentPersonalUser.caches";
+} from '../apollo/notification/notification.types';
+import { setCurrentPersonalUser } from '../apollo/user/currentPersonalUser.caches';
 import {
   addUserToReceivedRequestToAddFriend,
   removeUserFromReceivedRequestToAddFriend,
   moveSentRequestToFriend,
-} from "../apollo/contact/contact.caches";
+} from '../apollo/contact/contact.caches';
 import {
   addLikeResponse,
   removeLikeResponse,
   updateCommentLikes,
-} from "../apollo/post/post.caches";
+} from '../apollo/post/post.caches';
 import {
   userLikePostInCurrentPersonalUser,
   userRemoveLikePostInCurrentPersonalUser,
-} from "../apollo/post/post.caches";
+} from '../apollo/post/post.caches';
 import {
   ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
@@ -43,29 +43,29 @@ import {
   REMOVE_LIKE_RESPONSE_SUBSCRIPTION,
   REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST,
   SENT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
-} from "../apollo/notification/notification.types";
-import { addNotificationItemToNotificationsList } from "../apollo/notification/notification.caches";
-import { setCurrentUser } from "../apollo/user/user.caches";
+} from '../apollo/notification/notification.types';
+import { addNotificationItemToNotificationsList } from '../apollo/notification/notification.caches';
+import { setCurrentUser } from '../apollo/user/user.caches';
 import {
   removeNotificationItemFromNotificationsList,
   setCountNumberNotificationsUnseen,
   setNewNotifications,
   setLatestNotification,
   updateNotificationItemInNotificationsList,
-} from "../apollo/notification/notification.caches";
+} from '../apollo/notification/notification.caches';
 const useNotificationsPostSubscription = () => {
   const { subscribeToMore: subscribeToMoreNotifications } = useQuery(
     FETCH_NOTIFICATIONS,
     {
       skip: true,
-      fetchPolicy: "cache-and-network",
+      fetchPolicy: 'cache-and-network',
     }
   );
   const { refetch: fetchCountNumberNotificationsUnseen } = useQuery(
     FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
     {
       skip: true,
-      fetchPolicy: "cache-and-network",
+      fetchPolicy: 'cache-and-network',
     }
   );
   const countNumberNotificationsUnseen = useReactiveVar(
@@ -178,9 +178,8 @@ const useNotificationsPostSubscription = () => {
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
-            const {
-              sentRequestToAddFriendSubscription: notification,
-            } = subscriptionData.data;
+            const { sentRequestToAddFriendSubscription: notification } =
+              subscriptionData.data;
             const { receiver, sender } = notification?.fieldIdentity;
             if (sender && receiver) {
               console.log(sender, receiver, notification);
@@ -196,9 +195,8 @@ const useNotificationsPostSubscription = () => {
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
-            const {
-              cancelRequestToAddFriendSubscription: notification,
-            } = subscriptionData.data;
+            const { cancelRequestToAddFriendSubscription: notification } =
+              subscriptionData.data;
             const { sender, receiver } = notification.fieldIdentity;
             if (sender && receiver) {
               removeUserFromReceivedRequestToAddFriend(sender);
@@ -213,9 +211,8 @@ const useNotificationsPostSubscription = () => {
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
-            const {
-              acceptRequestToAddFriendSubscription: notification,
-            } = subscriptionData.data;
+            const { acceptRequestToAddFriendSubscription: notification } =
+              subscriptionData.data;
             const { sender, receiver } = notification.fieldIdentity;
             moveSentRequestToFriend(sender);
             updatedAddNotification(notification, sender, receiver);
@@ -295,10 +292,8 @@ const useNotificationsPostSubscription = () => {
         updateQuery: (_, { subscriptionData }) => {
           console.log(subscriptionData);
           if (subscriptionData) {
-            const {
-              comment,
-              notification,
-            } = subscriptionData.data.likeCommentSubscription;
+            const { comment, notification } =
+              subscriptionData.data.likeCommentSubscription;
             //create notification to receiver
             if (notification && notification.receiver === user._id) {
               updatedAddNotification(notification);
@@ -316,10 +311,8 @@ const useNotificationsPostSubscription = () => {
         document: REMOVE_LIKE_COMMENT_SUBSCRIPTION,
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
-            const {
-              comment,
-              notification,
-            } = subscriptionData.data.removeLikeCommentSubscription;
+            const { comment, notification } =
+              subscriptionData.data.removeLikeCommentSubscription;
             if (notification && notification.receiver === user._id) {
               updatedRemoveNotification(notification);
             }
@@ -337,9 +330,8 @@ const useNotificationsPostSubscription = () => {
         variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
-            const {
-              notifyUserResponseCommentSubscription,
-            } = subscriptionData.data;
+            const { notifyUserResponseCommentSubscription } =
+              subscriptionData.data;
             updatedAddNotification(notifyUserResponseCommentSubscription);
           }
         },
@@ -362,11 +354,8 @@ const useNotificationsPostSubscription = () => {
             if (likeResponseSubscription.receiver.toString() === user._id) {
               updatedAddNotification(likeResponseSubscription);
             }
-            const {
-              post,
-              comment,
-              response,
-            } = likeResponseSubscription.fieldIdentity;
+            const { post, comment, response } =
+              likeResponseSubscription.fieldIdentity;
             if (likeResponseSubscription.creator._id.toString() !== user._id) {
               addLikeResponse(
                 post._id,
@@ -388,11 +377,8 @@ const useNotificationsPostSubscription = () => {
             ) {
               updatedRemoveNotification(removeLikeResponseSubscription);
             }
-            const {
-              post,
-              comment,
-              response,
-            } = removeLikeResponseSubscription.fieldIdentity;
+            const { post, comment, response } =
+              removeLikeResponseSubscription.fieldIdentity;
             if (
               removeLikeResponseSubscription.creator._id.toString() !== user._id
             ) {
@@ -407,22 +393,20 @@ const useNotificationsPostSubscription = () => {
         },
       });
 
-      unsubscribeRemoveMentionedUsersNotificationInPost = subscribeToMoreNotifications(
-        {
+      unsubscribeRemoveMentionedUsersNotificationInPost =
+        subscribeToMoreNotifications({
           document: REMOVE_MENTIONED_USERS_NOTIFICATION_IN_POST,
           variables: { userId: user._id },
           updateQuery: (_, { subscriptionData }) => {
             if (subscriptionData) {
-              const {
-                removeMentionedNotificationSubscription,
-              } = subscriptionData.data;
+              const { removeMentionedNotificationSubscription } =
+                subscriptionData.data;
               updatedRemoveNotification(
                 removeMentionedNotificationSubscription
               );
             }
           },
-        }
-      );
+        });
       //#endregion
     }
 

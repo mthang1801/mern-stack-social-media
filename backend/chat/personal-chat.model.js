@@ -1,20 +1,20 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const PersonalChatSchema = new mongoose.Schema(
   {
     sender: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
       required: true,
-    },    
+    },
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
       required: true,
-    },    
+    },
     messageType: {
       type: String,
-      enum: ["TEXT", "IMAGE", "ATTACHMENT"],
+      enum: ['TEXT', 'IMAGE', 'ATTACHMENT'],
     },
     text: {
       type: String,
@@ -26,18 +26,18 @@ const PersonalChatSchema = new mongoose.Schema(
     },
     receiverStatus: {
       type: String,
-      enum: ["SENT", "DELIVERED", "SEEN", "DELETED"],
-      default: "SENT",
+      enum: ['SENT', 'DELIVERED', 'SEEN', 'DELETED'],
+      default: 'SENT',
     },
     senderStatus: {
       type: String,
-      enum: ["SENT", "RECALLED", "DELETED"],
-      default: "SENT",
+      enum: ['SENT', 'RECALLED', 'DELETED'],
+      default: 'SENT',
     },
     blocked: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: 'users',
         required: true,
       },
     ],
@@ -45,4 +45,7 @@ const PersonalChatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const PersonalChat = mongoose.model("personal-chats", PersonalChatSchema);
+export const PersonalChat = mongoose.model(
+  'personal-chats',
+  PersonalChatSchema
+);

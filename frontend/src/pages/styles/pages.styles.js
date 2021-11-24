@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const MainContent = styled.div`
   display: flex;
@@ -43,19 +43,19 @@ export const MainContentRightSide = styled.div`
 
 export const MainContentFullSize = styled.div`
   width: 95%;
-  margin : auto;
+  margin: auto;
   @media screen and (min-width: 768px) {
-    width : 90%;
+    width: 90%;
   }
   @media screen and (min-width: 992px) {
     width: 80%;
   }
   @media screen and (min-width: 1920px) {
-    width : 60%;
+    width: 60%;
   }
 `;
 
 export const ContactTitle = styled.h2`
   margin: 0 auto 3rem auto;
-  font-size : 1.8rem;
-`
+  font-size: 1.8rem;
+`;

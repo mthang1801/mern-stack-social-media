@@ -4,10 +4,10 @@ import {
   newNotificationsVar,
   latestNotificationVar,
   userVar,
-} from "../cache";
-import _ from "lodash";
+} from '../cache';
+import _ from 'lodash';
 
-import { initialState } from "../initialState";
+import { initialState } from '../initialState';
 
 export const decreaseCountNumberNotificationsUnseen = () => {
   const currentNumber = countNumberOfNotificationUnseenVar();
@@ -22,14 +22,14 @@ export const increaseCountNumberNotificationsUnseen = () => {
 };
 
 export const setCountNumberNotificationsUnseen = (num) => {
-  if(Number.isInteger(num)){    
-    return countNumberOfNotificationUnseenVar(num)
-  }  
-}
+  if (Number.isInteger(num)) {
+    return countNumberOfNotificationUnseenVar(num);
+  }
+};
 
 export const addNotificationItemToNotificationsList = (newNotification) => {
   let notifications = [...notificationsVar()];
-  increaseCountNumberNotificationsUnseen()
+  increaseCountNumberNotificationsUnseen();
   return notificationsVar([
     { ...newNotification, new: true },
     ...notifications,
@@ -38,12 +38,10 @@ export const addNotificationItemToNotificationsList = (newNotification) => {
 
 export const addNotificationsToNotifcationsList = (notifications) => {
   const prevNotifications = [...notificationsVar()];
-  if(Array.isArray(notifications)){
-    return notificationsVar([...prevNotifications, ...notifications])
+  if (Array.isArray(notifications)) {
+    return notificationsVar([...prevNotifications, ...notifications]);
   }
-}
-
-
+};
 
 export const removeNewNotification = (notificationId) => {
   const newNotifications = newNotificationsVar();
@@ -61,25 +59,27 @@ export const removeNewNotification = (notificationId) => {
 export const removeNotificationItemFromNotificationsList = (
   removedNotification
 ) => {
-  let notifications = [...notificationsVar()];  
+  let notifications = [...notificationsVar()];
   removeNewNotification(removedNotification._id);
   const latestNotification = latestNotificationVar();
-  if(latestNotification?._id === removedNotification._id){
+  if (latestNotification?._id === removedNotification._id) {
     latestNotificationVar(initialState.latestNotification);
   }
-  const user = {...userVar()};
-  user.notifications = user.notifications.filter(notification => notification._id !== removedNotification._id);
+  const user = { ...userVar() };
+  user.notifications = user.notifications.filter(
+    (notification) => notification._id !== removedNotification._id
+  );
   userVar(user);
   const updatedNotifications = notifications.filter((notification) => {
     if (notification._id === removedNotification._id) {
       if (!removedNotification.hasSeen) {
-        decreaseCountNumberNotificationsUnseen()
+        decreaseCountNumberNotificationsUnseen();
       }
       return false;
     }
     return true;
   });
-  
+
   return notificationsVar(updatedNotifications);
 };
 
@@ -119,7 +119,7 @@ export const updateNotificationItemInNotificationsList = (notification) => {
   });
   const sortNotificationByUpdatedAt = _.sortBy(updatedNotification, [
     (o) => -o.updatedAt,
-  ]);  
+  ]);
   return notificationsVar(sortNotificationByUpdatedAt);
 };
 
@@ -136,11 +136,11 @@ export const clearNotifications = () =>
 
 export const removeNotificationWhenUserRejectToAddFriend = (
   removedNotification
-) => {  
+) => {
   const notifications = [...notificationsVar()];
   removeNewNotification(removedNotification._id);
   const latestNotification = latestNotificationVar();
-  if(latestNotification?._id === removedNotification._id){
+  if (latestNotification?._id === removedNotification._id) {
     latestNotificationVar(initialState.latestNotification);
   }
   const updatedNotifications = notifications.filter((notification) => {
@@ -152,7 +152,7 @@ export const removeNotificationWhenUserRejectToAddFriend = (
       notification?.fieldIdentity?.receiver?._id ===
         removedNotification.fieldIdentity.receiver._id
     ) {
-      if(!notification.hasSeen){
+      if (!notification.hasSeen) {
         decreaseCountNumberNotificationsUnseen();
       }
       return false;
@@ -161,4 +161,3 @@ export const removeNotificationWhenUserRejectToAddFriend = (
   });
   return notificationsVar(updatedNotifications);
 };
-

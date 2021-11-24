@@ -1,7 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
-  subscription($userId: ID!) {
+  subscription ($userId: ID!) {
     cancelRequestToAddFriendSubscription(userId: $userId) {
       _id
       field
@@ -9,7 +9,7 @@ export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
       hasSeen
       isQuestion
       url
-      questionType{
+      questionType {
         yesNoQuestion
       }
       fieldIdentity {
@@ -47,4 +47,3 @@ export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
     }
   }
 `;
-

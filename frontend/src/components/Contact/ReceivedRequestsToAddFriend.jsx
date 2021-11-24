@@ -1,17 +1,18 @@
-import React, { useEffect } from "react";
-import { FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND } from "../../apollo/contact/contact.types";
-import { useQuery } from "@apollo/client";
-import { useThemeUI } from "theme-ui";
-import { ContactWrapper, Title, LinkReadMore } from "./Contact.styles";
-import { fetchMoreReceivedRequestsToAddFriend } from "../../apollo/contact/contact.caches";
-import useLanguage from "../Global/useLanguage";
-import ContactItem from "./ContactItem";
-import _ from "lodash";
+import React, { useEffect } from 'react';
+import { FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND } from '../../apollo/contact/contact.types';
+import { useQuery } from '@apollo/client';
+import { useThemeUI } from 'theme-ui';
+import { ContactWrapper, Title, LinkReadMore } from './Contact.styles';
+import { fetchMoreReceivedRequestsToAddFriend } from '../../apollo/contact/contact.caches';
+import useLanguage from '../Global/useLanguage';
+import ContactItem from './ContactItem';
+import _ from 'lodash';
+import constant from '../../constant/constant';
 const ReceivedRequestsToAddFriend = ({ user, receivedRequestsToAddFriend }) => {
   const { refetch: fetchReceivedRequestToAddFriend } = useQuery(
     FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND,
     {
-      fetchPolicy: "cache-and-network",
+      fetchPolicy: 'cache-and-network',
       skip: true,
     }
   );
@@ -20,11 +21,13 @@ const ReceivedRequestsToAddFriend = ({ user, receivedRequestsToAddFriend }) => {
 
   const getMoreReceivedRequestToAddFriend = () => {
     const skip = receivedRequestsToAddFriend.length;
-    const limit = +process.env.REACT_APP_CONTACT_USER_PER_PAGE;
+    const limit = constant.REACT_APP_CONTACT_USER_PER_PAGE;
     if (fetchReceivedRequestToAddFriend) {
       fetchReceivedRequestToAddFriend({ skip, limit }).then(({ data }) => {
         if (data?.fetchReceivedRequestToAddFriend?.length) {
-          fetchMoreReceivedRequestsToAddFriend(data.fetchReceivedRequestToAddFriend)
+          fetchMoreReceivedRequestsToAddFriend(
+            data.fetchReceivedRequestToAddFriend
+          );
         }
       });
     }

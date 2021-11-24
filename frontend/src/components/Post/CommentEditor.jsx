@@ -4,36 +4,31 @@ import React, {
   useCallback,
   useRef,
   useEffect,
-} from "react";
-import { EditorState, convertToRaw } from "draft-js";
-import Editor from "@draft-js-plugins/editor";
-import draftToHtml from "draftjs-to-html";
-import _ from "lodash";
-import { useQuery, useMutation } from "@apollo/client";
-import { SEARCH_FRIENDS } from "../../apollo/user/user.types";
-import {
-  Wrapper,
-} from "./PostEditor/styles/PostEditorBody.styles";
-import { useHistory } from "react-router-dom";
-import {
-  CommentInput,
-  CommentControls,
-} from "./styles/CommentEditor.styles";
-import { useThemeUI } from "theme-ui";
-import useLanguage from "../Global/useLanguage";
-import { CREATE_COMMENT } from "../../apollo/post/post.mutations";
-import {addCommentToPost} from "../../apollo/post/post.caches"
-import useDraftEditorPlugin from "./useDraftEditorPlugin"
+} from 'react';
+import { EditorState, convertToRaw } from 'draft-js';
+import Editor from '@draft-js-plugins/editor';
+import draftToHtml from 'draftjs-to-html';
+import _ from 'lodash';
+import { useQuery, useMutation } from '@apollo/client';
+import { SEARCH_FRIENDS } from '../../apollo/user/user.types';
+import { Wrapper } from './PostEditor/styles/PostEditorBody.styles';
+import { useHistory } from 'react-router-dom';
+import { CommentInput, CommentControls } from './styles/CommentEditor.styles';
+import { useThemeUI } from 'theme-ui';
+import useLanguage from '../Global/useLanguage';
+import { CREATE_COMMENT } from '../../apollo/post/post.mutations';
+import { addCommentToPost } from '../../apollo/post/post.caches';
+import useDraftEditorPlugin from './useDraftEditorPlugin';
 const CommentEditor = ({ post }) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
   const [openMention, setOpenMention] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const {
-    refetch: searchFriends,
-    loading: searchFriendsLoading,
-  } = useQuery(SEARCH_FRIENDS, { fetchPolicy: "network-only", skip: true });
+  const { refetch: searchFriends, loading: searchFriendsLoading } = useQuery(
+    SEARCH_FRIENDS,
+    { fetchPolicy: 'network-only', skip: true }
+  );
   const [createComment] = useMutation(CREATE_COMMENT);
   const { colorMode } = useThemeUI();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
@@ -53,12 +48,9 @@ const CommentEditor = ({ post }) => {
       setSuggestions([]);
     }
   }, []);
-  
-  const {
-    plugins,
-    MentionSuggestions,
-    EmojiSelect,
-    EmojiSuggestions,} = useDraftEditorPlugin();
+
+  const { plugins, MentionSuggestions, EmojiSelect, EmojiSuggestions } =
+    useDraftEditorPlugin();
 
   useEffect(() => {
     function trackUserClickCommentControls(e) {
@@ -70,29 +62,30 @@ const CommentEditor = ({ post }) => {
         setShowControls(false);
       }
     }
-    window.addEventListener("click", trackUserClickCommentControls);
+    window.addEventListener('click', trackUserClickCommentControls);
 
     return () =>
-      window.removeEventListener("click", trackUserClickCommentControls);
+      window.removeEventListener('click', trackUserClickCommentControls);
   }, [commentRef, showControls]);
 
   const onSubmitComment = (e) => {
     if (
       e.which === 13 &&
       editorState.getCurrentContent().hasText() &&
-      !openMention && 
-      !document.querySelector(`[data-target=comment-input-${post._id}]`).querySelector("[role=listbox]")
-      
+      !openMention &&
+      !document
+        .querySelector(`[data-target=comment-input-${post._id}]`)
+        .querySelector('[role=listbox]')
     ) {
       const rawEditorState = convertToRaw(editorState.getCurrentContent());
       const rawText = JSON.stringify(rawEditorState);
       const shortenText = draftToHtml(rawEditorState)
-        .split("</p>")[0]
-        .replace(/<p>|&nbsp;/g, "");
+        .split('</p>')[0]
+        .replace(/<p>|&nbsp;/g, '');
       document
         .querySelector(`[data-target=comment-input-${post._id}]`)
-        .querySelector("[contenteditable=true]")
-        ?.setAttribute("contenteditable", false);
+        .querySelector('[contenteditable=true]')
+        ?.setAttribute('contenteditable', false);
       const textData = document.querySelector(
         `[data-target=comment-input-${post._id}]`
       ).innerHTML;
@@ -104,7 +97,7 @@ const CommentEditor = ({ post }) => {
           }
         });
       }
-      mentions = _.unionBy(mentions, "_id").map((mention) =>
+      mentions = _.unionBy(mentions, '_id').map((mention) =>
         mention._id.toString()
       );
       if (textData) {
@@ -121,8 +114,8 @@ const CommentEditor = ({ post }) => {
           .then(({ data }) => {
             document
               .querySelector(`[data-target=comment-input-${post._id}]`)
-              .querySelector("[contenteditable=false]")
-              ?.setAttribute("contenteditable", true);
+              .querySelector('[contenteditable=false]')
+              ?.setAttribute('contenteditable', true);
 
             const { createComment } = data;
             addCommentToPost(post._id, createComment);
@@ -130,8 +123,8 @@ const CommentEditor = ({ post }) => {
           .catch((err) => {
             document
               .querySelector(`[data-target=comment-input-${post._id}]`)
-              .querySelector("[contenteditable=true]")
-              ?.setAttribute("contenteditable", true);
+              .querySelector('[contenteditable=true]')
+              ?.setAttribute('contenteditable', true);
           });
       }
     }

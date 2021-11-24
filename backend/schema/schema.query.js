@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-express";
+import { gql } from 'apollo-server-express';
 
 export const schemaQuery = gql`
   type Query {
@@ -8,7 +8,7 @@ export const schemaQuery = gql`
     fetchPosts(userId: ID, skip: Int, limit: Int): [Post!]!
     fetchComments(postId: ID!, except: [ID!], skip: Int, limit: Int): [Comment!]
     fetchResponses(commentId: ID!, skip: Int, limit: Int): [Response!]
-    fetchFriends(skip: Int, limit: Int, except : [ID!], userId: ID): [User!]!
+    fetchFriends(skip: Int, limit: Int, except: [ID!], userId: ID): [User!]!
     fetchListContact: ListContact!
     fetchSentRequestToAddFriend(skip: Int, limit: Int): [User!]!
     fetchReceivedRequestToAddFriend(skip: Int, limit: Int): [User!]!

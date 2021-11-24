@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Wrapper,
   Controls,
@@ -11,24 +11,24 @@ import {
   FormComment,
   PostInfo,
   CommentCounter,
-} from "./styles/PostCardFooter.styles";
-import useLanguage from "../Global/useLanguage";
-import { BiLike } from "react-icons/bi";
-import { useThemeUI } from "theme-ui";
-import { useMutation, useReactiveVar } from "@apollo/client";
-import { userVar } from "../../apollo/cache";
-import { LIKE_POST, REMOVE_LIKE_POST } from "../../apollo/post/post.types";
+} from './styles/PostCardFooter.styles';
+import useLanguage from '../Global/useLanguage';
+import { BiLike } from 'react-icons/bi';
+import { useThemeUI } from 'theme-ui';
+import { useMutation, useReactiveVar } from '@apollo/client';
+import { userVar } from '../../apollo/cache';
+import { LIKE_POST, REMOVE_LIKE_POST } from '../../apollo/post/post.types';
 
-import LazyLoad from "react-lazyload";
+import LazyLoad from 'react-lazyload';
 import {
   updateLikePost,
   updateRemoveLikePost,
-} from "../../apollo/post/post.caches";
-import CommentEditor from "./CommentEditor";
+} from '../../apollo/post/post.caches';
+import CommentEditor from './CommentEditor';
 const PostCardFooter = ({ post, fetchComments, user }) => {
   const { i18n, lang } = useLanguage();
   const { controls } = i18n.store.data[lang].translation.post;
-  const { colorMode } = useThemeUI();  
+  const { colorMode } = useThemeUI();
   const [likePost] = useMutation(LIKE_POST);
   const [removeLikePost] = useMutation(REMOVE_LIKE_POST);
   const [showCommentEditor, setShowCommentEditor] = useState(false);
@@ -59,12 +59,12 @@ const PostCardFooter = ({ post, fetchComments, user }) => {
     }
   };
   const onClickLikePost = () => {
-    if(user){
-      return post.likes.includes(user._id) ? onUnlikePost() : onLikePost()
+    if (user) {
+      return post.likes.includes(user._id) ? onUnlikePost() : onLikePost();
     }
-    alert("Please login before comment")    
-  }
-  
+    alert('Please login before comment');
+  };
+
   return (
     <Wrapper>
       <Controls theme={colorMode}>

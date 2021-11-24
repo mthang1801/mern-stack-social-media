@@ -1,21 +1,22 @@
-import getAuthUser from "../utils/getAuthUser";
-import { PersonalChat } from "./personal-chat.model";
-import { User } from "../user/user.model";
-import { ApolloError, UserInputError } from "apollo-server-express";
-import _ from "lodash";
-import decodeBase64 from "../utils/decodeBase64";
-import mongoose from "mongoose";
+import getAuthUser from '../utils/getAuthUser';
+import { PersonalChat } from './personal-chat.model';
+import { User } from '../user/user.model';
+import { ApolloError, UserInputError } from 'apollo-server-express';
+import _ from 'lodash';
+import decodeBase64 from '../utils/decodeBase64';
+import mongoose from 'mongoose';
+import constant from '../config/constant';
 
 export const chatControllers = {
-  fetchChatConversations: async (req, except,skip, limit) => {
+  fetchChatConversations: async (req, except, skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
     try {
-      console.time("fetchChatConversations");
+      console.time('fetchChatConversations');
       //convert except to Object
-      const _exceptToObject = {}; 
-      for(let item of except){
-        _exceptToObject[item] = true ; 
-      }      
+      const _exceptToObject = {};
+      for (let item of except) {
+        _exceptToObject[item] = true;
+      }
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId);
       const { conversations } = currentUser;
@@ -29,13 +30,13 @@ export const chatControllers = {
           const { isGroup, conversationId } = conversation;
           let getConversations;
           let scope; //["PERSONAL", "GROUP"]
-          if(_exceptToObject[conversationId.toString()]) {            
-            continue; 
+          if (_exceptToObject[conversationId.toString()]) {
+            continue;
           }
           if (isGroup) {
             //here is GROUP conversation
             // do later with group chat
-            scope = "GROUP";
+            scope = 'GROUP';
             continue;
           } else {
             // here is PERSONAL conversation
@@ -44,15 +45,14 @@ export const chatControllers = {
                 { sender: currentUserId, receiver: conversationId },
                 { sender: conversationId, receiver: currentUserId },
               ],
-
             })
               .populate({
-                path: "sender",
-                select: "name slug avatar isOnline offlinedAt",
+                path: 'sender',
+                select: 'name slug avatar isOnline offlinedAt',
               })
               .populate({
-                path: "receiver",
-                select: "name slug avatar isOnline offlinedAt",
+                path: 'receiver',
+                select: 'name slug avatar isOnline offlinedAt',
               })
               .sort({ createdAt: -1 })
               .skip(+skip)
@@ -60,8 +60,8 @@ export const chatControllers = {
             getConversations = getConversations.map((conversation) => {
               const _messages = conversation._doc;
               if (
-                _messages.messageType === "IMAGE" ||
-                _messages.messageType === "ATTACHMENT"
+                _messages.messageType === 'IMAGE' ||
+                _messages.messageType === 'ATTACHMENT'
               ) {
                 return {
                   ..._messages,
@@ -69,13 +69,13 @@ export const chatControllers = {
                     ..._messages.file,
                     data: `data:${
                       _messages.file.mimetype
-                    };base64,${_messages.file.data.toString("base64")}`,
+                    };base64,${_messages.file.data.toString('base64')}`,
                   },
                 };
               }
               return { ..._messages };
             });
-            scope = "PERSONAL";
+            scope = 'PERSONAL';
           }
 
           if (getConversations.length) {
@@ -88,7 +88,7 @@ export const chatControllers = {
             const hasSeenLatestMessage =
               latestMessage.receiver._id.toString() ===
                 currentUserId.toString() &&
-              latestMessage.receiverStatus !== "SEEN"
+              latestMessage.receiverStatus !== 'SEEN'
                 ? false
                 : true;
             conversationsResult = [
@@ -101,9 +101,9 @@ export const chatControllers = {
                 hasSeenLatestMessage,
               },
             ];
-          }          
+          }
         }
-        console.timeEnd("fetchChatConversations");        
+        console.timeEnd('fetchChatConversations');
         return {
           conversations: conversationsResult,
           numberOfConversations: conversations.length,
@@ -113,15 +113,15 @@ export const chatControllers = {
         conversations: [],
         numberOfConversations: 0,
       };
-    } catch (error) {      
+    } catch (error) {
       console.log(`102-${error}`);
-      throw new ApolloError("Server error");
+      throw new ApolloError('Server error');
     }
-  },  
+  },
   fetchMessages: async (req, conversationId, scope, skip, limit) => {
     try {
       const currentUserId = getAuthUser(req);
-      if (scope === "PERSONAL") {
+      if (scope === 'PERSONAL') {
         const numberMessages = await PersonalChat.countDocuments({
           $or: [
             { sender: currentUserId, receiver: conversationId },
@@ -140,12 +140,12 @@ export const chatControllers = {
           ],
         })
           .populate({
-            path: "sender",
-            select: "name slug avatar isOnline offlinedAt",
+            path: 'sender',
+            select: 'name slug avatar isOnline offlinedAt',
           })
           .populate({
-            path: "receiver",
-            select: "name slug avatar isOnline offlinedAt",
+            path: 'receiver',
+            select: 'name slug avatar isOnline offlinedAt',
           })
           .sort({ createdAt: -1 })
           .skip(+skip)
@@ -153,8 +153,8 @@ export const chatControllers = {
         personalMessages = personalMessages.map((message) => {
           const _messages = message._doc;
           if (
-            _messages.messageType === "IMAGE" ||
-            _messages.messageType === "ATTACHMENT"
+            _messages.messageType === 'IMAGE' ||
+            _messages.messageType === 'ATTACHMENT'
           ) {
             return {
               ..._messages,
@@ -162,7 +162,7 @@ export const chatControllers = {
                 ..._messages.file,
                 data: `data:${
                   _messages.file.mimetype
-                };base64,${_messages.file.data.toString("base64")}`,
+                };base64,${_messages.file.data.toString('base64')}`,
               },
             };
           }
@@ -172,20 +172,20 @@ export const chatControllers = {
         return {
           messages: personalMessages.reverse(),
         };
-      } else if (scope === "GROUP") {
+      } else if (scope === 'GROUP') {
       } else {
-        throw new UserInputError("invalid scope");
+        throw new UserInputError('invalid scope');
       }
     } catch (error) {
       console.log(`157-${error.message}`);
 
-      throw new ApolloError("Server error");
+      throw new ApolloError('Server error');
     }
   },
-  fetchSingleChatConversation: async (req, conversationId, scope) => {   
-    console.time("fetch single chat conversations") 
+  fetchSingleChatConversation: async (req, conversationId, scope) => {
+    console.time('fetch single chat conversations');
     const currentUserId = getAuthUser(req);
-    if (scope === "PERSONAL") {
+    if (scope === 'PERSONAL') {
       let getConversations = await PersonalChat.find({
         $or: [
           { sender: currentUserId, receiver: conversationId },
@@ -193,22 +193,22 @@ export const chatControllers = {
         ],
       })
         .populate({
-          path: "sender",
-          select: "name slug avatar isOnline offlinedAt",
+          path: 'sender',
+          select: 'name slug avatar isOnline offlinedAt',
         })
         .populate({
-          path: "receiver",
-          select: "name slug avatar isOnline offlinedAt",
+          path: 'receiver',
+          select: 'name slug avatar isOnline offlinedAt',
         })
         .sort({ createdAt: -1 })
         .skip(0)
-        .limit(+process.env.NUMBER_OF_MESSAGES_PER_LOAD);      
+        .limit(+constant.NUMBER_OF_MESSAGES_PER_LOAD);
       if (getConversations.length) {
         getConversations = getConversations.map((conversation) => {
           const _messages = conversation._doc;
           if (
-            _messages.messageType === "IMAGE" ||
-            _messages.messageType === "ATTACHMENT"
+            _messages.messageType === 'IMAGE' ||
+            _messages.messageType === 'ATTACHMENT'
           ) {
             return {
               ..._messages,
@@ -216,7 +216,7 @@ export const chatControllers = {
                 ..._messages.file,
                 data: `data:${
                   _messages.file.mimetype
-                };base64,${_messages.file.data.toString("base64")}`,
+                };base64,${_messages.file.data.toString('base64')}`,
               },
             };
           }
@@ -230,10 +230,10 @@ export const chatControllers = {
         const latestMessage = getConversations[0];
         const hasSeenLatestMessage =
           latestMessage.receiver._id.toString() === currentUserId.toString() &&
-          latestMessage.receiverStatus !== "SEEN"
+          latestMessage.receiverStatus !== 'SEEN'
             ? false
-            : true;    
-            console.timeEnd("fetch single chat conversations")    
+            : true;
+        console.timeEnd('fetch single chat conversations');
         return {
           profile,
           messages: [...getConversations.reverse()],
@@ -256,20 +256,20 @@ export const chatControllers = {
   ) => {
     try {
       const currentUserId = getAuthUser(req);
-      if (scope === "PERSONAL") {
+      if (scope === 'PERSONAL') {
         const currentUser = await User.findById(currentUserId, {
           name: 1,
           slug: 1,
           avatar: 1,
           conversations: 1,
-          isOnline : 1,
-          offlinedAt : 1
+          isOnline: 1,
+          offlinedAt: 1,
         });
 
         if (!currentUser) {
           return {
             error: {
-              message: "UnAuthorized",
+              message: 'UnAuthorized',
               statusCode: 400,
             },
           };
@@ -300,7 +300,7 @@ export const chatControllers = {
           const newPersonalChatText = new PersonalChat({
             sender: currentUserId,
             receiver: receiverId,
-            messageType: "TEXT",
+            messageType: 'TEXT',
             text,
           });
           const session = await mongoose.startSession();
@@ -360,7 +360,7 @@ export const chatControllers = {
           const _cloneChatText = newPersonalChatText._doc;
           pubsub.publish(sentMessageChatSubscription, {
             sentMessageChatSubscription: {
-              action: "SENT",
+              action: 'SENT',
               scope,
               message: { ..._cloneChatText, sender: currentUser, receiver },
             },
@@ -373,13 +373,13 @@ export const chatControllers = {
       }
       return {
         error: {
-          message: "Send message fail, there were some errors occured",
+          message: 'Send message fail, there were some errors occured',
           statusCode: 400,
         },
       };
     } catch (error) {
       console.log(`286-${error.message}`);
-      throw new ApolloError("Server error");
+      throw new ApolloError('Server error');
     }
   },
   sendMessageChatFile: async (
@@ -407,18 +407,25 @@ export const chatControllers = {
           _id: receiverId,
           blocks: { $ne: currentUserId },
         },
-        { name: 1, slug: 1, avatar: 1, conversations: 1, isOnline : 1, offlinedAt : 1 }
+        {
+          name: 1,
+          slug: 1,
+          avatar: 1,
+          conversations: 1,
+          isOnline: 1,
+          offlinedAt: 1,
+        }
       );
       if (!receiver) {
         return {
           error: {
-            message: "User not found",
+            message: 'User not found',
             statusCode: 400,
           },
         };
       }
       const { data } = decodeBase64(encoding);
-      if (scope === "PERSONAL") {
+      if (scope === 'PERSONAL') {
         const session = await mongoose.startSession();
         session.startTransaction();
         const newPersonalMessageFile = new PersonalChat({
@@ -493,7 +500,7 @@ export const chatControllers = {
         };
         pubsub.publish(sentMessageChatSubscription, {
           sentMessageChatSubscription: {
-            action: "SENT",
+            action: 'SENT',
             message: messageResult,
             scope,
           },
@@ -505,7 +512,7 @@ export const chatControllers = {
       }
       return {
         error: {
-          message: "Send message fail, there were some errors occured",
+          message: 'Send message fail, there were some errors occured',
           statusCode: 400,
         },
       };
@@ -513,7 +520,7 @@ export const chatControllers = {
       console.log(`418-${error.message}`);
       return {
         error: {
-          message: "Send message fail, there were some errors occured",
+          message: 'Send message fail, there were some errors occured',
           statusCode: 400,
         },
       };
@@ -529,8 +536,8 @@ export const chatControllers = {
       const currentUserId = getAuthUser(req);
       for (let senderId of listSenderId) {
         await PersonalChat.updateMany(
-          { sender: senderId, receiver: currentUserId, receiverStatus: "SENT" },
-          { receiverStatus: "DELIVERED" },
+          { sender: senderId, receiver: currentUserId, receiverStatus: 'SENT' },
+          { receiverStatus: 'DELIVERED' },
           { new: true }
         );
       }
@@ -561,25 +568,25 @@ export const chatControllers = {
         { new: true }
       )
         .populate({
-          path: "sender",
-          select: "name slug avatar isOnline offlinedAt",
+          path: 'sender',
+          select: 'name slug avatar isOnline offlinedAt',
         })
         .populate({
-          path: "receiver",
-          select: "name slug avatar isOnline offlinedAt",
+          path: 'receiver',
+          select: 'name slug avatar isOnline offlinedAt',
         });
 
       let _cloneUpdatedMessage = updatedMessage._doc;
-      if (updatedMessage.messageType !== "TEXT") {
+      if (updatedMessage.messageType !== 'TEXT') {
         _cloneUpdatedMessage.file.data = `data:${
           _cloneUpdatedMessage.file.mimetype
-        };base64,${_cloneUpdatedMessage.file.data.toString("base64")}`;
+        };base64,${_cloneUpdatedMessage.file.data.toString('base64')}`;
       }
 
       pubsub.publish(notifySenderThatReceiverHasReceivedMessageChat, {
         notifySenderThatReceiverHasReceivedMessageChat: {
           action: messageStatus,
-          scope: "PERSONAL",
+          scope: 'PERSONAL',
           message: _cloneUpdatedMessage,
         },
       });
@@ -598,21 +605,21 @@ export const chatControllers = {
   ) => {
     try {
       const currentUserId = getAuthUser(req);
-      if (scope === "PERSONAL") {
+      if (scope === 'PERSONAL') {
         const updatedResult = await PersonalChat.updateMany(
           {
             receiver: currentUserId,
             sender: conversationId,
-            receiverStatus: { $ne: "SEEN" },
+            receiverStatus: { $ne: 'SEEN' },
           },
-          { receiverStatus: "SEEN" },
+          { receiverStatus: 'SEEN' },
           { new: true }
         );
         if (updatedResult.nModified) {
           pubsub.publish(senderSubscribeWhenReceiverHasSeenAllMessages, {
             senderSubscribeWhenReceiverHasSeenAllMessages: {
               scope,
-              action: "SEEN",
+              action: 'SEEN',
               senderId: conversationId,
               receiverId: currentUserId,
             },

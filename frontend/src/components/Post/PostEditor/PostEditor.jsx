@@ -1,26 +1,26 @@
-import React, { useState, useCallback, useEffect } from "react";
-import PostEditorHeader from "./PostEditorHeader";
-import PostEditorBody from "./PostEditorBody";
-import { EditorWrapper } from "./styles/PostEditor.styles";
-import draftToHtml from "draftjs-to-html";
-import { useThemeUI } from "theme-ui";
-import { EditorState, convertToRaw } from "draft-js";
-import useLanguage from "../../Global/useLanguage";
-import _ from "lodash";
-import { useMutation, useReactiveVar } from "@apollo/client";
-import { EDIT_POST, CREATE_POST } from "../../../apollo/post/post.types";
-import { userVar, currentPersonalUserVar } from "../../../apollo/cache";
-import { Prompt } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
+import React, { useState, useCallback, useEffect } from 'react';
+import PostEditorHeader from './PostEditorHeader';
+import PostEditorBody from './PostEditorBody';
+import { EditorWrapper } from './styles/PostEditor.styles';
+import draftToHtml from 'draftjs-to-html';
+import { useThemeUI } from 'theme-ui';
+import { EditorState, convertToRaw } from 'draft-js';
+import useLanguage from '../../Global/useLanguage';
+import _ from 'lodash';
+import { useMutation, useReactiveVar } from '@apollo/client';
+import { EDIT_POST, CREATE_POST } from '../../../apollo/post/post.types';
+import { userVar, currentPersonalUserVar } from '../../../apollo/cache';
+import { Prompt } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 import {
   pushNewPostToPostsList,
   updatePost,
-} from "../../../apollo/post/post.caches";
+} from '../../../apollo/post/post.caches';
 import {
   addPostItemToCurrentPersonalUser,
   updatePostInCurrentPersonalUser,
-} from "../../../apollo/post/post.caches";
+} from '../../../apollo/post/post.caches';
 const PostEditor = ({
   editedEditorState,
   isEdited,
@@ -30,7 +30,7 @@ const PostEditor = ({
 }) => {
   const user = useReactiveVar(userVar);
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
-  const [postStatus, setPostStatus] = useState("PUBLIC");
+  const [postStatus, setPostStatus] = useState('PUBLIC');
   const [editorState, setEditorState] = useState(() =>
     editedEditorState ? editedEditorState : EditorState.createEmpty()
   );
@@ -59,9 +59,9 @@ const PostEditor = ({
     timer = setTimeout(() => {
       if (images.length || editorState.getCurrentContent().hasText()) {
         if (
-          postStatus === "PUBLIC" ||
-          postStatus === "PRIVATE" ||
-          postStatus === "FRIENDS"
+          postStatus === 'PUBLIC' ||
+          postStatus === 'PRIVATE' ||
+          postStatus === 'FRIENDS'
         ) {
           setDisabledSubmit(false);
         } else {
@@ -84,17 +84,17 @@ const PostEditor = ({
     if (isEdited) {
       elementId = `edited-post-body-${postEdited._id}`;
     } else {
-      elementId = "post-editor-body";
+      elementId = 'post-editor-body';
     }
     const rawEditorState = convertToRaw(editorState.getCurrentContent());
     const rawText = JSON.stringify(rawEditorState);
     const shortenText = draftToHtml(rawEditorState)
-      .split("</p>")[0]
-      .replace(/<p>|&nbsp;/g, "");
+      .split('</p>')[0]
+      .replace(/<p>|&nbsp;/g, '');
     document
       .getElementById(elementId)
-      ?.querySelector("[contenteditable=true]")
-      ?.setAttribute("contenteditable", false);
+      ?.querySelector('[contenteditable=true]')
+      ?.setAttribute('contenteditable', false);
     const text = document.getElementById(elementId).innerHTML;
     let mentions = [];
     let fileNames = [];
@@ -108,7 +108,7 @@ const PostEditor = ({
         }
       });
     }
-    mentions = _.unionBy(mentions, "_id").map((mention) =>
+    mentions = _.unionBy(mentions, '_id').map((mention) =>
       mention._id.toString()
     );
 
@@ -128,7 +128,7 @@ const PostEditor = ({
       status: postStatus,
     };
     if (isEdited && postEdited) {
-      console.log("edited Post");
+      console.log('edited Post');
       editPost({ variables: { postId: postEdited._id, ...postData } })
         .then(({ data }) => {
           if (openEdited) {
@@ -143,8 +143,8 @@ const PostEditor = ({
           }
           document
             .getElementById(elementId)
-            ?.querySelector("[contenteditable=true]")
-            ?.setAttribute("contenteditable", true);
+            ?.querySelector('[contenteditable=true]')
+            ?.setAttribute('contenteditable', true);
           setEditorState(EditorState.createEmpty());
           setImages([]);
         })
@@ -152,11 +152,11 @@ const PostEditor = ({
           console.log(err.message);
           document
             .getElementById(elementId)
-            ?.querySelector("[contenteditable=true]")
-            ?.setAttribute("contenteditable", true);
+            ?.querySelector('[contenteditable=true]')
+            ?.setAttribute('contenteditable', true);
         });
     } else {
-      console.log("create new post");
+      console.log('create new post');
       createPost({
         variables: {
           text,
@@ -181,8 +181,8 @@ const PostEditor = ({
           }
           document
             .getElementById(elementId)
-            ?.querySelector("[contenteditable=true]")
-            ?.setAttribute("contenteditable", true);
+            ?.querySelector('[contenteditable=true]')
+            ?.setAttribute('contenteditable', true);
           setEditorState(EditorState.createEmpty());
           setImages([]);
         })
@@ -190,8 +190,8 @@ const PostEditor = ({
           console.log(err);
           document
             .getElementById(elementId)
-            ?.querySelector("[contenteditable=true]")
-            ?.setAttribute("contenteditable", true);
+            ?.querySelector('[contenteditable=true]')
+            ?.setAttribute('contenteditable', true);
         });
     }
   };
@@ -229,7 +229,7 @@ const PostEditor = ({
         isEdited={isEdited}
         postEdited={postEdited}
         id={
-          postEdited ? `edited-post-body-${postEdited._id}` : "post-editor-body"
+          postEdited ? `edited-post-body-${postEdited._id}` : 'post-editor-body'
         }
       />
 
@@ -239,7 +239,7 @@ const PostEditor = ({
           color="primary"
           disabled={disabledSubmit}
           onClick={onSubmitPostStatus}
-          style={{ display: "block", width: "95%", margin: "0.5rem auto" }}
+          style={{ display: 'block', width: '95%', margin: '0.5rem auto' }}
         >
           {post.post}
         </Button>
@@ -254,7 +254,7 @@ const PostEditor = ({
       open={openPostEditorDialog}
       onClose={handleCloseDialog}
       aria-labelledby="max-width-dialog-title"
-      style={{ maxWidth: "800px", margin: "auto" }}
+      style={{ maxWidth: '800px', margin: 'auto' }}
     >
       {PostEditorRoot}
     </Dialog>

@@ -1,25 +1,29 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const Wrapper = styled.div`
-`;
+export const Wrapper = styled.div``;
 
 export const DraftEditor = styled.div`
   cursor: text !important;
   .DraftEditor-root {
-    width: 100% !important;   
+    width: 100% !important;
     padding: 0.5rem 1rem;
-    -ms-overflow-style: none;  /* IE and Edge */
+    -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none;
-    &::-webkit-scrollbar{
-      display : none;
+    &::-webkit-scrollbar {
+      display: none;
     }
     a {
-      color : var(--blue-1);
+      color: var(--blue-1);
     }
-    a[aria-label="hashtag"]{
-      color : inherit ; 
-      opacity : 0.8;
-      background : linear-gradient(to bottom, #90caf9   40%,#64b5f6 60%, #42a5f5 100% );
+    a[aria-label='hashtag'] {
+      color: inherit;
+      opacity: 0.8;
+      background: linear-gradient(
+        to bottom,
+        #90caf9 40%,
+        #64b5f6 60%,
+        #42a5f5 100%
+      );
       padding: 0.1rem;
     }
   }

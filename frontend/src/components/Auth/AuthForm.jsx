@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 export const CustomFormContainer = styled.form`
   width: 90%;
   max-width: 500px;
@@ -38,7 +38,7 @@ export const TextForm = styled.div`
   margin-bottom: 1rem;
   .MuiFormControl-root {
     width: 100%;
-  } 
+  }
 `;
 
 export const ValidTextField = styled.div`

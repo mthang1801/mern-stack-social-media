@@ -1,12 +1,12 @@
-import { client } from "../apollo/client";
-import { initialState } from "../apollo/initialState";
+import { client } from '../apollo/client';
+import { initialState } from '../apollo/initialState';
 import {
   postsVar,
   userVar,
   countNumberOfNotificationUnseenVar,
   notificationsVar,
   newNotificationsVar,
-} from "../apollo/cache";
+} from '../apollo/cache';
 
 const clearCache = () => {
   userVar(initialState.user);
@@ -19,17 +19,17 @@ const clearCache = () => {
 };
 
 const logout = async () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("tokenExpire");
+  localStorage.removeItem('token');
+  localStorage.removeItem('tokenExpire');
   await client.clearStore();
   clearCache();
 };
 
 const login = async (token, tokenExpire) => {
   logout();
-  localStorage.setItem("token", token);
+  localStorage.setItem('token', token);
   localStorage.setItem(
-    "tokenExpire",
+    'tokenExpire',
     new Date(Date.now() + tokenExpire * 1000)
   );
   await client.resetStore();

@@ -1,32 +1,37 @@
-import React, { useEffect, useState } from "react";
-import Layout from "../containers/Layout";
+import React, { useEffect, useState } from 'react';
+import Layout from '../containers/Layout';
 import {
   Wrapper,
   NotificationsContent,
   OtherContents,
-} from "./styles/notifications.styles";
-import NotificationItem from "../components/Notification/NotificationItem";
-import { useQuery, useReactiveVar } from "@apollo/client";
-import { userVar, notificationsVar } from "../apollo/cache";
-import CardRequestAuth from "../components/Card/CardRequestAuth";
-import InfiniteScroll from "react-infinite-scroll-component";
-import MainBody from "../containers/MainBody";
-import { FETCH_NOTIFICATIONS } from "../apollo/notification/notification.types";
-import { addNotificationsToNotifcationsList, setNotifications } from "../apollo/notification/notification.caches";
+} from './styles/notifications.styles';
+import NotificationItem from '../components/Notification/NotificationItem';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { userVar, notificationsVar } from '../apollo/cache';
+import CardRequestAuth from '../components/Card/CardRequestAuth';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import MainBody from '../containers/MainBody';
+import { FETCH_NOTIFICATIONS } from '../apollo/notification/notification.types';
+import {
+  addNotificationsToNotifcationsList,
+  setNotifications,
+} from '../apollo/notification/notification.caches';
+import constant from '../constant/constant';
 const NotificationsPage = () => {
   const user = useReactiveVar(userVar);
   const notifications = useReactiveVar(notificationsVar);
   const [fetchedNotifications, setFetchedNotifications] = useState(false);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
     skip: true,
-  });  
+  });
 
   useEffect(() => {
     if (
       !fetchedNotifications &&
-      user?.notifications?.length && !notifications.length
+      user?.notifications?.length &&
+      !notifications.length
     ) {
       fetchNotifications()
         .then(({ data }) => {
@@ -45,17 +50,21 @@ const NotificationsPage = () => {
       setFetchedNotifications(true);
       setLoadingNotifications(false);
     }
-  }, [fetchedNotifications, user,user?.notifications?.length && notifications]);
+  }, [
+    fetchedNotifications,
+    user,
+    user?.notifications?.length && notifications,
+  ]);
 
   const fetchMoreNotifications = () => {
-    const skip = notifications.length; 
-    const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
-    fetchNotifications({skip, limit}).then(({data})=> {
-      if(data){
-        addNotificationsToNotifcationsList(data.fetchNotifications)
+    const skip = notifications.length;
+    const limit = constant.REACT_APP_NOTIFICATIONS_PER_PAGE;
+    fetchNotifications({ skip, limit }).then(({ data }) => {
+      if (data) {
+        addNotificationsToNotifcationsList(data.fetchNotifications);
       }
-    })
-  }
+    });
+  };
 
   return (
     <Layout>

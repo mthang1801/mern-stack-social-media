@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Wrapper,
   Information,
@@ -8,12 +8,12 @@ import {
   StatusItem,
   ButtonZoom,
   Selected,
-} from "./styles/PostEditorHeader.styles";
-import { Link } from "react-router-dom";
-import LazyLoad from "react-lazyload";
-import useLanguage from "../../Global/useLanguage";
-import { MdZoomOutMap } from "react-icons/md";
-import { useThemeUI } from "theme-ui";
+} from './styles/PostEditorHeader.styles';
+import { Link } from 'react-router-dom';
+import LazyLoad from 'react-lazyload';
+import useLanguage from '../../Global/useLanguage';
+import { MdZoomOutMap } from 'react-icons/md';
+import { useThemeUI } from 'theme-ui';
 const PostEditorHeader = ({
   user,
   postStatus,
@@ -37,9 +37,9 @@ const PostEditorHeader = ({
         return setOpenDropdown(false);
       }
     }
-    window.addEventListener("click", trackUserClickWithDropdown);
+    window.addEventListener('click', trackUserClickWithDropdown);
     return () =>
-      window.removeEventListener("click", trackUserClickWithDropdown);
+      window.removeEventListener('click', trackUserClickWithDropdown);
   }, [dropdownRef]);
 
   return (
@@ -51,13 +51,13 @@ const PostEditorHeader = ({
           </LazyLoad>
         </Link>
         <div>
-          <Link to={`${user.slug}`} style={{ textTransform: "capitalize" }}>
+          <Link to={`${user.slug}`} style={{ textTransform: 'capitalize' }}>
             {user.name.toLowerCase()}
           </Link>
           <SelectStatus ref={dropdownRef}>
             <Selected
               theme={colorMode}
-              style={{ textTransform: "capitalize" }}
+              style={{ textTransform: 'capitalize' }}
               status={currentStatus.name.toLowerCase()}
               onClick={() => setOpenDropdown((prevState) => !prevState)}
             >

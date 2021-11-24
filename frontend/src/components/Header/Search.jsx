@@ -1,19 +1,19 @@
-import React from "react";
-import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
-import classNames from "classnames";
+import React from 'react';
+import styled from 'styled-components';
+import { FaSearch } from 'react-icons/fa';
+import classNames from 'classnames';
 
-const Search = ({ openSearch, setOpenSearch }) => {  
+const Search = ({ openSearch, setOpenSearch }) => {
   return (
     <SearchForm openSearch={openSearch}>
       <input
         type="text"
-        className={classNames("input-search", { hide: !openSearch })}
+        className={classNames('input-search', { hide: !openSearch })}
         placeholder="Search..."
       />
       <button
         type="button"
-        className={classNames("btn-search", { hide: openSearch })}
+        className={classNames('btn-search', { hide: openSearch })}
         onClick={setOpenSearch}
       >
         <FaSearch />
@@ -29,10 +29,10 @@ const SearchForm = styled.form`
   background-color: var(--light);
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--gray);
-  border-radius: ${({ openSearch }) => (openSearch ? "20px" : "50%")};
+  border-radius: ${({ openSearch }) => (openSearch ? '20px' : '50%')};
   flex-direction: row-reverse;
-  width: ${({ openSearch }) => (openSearch ? "100%" : "40px")};
-  height: ${({ openSearch }) => (openSearch ? "auto" : "40px")};  
+  width: ${({ openSearch }) => (openSearch ? '100%' : '40px')};
+  height: ${({ openSearch }) => (openSearch ? 'auto' : '40px')};
 
   .input-search {
     width: 100%;
@@ -51,7 +51,7 @@ const SearchForm = styled.form`
     background-color: transparent;
     cursor: pointer;
     transition: var(--mainTransition);
-    padding : 0 0.5rem;
+    padding: 0 0.5rem;
     &:hover {
       opacity: 0.8;
     }
@@ -64,10 +64,10 @@ const SearchForm = styled.form`
       transition: var(--mainTransition);
     }
   }
-  @media screen and (min-width: 768px) {    
-    width : 100% ; 
-    height : auto;
-    border-radius : 20px;    
+  @media screen and (min-width: 768px) {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
   }
 `;
 

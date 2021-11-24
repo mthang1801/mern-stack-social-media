@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ResponseSchema = new mongoose.Schema(
   {
@@ -14,7 +14,7 @@ const ResponseSchema = new mongoose.Schema(
     mentions: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: 'users',
         required: true,
       },
     ],
@@ -25,23 +25,23 @@ const ResponseSchema = new mongoose.Schema(
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
       required: true,
     },
     post: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "posts",
+      ref: 'posts',
       required: true,
     },
     comment: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "comments",
+      ref: 'comments',
       required: true,
     },
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: 'users',
         required: true,
       },
     ],
@@ -49,4 +49,4 @@ const ResponseSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Response = mongoose.model("responses", ResponseSchema);
+export const Response = mongoose.model('responses', ResponseSchema);

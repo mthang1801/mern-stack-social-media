@@ -1,11 +1,10 @@
-import { gql } from "@apollo/client";
-
+import { gql } from '@apollo/client';
 
 export const CREATE_POST = gql`
   mutation CreatePost(
     $text: String
     $shortenText: String
-    $rawText : String
+    $rawText: String
     $mentions: [ID!]
     $fileNames: [String!]
     $fileMimetype: [String!]
@@ -16,7 +15,7 @@ export const CREATE_POST = gql`
       data: {
         text: $text
         shortenText: $shortenText
-        rawText : $rawText
+        rawText: $rawText
         mentions: $mentions
         fileNames: $fileNames
         fileMimetype: $fileMimetype
@@ -34,21 +33,21 @@ export const CREATE_POST = gql`
         avatar
         slug
         isOnline
-      }      
+      }
       author {
         _id
         name
         slug
         avatar
       }
-      files{
+      files {
         filename
         mimetype
         data
       }
-      comments       
-      responses     
-      likes      
+      comments
+      responses
+      likes
       status
       createdAt
     }
@@ -56,7 +55,7 @@ export const CREATE_POST = gql`
 `;
 
 export const CREATE_COMMENT = gql`
-  mutation(
+  mutation (
     $postId: ID!
     $text: String
     $shortenText: String
@@ -127,10 +126,10 @@ export const CREATE_RESPONSE = gql`
 
 export const EDIT_POST = gql`
   mutation EditPost(
-    $postId : ID!
+    $postId: ID!
     $text: String
     $shortenText: String
-    $rawText : String
+    $rawText: String
     $mentions: [ID!]
     $fileNames: [String!]
     $fileMimetype: [String!]
@@ -138,11 +137,11 @@ export const EDIT_POST = gql`
     $status: String!
   ) {
     editPost(
-      postId : $postId,
+      postId: $postId
       data: {
         text: $text
         shortenText: $shortenText
-        rawText : $rawText
+        rawText: $rawText
         mentions: $mentions
         fileNames: $fileNames
         fileMimetype: $fileMimetype
@@ -160,21 +159,21 @@ export const EDIT_POST = gql`
         avatar
         slug
         isOnline
-      }      
+      }
       author {
         _id
         name
         slug
         avatar
       }
-      files{
+      files {
         filename
         mimetype
         data
       }
-      comments       
-      responses     
-      likes      
+      comments
+      responses
+      likes
       status
       createdAt
     }
@@ -182,51 +181,50 @@ export const EDIT_POST = gql`
 `;
 
 export const LIKE_COMMENT = gql`
-  mutation LikeComment($commentId: ID!){
+  mutation LikeComment($commentId: ID!) {
     likeComment(commentId: $commentId)
   }
-`
+`;
 
 export const LIKE_POST = gql`
-  mutation ($postId : ID!){
-    likePost(postId : $postId)
-  } 
-`
- export const LIKE_RESPONSE = gql`
-  mutation LikeResponse($responseId : ID!){
-    likeResponse(responseId : $responseId)
+  mutation ($postId: ID!) {
+    likePost(postId: $postId)
   }
-`
+`;
+export const LIKE_RESPONSE = gql`
+  mutation LikeResponse($responseId: ID!) {
+    likeResponse(responseId: $responseId)
+  }
+`;
 
 export const REMOVE_COMMENT = gql`
-  mutation RemoveComment($commentId : ID!){
+  mutation RemoveComment($commentId: ID!) {
     removeComment(commentId: $commentId)
   }
-`
+`;
 export const REMOVE_LIKE_COMMENT = gql`
-  mutation RemoveLikeComment($commentId : ID!){
-    removeLikeComment(commentId : $commentId)
+  mutation RemoveLikeComment($commentId: ID!) {
+    removeLikeComment(commentId: $commentId)
   }
-`
+`;
 
 export const REMOVE_LIKE_POST = gql`
-  mutation ($postId: ID!){
-    removeLikePost(postId : $postId)
+  mutation ($postId: ID!) {
+    removeLikePost(postId: $postId)
   }
-`
-
+`;
 
 export const REMOVE_LIKE_RESPONSE = gql`
-  mutation RemoveLikeResponse($responseId: ID!){
-    removeLikeResponse(responseId : $responseId) 
+  mutation RemoveLikeResponse($responseId: ID!) {
+    removeLikeResponse(responseId: $responseId)
   }
-`
+`;
 
 export const REMOVE_RESPONSE = gql`
-  mutation RemoveResponse($responseId : ID!){
-    removeResponse(responseId : $responseId)
+  mutation RemoveResponse($responseId: ID!) {
+    removeResponse(responseId: $responseId)
   }
-`
+`;
 
 export default {
   CREATE_POST,
@@ -240,5 +238,5 @@ export default {
   REMOVE_LIKE_COMMENT,
   REMOVE_LIKE_POST,
   REMOVE_LIKE_RESPONSE,
-  REMOVE_RESPONSE
-}
+  REMOVE_RESPONSE,
+};

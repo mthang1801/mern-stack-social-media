@@ -1,47 +1,47 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Wrapper } from "./PostEditor/styles/PostEditorBody.styles";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Wrapper } from './PostEditor/styles/PostEditorBody.styles';
 import {
   UserAvatar,
   ResponseInput,
   ResponsesComponent,
   LoadMoreResponse,
   CommentResponse,
-} from "./styles/CommentItem.styles";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useThemeUI } from "theme-ui";
-import useLanguage from "../Global/useLanguage";
-import { BsArrowReturnRight } from "react-icons/bs";
-import { Response } from "./styles/CommentItem.styles";
-import ResponseEditor from "./ResponseEditor";
-import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
-import { dialogVar } from "../../apollo/cache";
+} from './styles/CommentItem.styles';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useThemeUI } from 'theme-ui';
+import useLanguage from '../Global/useLanguage';
+import { BsArrowReturnRight } from 'react-icons/bs';
+import { Response } from './styles/CommentItem.styles';
+import ResponseEditor from './ResponseEditor';
+import { useQuery, useMutation, useReactiveVar } from '@apollo/client';
+import { dialogVar } from '../../apollo/cache';
 import {
   REMOVE_COMMENT,
   LIKE_COMMENT,
   REMOVE_LIKE_COMMENT,
   REMOVE_RESPONSE,
-} from "../../apollo/post/post.types";
-import { FETCH_RESPONSES } from "../../apollo/post/post.queries";
-import Responses from "./Responses";
-import shortid from "shortid";
-import CommentCard from "./CommentCard";
+} from '../../apollo/post/post.types';
+import { FETCH_RESPONSES } from '../../apollo/post/post.queries';
+import Responses from './Responses';
+import shortid from 'shortid';
+import CommentCard from './CommentCard';
 import {
   addLikeComment,
   addResponsesToComment,
   removeComment as removeCommentFromPostCache,
   removeLikeComment,
   removeResponse as removeResponseInCache,
-  addResponsesToCommentInPersonalUser
-} from "../../apollo/post/post.caches";
-import {setAlertDialog} from "../../apollo/controls/controls.caches"
+  addResponsesToCommentInPersonalUser,
+} from '../../apollo/post/post.caches';
+import { setAlertDialog } from '../../apollo/controls/controls.caches';
 const CommentItem = ({ comment, user }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const [showResponse, setShowResponse] = useState(false);
-  const [dataResponse, setDataResponse] = useState("");
+  const [dataResponse, setDataResponse] = useState('');
   const { controls } = i18n.store.data[lang].translation.comment;
   const { dialog: dialogAlert } = i18n.store.data[lang].translation;
-  const [focusResponseEditor, setFocusResponseEditor] = useState(false);  
+  const [focusResponseEditor, setFocusResponseEditor] = useState(false);
   const dialog = useReactiveVar(dialogVar);
   const [likeComment] = useMutation(LIKE_COMMENT);
   const [RemoveLikeComment] = useMutation(REMOVE_LIKE_COMMENT);
@@ -53,7 +53,7 @@ const CommentItem = ({ comment, user }) => {
       agree: false,
       title: dialogAlert.removeComment.title,
       content: dialogAlert.removeComment.content,
-      data: { commentId: comment._id, role: "comment" },
+      data: { commentId: comment._id, role: 'comment' },
     });
   };
   const [removeComment] = useMutation(REMOVE_COMMENT);
@@ -62,7 +62,7 @@ const CommentItem = ({ comment, user }) => {
     if (
       dialog.data?.commentId === comment._id &&
       dialog.agree &&
-      dialog.data?.role === "comment"
+      dialog.data?.role === 'comment'
     ) {
       removeComment({ variables: { commentId: comment._id } }).then(
         ({ data }) => {
@@ -70,7 +70,7 @@ const CommentItem = ({ comment, user }) => {
         }
       );
     } else if (
-      dialog.data?.role === "response" &&
+      dialog.data?.role === 'response' &&
       dialog.data?.response &&
       dialog.agree
     ) {
@@ -134,7 +134,11 @@ const CommentItem = ({ comment, user }) => {
       ({ data }) => {
         if (data.fetchResponses) {
           addResponsesToComment(comment.post, comment._id, data.fetchResponses);
-          addResponsesToCommentInPersonalUser(comment.post, comment._id, data.fetchResponses)
+          addResponsesToCommentInPersonalUser(
+            comment.post,
+            comment._id,
+            data.fetchResponses
+          );
           if (!showResponse) {
             setShowResponse(true);
             setFocusResponseEditor(true);
@@ -149,8 +153,12 @@ const CommentItem = ({ comment, user }) => {
     fetchResponses({ commentId: comment._id, skip }).then(({ data }) => {
       if (data.fetchResponses) {
         addResponsesToComment(comment.post, comment._id, data.fetchResponses);
-        addResponsesToCommentInPersonalUser(comment.post, comment._id, data.fetchResponses);
-        
+        addResponsesToCommentInPersonalUser(
+          comment.post,
+          comment._id,
+          data.fetchResponses
+        );
+
         if (!showResponse) {
           setShowResponse(true);
           setFocusResponseEditor(true);
@@ -203,12 +211,12 @@ const CommentItem = ({ comment, user }) => {
         {comment.responsesData &&
         comment.responsesData.length < comment.responses.length ? (
           <LoadMoreResponse onClick={onLoadMoreResponses}>
-            {" "}
+            {' '}
             <BsArrowReturnRight /> <span>{controls.loadMoreResponses}</span>
           </LoadMoreResponse>
         ) : !comment.responsesData && comment.responses.length ? (
           <LoadMoreResponse onClick={onLoadResponses}>
-            {" "}
+            {' '}
             <BsArrowReturnRight /> <span>{controls.loadMoreResponses}</span>
           </LoadMoreResponse>
         ) : null}

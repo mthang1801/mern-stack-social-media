@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
-import classNames from "classnames";
+import React from 'react';
+import styled from 'styled-components';
+import classNames from 'classnames';
 const Tooltips = ({ className, children, showTooltips }) => {
   return (
     <div className={className}>
-      <span className={classNames("tooltiptext", { show: showTooltips })}>
+      <span className={classNames('tooltiptext', { show: showTooltips })}>
         {children}
       </span>
     </div>
@@ -36,7 +36,7 @@ export default styled(React.memo(Tooltips))`
     }
 
     & .tooltiptext::before {
-      content: "";
+      content: '';
       position: absolute;
       top: -30%;
       left: 50%;

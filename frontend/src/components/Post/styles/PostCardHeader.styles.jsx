@@ -1,9 +1,13 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.div`
   display: flex;
   padding: 0.5rem;
-  border-bottom: 1px solid ${({theme}) => theme === "dark" ? "var(--color-border-dark)" : "var(--color-border-default)"};
+  border-bottom: 1px solid
+    ${({ theme }) =>
+      theme === 'dark'
+        ? 'var(--color-border-dark)'
+        : 'var(--color-border-default)'};
 `;
 
 export const Information = styled.div`
@@ -38,17 +42,17 @@ export const ButtonZoom = styled.button`
 `;
 
 export const Timeline = styled.div`
-  display : flex;
-  flex-direction : column;
-`
+  display: flex;
+  flex-direction: column;
+`;
 
 export const Small = styled.small`
-  display : flex;
+  display: flex;
   align-items: center;
-  & > *:not(:first-child)  {
+  & > *:not(:first-child) {
     margin-left: 0.4rem;
   }
-  & span{
-    display : flex;
+  & span {
+    display: flex;
   }
-`
+`;

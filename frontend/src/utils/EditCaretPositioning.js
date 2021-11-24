@@ -2,7 +2,6 @@
 
 // export default EditCaretPositioning;
 
-
 // if (window.getSelection && document.createRange) {
 //     //saves caret position(s)
 //     EditCaretPositioning.saveSelection = function(containerEl) {
@@ -48,8 +47,6 @@
 //         sel.removeAllRanges();
 //         sel.addRange(range);
 //     }
-
-
 
 // } else if (document.selection && document.body.createTextRange) {
 //   //saves caret position(s)

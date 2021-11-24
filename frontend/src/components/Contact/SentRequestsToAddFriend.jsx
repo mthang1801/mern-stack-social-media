@@ -1,34 +1,35 @@
-import React, {useEffect}  from "react";
-import { FETCH_SENT_REQUEST_TO_ADD_FRIEND } from "../../apollo/contact/contact.types";
-import { useQuery} from "@apollo/client";
-import { useThemeUI } from "theme-ui";
-import { fetchMoreSentRequestsToAddFriend } from "../../apollo/contact/contact.caches";
-import { ContactWrapper, Title, LinkReadMore } from "./Contact.styles";
-import useLanguage from "../Global/useLanguage";
-import ContactItem from "./ContactItem";
-const SentRequestsToAddFriend = ({user,sentRequestsToAddFriend}) => {
-  
-  const {
-    refetch: fetchUsersSentRequestsToAddFriend,
-  } = useQuery(FETCH_SENT_REQUEST_TO_ADD_FRIEND, {
-    fetchPolicy: "cache-and-network",
-    skip: true,
-  });
+import React, { useEffect } from 'react';
+import { FETCH_SENT_REQUEST_TO_ADD_FRIEND } from '../../apollo/contact/contact.types';
+import { useQuery } from '@apollo/client';
+import { useThemeUI } from 'theme-ui';
+import { fetchMoreSentRequestsToAddFriend } from '../../apollo/contact/contact.caches';
+import { ContactWrapper, Title, LinkReadMore } from './Contact.styles';
+import useLanguage from '../Global/useLanguage';
+import ContactItem from './ContactItem';
+import constant from '../../constant/constant';
+const SentRequestsToAddFriend = ({ user, sentRequestsToAddFriend }) => {
+  const { refetch: fetchUsersSentRequestsToAddFriend } = useQuery(
+    FETCH_SENT_REQUEST_TO_ADD_FRIEND,
+    {
+      fetchPolicy: 'cache-and-network',
+      skip: true,
+    }
+  );
   const { colorMode } = useThemeUI();
-  const { i18n, lang } = useLanguage();  
+  const { i18n, lang } = useLanguage();
 
   const getMoreSentRequestToAddFriend = () => {
     const skip = sentRequestsToAddFriend.length;
-    const limit = +process.env.REACT_APP_USERS_CONTACT_PER_LOAD;
+    const limit = constant.REACT_APP_USERS_CONTACT_PER_LOAD;
     if (fetchUsersSentRequestsToAddFriend) {
       fetchUsersSentRequestsToAddFriend({ skip, limit }).then(({ data }) => {
-        if (data?.fetchSentRequestToAddFriend?.length) {         
-          fetchMoreSentRequestsToAddFriend(data.fetchSentRequestToAddFriend)
+        if (data?.fetchSentRequestToAddFriend?.length) {
+          fetchMoreSentRequestsToAddFriend(data.fetchSentRequestToAddFriend);
         }
       });
     }
   };
- 
+
   return (
     <ContactWrapper theme={colorMode}>
       <Title theme={colorMode}>

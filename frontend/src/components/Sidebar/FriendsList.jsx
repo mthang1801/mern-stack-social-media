@@ -1,19 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from 'react';
 import {
   FriendsListWrapper,
   TitleContacts,
   FriendsListSearch,
   FriendsListTitle,
-} from "./Sidebar.styles";
-import { useThemeUI } from "theme-ui";
-import { userVar, contactVar } from "../../apollo/cache";
-import { useQuery, useReactiveVar } from "@apollo/client";
-import { FETCH_USER_FRIENDS_DATA } from "../../apollo/contact/contact.types";
-import { pushFriendsListToContact } from "../../apollo/contact/contact.caches";
-import FriendItem from "./FriendItem";
-import { Scrollbars } from "react-custom-scrollbars";
-import useLanguage from "../Global/useLanguage";
-import { FaSearch } from "react-icons/fa";
+} from './Sidebar.styles';
+import { useThemeUI } from 'theme-ui';
+import { userVar, contactVar } from '../../apollo/cache';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { FETCH_USER_FRIENDS_DATA } from '../../apollo/contact/contact.types';
+import { pushFriendsListToContact } from '../../apollo/contact/contact.caches';
+import FriendItem from './FriendItem';
+import { Scrollbars } from 'react-custom-scrollbars';
+import useLanguage from '../Global/useLanguage';
+import { FaSearch } from 'react-icons/fa';
 
 const FriendsList = ({ show }) => {
   const { colorMode } = useThemeUI();
@@ -25,7 +25,7 @@ const FriendsList = ({ show }) => {
   const [loading, setLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
   const { refetch: fetchUserFriends } = useQuery(FETCH_USER_FRIENDS_DATA, {
-    fetchPolicy: "no-cache",
+    fetchPolicy: 'no-cache',
     notifyOnNetworkStatusChange: true,
     skip: true,
   });
@@ -36,7 +36,7 @@ const FriendsList = ({ show }) => {
       setLoading(true);
       fetchUserFriends().then(({ data }) => {
         if (data && _isMounted) {
-          pushFriendsListToContact(data.fetchFriends)
+          pushFriendsListToContact(data.fetchFriends);
           setLoading(false);
           setFetched(true);
         }
@@ -55,7 +55,7 @@ const FriendsList = ({ show }) => {
     setOpenSearch(true);
   };
 
-  console.log(contact)
+  console.log(contact);
   return (
     <Scrollbars
       autoHide

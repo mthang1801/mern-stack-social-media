@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ContactItemWrapper = styled.div`
   width: 100%;
@@ -8,21 +8,23 @@ export const ContactItemWrapper = styled.div`
   padding: 0.5rem;
   &:hover {
     background-color: ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-hover-dark)"
-        : "var(--color-hover-default)"};
-  }  
+      theme === 'dark'
+        ? 'var(--color-hover-dark)'
+        : 'var(--color-hover-default)'};
+  }
 `;
 
 export const Avatar = styled.div`
   width: 2.5rem;
   height: 2.5rem;
-  position : relative;
+  position: relative;
   & img {
     width: 100%;
     border-radius: 50%;
   }
-  ${({active}) => active && `
+  ${({ active }) =>
+    active &&
+    `
     & img{
       border: 2px solid var(--green);
     }
@@ -50,8 +52,8 @@ export const UserContactOverview = styled.div`
 `;
 
 export const ContactControls = styled.div`
-  display : none ; 
-  @media screen and (min-width:768px){
+  display: none;
+  @media screen and (min-width: 768px) {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -63,10 +65,9 @@ export const ContactControls = styled.div`
       text-align: right;
       font-size: 1.2rem;
       opacity: ${({ show }) => (show ? 1 : 0)};
-      visibility: ${({ show }) => (show ? "visible" : "hidden")};
+      visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
       transition: var(--mainTransition);
       color: inherit;
     }
   }
 `;
-

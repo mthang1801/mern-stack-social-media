@@ -1,21 +1,21 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App/App";
-import { ThemeProvider } from "theme-ui";
-import theme from "./theme";
-import reportWebVitals from "./reportWebVitals";
-import { client } from "./apollo/client";
-import { ApolloProvider } from "@apollo/client";
-import "@draft-js-plugins/mention/lib/plugin.css";
-import "@draft-js-plugins/hashtag/lib/plugin.css";
-import "./i18n";
-ReactDOM.render(  
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App/App';
+import { ThemeProvider } from 'theme-ui';
+import theme from './theme';
+import reportWebVitals from './reportWebVitals';
+import { client } from './apollo/client';
+import { ApolloProvider } from '@apollo/client';
+import '@draft-js-plugins/mention/lib/plugin.css';
+import '@draft-js-plugins/hashtag/lib/plugin.css';
+import './i18n';
+ReactDOM.render(
   <ThemeProvider theme={theme}>
-    <ApolloProvider client={client}>    
-      <App />    
+    <ApolloProvider client={client}>
+      <App />
     </ApolloProvider>
   </ThemeProvider>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

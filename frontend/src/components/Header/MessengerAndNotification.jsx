@@ -1,34 +1,35 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 
 import {
   Wrapper,
   Notification,
   UnseenNotification,
   NotificationBoard,
-} from "./styles/Header.styles";
-import { IoMdNotifications } from "react-icons/io";
-import Button from "../Controls/ButtonDefaultCircle";
-import NotificationsBoard from "./NotificationsBoard";
-import useNotificationsSubscription from "../../hooks/useNotificationsSubscription";
-import { useQuery, useReactiveVar } from "@apollo/client";
+} from './styles/Header.styles';
+import { IoMdNotifications } from 'react-icons/io';
+import Button from '../Controls/ButtonDefaultCircle';
+import NotificationsBoard from './NotificationsBoard';
+import useNotificationsSubscription from '../../hooks/useNotificationsSubscription';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import {
   userVar,
   notificationsVar,
   countNumberOfNotificationUnseenVar,
-} from "../../apollo/cache";
+} from '../../apollo/cache';
 import {
   FETCH_NOTIFICATIONS,
   FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
-} from "../../apollo/notification/notification.types";
-import { Scrollbars } from "react-custom-scrollbars";
-import FlashPopUpNotification from "../Notification/FlashPopUpNotification";
+} from '../../apollo/notification/notification.types';
+import { Scrollbars } from 'react-custom-scrollbars';
+import FlashPopUpNotification from '../Notification/FlashPopUpNotification';
 import {
   setLatestNotification,
   setNotifications,
   addNotificationsToNotifcationsList,
   setCountNumberNotificationsUnseen,
-} from "../../apollo/notification/notification.caches";
-import { useThemeUI } from "theme-ui";
+} from '../../apollo/notification/notification.caches';
+import { useThemeUI } from 'theme-ui';
+import constant from '../../constant/constant';
 const Control = () => {
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
   const [fetchedNotifications, setFetchedNotifications] = useState(false);
@@ -43,7 +44,7 @@ const Control = () => {
     { skip: true }
   );
   const { refetch: fetchNotifications } = useQuery(FETCH_NOTIFICATIONS, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
     skip: true,
   });
   const user = useReactiveVar(userVar);
@@ -75,9 +76,9 @@ const Control = () => {
         setOpenNotificationBoard(false);
       }
     }
-    window.addEventListener("click", handleClickOutsideNotificationBoard);
+    window.addEventListener('click', handleClickOutsideNotificationBoard);
     return () =>
-      window.removeEventListener("click", handleClickOutsideNotificationBoard);
+      window.removeEventListener('click', handleClickOutsideNotificationBoard);
   }, [notificationRef.current, openNotificationBoard]);
 
   const handleClickNotification = useCallback(async () => {
@@ -129,7 +130,7 @@ const Control = () => {
     if (
       !fetchedNotifications &&
       openNotificationBoard &&
-      notifications.length < +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE
+      notifications.length < constant.REACT_APP_NOTIFICATIONS_PER_PAGE
     ) {
       setLoadingFetchNotifications(true);
       fetchNotifications()

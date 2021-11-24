@@ -1,48 +1,54 @@
-import { ApolloServer, mergeSchemas } from "apollo-server-express";
-import express from "express";
-import connectDB from "./config/connectDB";
-import schema from "./schema";
-import resolvers from "./resolvers";
-import { createServer } from "http";
-import path from "path";
-import events from "events";
-import socketio from "socket.io"
-import {initSockets} from "./socket"
+import { ApolloServer, mergeSchemas } from 'apollo-server-express';
+import express from 'express';
+import connectDB from './config/connectDB';
+import schema from './schema';
+import resolvers from './resolvers';
+import { createServer } from 'http';
+import path from 'path';
+import events from 'events';
+import socketio from 'socket.io';
+import { initSockets } from './socket';
 events.EventEmitter.defaultMaxListeners = Infinity;
 
 const schemas = mergeSchemas({
   resolvers,
   schemas: [schema],
+  cors: {
+    origin: 'http://localhost:3000',
+    credentials: true,
+  },
 });
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 const server = new ApolloServer({
   schema: schemas,
-  context: ({ req }) => ({req}),
-  formatError: err => {
-    if(!err.statusCode){
-      err.statusCode = 500; 
+  context: ({ req }) => ({ req }),
+  formatError: (err) => {
+    if (!err.statusCode) {
+      err.statusCode = 500;
     }
-    if(!err.message){
-      err.message = "Something went wrong from server";
+    if (!err.message) {
+      err.message = 'Something went wrong from server';
     }
-    return {statusCode : err.statusCode , message: err.message}
-  }
+    return { statusCode: err.statusCode, message: err.message };
+  },
 });
 server.applyMiddleware({ app });
 const httpServer = createServer(app);
 server.installSubscriptionHandlers(httpServer);
 const io = socketio(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
+  },
 });
 
 initSockets(io);

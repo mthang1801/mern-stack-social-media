@@ -3,15 +3,15 @@ export {
   FETCH_USER_FRIENDS_DATA,
   FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND,
   FETCH_SENT_REQUEST_TO_ADD_FRIEND,
-} from "./contact.queries";
+} from './contact.queries';
 export {
   ACCEPT_REQUEST_TO_ADD_FRIEND,
   CANCEL_REQUEST_TO_ADD_FRIEND,
   REJECT_REQUEST_TO_ADD_FRIEND,
   REMOVE_FRIEND,
   SEND_REQUEST_TO_ADD_FRIEND,
-} from "./contact.mutations";
+} from './contact.mutations';
 export {
   REJECT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   REMOVE_FRIEND_SUBSCRIPTION,
-} from "./contact.subscriptions";
+} from './contact.subscriptions';

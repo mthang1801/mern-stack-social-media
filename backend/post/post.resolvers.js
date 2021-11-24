@@ -1,7 +1,8 @@
-import { postControllers } from "./post.controllers";
-import { pubsub } from "../pubsub";
-import { withFilter } from "apollo-server-express";
-import { subscriptionActions } from "../schema";
+import { postControllers } from './post.controllers';
+import { pubsub } from '../pubsub';
+import { withFilter } from 'apollo-server-express';
+import { subscriptionActions } from '../schema';
+import constant from '../config/constant';
 export const postResolvers = {
   Query: {
     fetchPosts: (_, args, { req }, info) => {
@@ -9,7 +10,7 @@ export const postResolvers = {
         req,
         args.userId || null,
         args.skip || 0,
-        args.limit || +process.env.POSTS_PER_PAGE
+        args.limit || constant.POSTS_PER_PAGE
       );
     },
   },

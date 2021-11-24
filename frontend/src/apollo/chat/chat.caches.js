@@ -4,8 +4,8 @@ import {
   friendsVar,
   messagesStorageVar,
   contactVar,
-} from "../cache";
-import { initialState } from "../initialState";
+} from '../cache';
+import { initialState } from '../initialState';
 export const setCurrentChat = (userOrGroup) =>
   currentChatVar({ ...userOrGroup });
 
@@ -15,7 +15,6 @@ export const setNumberOfConversations = (number) =>
 /**
  * {user} Object
  */
-
 
 export const updateUserOnlineOfflineMessagesStorage = (
   userId,
@@ -106,7 +105,9 @@ export const updateMessagesStorage = (
   });
 };
 
-export const updateMessagesStorageToReceivedWhenUserOnline = (conversationId) => {
+export const updateMessagesStorageToReceivedWhenUserOnline = (
+  conversationId
+) => {
   const storage = { ...messagesStorageVar() };
   if (storage[conversationId]) {
     return messagesStorageVar({
@@ -115,8 +116,8 @@ export const updateMessagesStorageToReceivedWhenUserOnline = (conversationId) =>
         ...storage[conversationId],
         messages: storage[conversationId].messages.map((message) => {
           let __message = { ...message };
-          if (message.receiverStatus === "SENT") {
-            __message.receiverStatus = "DELIVERED";
+          if (message.receiverStatus === 'SENT') {
+            __message.receiverStatus = 'DELIVERED';
           }
           return { ...__message };
         }),
@@ -134,7 +135,7 @@ export const updateMessagesStorageWhenReceiverSeenAllMessages = (
       ...storage[conversationId],
       messages: storage[conversationId].messages.map((message) => {
         if (message.receiver._id === conversationId) {
-          return { ...message, receiverStatus: "SEEN" };
+          return { ...message, receiverStatus: 'SEEN' };
         }
         return { ...message };
       }),

@@ -1,18 +1,18 @@
-import React, { useState, useRef, useEffect } from "react";
-import { IoIosSettings } from "react-icons/io";
-import Button from "../Controls/ButtonDefaultCircle";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import classNames from "classnames";
-import { useThemeUI } from "theme-ui";
-import { FaChevronRight, FaRegSun } from "react-icons/fa";
-import { AiOutlineSetting } from "react-icons/ai";
-import { FiLogOut } from "react-icons/fi";
-import { MdLanguage } from "react-icons/md";
-import ButoonColorMode from "../Controls/ButtonColorMode";
-import {userVar} from "../../apollo/cache";
-import {useReactiveVar} from "@apollo/client"
-import {logout} from "../Auth/Auth.utility"
+import React, { useState, useRef, useEffect } from 'react';
+import { IoIosSettings } from 'react-icons/io';
+import Button from '../Controls/ButtonDefaultCircle';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import classNames from 'classnames';
+import { useThemeUI } from 'theme-ui';
+import { FaChevronRight, FaRegSun } from 'react-icons/fa';
+import { AiOutlineSetting } from 'react-icons/ai';
+import { FiLogOut } from 'react-icons/fi';
+import { MdLanguage } from 'react-icons/md';
+import ButoonColorMode from '../Controls/ButtonColorMode';
+import { userVar } from '../../apollo/cache';
+import { useReactiveVar } from '@apollo/client';
+import { logout } from '../Auth/Auth.utility';
 const SettingAccount = ({ className }) => {
   const [togglePopup, setTogglePopup] = useState(false);
   const { colorMode } = useThemeUI();
@@ -24,18 +24,18 @@ const SettingAccount = ({ className }) => {
         setTogglePopup(false);
       }
     }
-    window.addEventListener("click", (e) => {
+    window.addEventListener('click', (e) => {
       handleClickOutsidePopup(e);
     });
     return () =>
-      window.removeEventListener("click", (e) => {
+      window.removeEventListener('click', (e) => {
         handleClickOutsidePopup(e);
       });
   }, []);
 
-  const onLogout = () => {        
-    logout();  
-  }  
+  const onLogout = () => {
+    logout();
+  };
 
   return (
     <SettingWrapper className={className} ref={settingRef} theme={colorMode}>
@@ -43,16 +43,13 @@ const SettingAccount = ({ className }) => {
         <IoIosSettings />
       </Button>
       <ul
-        className={classNames("popup-setting", {
-          "popup-setting-hide": !togglePopup,
+        className={classNames('popup-setting', {
+          'popup-setting-hide': !togglePopup,
         })}
       >
         {user ? (
           <li className="user-profile">
-            <Link
-              to={`/${user.slug}`}
-              className="direct-user-profile"
-            >
+            <Link to={`/${user.slug}`} className="direct-user-profile">
               <span className="user-image-container">
                 <img src={`${user.avatar}`} alt="user profile" />
               </span>
@@ -139,11 +136,13 @@ const SettingWrapper = styled.div`
     overflow: hidden;
     padding: 0.4rem;
     background-color: ${({ theme }) =>
-      theme === "dark" ? "var(--color-card-dark)" : "var(--color-card-default)"};
+      theme === 'dark'
+        ? 'var(--color-card-dark)'
+        : 'var(--color-card-default)'};
     color: ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-text-dark)"
-        : "var(--color-text-default)"};
+      theme === 'dark'
+        ? 'var(--color-text-dark)'
+        : 'var(--color-text-default)'};
     box-shadow: var(--lightShadow);
     z-index: 2;
     & li {
@@ -155,11 +154,13 @@ const SettingWrapper = styled.div`
       cursor: pointer;
       &:hover {
         background-color: ${({ theme }) =>
-          theme === "dark"
-            ? "var(--color-background-dark)"
-            : "var(--color-background-default)"};
+          theme === 'dark'
+            ? 'var(--color-background-dark)'
+            : 'var(--color-background-default)'};
         color: ${({ theme }) =>
-        theme === "dark" ? "var(--color-text-dark)" : "var(--color-text-default)"};        
+          theme === 'dark'
+            ? 'var(--color-text-dark)'
+            : 'var(--color-text-default)'};
       }
     }
   }
@@ -173,7 +174,9 @@ const SettingWrapper = styled.div`
         font-size: 1.3em;
         margin-right: 0.25rem;
         color: ${({ theme }) =>
-          theme === "dark" ? "var(--color-text-dark)" : "var(--color-text-default)"};
+          theme === 'dark'
+            ? 'var(--color-text-dark)'
+            : 'var(--color-text-default)'};
       }
     }
     &-right {

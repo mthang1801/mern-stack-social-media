@@ -1,5 +1,5 @@
-import styled from "styled-components"
+import styled from 'styled-components';
 
 export const Wrapper = styled.section`
-  margin : 1rem 0;
-`
+  margin: 1rem 0;
+`;

@@ -1,15 +1,15 @@
-import React, { memo } from "react";
+import React, { memo } from 'react';
 import {
   Wrapper,
   Title,
   Header,
   Body,
-} from "./styles/NotificationsBoard.styles";
-import Button from "../Controls/ButtonDefaultCircle";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
-import { useThemeUI } from "theme-ui";
-import Notifications from "../Notification/Notifications";
-import NotificationItem from "../Notification/NotificationItem";
+} from './styles/NotificationsBoard.styles';
+import Button from '../Controls/ButtonDefaultCircle';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import { useThemeUI } from 'theme-ui';
+import Notifications from '../Notification/Notifications';
+import NotificationItem from '../Notification/NotificationItem';
 const NotificationsBoard = ({ notifications, loading }) => {
   const { colorMode } = useThemeUI();
   return (

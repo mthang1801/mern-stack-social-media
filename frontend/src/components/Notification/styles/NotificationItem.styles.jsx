@@ -1,19 +1,19 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 export const Wrapper = styled.section`
   background-color: ${({ hasSeen, theme }) =>
-    theme === "dark"
+    theme === 'dark'
       ? hasSeen
-        ? "var(--color-notification-hasSeen-dark)"
-        : "var( --color-notification-notSeen-dark)"
+        ? 'var(--color-notification-hasSeen-dark)'
+        : 'var( --color-notification-notSeen-dark)'
       : hasSeen
-      ? "var( --color-notification-hasSeen-default)"
-      : "var( --color-notification-notSeen-dark)"};
+      ? 'var( --color-notification-hasSeen-default)'
+      : 'var( --color-notification-notSeen-dark)'};
   &:hover {
     background-color: ${({ theme }) =>
-      theme === "dark"
-        ? "var(--color-hover-dark)"
-        : "var(--color-hover-default)"};
+      theme === 'dark'
+        ? 'var(--color-hover-dark)'
+        : 'var(--color-hover-default)'};
   }
 `;
 

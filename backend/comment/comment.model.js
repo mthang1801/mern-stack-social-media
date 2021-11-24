@@ -1,22 +1,22 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const CommentSchema = new mongoose.Schema(
   {
     text: {
-      type: String,      
+      type: String,
     },
-    shortenText : {
-      type : String
+    shortenText: {
+      type: String,
     },
-    rawText : {
-      type : String
+    rawText: {
+      type: String,
     },
-    mentions : [
+    mentions: [
       {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "users",
-        required :true
-      }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true,
+      },
     ],
     file: {
       data: Buffer,
@@ -25,28 +25,30 @@ const CommentSchema = new mongoose.Schema(
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
       required: true,
     },
     post: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "posts",
+      ref: 'posts',
       required: true,
     },
-    likes: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-      required: true,
-    }],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true,
+      },
+    ],
     responses: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "responses",
+        ref: 'responses',
         required: true,
       },
-    ],    
+    ],
   },
   { timestamps: true }
 );
 
-export const Comment = mongoose.model("comments", CommentSchema);
+export const Comment = mongoose.model('comments', CommentSchema);

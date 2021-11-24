@@ -1,31 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { ListConversationsWrapper } from "./styles/ListConversations.styles";
-import {userVar, messagesStorageVar, currentChatVar, numberOfConversationsVar} from "../../apollo/cache"
-import ConversationItem from "./ConversationItem";
-import _ from "lodash";
-import { usePopupMessagesActions } from "./hook/usePopupActions";
-import { FETCH_CHAT_CONVERSATIONS, UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED } from "../../apollo/chat/chat.types";
-import { useQuery, useMutation, useReactiveVar } from "@apollo/client";
-import { setInitialMessagesStorage } from "../../apollo/chat/chat.caches";
+import React, { useEffect, useState } from 'react';
+import { ListConversationsWrapper } from './styles/ListConversations.styles';
+import {
+  userVar,
+  messagesStorageVar,
+  currentChatVar,
+  numberOfConversationsVar,
+} from '../../apollo/cache';
+import ConversationItem from './ConversationItem';
+import _ from 'lodash';
+import { usePopupMessagesActions } from './hook/usePopupActions';
+import {
+  FETCH_CHAT_CONVERSATIONS,
+  UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED,
+} from '../../apollo/chat/chat.types';
+import { useQuery, useMutation, useReactiveVar } from '@apollo/client';
+import { setInitialMessagesStorage } from '../../apollo/chat/chat.caches';
+import constant from '../../constant/constant';
 const ListConversations = () => {
   //use Query
   const currentChat = useReactiveVar(currentChatVar);
   const messagesStorage = useReactiveVar(messagesStorageVar);
-  const numberOfConversations = useReactiveVar(numberOfConversationsVar)
+  const numberOfConversations = useReactiveVar(numberOfConversationsVar);
   const user = useReactiveVar(userVar);
-  
+
   const { refetch: fetchMoreConversations } = useQuery(
     FETCH_CHAT_CONVERSATIONS,
-    { fetchPolicy: "cache-and-network", skip: true }
+    { fetchPolicy: 'cache-and-network', skip: true }
   );
   //use State
   const [_messagesStorage, _setMessagesStorage] = useState([]);
   const [loadMoreConversations, setLoadMoreConversations] = useState(false);
-  const [
-    updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched,
-  ] = useMutation(
-    UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED
-  );
+  const [updatePersonalReceiverStatusSentToDeliveredWhenReceiverFetched] =
+    useMutation(
+      UPDATE_PERSONAL_RECEIVER_STATUS_SENT_TO_DELIVERED_WHEN_RECEIVER_FETCHED
+    );
   const { setShowPopup } = usePopupMessagesActions();
   useEffect(() => {
     const _convertStorageToArray = Object.values(messagesStorage);
@@ -36,21 +44,21 @@ const ListConversations = () => {
     ]);
     _setMessagesStorage([..._sortedByLatestMessages]);
   }, [messagesStorage]);
- 
+
   useEffect(() => {
     let isScrolling;
     function onScrollListConversations(e) {
       clearTimeout(isScrolling);
       isScrolling = setTimeout(() => {
         const { scrollTop, clientHeight, scrollHeight } = e.target;
-        console.log(scrollTop, clientHeight, scrollHeight)
-        if (scrollTop + clientHeight > 0.8 * scrollHeight) {         
+        console.log(scrollTop, clientHeight, scrollHeight);
+        if (scrollTop + clientHeight > 0.8 * scrollHeight) {
           setLoadMoreConversations(true);
         }
       }, 66);
     }
-    document.getElementById("list-conversations").addEventListener(
-      "scroll",
+    document.getElementById('list-conversations').addEventListener(
+      'scroll',
       (e) => {
         onScrollListConversations(e);
       },
@@ -58,8 +66,8 @@ const ListConversations = () => {
     );
     return () => {
       clearTimeout(isScrolling);
-      document.getElementById("list-conversations").removeEventListener(
-        "scroll",
+      document.getElementById('list-conversations').removeEventListener(
+        'scroll',
         (e) => {
           onScrollListConversations(e);
         },
@@ -74,9 +82,8 @@ const ListConversations = () => {
       loadMoreConversations &&
       numberOfConversations > _messagesStorage.length
     ) {
-      console.log("load more");
       const skip = _messagesStorage.length;
-      const limit = +process.env.REACT_APP_NUMBER_CONVERSATIONS_LIMITATION;
+      const limit = constant.REACT_APP_NUMBER_CONVERSATIONS_LIMITATION;
       const except = Object.keys(messagesStorage);
       let personalMessagesHaveReceiverSentStatus = new Set();
       fetchMoreConversations({ except, skip, limit }).then(({ data }) => {
@@ -84,12 +91,12 @@ const ListConversations = () => {
           const { conversations } = data.fetchChatConversations;
           let storage = {};
           conversations.forEach((conversation) => {
-            if (conversation.scope === "PERSONAL") {
+            if (conversation.scope === 'PERSONAL') {
               storage[conversation.profile._id] = { ...conversation };
               if (
                 conversation.latestMessage.receiver._id.toString() ===
                   user._id.toString() &&
-                conversation.latestMessage.receiverStatus === "SENT"
+                conversation.latestMessage.receiverStatus === 'SENT'
               ) {
                 personalMessagesHaveReceiverSentStatus.add(
                   conversation.latestMessage.sender._id

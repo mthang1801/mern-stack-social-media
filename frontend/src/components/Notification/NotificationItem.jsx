@@ -1,39 +1,39 @@
-import React from "react";
-import { useMutation, useReactiveVar } from "@apollo/client";
-import { UPDATE_USER_HAS_SEEN_NOTIFICATION } from "../../apollo/notification/notification.types";
-import { removeReceivedRequestToAddFriend } from "../../apollo/contact/contact.caches";
-import { AcceptButton, DenyButton } from "../Custom/CustomMaterialButton";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import useLanguage from "../Global/useLanguage";
-import Moment from "react-moment";
-import "moment/locale/vi";
+import React from 'react';
+import { useMutation, useReactiveVar } from '@apollo/client';
+import { UPDATE_USER_HAS_SEEN_NOTIFICATION } from '../../apollo/notification/notification.types';
+import { removeReceivedRequestToAddFriend } from '../../apollo/contact/contact.caches';
+import { AcceptButton, DenyButton } from '../Custom/CustomMaterialButton';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import useLanguage from '../Global/useLanguage';
+import Moment from 'react-moment';
+import 'moment/locale/vi';
 import {
   Wrapper,
   LinkWrapper,
   AvatarContainer,
   NotificationContent,
   Controls,
-} from "./styles/NotificationItem.styles";
-import { notificationContent } from "../../utils/notificationContent";
+} from './styles/NotificationItem.styles';
+import { notificationContent } from '../../utils/notificationContent';
 import {
   userVar,
   currentPersonalUserVar,
   newNotificationsVar,
-} from "../../apollo/cache";
-import { useThemeUI } from "theme-ui";
+} from '../../apollo/cache';
+import { useThemeUI } from 'theme-ui';
 import {
   ACCEPT_REQUEST_TO_ADD_FRIEND,
   REJECT_REQUEST_TO_ADD_FRIEND,
-} from "../../apollo/contact/contact.types";
-import { setCurrentUser } from "../../apollo/user/user.caches";
-import { setCurrentPersonalUser } from "../../apollo/user/currentPersonalUser.caches";
+} from '../../apollo/contact/contact.types';
+import { setCurrentUser } from '../../apollo/user/user.caches';
+import { setCurrentPersonalUser } from '../../apollo/user/currentPersonalUser.caches';
 import {
   decreaseCountNumberNotificationsUnseen,
-  removeNotificationItemFromNotificationsList,  
+  removeNotificationItemFromNotificationsList,
   updateNotificationHasSeen,
   removeNotificationWhenUserRejectToAddFriend,
-} from "../../apollo/notification/notification.caches";
-import { moveReceivedRequestToFriend } from "../../apollo/contact/contact.caches";
+} from '../../apollo/notification/notification.caches';
+import { moveReceivedRequestToFriend } from '../../apollo/contact/contact.caches';
 
 const NotificationItem = ({ notification }) => {
   //Query
@@ -79,11 +79,8 @@ const NotificationItem = ({ notification }) => {
       variables: { senderId: notification.creator._id },
     })
       .then(({ data }) => {
-        const {
-          sender,
-          receiver,
-          notification,
-        } = data.acceptRequestToAddFriend;
+        const { sender, receiver, notification } =
+          data.acceptRequestToAddFriend;
         //remove user at recived requests to head of friends list
         removeNotificationItemFromNotificationsList(notification);
         moveReceivedRequestToFriend(sender);
@@ -99,11 +96,8 @@ const NotificationItem = ({ notification }) => {
       variables: { senderId: notification.creator._id },
     })
       .then(({ data }) => {
-        const {
-          sender,
-          receiver,
-          notification,
-        } = data.rejectRequestToAddFriend;
+        const { sender, receiver, notification } =
+          data.rejectRequestToAddFriend;
 
         removeReceivedRequestToAddFriend(sender);
         removeNotificationWhenUserRejectToAddFriend(notification);
@@ -138,7 +132,7 @@ const NotificationItem = ({ notification }) => {
           <small>
             <Moment
               fromNow
-              className={newNotifications?.has(notification._id) ? "new" : ""}
+              className={newNotifications?.has(notification._id) ? 'new' : ''}
               locale={lang}
             >
               {new Date(+notification.updatedAt)}

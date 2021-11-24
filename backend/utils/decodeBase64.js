@@ -1,17 +1,17 @@
-function decodeBase64(dataString) {    
+function decodeBase64(dataString) {
   const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-  if(!matches){
-    throw new Error("invalid data");
+  if (!matches) {
+    throw new Error('invalid data');
   }
-  let response = {};  
+  let response = {};
   if (matches.length !== 3) {
-    return new Error("Invalid input string");
+    return new Error('Invalid input string');
   }
 
   response.type = matches[1];
-  response.data = Buffer.from(matches[2], "base64");
+  response.data = Buffer.from(matches[2], 'base64');
 
   return response;
 }
 
-export default decodeBase64
+export default decodeBase64;

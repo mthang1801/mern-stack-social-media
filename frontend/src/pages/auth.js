@@ -1,11 +1,11 @@
-import React, { lazy, useEffect } from "react";
-import { Switch, Route } from "react-router-dom";
-import { userVar } from "../apollo/cache";
-import { useReactiveVar } from "@apollo/client";
-const SignIn = lazy(() => import("../components/Auth/SignIn"));
-const SignUp = lazy(() => import("../components/Auth/SignUp"));
+import React, { lazy, useEffect } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { userVar } from '../apollo/cache';
+import { useReactiveVar } from '@apollo/client';
+const SignIn = lazy(() => import('../components/Auth/SignIn'));
+const SignUp = lazy(() => import('../components/Auth/SignUp'));
 
-const AuthPage = ({setIsAuth, ...props}) => {
+const AuthPage = ({ setIsAuth, ...props }) => {
   const { match, location, history } = props;
   const user = useReactiveVar(userVar);
   useEffect(() => {
@@ -13,7 +13,7 @@ const AuthPage = ({setIsAuth, ...props}) => {
       history.replace(location.state.from);
       setIsAuth(true);
     } else if (user) {
-      history.replace("/");
+      history.replace('/');
       setIsAuth(Date.now());
     }
   }, [user, history, location.state]);

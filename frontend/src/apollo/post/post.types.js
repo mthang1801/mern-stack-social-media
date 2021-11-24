@@ -1,4 +1,4 @@
-export { FETCH_POSTS, FETCH_COMMENTS, FETCH_RESPONSES } from "./post.queries";
+export { FETCH_POSTS, FETCH_COMMENTS, FETCH_RESPONSES } from './post.queries';
 export {
   CREATE_POST,
   CREATE_COMMENT,
@@ -11,8 +11,10 @@ export {
   REMOVE_LIKE_COMMENT,
   REMOVE_LIKE_POST,
   REMOVE_LIKE_RESPONSE,
-  REMOVE_RESPONSE
-} from "./post.mutations";
-export {CREATE_COMMENT_SUBSCIPTION, CREATE_RESPONSE_SUBSCRIPTION, EDIT_POST_SUBSCRIPTION} from "./post.subscriptions";
-
-
+  REMOVE_RESPONSE,
+} from './post.mutations';
+export {
+  CREATE_COMMENT_SUBSCIPTION,
+  CREATE_RESPONSE_SUBSCRIPTION,
+  EDIT_POST_SUBSCRIPTION,
+} from './post.subscriptions';
