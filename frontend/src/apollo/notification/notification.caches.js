@@ -30,6 +30,12 @@ export const setCountNumberNotificationsUnseen = (num) => {
 export const addNotificationItemToNotificationsList = (newNotification) => {
   let notifications = [...notificationsVar()];
   increaseCountNumberNotificationsUnseen();
+  const user = userVar();
+  userVar({
+    ...user,
+    notifications: [...new Set([...user.notifications, newNotification._id])],
+  });
+
   return notificationsVar([
     { ...newNotification, new: true },
     ...notifications,
@@ -70,6 +76,8 @@ export const removeNotificationItemFromNotificationsList = (
     (notification) => notification._id !== removedNotification._id
   );
   userVar(user);
+  console.log(notifications);
+  console.log(removedNotification);
   const updatedNotifications = notifications.filter((notification) => {
     if (notification._id === removedNotification._id) {
       if (!removedNotification.hasSeen) {
@@ -138,6 +146,7 @@ export const removeNotificationWhenUserRejectToAddFriend = (
   removedNotification
 ) => {
   const notifications = [...notificationsVar()];
+  console.log(removedNotification, notifications);
   removeNewNotification(removedNotification._id);
   const latestNotification = latestNotificationVar();
   if (latestNotification?._id === removedNotification._id) {
@@ -145,12 +154,13 @@ export const removeNotificationWhenUserRejectToAddFriend = (
   }
   const updatedNotifications = notifications.filter((notification) => {
     if (
-      notification?.field === removedNotification.field &&
-      notification?.content === removedNotification.content &&
-      notification?.fieldIdentity?.sender?._id ===
-        removedNotification.fieldIdentity.sender._id &&
-      notification?.fieldIdentity?.receiver?._id ===
-        removedNotification.fieldIdentity.receiver._id
+      // notification?.field === removedNotification.field &&
+      // notification?.content === removedNotification.content &&
+      // notification?.fieldIdentity?.sender?._id ===
+      //   removedNotification.fieldIdentity.sender._id &&
+      // notification?.fieldIdentity?.receiver?._id ===
+      //   removedNotification.fieldIdentity.receiver._id
+      notification._id === removedNotification._id
     ) {
       if (!notification.hasSeen) {
         decreaseCountNumberNotificationsUnseen();

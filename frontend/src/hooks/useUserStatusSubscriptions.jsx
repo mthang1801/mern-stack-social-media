@@ -13,7 +13,6 @@ const useUserStatusSubscriptions = () => {
     const socket = io('http://localhost:5000');
 
     if (user) {
-      console.log('render');
       //pass socket to backend to update status online
       socket.open();
       const { _id, name, slug, avatar } = user;

@@ -75,7 +75,6 @@ const PersonalContact = ({ user }) => {
   const [unFollowUser] = useMutation(UNFOLLOW_USER);
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
   const [removeFriend] = useMutation(REMOVE_FRIEND);
-
   //color theme
   const { colorMode } = useThemeUI();
   //useRef
@@ -101,6 +100,7 @@ const PersonalContact = ({ user }) => {
   }, [dialog, currentPersonalUser]);
   //function to handle when user click button request
   const updateMutationOnChange = (sender, receiver, removedNotification) => {
+    console.log(removedNotification, user.notifications);
     if (
       removedNotification &&
       user.notifications.includes(removedNotification._id)

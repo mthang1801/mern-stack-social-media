@@ -93,9 +93,9 @@ const ContactItem = ({ userContact, type }) => {
       variables: { senderId: userContact._id },
     })
       .then(({ data }) => {
+        console.log(data);
         const { sender, receiver, notification } =
           data.rejectRequestToAddFriend;
-
         removeReceivedRequestToAddFriend(sender);
         removeNotificationWhenUserRejectToAddFriend(notification);
         updateMutationOnChange(receiver, sender);
@@ -113,7 +113,11 @@ const ContactItem = ({ userContact, type }) => {
       <Button acceptBtn variant="outlined" onClick={onAcceptRequestToAddFriend}>
         {i18n.store.data[lang].translation.contacts.acceptRequest}
       </Button>
-      <Button reject onClick={onRejectRequestToAddFriend}>
+      <Button
+        reject
+        onClick={onRejectRequestToAddFriend}
+        aria-label="reject-button"
+      >
         {i18n.store.data[lang].translation.contacts.rejectRequest}
       </Button>
     </>

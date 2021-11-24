@@ -13,7 +13,7 @@ import constant from '../config/constant';
 import mongoose from 'mongoose';
 import _ from 'lodash';
 import { raiseError } from '../utils/raiseError';
-import pattern from '../config/constant';
+import pattern from '../config/pattern';
 export const userController = {
   users: () => User.find(),
   createUser: async (data) => {
@@ -21,11 +21,13 @@ export const userController = {
     if (!name) {
       throw new UserInputError('Name is requried');
     }
+    const lowerName = name.toLowerCase();
     const emailRegex = pattern.email;
     if (!emailRegex.test(email)) {
       throw new UserInputError('Email is invalid');
     }
-    if (password.length < 6) {
+    const pwdPattern = pattern.password;
+    if (!pwdPattern.test(password)) {
       throw new UserInputError('Password is too short');
     }
     const checkUserExist = await User.findOne({ email });
@@ -34,7 +36,10 @@ export const userController = {
     }
     const hashPassword = await bcrypt.hash(password, 10);
 
-    let slug = name.replace(/[^0-9A-Za-z]+/g, '_').toLowerCase();
+    let slug = pattern
+      .removeVietnameseTones(lowerName)
+      .replace(/[^a-z0-9]/gi, '-')
+      .replace(/-+/g, '-');
     const checkSlugExisting = await User.findOne({ slug });
     if (checkSlugExisting) {
       slug = `${slug}_${Date.now().toString(36)}`;
@@ -586,6 +591,7 @@ export const userController = {
         .populate({ path: 'creator', select: 'name slug avatar' })
         .populate({ path: 'fieldIdentity.sender' })
         .populate({ path: 'fieldIdentity.receiver' });
+
       if (removedNotification) {
         currentUser.notifications.pull(removedNotification._id);
       }
@@ -598,6 +604,7 @@ export const userController = {
         rejectRequestToAddFriendSubscription: {
           sender: sender,
           receiver: currentUser,
+          notification: removedNotification,
         },
       });
 

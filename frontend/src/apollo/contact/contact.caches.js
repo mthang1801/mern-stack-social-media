@@ -73,7 +73,6 @@ export const addUserToReceivedRequestToAddFriend = (sender) => {
     { ...sender },
     ...contact.receivedRequestsToAddFriend,
   ];
-  console.log(contact);
   return contactVar(contact);
 };
 

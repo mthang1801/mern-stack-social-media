@@ -104,6 +104,8 @@ const useNotificationsPostSubscription = () => {
   ) => {
     setLatestNotification(newNotification);
     setNewNotifications(newNotification._id);
+    const user = userVar();
+
     if (sender && receiver) {
       setCurrentUser({
         ...user,
@@ -181,8 +183,8 @@ const useNotificationsPostSubscription = () => {
             const { sentRequestToAddFriendSubscription: notification } =
               subscriptionData.data;
             const { receiver, sender } = notification?.fieldIdentity;
+            console.log(subscriptionData);
             if (sender && receiver) {
-              console.log(sender, receiver, notification);
               addUserToReceivedRequestToAddFriend(sender);
               updatedAddNotification(notification, sender, receiver);
             }

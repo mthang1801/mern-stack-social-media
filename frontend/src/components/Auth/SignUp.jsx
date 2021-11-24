@@ -49,6 +49,8 @@ const INITIAL_STATE = {
       validation: {
         required: true,
         isEmail: true,
+        regex:
+          /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
       },
       value: '',
       touched: false,
@@ -61,7 +63,8 @@ const INITIAL_STATE = {
       label: 'Password',
       validation: {
         required: true,
-        minLength: 6,
+        isPassword: true,
+        regex: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
       },
       value: '',
       touched: false,
@@ -74,7 +77,6 @@ const INITIAL_STATE = {
       valid: false,
       validation: {
         required: true,
-        minLength: 6,
         match: true,
       },
       value: '',
@@ -149,12 +151,15 @@ const SignUp = withSignUpMutation(
           errorsMessage.push('This field is required');
         }
       }
-      if (rules.isEmail) {
-        const pattern =
-          /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        isValid = pattern.test(value) && isValid;
+      if (rules.regex) {
+        isValid = rules.regex.test(value) && isValid;
         if (!isValid) {
-          errorsMessage.push('Email is invalid');
+          if (rules.isEmail) {
+            errorsMessage.push('Email is invalid');
+          }
+          if (rules.isPassword) {
+            errorsMessage.push('Password is invalid');
+          }
         }
       }
       if (rules.minLength) {
@@ -170,8 +175,7 @@ const SignUp = withSignUpMutation(
         }
       }
       if (rules.match) {
-        isValid =
-          value.trim() === this.state.controls.password.value && isValid;
+        isValid = value === this.state.controls.password.value && isValid;
         if (!isValid) {
           errorsMessage.push('Password and confirm Password do not match');
         }
