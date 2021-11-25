@@ -55,7 +55,6 @@ const FriendsList = ({ show }) => {
     setOpenSearch(true);
   };
 
-  console.log(contact);
   return (
     <Scrollbars
       autoHide

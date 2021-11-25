@@ -76,3 +76,20 @@ export const EDIT_POST_SUBSCRIPTION = gql`
     }
   }
 `;
+
+export const LIKE_POST_SUBSCRIPTION = gql`
+  subscription LikePost {
+    likePostSubscription {
+      _id
+      likes
+    }
+  }
+`;
+export const REMOVE_LIKE_POST_SUBSCRIPTION = gql`
+  subscription RemoveLikePost {
+    removeLikePostSubscription {
+      _id
+      likes
+    }
+  }
+`;

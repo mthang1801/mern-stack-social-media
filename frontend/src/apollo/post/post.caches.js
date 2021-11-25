@@ -7,7 +7,6 @@ export const addFetchedPostToCache = (fetchedPosts) => {
   if (!Array.isArray(fetchedPosts)) {
     return false;
   }
-  console.log([...posts, ...fetchedPosts]);
   return postsVar([...posts, ...fetchedPosts]);
 };
 
@@ -305,6 +304,19 @@ export const updateLikePost = (postId, userId) => {
   return postsVar(updatedPosts);
 };
 
+export const updateLikePostSubscription = (likedPost) => {
+  const posts = postsVar();
+  if (posts.some((post) => post._id === likedPost._id)) {
+    const updatedPosts = posts.map((post) => {
+      if (post._id === likedPost._id) {
+        return { ...post, ...likedPost };
+      }
+      return post;
+    });
+    return postsVar(updatedPosts);
+  }
+};
+
 export const updatePost = (editedPost) => {
   const posts = [...postsVar()];
   if (posts.some((post) => post._id === editedPost._id)) {
@@ -319,21 +331,20 @@ export const updatePost = (editedPost) => {
   }
 };
 
-export const updateRemoveLikePost = (postId, userId) => {
+export const removeLikePost = (removedLikePost) => {
   const posts = [...postsVar()];
-  console.log(postId, userId);
-  console.log(posts);
-  const updatedPosts = posts.map((post) => {
-    if (post._id === postId) {
-      return {
-        ...post,
-        likes: post.likes.filter((like) => like === userId),
-      };
-    }
-    return post;
-  });
-  console.log(updatedPosts);
-  return postsVar(updatedPosts);
+  if (posts.some((post) => post._id === removedLikePost._id)) {
+    const updatedPosts = posts.map((post) => {
+      if (post._id === removedLikePost._id) {
+        return {
+          ...post,
+          ...removedLikePost,
+        };
+      }
+      return post;
+    });
+    return postsVar(updatedPosts);
+  }
 };
 
 export const clearPosts = () => postsVar(initialState.posts);
@@ -425,7 +436,6 @@ export const userRemoveLikePost = (userId, postId) => {
   // at home page
   const posts = postsVar();
   const updatedPosts = posts.map((post) => {
-    console.log(post);
     if (post._id === postId) {
       return {
         ...post,

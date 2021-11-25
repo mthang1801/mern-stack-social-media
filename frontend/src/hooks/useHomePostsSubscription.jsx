@@ -1,28 +1,52 @@
 import { useEffect } from 'react';
-import { useQuery, useReactiveVar } from '@apollo/client';
+import { useQuery, useReactiveVar, useSubscription } from '@apollo/client';
 import { FETCH_POSTS } from '../apollo/post/post.queries';
 import {
   CREATE_COMMENT_SUBSCIPTION,
   CREATE_RESPONSE_SUBSCRIPTION,
   EDIT_POST_SUBSCRIPTION,
+  LIKE_POST_SUBSCRIPTION,
+  REMOVE_LIKE_POST_SUBSCRIPTION,
 } from '../apollo/post/post.types';
 import { userVar } from '../apollo/cache';
 import {
   addCommentToPost,
   addNewResponseToComment,
   updatePost,
+  updateLikePostSubscription,
+  removeLikePost,
 } from '../apollo/post/post.caches';
+
 const useHomePostsSubscription = () => {
   const { subscribeToMore: subscribePosts } = useQuery(FETCH_POSTS, {
-    fetchPolicy: 'cache-and-network',
     skip: true,
+    fetchPolicy: 'network-only',
   });
+  useSubscription(LIKE_POST_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      if (subscriptionData.data) {
+        const { likePostSubscription } = subscriptionData.data;
+        updateLikePostSubscription(likePostSubscription);
+      }
+    },
+  });
+  useSubscription(REMOVE_LIKE_POST_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      if (subscriptionData.data) {
+        const { removeLikePostSubscription } = subscriptionData.data;
+        removeLikePost(removeLikePostSubscription);
+      }
+    },
+  });
+
   const user = useReactiveVar(userVar);
 
   useEffect(() => {
-    let unsubscribeCreateComment,
+    let unsubscribeLikePost,
+      unsubscribeCreateComment,
       unsubscribeCreateResponse,
       unsubscribeUpdatePost;
+
     if (user && subscribePosts) {
       unsubscribeCreateComment = subscribePosts({
         document: CREATE_COMMENT_SUBSCIPTION,
@@ -68,6 +92,9 @@ const useHomePostsSubscription = () => {
       });
     }
     return () => {
+      if (unsubscribeLikePost) {
+        unsubscribeLikePost();
+      }
       if (unsubscribeCreateComment) {
         unsubscribeCreateComment();
       }

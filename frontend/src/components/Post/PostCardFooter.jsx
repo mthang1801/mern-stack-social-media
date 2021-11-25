@@ -20,10 +20,6 @@ import { userVar } from '../../apollo/cache';
 import { LIKE_POST, REMOVE_LIKE_POST } from '../../apollo/post/post.types';
 
 import LazyLoad from 'react-lazyload';
-import {
-  updateLikePost,
-  updateRemoveLikePost,
-} from '../../apollo/post/post.caches';
 import CommentEditor from './CommentEditor';
 const PostCardFooter = ({ post, fetchComments, user }) => {
   const { i18n, lang } = useLanguage();
@@ -36,7 +32,7 @@ const PostCardFooter = ({ post, fetchComments, user }) => {
     likePost({ variables: { postId: post._id } })
       .then(({ data }) => {
         if (data.likePost) {
-          updateLikePost(post._id, user._id);
+          // updateLikePost(post._id, user._id);
         }
       })
       .catch((error) => {
@@ -45,11 +41,7 @@ const PostCardFooter = ({ post, fetchComments, user }) => {
   };
 
   const onUnlikePost = () => {
-    removeLikePost({ variables: { postId: post._id } }).then(({ data }) => {
-      if (data.removeLikePost) {
-        updateRemoveLikePost(post._id, user._id);
-      }
-    });
+    removeLikePost({ variables: { postId: post._id } });
   };
 
   const onClickComment = () => {
@@ -59,7 +51,6 @@ const PostCardFooter = ({ post, fetchComments, user }) => {
     }
   };
   const onClickLikePost = () => {
-    console.log(post.likes, user._id);
     if (user) {
       return post.likes.includes(user._id) ? onUnlikePost() : onLikePost();
     }

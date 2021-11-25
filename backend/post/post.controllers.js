@@ -290,13 +290,19 @@ export const postControllers = {
       raiseError(error.message, error.statusCode);
     }
   },
-  likePost: async (req, postId, pubsub, likePostSubscriptionNotification) => {
+  likePost: async (
+    req,
+    postId,
+    pubsub,
+    likePostSubscriptionNotification,
+    likePostSubscription
+  ) => {
     try {
       const currentUserId = getAuthUser(req);
 
       const post = await Post.findById(postId).populate({
         path: 'author',
-        select: '_id name slug',
+        select: '_id name slug avatar',
       });
       if (!post || post.likes.includes(currentUserId)) {
         return false;
@@ -336,13 +342,22 @@ export const postControllers = {
           });
         }
       }
+      await pubsub.publish(likePostSubscription, {
+        likePostSubscription: post,
+      });
 
       return true;
     } catch (error) {
       throw new ApolloError(error.message);
     }
   },
-  removeLikePost: async (req, postId, pubsub, removeLikePostSubscription) => {
+  removeLikePost: async (
+    req,
+    postId,
+    pubsub,
+    removeLikePostSubscriptionNotification,
+    removeLikePostSubscription
+  ) => {
     const currentUserId = getAuthUser(req);
     const post = await Post.findByIdAndUpdate(
       postId,
@@ -363,10 +378,13 @@ export const postControllers = {
         $pull: { notifications: notification._id },
       });
       console.log(notification);
-      await pubsub.publish(removeLikePostSubscription, {
-        removeLikePostSubscription: notification._doc,
+      await pubsub.publish(removeLikePostSubscriptionNotification, {
+        removeLikePostSubscriptionNotification: notification._doc,
       });
     }
+    await pubsub.publish(removeLikePostSubscription, {
+      removeLikePostSubscription: post,
+    });
     return !!post;
   },
   updatePost: async (req, postId, data, pubsub, postActions) => {

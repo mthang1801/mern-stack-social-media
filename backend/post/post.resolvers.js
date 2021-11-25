@@ -37,13 +37,15 @@ export const postResolvers = {
         req,
         args.postId,
         pubsub,
-        subscriptionActions.LIKE_POST_SUBSCRIPTION_NOTIFICATION
+        subscriptionActions.LIKE_POST_SUBSCRIPTION_NOTIFICATION,
+        subscriptionActions.LIKE_POST_SUBSCRIPTION
       ),
     removeLikePost: (_, args, { req }, info) =>
       postControllers.removeLikePost(
         req,
         args.postId,
         pubsub,
+        subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION_NOTIFICATION,
         subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION
       ),
   },
@@ -66,6 +68,16 @@ export const postResolvers = {
       subscribe: () =>
         pubsub.asyncIterator(
           subscriptionActions.LIKE_POST_SUBSCRIPTION_NOTIFICATION
+        ),
+    },
+    likePostSubscription: {
+      subscribe: () =>
+        pubsub.asyncIterator(subscriptionActions.LIKE_POST_SUBSCRIPTION),
+    },
+    removeLikePostSubscriptionNotification: {
+      subscribe: () =>
+        pubsub.asyncIterator(
+          subscriptionActions.REMOVE_LIKE_POST_SUBSCRIPTION_NOTIFICATION
         ),
     },
     removeLikePostSubscription: {

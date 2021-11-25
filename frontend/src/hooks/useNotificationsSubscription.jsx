@@ -225,7 +225,6 @@ const useNotificationsPostSubscription = () => {
         document: NOTIFY_MENTIONED_USERS_IN_POST,
         variables: { userId: user._id },
         updateQuery: (prev, { subscriptionData }) => {
-          console.log(subscriptionData);
           if (subscriptionData) {
             const { notifyMentionedUsersInPost } = subscriptionData.data;
             console.log(notifyMentionedUsersInPost);
@@ -236,23 +235,13 @@ const useNotificationsPostSubscription = () => {
       unsubscribeUserLikePost = subscribeToMoreNotifications({
         document: LIKE_POST_SUBSCRIPTION_NOTIFICATION,
         updateQuery: (_, { subscriptionData }) => {
-          console.log(subscriptionData);
           if (subscriptionData) {
             const { likePostSubscriptionNotification } = subscriptionData.data;
-            console.log(subscriptionData);
             if (
               user._id.toString() ===
               likePostSubscriptionNotification?.receiver.toString()
             ) {
               updatedAddNotification(likePostSubscriptionNotification);
-            }
-            //update user like in personal user
-            if (
-              !likePostSubscriptionNotification.fieldIdentity.post.likes.includes(
-                user._id
-              )
-            ) {
-              userLikePost(likePostSubscriptionNotification.fieldIdentity.post);
             }
           }
         },
@@ -265,12 +254,6 @@ const useNotificationsPostSubscription = () => {
             if (removeLikePostSubscription?.receiver === user._id) {
               updatedRemoveNotification(removeLikePostSubscription);
             }
-            console.log(removeLikePostSubscription);
-            //update current Personal user
-            userRemoveLikePost(
-              removeLikePostSubscription.creator._id,
-              removeLikePostSubscription.fieldIdentity.post._id
-            );
           }
         },
       });

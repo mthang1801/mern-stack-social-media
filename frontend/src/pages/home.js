@@ -17,7 +17,11 @@ import LazyLoad from 'react-lazyload';
 import { userVar, toggleFriendsBoardVar, postsVar } from '../apollo/cache';
 import { setToggleFriendsBoard } from '../apollo/controls/controls.caches';
 import { FETCH_POSTS } from '../apollo/post/post.queries';
-import { addFetchedPostToCache } from '../apollo/post/post.caches';
+import {
+  addFetchedPostToCache,
+  updateLikePostSubscription,
+} from '../apollo/post/post.caches';
+import { LIKE_POST_SUBSCRIPTION } from '../apollo/post/post.types';
 import constant from '../constant/constant';
 const Home = () => {
   const user = useReactiveVar(userVar);
@@ -27,11 +31,13 @@ const Home = () => {
   const [loading, setLoading] = useState();
   const [fetchMore, setFetchMore] = useState(false);
   useHomePostsSubscription();
-  console.log(posts);
-  const { refetch: fetchPosts } = useQuery(FETCH_POSTS, {
-    fetchPolicy: 'no-cache',
-    skip: true,
-  });
+  const { refetch: fetchPosts, subscribeToMore: subcscribePosts } = useQuery(
+    FETCH_POSTS,
+    {
+      fetchPolicy: 'no-cache',
+      skip: true,
+    }
+  );
   useEffect(() => {
     if (!posts.length && user && !fetched) {
       setLoading(true);
@@ -63,6 +69,21 @@ const Home = () => {
       window.removeEventListener('scroll', onTrackUserScrolled);
     };
   });
+
+  useEffect(() => {
+    let unsubscribeLikePost;
+    if (user && subcscribePosts) {
+      unsubscribeLikePost = subcscribePosts({
+        document: LIKE_POST_SUBSCRIPTION,
+        updateQuery: (_, { subscriptionData }) => {
+          if (subscriptionData.data) {
+            const { likePostSubscription } = subscriptionData.data;
+            updateLikePostSubscription(likePostSubscription);
+          }
+        },
+      });
+    }
+  }, [subcscribePosts]);
 
   useEffect(() => {
     if (user && fetchMore) {

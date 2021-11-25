@@ -76,8 +76,6 @@ export const removeNotificationItemFromNotificationsList = (
     (notification) => notification._id !== removedNotification._id
   );
   userVar(user);
-  console.log(notifications);
-  console.log(removedNotification);
   const updatedNotifications = notifications.filter((notification) => {
     if (notification._id === removedNotification._id) {
       if (!removedNotification.hasSeen) {
