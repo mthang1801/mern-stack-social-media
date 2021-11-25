@@ -27,7 +27,7 @@ const Home = () => {
   const [loading, setLoading] = useState();
   const [fetchMore, setFetchMore] = useState(false);
   useHomePostsSubscription();
-
+  console.log(posts);
   const { refetch: fetchPosts } = useQuery(FETCH_POSTS, {
     fetchPolicy: 'no-cache',
     skip: true,

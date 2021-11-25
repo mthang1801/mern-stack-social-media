@@ -4,6 +4,7 @@ import { commentResolvers } from '../comment/comment.resolvers';
 import { contactResolvers } from '../contact/contact.resolvers';
 import { chatResolvers } from '../chat/chat.resolvers';
 import { notificationResolvers } from '../notification/notification.resolvers';
+import { conversationsResolvers } from '../conversation/conversation.resovers';
 import { responseResolvers } from '../response/response.resolvers';
 const resolvers = [
   userResolvers,
@@ -13,6 +14,7 @@ const resolvers = [
   chatResolvers,
   notificationResolvers,
   responseResolvers,
+  conversationsResolvers,
 ];
 
 export default resolvers;

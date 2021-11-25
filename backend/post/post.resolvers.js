@@ -37,7 +37,7 @@ export const postResolvers = {
         req,
         args.postId,
         pubsub,
-        subscriptionActions.LIKE_POST_SUBSCRIPTION
+        subscriptionActions.LIKE_POST_SUBSCRIPTION_NOTIFICATION
       ),
     removeLikePost: (_, args, { req }, info) =>
       postControllers.removeLikePost(
@@ -62,9 +62,11 @@ export const postResolvers = {
         }
       ),
     },
-    likePostSubscription: {
+    likePostSubscriptionNotification: {
       subscribe: () =>
-        pubsub.asyncIterator(subscriptionActions.LIKE_POST_SUBSCRIPTION),
+        pubsub.asyncIterator(
+          subscriptionActions.LIKE_POST_SUBSCRIPTION_NOTIFICATION
+        ),
     },
     removeLikePostSubscription: {
       subscribe: () =>

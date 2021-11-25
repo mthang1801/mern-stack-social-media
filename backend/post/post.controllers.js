@@ -290,12 +290,13 @@ export const postControllers = {
       raiseError(error.message, error.statusCode);
     }
   },
-  likePost: async (req, postId, pubsub, likePostSubscription) => {
+  likePost: async (req, postId, pubsub, likePostSubscriptionNotification) => {
     try {
       const currentUserId = getAuthUser(req);
+
       const post = await Post.findById(postId).populate({
         path: 'author',
-        select: 'name slug',
+        select: '_id name slug',
       });
       if (!post || post.likes.includes(currentUserId)) {
         return false;
@@ -304,36 +305,36 @@ export const postControllers = {
       await post.save();
       //create notification to notify user like post author
       //Firstly, check notification has existed
-      const checkNotificationExisted = await Notification.findOne({
-        'fieldIdentity.post': postId,
-        content: contents.LIKED,
-        creator: currentUserId,
-      });
-
-      if (!checkNotificationExisted) {
-        const newNotification = new Notification({
-          field: fields.POST,
+      if (currentUserId.toString() !== post.author._id.toString()) {
+        const checkNotificationExisted = await Notification.findOne({
+          'fieldIdentity.post': postId,
           content: contents.LIKED,
           creator: currentUserId,
-          fieldIdentity: {
-            post: post._id,
-          },
-          receiver: post.author._id,
-          url: `/${post.author.slug}/posts/${post._id}`,
         });
-        //save notification into user model
-        await User.findByIdAndUpdate(post.author._id, {
-          $push: { notifications: newNotification._id },
-        });
-        //save notification
-        await (await newNotification.save())
-          .populate({ path: 'fieldIdentity.post' })
-          .populate({ path: 'creator', select: 'name avatar slug' })
-          .execPopulate();
-
-        await pubsub.publish(likePostSubscription, {
-          likePostSubscription: newNotification._doc,
-        });
+        if (!checkNotificationExisted) {
+          const newNotification = new Notification({
+            field: fields.POST,
+            content: contents.LIKED,
+            creator: currentUserId,
+            fieldIdentity: {
+              post: post._id,
+            },
+            receiver: post.author._id,
+            url: `/${post.author.slug}/posts/${post._id}`,
+          });
+          //save notification into user model
+          await User.findByIdAndUpdate(post.author._id, {
+            $push: { notifications: newNotification._id },
+          });
+          //save notification
+          await (await newNotification.save())
+            .populate({ path: 'fieldIdentity.post' })
+            .populate({ path: 'creator', select: 'name avatar slug' })
+            .execPopulate();
+          await pubsub.publish(likePostSubscriptionNotification, {
+            likePostSubscriptionNotification: newNotification._doc,
+          });
+        }
       }
 
       return true;

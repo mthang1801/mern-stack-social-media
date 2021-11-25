@@ -52,7 +52,7 @@ function App() {
               path="/auth"
               render={(props) => <AuthPage setIsAuth={setIsAuth} {...props} />}
             />
-            <Route path="/contacts" component={ContactsPage} />
+            <Route exact path="/contacts" component={ContactsPage} />
             <Route path="/chats" component={ChatsPage} />
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/:slug" component={PersonalPage} />

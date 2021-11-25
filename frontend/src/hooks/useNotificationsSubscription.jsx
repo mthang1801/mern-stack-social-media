@@ -23,15 +23,12 @@ import {
   removeLikeResponse,
   updateCommentLikes,
 } from '../apollo/post/post.caches';
-import {
-  userLikePostInCurrentPersonalUser,
-  userRemoveLikePostInCurrentPersonalUser,
-} from '../apollo/post/post.caches';
+import { userLikePost, userRemoveLikePost } from '../apollo/post/post.caches';
 import {
   ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   LIKE_COMMENT_SUBSCRIPTION,
-  LIKE_POST_SUBSCRIPTION,
+  LIKE_POST_SUBSCRIPTION_NOTIFICATION,
   LIKE_RESPONSE_SUBSCRIPTION,
   NOTIFY_MENTIONED_USERS_IN_COMMENT_SUBSCRIPTION,
   NOTIFY_MENTIONED_USERS_IN_POST,
@@ -104,7 +101,6 @@ const useNotificationsPostSubscription = () => {
   ) => {
     setLatestNotification(newNotification);
     setNewNotifications(newNotification._id);
-    const user = userVar();
 
     if (sender && receiver) {
       setCurrentUser({
@@ -238,17 +234,26 @@ const useNotificationsPostSubscription = () => {
         },
       });
       unsubscribeUserLikePost = subscribeToMoreNotifications({
-        document: LIKE_POST_SUBSCRIPTION,
+        document: LIKE_POST_SUBSCRIPTION_NOTIFICATION,
         updateQuery: (_, { subscriptionData }) => {
+          console.log(subscriptionData);
           if (subscriptionData) {
-            const { likePostSubscription } = subscriptionData.data;
-            if (user._id === likePostSubscription?.receiver) {
-              updatedAddNotification(likePostSubscription);
+            const { likePostSubscriptionNotification } = subscriptionData.data;
+            console.log(subscriptionData);
+            if (
+              user._id.toString() ===
+              likePostSubscriptionNotification?.receiver.toString()
+            ) {
+              updatedAddNotification(likePostSubscriptionNotification);
             }
             //update user like in personal user
-            userLikePostInCurrentPersonalUser(
-              likePostSubscription.fieldIdentity.post
-            );
+            if (
+              !likePostSubscriptionNotification.fieldIdentity.post.likes.includes(
+                user._id
+              )
+            ) {
+              userLikePost(likePostSubscriptionNotification.fieldIdentity.post);
+            }
           }
         },
       });
@@ -260,8 +265,9 @@ const useNotificationsPostSubscription = () => {
             if (removeLikePostSubscription?.receiver === user._id) {
               updatedRemoveNotification(removeLikePostSubscription);
             }
+            console.log(removeLikePostSubscription);
             //update current Personal user
-            userRemoveLikePostInCurrentPersonalUser(
+            userRemoveLikePost(
               removeLikePostSubscription.creator._id,
               removeLikePostSubscription.fieldIdentity.post._id
             );
@@ -275,6 +281,7 @@ const useNotificationsPostSubscription = () => {
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
             const { notifyUserCommentPostSubscription } = subscriptionData.data;
+            console.log(notifyUserCommentPostSubscription);
             updatedAddNotification(notifyUserCommentPostSubscription);
           }
         },

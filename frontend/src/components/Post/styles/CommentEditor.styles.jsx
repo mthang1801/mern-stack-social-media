@@ -27,7 +27,7 @@ export const CommentControls = styled.div`
   .e8k2yoa,
   .e13wqaj6 {
     color: inherit;
-    transform: scale(1.5);
+    margin-top: 0.25rem;
     opacity: 0.6;
     &:hover {
       color: inherit;

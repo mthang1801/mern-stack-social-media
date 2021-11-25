@@ -4,10 +4,10 @@ import { initialState } from '../initialState';
 //#region Home Post
 export const addFetchedPostToCache = (fetchedPosts) => {
   const posts = [...postsVar()];
-  console.log(fetchedPosts);
   if (!Array.isArray(fetchedPosts)) {
     return false;
   }
+  console.log([...posts, ...fetchedPosts]);
   return postsVar([...posts, ...fetchedPosts]);
 };
 
@@ -294,12 +294,13 @@ export const updateCommentLikes = (comment) => {
 export const updateLikePost = (postId, userId) => {
   const posts = [...postsVar()];
   const updatedPosts = posts.map((post) => {
-    if (post._id === postId) {
-      let _post = { ...post };
-      _post.likes = [..._post.likes, userId];
-      return { ..._post };
+    if (post._id.toString() === postId.toString()) {
+      return {
+        ...post,
+        likes: [...new Set([...post.likes, userId])],
+      };
     }
-    return { ...post };
+    return post;
   });
   return postsVar(updatedPosts);
 };
@@ -320,14 +321,18 @@ export const updatePost = (editedPost) => {
 
 export const updateRemoveLikePost = (postId, userId) => {
   const posts = [...postsVar()];
+  console.log(postId, userId);
+  console.log(posts);
   const updatedPosts = posts.map((post) => {
     if (post._id === postId) {
-      let _post = { ...post };
-      _post.likes = _post.likes.filter((_id) => _id !== userId);
-      return { ..._post };
+      return {
+        ...post,
+        likes: post.likes.filter((like) => like === userId),
+      };
     }
-    return { ...post };
+    return post;
   });
+  console.log(updatedPosts);
   return postsVar(updatedPosts);
 };
 
@@ -372,8 +377,11 @@ export const updatePostInCurrentPersonalUser = (editedPost) => {
   }
 };
 
-export const userLikePostInCurrentPersonalUser = (likedPost) => {
+export const userLikePost = (likedPost) => {
+  console.log(likedPost);
+  // at current personal user
   let currentUser = { ...currentPersonalUserVar() };
+
   if (currentUser.postsData?.some((post) => post._id === likedPost._id)) {
     const updatedPosts = currentUser.postsData.map((post) => {
       let _post = { ...post };
@@ -382,11 +390,23 @@ export const userLikePostInCurrentPersonalUser = (likedPost) => {
       }
       return { ..._post };
     });
-    return currentPersonalUserVar({ ...currentUser, postsData: updatedPosts });
+    currentPersonalUserVar({ ...currentUser, postsData: updatedPosts });
+  }
+  // at home page
+  const posts = postsVar();
+  if (posts.some((post) => post._id === likedPost._id)) {
+    const updatedPosts = posts.map((post) => {
+      if (post._id === likedPost._id) {
+        return { ...post, ...likedPost };
+      }
+      return post;
+    });
+    postsVar(updatedPosts);
   }
 };
 
-export const userRemoveLikePostInCurrentPersonalUser = (userId, postId) => {
+export const userRemoveLikePost = (userId, postId) => {
+  // At current personal user page
   let currentUser = { ...currentPersonalUserVar() };
   if (currentUser.postsData?.some((post) => post._id === postId)) {
     const updatedPosts = currentUser.postsData.map((post) => {
@@ -399,8 +419,23 @@ export const userRemoveLikePostInCurrentPersonalUser = (userId, postId) => {
       }
       return { ..._post };
     });
-    return currentPersonalUserVar({ ...currentUser, postsData: updatedPosts });
+    currentPersonalUserVar({ ...currentUser, postsData: updatedPosts });
   }
+
+  // at home page
+  const posts = postsVar();
+  const updatedPosts = posts.map((post) => {
+    console.log(post);
+    if (post._id === postId) {
+      return {
+        ...post,
+        likes: post.likes.filter((like) => like !== userId),
+      };
+    }
+    return post;
+  });
+
+  postsVar(updatedPosts);
 };
 
 export const addCommentsToPostInPersonalUser = (postId, comments) => {

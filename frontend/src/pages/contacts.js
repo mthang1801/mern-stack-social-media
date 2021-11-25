@@ -51,6 +51,7 @@ const FriendsPage = () => {
       ) {
         fetchListContact()
           .then(({ data }) => {
+            console.log(data);
             setFetched(true);
             const { sentRequests, receivedRequests, friends } =
               data.fetchListContact;

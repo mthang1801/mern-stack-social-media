@@ -3,13 +3,13 @@ import { gql } from 'apollo-server-express';
 export const schemaSubscription = gql`
   type Subscription {
     notifyMentionedUsersInPost(userId: ID!): Notification!
-    likePostSubscription: Notification!
+    likePostSubscriptionNotification: Notification!
     removeLikePostSubscription: Notification!
     editPostSubscription: Post!
 
     notifyUserCommentPostSubscription(userId: ID!): Notification!
     notifyMentionUsersInComment(userId: ID!): Notification!
-    createCommentSubscription(userId: ID!): Comment!
+    createCommentSubscription: Comment!
     likeCommentSubscription: CommentSubscriptionPayload!
     removeLikeCommentSubscription: CommentSubscriptionPayload!
 
@@ -66,7 +66,7 @@ export const subscriptionActions = {
   UPDATE_RECEIVER_ONLINE_RECEIVED_ALL_MESSAGE:
     'UPDATE_RECEIVER_ONLINE_RECEIVED_ALL_MESSAGE',
   NOTIFY_MENTIONED_USERS_IN_POST: 'NOTIFY_MENTIONED_USERS_IN_POST',
-  LIKE_POST_SUBSCRIPTION: 'LIKE_POST_SUBSCRIPTION',
+  LIKE_POST_SUBSCRIPTION_NOTIFICATION: 'LIKE_POST_SUBSCRIPTION_NOTIFICATION',
   NOTIFY_USER_COMMENT_POST_SUBSCRIPTION:
     'NOTIFY_USER_COMMENT_POST_SUBSCRIPTION',
   REMOVE_LIKE_POST_SUBSCRIPTION: 'REMOVE_LIKE_POST_SUBSCRIPTION',

@@ -105,6 +105,22 @@ export const schemaType = gql`
     comment: Comment
     response: Response
   }
+  type ReceiversStatus {
+    receiver: User!
+    status: ReceiverStatusChatEnum!
+  }
+
+  type Chat {
+    _id: ID!
+    sender: User!
+    receivers: [User!]
+    messageType: MessageTypeEnum!
+    reiceiversStatus: [ReceiversStatus!]
+    senderStatus: SenderStatusChatEnum
+    blocked: [User]
+    createdAt: String!
+    updatedAt: String!
+  }
 
   type PersonalChat {
     _id: ID!

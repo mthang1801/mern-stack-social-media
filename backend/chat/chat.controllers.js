@@ -9,7 +9,7 @@ import constant from '../config/constant';
 
 export const chatControllers = {
   fetchChatConversations: async (req, except, skip, limit) => {
-    //when fetch chat messages, we need update status is delivered message is delivered if it is sent status
+    //when fetch chat messages, we need update status is delivered message is delivered if it is on sent status
     try {
       console.time('fetchChatConversations');
       //convert except to Object
@@ -20,6 +20,7 @@ export const chatControllers = {
       const currentUserId = getAuthUser(req);
       const currentUser = await User.findById(currentUserId);
       const { conversations } = currentUser;
+      console.log(conversations);
       if (conversations.length) {
         const sortedConversations = _.sortBy(
           conversations,

@@ -18,6 +18,7 @@ const useHomePostsSubscription = () => {
     skip: true,
   });
   const user = useReactiveVar(userVar);
+
   useEffect(() => {
     let unsubscribeCreateComment,
       unsubscribeCreateResponse,
@@ -25,11 +26,12 @@ const useHomePostsSubscription = () => {
     if (user && subscribePosts) {
       unsubscribeCreateComment = subscribePosts({
         document: CREATE_COMMENT_SUBSCIPTION,
-        variables: { userId: user._id },
         updateQuery: (_, { subscriptionData }) => {
+          console.log(subscriptionData);
           if (subscriptionData) {
             const { createCommentSubscription: comment } =
               subscriptionData.data;
+
             if (comment.author._id !== user._id) {
               addCommentToPost(comment.post, comment);
             }

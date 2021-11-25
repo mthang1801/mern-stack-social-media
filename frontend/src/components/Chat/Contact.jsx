@@ -5,14 +5,17 @@ import {
   RightSide,
   PopupSettings,
 } from './styles/Chat.styles';
-import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/cache';
 import Search from './Search';
 import { useThemeUI } from 'theme-ui';
 import { setCurrentChat } from '../../apollo/chat/chat.caches';
 import ListContacts from './ListContacts';
+import { FETCH_USER_FRIENDS_DATA } from '../../apollo/contact/contact.queries';
+import { contactVar } from '../../apollo/cache';
+import { pushFriendsListToContact } from '../../apollo/contact/contact.caches';
 import ChatBoard from './ChatBoard';
-
+import { useQuery, useReactiveVar } from '@apollo/client';
+import constant from '../../constant/constant';
 export const ContactContext = createContext({});
 
 const Contact = () => {
@@ -23,6 +26,11 @@ const Contact = () => {
   const [contactData, setContactData] = useState([]);
   const [originData, setOriginData] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const [fetched, setFetched] = useState(false);
+  const contact = useReactiveVar(contactVar);
+  const { refetch: fetchFriends } = useQuery(FETCH_USER_FRIENDS_DATA, {
+    skip: true,
+  });
   const [popupPosition, setPopupPosition] = useState({
     left: -10000,
     top: -10000,
@@ -43,10 +51,18 @@ const Contact = () => {
     // }
   }, [search]);
 
-  // useEffect(() => {
-  //   setContactData([...friends]);
-  //   setOriginData([...friends]);
-  // }, [friends]);
+  useEffect(() => {
+    if (!contact.friends.length && !fetched) {
+      fetchFriends({
+        skip: 0,
+        limit: constant.REACT_APP_FRIENDS_PER_LOAD,
+      }).then(({ data }) => {
+        pushFriendsListToContact(data.fetchFriends);
+      });
+    }
+    // setContactData([...friends]);
+    // setOriginData([...friends]);
+  }, [contact, fetched]);
 
   useEffect(() => {
     setCurrentChat(null);
@@ -104,7 +120,7 @@ const Contact = () => {
         <LeftSide theme={colorMode}>
           <Search search={search} onChange={onChangeSearch} />
           <hr />
-          {/* <ListContacts data={contactData.length ? contactData : friends} /> */}
+          <ListContacts data={contact.friends} />
         </LeftSide>
         <RightSide>
           <ChatBoard />

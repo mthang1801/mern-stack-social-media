@@ -135,9 +135,9 @@ export const LIKE_COMMENT_SUBSCRIPTION = gql`
   }
 `;
 
-export const LIKE_POST_SUBSCRIPTION = gql`
-  subscription {
-    likePostSubscription {
+export const LIKE_POST_SUBSCRIPTION_NOTIFICATION = gql`
+  subscription LikePostSubscriptionNotification {
+    likePostSubscriptionNotification {
       _id
       field
       content

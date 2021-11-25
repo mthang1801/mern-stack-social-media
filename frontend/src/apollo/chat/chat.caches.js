@@ -48,6 +48,14 @@ export const addNewConversationToMessagesStorage = (key, value) => {
 export const setInitialMessagesStorage = (data) =>
   messagesStorageVar({ ...data });
 
+/**
+ *
+ * @param {Object} conversation
+ * @param {Array} message
+ * @param {String} scope ["private", "group"]
+ * @param {Boolean} hasSeenLatestMessage
+ * @returns
+ */
 export const setMessagesStorage = (
   conversation,
   message,

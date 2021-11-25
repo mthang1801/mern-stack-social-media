@@ -39,4 +39,17 @@ export const schemaEnum = gql`
     PERSONAL
     GROUP
   }
+
+  enum ReceiverStatusChatEnum {
+    UNRECEIVED
+    RECEIVED
+    SEEN
+    DELETED
+  }
+
+  enum SenderStatusChatEnum {
+    SENT
+    RECALLED
+    DELETED
+  }
 `;

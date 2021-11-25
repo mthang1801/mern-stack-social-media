@@ -107,19 +107,20 @@ const UserSchema = new mongoose.Schema(
       {
         conversationId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'personal-chats',
-          required: true,
+          refPath: 'conversations.conversationScope',
         },
         latestMessage: {
           type: Number,
           default: Date.now,
         },
-        isGroup: {
-          type: Boolean,
-          default: false,
+        conversationScope: {
+          type: String,
+          requried: true,
+          enum: ['users', 'groups'],
         },
       },
     ],
+
     isOnline: {
       type: Boolean,
       default: false,

@@ -59,6 +59,7 @@ const PostCardFooter = ({ post, fetchComments, user }) => {
     }
   };
   const onClickLikePost = () => {
+    console.log(post.likes, user._id);
     if (user) {
       return post.likes.includes(user._id) ? onUnlikePost() : onLikePost();
     }

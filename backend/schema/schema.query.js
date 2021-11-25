@@ -17,6 +17,11 @@ export const schemaQuery = gql`
       skip: Int
       limit: Int
     ): ConversationsResult
+    fetchConversations(
+      except: [ID!]
+      skip: Int
+      limit: Int
+    ): ConversationsResult
     fetchMessages(
       conversationId: ID!
       scope: String!

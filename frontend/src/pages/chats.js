@@ -26,6 +26,7 @@ const ChatConversations = lazy(() =>
 const ChatContacts = lazy(() => import('../components/Chat/Contact'));
 
 const ChatsPage = ({ match }) => {
+  const [fetched, setFetched] = useState(false);
   //use Query
   const user = useReactiveVar(userVar);
   const messagesStorage = useReactiveVar(messagesStorageVar);
@@ -43,15 +44,13 @@ const ChatsPage = ({ match }) => {
   //useState
 
   useChatSubscriptions();
-  console.log(messagesStorage);
   useEffect(() => {
     let _isMounted = true;
-    if (!Object.keys(messagesStorage).length && user) {
+    if (!Object.keys(messagesStorage).length && user && !fetch) {
       //fetch conversations
       let personalMessagesHaveReceiverSentStatus = new Set();
       fetchChatConversations().then(({ data }) => {
         if (_isMounted) {
-          console.log(data);
           const { conversations, numberOfConversations } =
             data.fetchChatConversations;
           let storage = {};
@@ -82,9 +81,10 @@ const ChatsPage = ({ match }) => {
           setNumberOfConversations(numberOfConversations);
         }
       });
+      setFetched(true);
     }
     return () => (_isMounted = false);
-  }, [user, messagesStorage]);
+  }, [user, messagesStorage, fetched]);
   if (!user)
     return (
       <Layout>

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const CREATE_COMMENT_SUBSCIPTION = gql`
-  subscription ($userId: ID!) {
-    createCommentSubscription(userId: $userId) {
+  subscription CreateCommentSubscription {
+    createCommentSubscription {
       _id
       text
       rawText

@@ -12,7 +12,6 @@ import _ from 'lodash';
 import { useQuery, useMutation } from '@apollo/client';
 import { SEARCH_FRIENDS } from '../../apollo/user/user.types';
 import { Wrapper } from './PostEditor/styles/PostEditorBody.styles';
-import { useHistory } from 'react-router-dom';
 import { CommentInput, CommentControls } from './styles/CommentEditor.styles';
 import { useThemeUI } from 'theme-ui';
 import useLanguage from '../Global/useLanguage';
