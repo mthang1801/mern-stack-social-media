@@ -17,7 +17,6 @@ import { CommentInput, CommentControls } from './styles/CommentEditor.styles';
 import { useThemeUI } from 'theme-ui';
 import useLanguage from '../Global/useLanguage';
 import { CREATE_RESPONSE } from '../../apollo/post/post.types';
-import { addNewResponseToComment } from '../../apollo/post/post.caches';
 const CommentEditor = ({
   comment,
   response,
@@ -185,9 +184,6 @@ const CommentEditor = ({
               .querySelector(`[data-target=response-input-${comment._id}]`)
               .querySelector('[contenteditable=false]')
               ?.setAttribute('contenteditable', true);
-
-            const { createResponse } = data;
-            addNewResponseToComment(comment.post, comment._id, createResponse);
           })
           .catch((err) => {
             document

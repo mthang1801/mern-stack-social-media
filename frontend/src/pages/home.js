@@ -70,20 +70,7 @@ const Home = () => {
     };
   });
 
-  useEffect(() => {
-    let unsubscribeLikePost;
-    if (user && subcscribePosts) {
-      unsubscribeLikePost = subcscribePosts({
-        document: LIKE_POST_SUBSCRIPTION,
-        updateQuery: (_, { subscriptionData }) => {
-          if (subscriptionData.data) {
-            const { likePostSubscription } = subscriptionData.data;
-            updateLikePostSubscription(likePostSubscription);
-          }
-        },
-      });
-    }
-  }, [subcscribePosts]);
+  console.log(posts);
 
   useEffect(() => {
     if (user && fetchMore) {

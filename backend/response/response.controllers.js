@@ -207,19 +207,27 @@ export const responseControllers = {
       console.log(error);
     }
   },
-  likeResponse: async (req, responseId, pubsub, likeResponseSubscription) => {
+  likeResponse: async (
+    req,
+    responseId,
+    pubsub,
+    likeResponseSubscriptionNotification,
+    likeResponseSubscription
+  ) => {
     const currentUserId = getAuthUser(req);
-    const response = await Response.findById(responseId).populate({
-      path: 'post',
-      populate: { path: 'author', select: 'slug' },
-    });
+    const response = await Response.findById(responseId)
+      .populate({
+        path: 'post',
+        populate: { path: 'author', select: 'slug' },
+      })
+      .populate({ path: 'author', select: '_id name avatar slug' });
     if (!response || response.likes.includes(currentUserId.toString())) {
       return false;
     }
     const session = await mongoose.startSession();
     session.startTransaction();
     //create notification to like response
-    if (currentUserId.toString() !== response.author.toString()) {
+    if (currentUserId.toString() !== response.author._id.toString()) {
       let notification = await Notification.findOneAndUpdate(
         {
           field: fields.RESPONSE,
@@ -276,21 +284,27 @@ export const responseControllers = {
           $addToSet: { notifications: notification._id },
         });
       }
-      console.log(notification);
-      await pubsub.publish(likeResponseSubscription, {
-        likeResponseSubscription: notification._doc,
+      await pubsub.publish(likeResponseSubscriptionNotification, {
+        likeResponseSubscriptionNotification: notification._doc,
       });
     }
     response.likes.push(currentUserId);
     await response.save();
     await session.commitTransaction();
     session.endSession();
+
+    await pubsub.publish(likeResponseSubscription, {
+      likeResponseSubscription: { ...response._doc, post: response.post._id },
+    });
+    console.log({ ...response._doc, post: response.post._id });
+
     return true;
   },
   removeLikeResponse: async (
     req,
     responseId,
     pubsub,
+    removeLikeResponseSubscriptionNotification,
     removeLikeResponseSubscription
   ) => {
     const currentUserId = getAuthUser(req);
@@ -327,14 +341,17 @@ export const responseControllers = {
           select: '_id',
         });
       if (notification) {
-        await pubsub.publish(removeLikeResponseSubscription, {
-          removeLikeResponseSubscription: notification._doc,
+        await pubsub.publish(removeLikeResponseSubscriptionNotification, {
+          removeLikeResponseSubscriptionNotification: notification._doc,
         });
       }
     }
 
     await session.commitTransaction();
     session.endSession();
+    await pubsub.publish(removeLikeResponseSubscription, {
+      removeLikeResponseSubscription: response._doc,
+    });
     return true;
   },
   removeResponse: async (req, responseId) => {

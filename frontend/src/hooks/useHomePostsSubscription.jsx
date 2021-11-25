@@ -4,9 +4,11 @@ import { FETCH_POSTS } from '../apollo/post/post.queries';
 import {
   CREATE_COMMENT_SUBSCIPTION,
   CREATE_RESPONSE_SUBSCRIPTION,
+  LIKE_RESPONSE_SUBSCRIPTION,
   EDIT_POST_SUBSCRIPTION,
   LIKE_POST_SUBSCRIPTION,
   REMOVE_LIKE_POST_SUBSCRIPTION,
+  REMOVE_LIKE_RESPONSE_SUBSCRIPTION,
 } from '../apollo/post/post.types';
 import { userVar } from '../apollo/cache';
 import {
@@ -15,6 +17,8 @@ import {
   updatePost,
   updateLikePostSubscription,
   removeLikePost,
+  addLikeResponse,
+  removeLikeResponse,
 } from '../apollo/post/post.caches';
 
 const useHomePostsSubscription = () => {
@@ -38,6 +42,42 @@ const useHomePostsSubscription = () => {
       }
     },
   });
+  useSubscription(CREATE_COMMENT_SUBSCIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      if (subscriptionData.data?.createCommentSubscription) {
+        const { createCommentSubscription } = subscriptionData.data;
+        addCommentToPost(
+          createCommentSubscription.post,
+          createCommentSubscription
+        );
+      }
+    },
+  });
+  useSubscription(CREATE_RESPONSE_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      if (subscriptionData.data?.createResponseSubscription) {
+        const { createResponseSubscription } = subscriptionData.data;
+        addNewResponseToComment(createResponseSubscription);
+      }
+    },
+  });
+  useSubscription(LIKE_RESPONSE_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      if (subscriptionData.data.likeResponseSubscription) {
+        const { likeResponseSubscription } = subscriptionData.data;
+        console.log(likeResponseSubscription);
+        addLikeResponse(likeResponseSubscription);
+      }
+    },
+  });
+  useSubscription(REMOVE_LIKE_RESPONSE_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      if (subscriptionData.data.removeLikeResponseSubscription) {
+        const { removeLikeResponseSubscription } = subscriptionData.data;
+        removeLikeResponse(removeLikeResponseSubscription);
+      }
+    },
+  });
 
   const user = useReactiveVar(userVar);
 
@@ -48,38 +88,6 @@ const useHomePostsSubscription = () => {
       unsubscribeUpdatePost;
 
     if (user && subscribePosts) {
-      unsubscribeCreateComment = subscribePosts({
-        document: CREATE_COMMENT_SUBSCIPTION,
-        updateQuery: (_, { subscriptionData }) => {
-          console.log(subscriptionData);
-          if (subscriptionData) {
-            const { createCommentSubscription: comment } =
-              subscriptionData.data;
-
-            if (comment.author._id !== user._id) {
-              addCommentToPost(comment.post, comment);
-            }
-          }
-        },
-      });
-      unsubscribeCreateResponse = subscribePosts({
-        document: CREATE_RESPONSE_SUBSCRIPTION,
-        variables: { userId: user._id },
-        updateQuery: (_, { subscriptionData }) => {
-          console.log(subscriptionData);
-          if (subscriptionData) {
-            const { createResponseSubscription: response } =
-              subscriptionData.data;
-            if (response.author._id !== user._id) {
-              addNewResponseToComment(
-                response.post,
-                response.comment,
-                response
-              );
-            }
-          }
-        },
-      });
       unsubscribeUpdatePost = subscribePosts({
         document: EDIT_POST_SUBSCRIPTION,
         updateQuery: (_, { subscriptionData }) => {

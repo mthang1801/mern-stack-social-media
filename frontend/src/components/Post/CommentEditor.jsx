@@ -115,9 +115,6 @@ const CommentEditor = ({ post }) => {
               .querySelector(`[data-target=comment-input-${post._id}]`)
               .querySelector('[contenteditable=false]')
               ?.setAttribute('contenteditable', true);
-
-            const { createComment } = data;
-            addCommentToPost(post._id, createComment);
           })
           .catch((err) => {
             document

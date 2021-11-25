@@ -28,6 +28,7 @@ export const responseResolvers = {
         req,
         args.responseId,
         pubsub,
+        subscriptionActions.LIKE_RESPONSE_SUBSCRIPTION_NOTIFICATION,
         subscriptionActions.LIKE_RESPONSE_SUBSCRIPTION
       ),
     removeLikeResponse: (_, args, { req }, info) =>
@@ -35,6 +36,7 @@ export const responseResolvers = {
         req,
         args.responseId,
         pubsub,
+        subscriptionActions.REMOVE_LIKE_RESPONSE_SUBSCRIPTION_NOTIFICATION,
         subscriptionActions.REMOVE_LIKE_RESPONSE_SUBSCRIPTION
       ),
     removeResponse: (_, args, { req }) =>
@@ -67,9 +69,21 @@ export const responseResolvers = {
       subscribe: () =>
         pubsub.asyncIterator(subscriptionActions.CREATE_RESPONSE_SUBSCRIPTION),
     },
+    likeResponseSubscriptionNotification: {
+      subscribe: () =>
+        pubsub.asyncIterator(
+          subscriptionActions.LIKE_RESPONSE_SUBSCRIPTION_NOTIFICATION
+        ),
+    },
     likeResponseSubscription: {
       subscribe: () =>
         pubsub.asyncIterator(subscriptionActions.LIKE_RESPONSE_SUBSCRIPTION),
+    },
+    removeLikeResponseSubscriptionNotification: {
+      subscribe: () =>
+        pubsub.asyncIterator(
+          subscriptionActions.REMOVE_LIKE_RESPONSE_SUBSCRIPTION_NOTIFICATION
+        ),
     },
     removeLikeResponseSubscription: {
       subscribe: () =>

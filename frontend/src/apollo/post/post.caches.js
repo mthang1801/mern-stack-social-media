@@ -65,64 +65,103 @@ export const addLikeComment = (postId, commentId, userId) => {
   return postsVar(updatedPost);
 };
 
-export const addLikeResponse = (postId, commentId, responseId, userId) => {
-  const posts = [...postsVar()];
-  const findPostByPostId = posts.find((post) => post._id === postId);
-  if (!findPostByPostId || (findPostByPostId && !findPostByPostId.commentsData))
-    return;
-  const findCommentsDataByCommentId = findPostByPostId.commentsData.find(
-    (comment) => comment._id === commentId
-  );
-  if (
-    !findCommentsDataByCommentId ||
-    (findCommentsDataByCommentId && !findCommentsDataByCommentId.responsesData)
-  )
-    return;
-  const findResponsesByResponseId =
-    findCommentsDataByCommentId.responsesData.find(
-      (response) => response._id === responseId
-    );
-  if (!findResponsesByResponseId) return;
+// export const addLikeResponse = (postId, commentId, responseId, userId) => {
+//   const posts = [...postsVar()];
+//   const findPostByPostId = posts.find((post) => post._id === postId);
+//   if (!findPostByPostId || (findPostByPostId && !findPostByPostId.commentsData))
+//     return;
+//   const findCommentsDataByCommentId = findPostByPostId.commentsData.find(
+//     (comment) => comment._id === commentId
+//   );
+//   if (
+//     !findCommentsDataByCommentId ||
+//     (findCommentsDataByCommentId && !findCommentsDataByCommentId.responsesData)
+//   )
+//     return;
+//   const findResponsesByResponseId =
+//     findCommentsDataByCommentId.responsesData.find(
+//       (response) => response._id === responseId
+//     );
+//   if (!findResponsesByResponseId) return;
 
-  const updatedPost = posts.map((post) => {
-    let _post = { ...post };
-    if (_post._id === postId) {
-      _post.commentsData = _post.commentsData.map((comment) => {
-        let _comment = { ...comment };
-        if (_comment._id === commentId) {
-          _comment.responsesData = _comment.responsesData.map((response) => {
-            let _response = { ...response };
-            if (_response._id === responseId) {
-              _response.likes = [userId, ..._response.likes];
-            }
-            return { ..._response };
-          });
-        }
-        return { ..._comment };
-      });
+//   const updatedPost = posts.map((post) => {
+//     let _post = { ...post };
+//     if (_post._id === postId) {
+//       _post.commentsData = _post.commentsData.map((comment) => {
+//         let _comment = { ...comment };
+//         if (_comment._id === commentId) {
+//           _comment.responsesData = _comment.responsesData.map((response) => {
+//             let _response = { ...response };
+//             if (_response._id === responseId) {
+//               _response.likes = [userId, ..._response.likes];
+//             }
+//             return { ..._response };
+//           });
+//         }
+//         return { ..._comment };
+//       });
+//     }
+//     return { ..._post };
+//   });
+
+//   return postsVar(updatedPost);
+// };
+
+export const addLikeResponse = (responseData) => {
+  const posts = postsVar();
+
+  const specificPost = posts.find((post) => post._id === responseData.post);
+  if (!specificPost || !specificPost.commentsData) return;
+  const specificComments = specificPost.commentsData.find(
+    (commentItem) => commentItem._id === responseData.comment
+  );
+  if (!specificComments) return;
+  const specificResponse = specificComments.responsesData.find(
+    (response) => response._id === responseData._id
+  );
+  if (!specificResponse) return;
+  const updatedPosts = posts.map((post) => {
+    if (post._id === responseData.post) {
+      return {
+        ...post,
+        commentsData: post.commentsData.map((comment) => {
+          if (comment._id === responseData.comment) {
+            return {
+              ...comment,
+              responsesData: comment.responsesData.map((response) => {
+                if (response._id === responseData._id) {
+                  return responseData;
+                }
+                return response;
+              }),
+            };
+          }
+          return comment;
+        }),
+      };
     }
-    return { ..._post };
+    return post;
   });
 
-  return postsVar(updatedPost);
+  postsVar(updatedPosts);
 };
 
-export const addNewResponseToComment = (postId, commentId, newResponse) => {
+export const addNewResponseToComment = (newResponse) => {
   const posts = [...postsVar()];
-  const specificPost = posts.find((post) => post._id === postId);
+  const specificPost = posts.find((post) => post._id === newResponse.post);
   if (!specificPost || !specificPost.commentsData) return;
   const specificCommentsData = specificPost.commentsData.find(
-    (commentItem) => commentItem._id === commentId
+    (commentItem) => commentItem._id === newResponse.comment
   );
   if (!specificCommentsData) return;
 
   const updatedPost = posts.map((post) => {
     let _post = { ...post };
-    if (_post._id === postId) {
+    if (_post._id === newResponse.post) {
       _post.responses = [newResponse._id, ..._post.responses];
       _post.commentsData = _post.commentsData.map((comment) => {
         let _comment = { ...comment };
-        if (_comment._id === commentId) {
+        if (_comment._id === newResponse.comment) {
           _comment.responses = [newResponse._id, ..._comment.responses];
           _comment.responsesData = _comment.responsesData
             ? [{ ...newResponse }, ..._comment.responsesData]
@@ -195,47 +234,82 @@ export const removeLikeComment = (postId, commentId, userId) => {
   return postsVar(updatedPost);
 };
 
-export const removeLikeResponse = (postId, commentId, responseId, userId) => {
-  const posts = [...postsVar()];
+export const removeLikeResponse = (responseData) => {
+  // const posts = [...postsVar()];
 
-  const findPostByPostId = posts.find((post) => post._id === postId);
-  if (!findPostByPostId || (findPostByPostId && !findPostByPostId.commentsData))
-    return;
-  const findCommentsDataByCommentId = findPostByPostId.commentsData.find(
-    (comment) => comment._id === commentId
+  // const findPostByPostId = posts.find((post) => post._id === postId);
+  // if (!findPostByPostId || (findPostByPostId && !findPostByPostId.commentsData))
+  //   return;
+  // const findCommentsDataByCommentId = findPostByPostId.commentsData.find(
+  //   (comment) => comment._id === commentId
+  // );
+  // if (
+  //   !findCommentsDataByCommentId ||
+  //   (findCommentsDataByCommentId && !findCommentsDataByCommentId.responsesData)
+  // )
+  //   return;
+  // const findResponsesByResponseId =
+  //   findCommentsDataByCommentId.responsesData.find(
+  //     (response) => response._id === responseId
+  //   );
+  // if (!findResponsesByResponseId) return;
+
+  // const updatedPost = posts.map((post) => {
+  //   let _post = { ...post };
+  //   if (_post._id === postId) {
+  //     _post.commentsData = _post.commentsData.map((comment) => {
+  //       let _comment = { ...comment };
+  //       if (_comment._id === commentId) {
+  //         _comment.responsesData = _comment.responsesData.map((response) => {
+  //           let _response = { ...response };
+  //           if (_response._id === responseId) {
+  //             _response.likes = _response.likes.filter((_id) => _id !== userId);
+  //           }
+  //           return { ..._response };
+  //         });
+  //       }
+  //       return { ..._comment };
+  //     });
+  //   }
+  //   return { ..._post };
+  // });
+
+  // return postsVar(updatedPost);
+  const posts = postsVar();
+  const specificPost = posts.find((post) => post._id === responseData.post);
+  if (!specificPost || !specificPost.commentsData) return;
+  const specificComments = specificPost.commentsData.find(
+    (commentItem) => commentItem._id === responseData.comment
   );
-  if (
-    !findCommentsDataByCommentId ||
-    (findCommentsDataByCommentId && !findCommentsDataByCommentId.responsesData)
-  )
-    return;
-  const findResponsesByResponseId =
-    findCommentsDataByCommentId.responsesData.find(
-      (response) => response._id === responseId
-    );
-  if (!findResponsesByResponseId) return;
-
-  const updatedPost = posts.map((post) => {
-    let _post = { ...post };
-    if (_post._id === postId) {
-      _post.commentsData = _post.commentsData.map((comment) => {
-        let _comment = { ...comment };
-        if (_comment._id === commentId) {
-          _comment.responsesData = _comment.responsesData.map((response) => {
-            let _response = { ...response };
-            if (_response._id === responseId) {
-              _response.likes = _response.likes.filter((_id) => _id !== userId);
-            }
-            return { ..._response };
-          });
-        }
-        return { ..._comment };
-      });
+  if (!specificComments) return;
+  const specificResponse = specificComments.responsesData.find(
+    (response) => response._id === responseData._id
+  );
+  if (!specificResponse) return;
+  const updatedPosts = posts.map((post) => {
+    if (post._id === responseData.post) {
+      return {
+        ...post,
+        commentsData: post.commentsData.map((comment) => {
+          if (comment._id === responseData.comment) {
+            return {
+              ...comment,
+              responsesData: comment.responsesData.map((response) => {
+                if (response._id === responseData._id) {
+                  return { ...response, ...responseData };
+                }
+                return response;
+              }),
+            };
+          }
+          return comment;
+        }),
+      };
     }
-    return { ..._post };
+    return post;
   });
 
-  return postsVar(updatedPost);
+  postsVar(updatedPosts);
 };
 
 export const removeResponse = (postId, commentId, responseId) => {

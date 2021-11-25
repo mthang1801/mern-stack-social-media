@@ -168,9 +168,9 @@ export const LIKE_POST_SUBSCRIPTION_NOTIFICATION = gql`
   }
 `;
 
-export const LIKE_RESPONSE_SUBSCRIPTION = gql`
+export const LIKE_RESPONSE_SUBSCRIPTION_NOTIFICATION = gql`
   subscription {
-    likeResponseSubscription {
+    likeResponseSubscriptionNotification {
       _id
       field
       content
@@ -432,7 +432,7 @@ export const REMOVE_LIKE_POST_SUBSCRIPTION = gql`
 
 export const REMOVE_LIKE_RESPONSE_SUBSCRIPTION = gql`
   subscription {
-    removeLikeResponseSubscription {
+    removeLikeResponseSubscriptionNotification {
       _id
       field
       content

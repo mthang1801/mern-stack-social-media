@@ -43,6 +43,39 @@ export const CREATE_RESPONSE_SUBSCRIPTION = gql`
   }
 `;
 
+export const LIKE_RESPONSE_SUBSCRIPTION = gql`
+  subscription LikeResponseSubscription {
+    likeResponseSubscription {
+      _id
+      text
+      shortenText
+      rawText
+      author {
+        _id
+        name
+        slug
+        avatar
+      }
+      comment
+      post
+      likes
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const REMOVE_LIKE_RESPONSE_SUBSCRIPTION = gql`
+  subscription RemoveLikeResponseSubscription {
+    removeLikeResponseSubscription {
+      _id
+      comment
+      post
+      likes
+    }
+  }
+`;
+
 export const EDIT_POST_SUBSCRIPTION = gql`
   subscription EditPost {
     editPostSubscription {

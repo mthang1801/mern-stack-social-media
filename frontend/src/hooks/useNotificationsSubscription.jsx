@@ -29,7 +29,7 @@ import {
   CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   LIKE_COMMENT_SUBSCRIPTION,
   LIKE_POST_SUBSCRIPTION_NOTIFICATION,
-  LIKE_RESPONSE_SUBSCRIPTION,
+  LIKE_RESPONSE_SUBSCRIPTION_NOTIFICATION,
   NOTIFY_MENTIONED_USERS_IN_COMMENT_SUBSCRIPTION,
   NOTIFY_MENTIONED_USERS_IN_POST,
   NOTIFY_MENTIONED_USERS_IN_RESPONSE,
@@ -227,7 +227,6 @@ const useNotificationsPostSubscription = () => {
         updateQuery: (prev, { subscriptionData }) => {
           if (subscriptionData) {
             const { notifyMentionedUsersInPost } = subscriptionData.data;
-            console.log(notifyMentionedUsersInPost);
             updatedAddNotification(notifyMentionedUsersInPost);
           }
         },
@@ -339,22 +338,17 @@ const useNotificationsPostSubscription = () => {
         },
       });
       unsubscribeUserLikeResponse = subscribeToMoreNotifications({
-        document: LIKE_RESPONSE_SUBSCRIPTION,
+        document: LIKE_RESPONSE_SUBSCRIPTION_NOTIFICATION,
         updateQuery: (_, { subscriptionData }) => {
           if (subscriptionData) {
-            const { likeResponseSubscription } = subscriptionData.data;
-            if (likeResponseSubscription.receiver.toString() === user._id) {
-              updatedAddNotification(likeResponseSubscription);
-            }
-            const { post, comment, response } =
-              likeResponseSubscription.fieldIdentity;
-            if (likeResponseSubscription.creator._id.toString() !== user._id) {
-              addLikeResponse(
-                post._id,
-                comment._id,
-                response._id,
-                likeResponseSubscription.creator._id
-              );
+            const { likeResponseSubscriptionNotification } =
+              subscriptionData.data;
+            console.log(likeResponseSubscriptionNotification);
+            if (
+              likeResponseSubscriptionNotification.receiver.toString() ===
+              user._id
+            ) {
+              updatedAddNotification(likeResponseSubscriptionNotification);
             }
           }
         },
@@ -368,18 +362,6 @@ const useNotificationsPostSubscription = () => {
               removeLikeResponseSubscription.receiver.toString() === user._id
             ) {
               updatedRemoveNotification(removeLikeResponseSubscription);
-            }
-            const { post, comment, response } =
-              removeLikeResponseSubscription.fieldIdentity;
-            if (
-              removeLikeResponseSubscription.creator._id.toString() !== user._id
-            ) {
-              removeLikeResponse(
-                post._id,
-                comment._id,
-                response._id,
-                removeLikeResponseSubscription.creator._id
-              );
             }
           }
         },

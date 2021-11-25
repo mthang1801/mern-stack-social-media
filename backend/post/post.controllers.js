@@ -377,7 +377,6 @@ export const postControllers = {
       await User.findByIdAndUpdate(notification.receiver, {
         $pull: { notifications: notification._id },
       });
-      console.log(notification);
       await pubsub.publish(removeLikePostSubscriptionNotification, {
         removeLikePostSubscriptionNotification: notification._doc,
       });
