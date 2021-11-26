@@ -96,39 +96,15 @@ const useCurrentPersonalSubscription = () => {
     },
   });
 
-  useEffect(() => {
-    let unsubscribeLikePost,
-      unsubscribeCreateComment,
-      unsubscribeCreateResponse,
-      unsubscribeUpdatePost;
-
-    if (user && subscribePosts) {
-      unsubscribeUpdatePost = subscribePosts({
-        document: EDIT_POST_SUBSCRIPTION,
-        updateQuery: (_, { subscriptionData }) => {
-          console.log(subscriptionData);
-          if (subscriptionData) {
-            const { editPostSubscription } = subscriptionData.data;
-            updatePost(editPostSubscription);
-          }
-        },
-      });
-    }
-    return () => {
-      if (unsubscribeLikePost) {
-        unsubscribeLikePost();
+  useSubscription(EDIT_POST_SUBSCRIPTION, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      console.log(subscriptionData);
+      if (subscriptionData.data?.editPostSubscription) {
+        const { editPostSubscription } = subscriptionData.data;
+        updatePost(editPostSubscription);
       }
-      if (unsubscribeCreateComment) {
-        unsubscribeCreateComment();
-      }
-      if (unsubscribeCreateResponse) {
-        unsubscribeCreateResponse();
-      }
-      if (unsubscribeUpdatePost) {
-        unsubscribeUpdatePost();
-      }
-    };
-  }, [user, subscribePosts]);
+    },
+  });
 };
 
 export default useCurrentPersonalSubscription;

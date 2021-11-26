@@ -9,9 +9,9 @@ export const commentResolvers = {
       commentControllers.fetchComments(
         req,
         args.postId,
-        args.except,
-        args.skip || 0,
-        args.limit || constant.POSTS_PER_PAGE
+        (args.except = []),
+        (args.skip = 0),
+        (args.limit = constant.POSTS_PER_PAGE)
       ),
   },
   Mutation: {

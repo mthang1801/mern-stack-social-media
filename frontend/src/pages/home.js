@@ -67,8 +67,6 @@ const Home = () => {
     };
   });
 
-  console.log(posts);
-
   useEffect(() => {
     if (user && fetchMore) {
       const skip = posts.length;

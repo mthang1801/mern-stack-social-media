@@ -15,9 +15,8 @@ import { contents, fields } from '../notification';
 export const commentControllers = {
   fetchComments: async (req, postId, except, skip, limit) => {
     try {
-      if (!except) {
-        except = [];
-      }
+      console.log(postId, except, skip, limit);
+
       const post = await Post.findById(postId).populate({
         path: 'comments',
         populate: {

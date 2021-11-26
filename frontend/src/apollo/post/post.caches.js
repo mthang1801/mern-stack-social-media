@@ -15,23 +15,6 @@ export const pushNewPostToPostsList = (newPost) => {
   return postsVar([{ ...newPost }, ...posts]);
 };
 
-export const addCommentsToPost = (postId, newComments) => {
-  const posts = [...postsVar()];
-  const post = posts.find((postItem) => postItem._id === postId);
-  if (post) {
-    const updatedPosts = posts.map((post) => {
-      let _post = { ...post };
-      if (_post._id === postId) {
-        _post.commentsData = _post.commentsData
-          ? [..._post.commentsData, ...newComments]
-          : [...newComments];
-      }
-      return { ..._post };
-    });
-    return postsVar(updatedPosts);
-  }
-};
-
 export const addCommentToPost = (newComment) => {
   const posts = [...postsVar()];
   if (posts.some((post) => post._id === newComment.post)) {
@@ -321,26 +304,6 @@ export const addNewResponseToCommentAtPersonalUser = (newResponse) => {
   currentPersonalUserVar(updatedCurrentPersonalPostUser);
 };
 
-export const addResponsesToComment = (postId, commentId, responses) => {
-  const posts = [...postsVar()];
-  const updatedPosts = posts.map((post) => {
-    let _post = { ...post };
-    if (_post._id === postId && _post.commentsData) {
-      _post.commentsData = _post.commentsData.map((comment) => {
-        let _comment = { ...comment };
-        if (_comment._id === commentId) {
-          _comment.responsesData = _comment.responsesData
-            ? [..._comment.responsesData, ...responses]
-            : [...responses];
-        }
-        return { ..._comment };
-      });
-    }
-    return { ..._post };
-  });
-  return postsVar([...updatedPosts]);
-};
-
 export const removeComment = (postId, commentId) => {
   const posts = [...postsVar()];
   const updatedPosts = posts.map((post) => {
@@ -544,16 +507,32 @@ export const updateLikePostSubscription = (likedPost) => {
 };
 
 export const updatePost = (editedPost) => {
-  const posts = [...postsVar()];
+  //At home page
+  const posts = postsVar();
   if (posts.some((post) => post._id === editedPost._id)) {
     const updatedPost = posts.map((post) => {
-      let _post = { ...post };
-      if (_post._id === editedPost._id) {
-        return { ..._post, ...editedPost };
+      if (post._id === editedPost._id) {
+        return { ...post, ...editedPost };
       }
-      return { ..._post };
+      return post;
     });
     return postsVar(updatedPost);
+  }
+  // At current personal user
+  const currentPersonalUser = currentPersonalUserVar();
+  if (
+    currentPersonalUser?.postsData?.some((post) => post._id === editedPost._id)
+  ) {
+    const updatedPosts = {
+      ...currentPersonalUser,
+      postsData: currentPersonalUser.postsData.map((post) => {
+        if (post._id === editedPost._id) {
+          return { ...post, ...editedPost };
+        }
+        return post;
+      }),
+    };
+    currentPersonalUserVar(updatedPosts);
   }
 };
 
@@ -693,8 +672,24 @@ export const userRemoveLikePost = (userId, postId) => {
   postsVar(updatedPosts);
 };
 
-export const addCommentsToPostInPersonalUser = (postId, comments) => {
-  let currentUser = { ...currentPersonalUserVar() };
+export const addFetchedCommentsToPost = (postId, comments) => {
+  // At home page
+  const posts = postsVar();
+  if (posts.some((post) => post._id === postId)) {
+    const updatedPosts = posts.map((post) => {
+      if (post._id === postId) {
+        return {
+          ...post,
+          commentsData: post.commentsData
+            ? [...post.commentsData, ...comments]
+            : [...comments],
+        };
+      }
+      return post;
+    });
+    postsVar(updatedPosts);
+  }
+  let currentUser = currentPersonalUserVar();
   if (currentUser?.postsData?.some((post) => post._id === postId)) {
     const updatedPosts = currentUser.postsData.map((post) => {
       let _post = { ...post };
@@ -708,15 +703,32 @@ export const addCommentsToPostInPersonalUser = (postId, comments) => {
       }
       return { ..._post };
     });
-    return currentPersonalUserVar({ ...currentUser, postsData: updatedPosts });
+    currentPersonalUserVar({ ...currentUser, postsData: updatedPosts });
   }
 };
 
-export const addResponsesToCommentInPersonalUser = (
-  postId,
-  commentId,
-  responses
-) => {
+export const addResponsesToComment = (postId, commentId, responses) => {
+  //At home pag
+  const posts = postsVar();
+  const updatedPosts = posts.map((post) => {
+    if (post._id === postId && post.commentsData) {
+      let cloned_post = { ...post };
+      cloned_post.commentsData = cloned_post.commentsData.map((comment) => {
+        if (comment._id === commentId) {
+          let cloned_comment = { ...comment };
+          cloned_comment.responsesData = cloned_comment.responsesData
+            ? [...cloned_comment.responsesData, ...responses]
+            : [...responses];
+        }
+        return comment;
+      });
+      return cloned_post;
+    }
+    return post;
+  });
+  postsVar([...updatedPosts]);
+
+  // At current personal user
   let currentUser = { ...currentPersonalUserVar() };
   if (currentUser?.postsData?.some((post) => post._id === postId)) {
     const updatedPosts = currentUser.postsData.map((post) => {
@@ -725,19 +737,20 @@ export const addResponsesToCommentInPersonalUser = (
         post?.commentsData.some((comment) => comment._id === commentId)
       ) {
         const updatedComments = post.commentsData.map((comment) => {
-          const _comment = { ...comment };
-          if (_comment._id === commentId) {
-            _comment.responsesData = _comment.responsesData
-              ? [..._comment.responsesData, ...responses]
+          if (comment._id === commentId) {
+            let cloned_comment = { ...comment };
+            cloned_comment.responsesData = cloned_comment.responsesData
+              ? [...cloned_comment.responsesData, ...responses]
               : [...responses];
+            return cloned_comment;
           }
-          return { ..._comment };
+          return comment;
         });
         return { ...post, commentsData: updatedComments };
       }
       return { ...post };
     });
-    return currentPersonalUserVar({ ...currentUser, postsData: updatedPosts });
+    currentPersonalUserVar({ ...currentUser, postsData: updatedPosts });
   }
 };
 

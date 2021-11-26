@@ -11,8 +11,7 @@ import { userVar } from '../../apollo/cache';
 import useLanguage from '../Global/useLanguage';
 import { EditorState, convertFromRaw } from 'draft-js';
 import EditPostDialog from './EditPostDialog';
-import { addCommentsToPost } from '../../apollo/post/post.caches';
-import { addCommentsToPostInPersonalUser } from '../../apollo/post/post.caches';
+import { addFetchedCommentsToPost } from '../../apollo/post/post.caches';
 
 const PostCard = ({ post }) => {
   const { colorMode } = useThemeUI();
@@ -34,21 +33,19 @@ const PostCard = ({ post }) => {
   const onFetchComments = () => {
     setLoading(true);
     fetchComments({ postId: post._id }).then(({ data }) => {
+      console.log(data);
       if (data.fetchComments) {
-        addCommentsToPost(post._id, data.fetchComments);
-        addCommentsToPostInPersonalUser(post._id, data.fetchComments);
+        addFetchedCommentsToPost(post._id, data.fetchComments);
       }
       setLoading(false);
     });
   };
 
   const onFetchMoreComments = () => {
-    setLoading(true);
     const skip = post.commentsData.length;
     fetchComments({ postId: post._id, skip }).then(({ data }) => {
       if (data.fetchComments) {
-        addCommentsToPost(post._id, data.fetchComments);
-        addCommentsToPostInPersonalUser(post._id, data.fetchComments);
+        addFetchedCommentsToPost(post._id, data.fetchComments);
       }
       setLoading(false);
     });
