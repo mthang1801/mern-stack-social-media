@@ -31,6 +31,7 @@ import {
   removeResponse as removeResponseInCache,
 } from '../../apollo/post/post.caches';
 import { setAlertDialog } from '../../apollo/controls/controls.caches';
+import constant from '../../constant/constant';
 const CommentItem = ({ comment, user }) => {
   const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
@@ -117,18 +118,20 @@ const CommentItem = ({ comment, user }) => {
   );
 
   const onLoadResponses = () => {
-    fetchResponses({ commentId: comment._id, skip: 0, limit: 3 }).then(
-      ({ data }) => {
-        if (data.fetchResponses) {
-          addResponsesToComment(comment.post, comment._id, data.fetchResponses);
+    fetchResponses({
+      commentId: comment._id,
+      skip: 0,
+      limit: constant.REACT_APP_RESPONSES_PER_COMMENT,
+    }).then(({ data }) => {
+      if (data.fetchResponses) {
+        addResponsesToComment(comment.post, comment._id, data.fetchResponses);
 
-          if (!showResponse) {
-            setShowResponse(true);
-            setFocusResponseEditor(true);
-          }
+        if (!showResponse) {
+          setShowResponse(true);
+          setFocusResponseEditor(true);
         }
       }
-    );
+    });
   };
 
   const onLoadMoreResponses = () => {
@@ -144,6 +147,8 @@ const CommentItem = ({ comment, user }) => {
       }
     });
   };
+
+  console.log(comment);
   return (
     <Wrapper>
       <CommentCard

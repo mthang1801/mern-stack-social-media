@@ -16,7 +16,8 @@ export const pushNewPostToPostsList = (newPost) => {
 };
 
 export const addCommentToPost = (newComment) => {
-  const posts = [...postsVar()];
+  const posts = postsVar();
+
   if (posts.some((post) => post._id === newComment.post)) {
     const updatedPosts = posts.map((post) => {
       let _post = { ...post };
@@ -719,6 +720,7 @@ export const addResponsesToComment = (postId, commentId, responses) => {
           cloned_comment.responsesData = cloned_comment.responsesData
             ? [...cloned_comment.responsesData, ...responses]
             : [...responses];
+          return cloned_comment;
         }
         return comment;
       });
@@ -726,7 +728,8 @@ export const addResponsesToComment = (postId, commentId, responses) => {
     }
     return post;
   });
-  postsVar([...updatedPosts]);
+  console.log(updatedPosts);
+  postsVar(updatedPosts);
 
   // At current personal user
   let currentUser = { ...currentPersonalUserVar() };

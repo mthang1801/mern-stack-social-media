@@ -48,4 +48,4 @@ function AlertDialogSlide() {
   );
 }
 
-export default React.memo(AlertDialogSlide);
+export default AlertDialogSlide;

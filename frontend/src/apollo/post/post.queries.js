@@ -63,7 +63,7 @@ export const FETCH_COMMENTS = gql`
 `;
 
 export const FETCH_RESPONSES = gql`
-  query ($commentId: ID!, $skip: Int, $limit: Int) {
+  query FetchResponses($commentId: ID!, $skip: Int, $limit: Int) {
     fetchResponses(commentId: $commentId, skip: $skip, limit: $limit) {
       _id
       text

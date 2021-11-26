@@ -84,6 +84,8 @@ const Home = () => {
     setToggleFriendsBoard();
   }, []);
 
+  console.log(posts);
+
   return (
     <Layout>
       <MainBody>

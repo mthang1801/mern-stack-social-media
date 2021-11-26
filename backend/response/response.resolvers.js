@@ -8,8 +8,8 @@ export const responseResolvers = {
     fetchResponses: (_, args, { req }, info) =>
       responseControllers.fetchResponses(
         args.commentId,
-        args.skip || 0,
-        args.limit || constant.COMMENTS_PER_POST
+        (args.skip = 0),
+        (args.limit = constant.COMMENTS_PER_POST)
       ),
   },
   Mutation: {

@@ -58,6 +58,8 @@ const PostCard = ({ post }) => {
       );
     }
   }, [isEdited]);
+
+  console.log(post.commentsData);
   return (
     <Wrapper theme={colorMode}>
       <EditPostDialog

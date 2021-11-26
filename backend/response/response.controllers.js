@@ -14,6 +14,7 @@ import mongoose from 'mongoose';
 export const responseControllers = {
   fetchResponses: async (commentId, skip, limit) => {
     try {
+      console.log(commentId, skip, limit);
       const comment = await Comment.findById(commentId).populate({
         path: 'responses',
         populate: { path: 'author', select: 'name avatar slug' },
