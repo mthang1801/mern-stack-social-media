@@ -93,44 +93,31 @@ export const CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION = gql`
 `;
 
 export const LIKE_COMMENT_SUBSCRIPTION = gql`
-  subscription {
-    likeCommentSubscription {
-      comment {
+  subscription LikeCommentSubscriptionNotification {
+    likeCommentSubscriptionNotification {
+      _id
+      field
+      content
+      url
+      hasSeen
+      creator {
         _id
-        post
-        likes
-        author {
+        name
+        avatar
+        slug
+      }
+      fieldIdentity {
+        post {
           _id
-          name
-          slug
+        }
+        comment {
+          _id
+          shortenText
         }
       }
-
-      notification {
-        _id
-        field
-        content
-        url
-        hasSeen
-        creator {
-          _id
-          name
-          avatar
-          slug
-        }
-        fieldIdentity {
-          post {
-            _id
-          }
-          comment {
-            _id
-            shortenText
-          }
-        }
-        receiver
-        createdAt
-        updatedAt
-      }
+      receiver
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -379,44 +366,31 @@ export const POST_CREATED_SUBSCRIPTIONS = gql`
 `;
 
 export const REMOVE_LIKE_COMMENT_SUBSCRIPTION = gql`
-  subscription {
-    removeLikeCommentSubscription {
-      comment {
+  subscription RemoveLikeCommentSubscriptionNotification {
+    removeLikeCommentSubscriptionNotification {
+      _id
+      field
+      content
+      url
+      hasSeen
+      creator {
         _id
-        post
-        likes
-        author {
+        name
+        avatar
+        slug
+      }
+      fieldIdentity {
+        post {
           _id
-          name
-          slug
+        }
+        comment {
+          _id
+          shortenText
         }
       }
-
-      notification {
-        _id
-        field
-        content
-        url
-        hasSeen
-        creator {
-          _id
-          name
-          avatar
-          slug
-        }
-        fieldIdentity {
-          post {
-            _id
-          }
-          comment {
-            _id
-            shortenText
-          }
-        }
-        receiver
-        createdAt
-        updatedAt
-      }
+      receiver
+      createdAt
+      updatedAt
     }
   }
 `;

@@ -17,10 +17,7 @@ import LazyLoad from 'react-lazyload';
 import { userVar, toggleFriendsBoardVar, postsVar } from '../apollo/cache';
 import { setToggleFriendsBoard } from '../apollo/controls/controls.caches';
 import { FETCH_POSTS } from '../apollo/post/post.queries';
-import {
-  addFetchedPostToCache,
-  updateLikePostSubscription,
-} from '../apollo/post/post.caches';
+import { addFetchedPostToCache } from '../apollo/post/post.caches';
 import { LIKE_POST_SUBSCRIPTION } from '../apollo/post/post.types';
 import constant from '../constant/constant';
 const Home = () => {

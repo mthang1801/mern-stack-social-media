@@ -21,6 +21,37 @@ export const CREATE_COMMENT_SUBSCIPTION = gql`
   }
 `;
 
+export const LIKE_COMMENT_SUBSCRIPTION = gql`
+  subscription LikeCommentSubcription {
+    likeCommentSubscription {
+      _id
+      text
+      rawText
+      author {
+        _id
+        name
+        avatar
+        slug
+      }
+      post
+      likes
+      responses
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const REMOVE_LIKE_COMMENT_SUBSCRIPTION = gql`
+  subscription LikeCommentSubcription {
+    removeLikeCommentSubscription {
+      _id
+      post
+      likes
+    }
+  }
+`;
+
 export const CREATE_RESPONSE_SUBSCRIPTION = gql`
   subscription {
     createResponseSubscription {
@@ -69,9 +100,20 @@ export const REMOVE_LIKE_RESPONSE_SUBSCRIPTION = gql`
   subscription RemoveLikeResponseSubscription {
     removeLikeResponseSubscription {
       _id
+      text
+      shortenText
+      rawText
+      author {
+        _id
+        name
+        slug
+        avatar
+      }
       comment
       post
       likes
+      createdAt
+      updatedAt
     }
   }
 `;

@@ -5,7 +5,6 @@ import {
   LIKE_RESPONSE,
   REMOVE_LIKE_RESPONSE,
 } from '../../apollo/post/post.types';
-import { removeLikeResponse as removeLikeResponseInCache } from '../../apollo/post/post.caches';
 import { setAlertDialog } from '../../apollo/controls/controls.caches';
 import useLanguage from '../Global/useLanguage';
 const Responses = ({ responses, user, onClickResponse }) => {

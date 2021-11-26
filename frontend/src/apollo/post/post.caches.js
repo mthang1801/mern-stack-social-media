@@ -32,96 +32,155 @@ export const addCommentsToPost = (postId, newComments) => {
   }
 };
 
-export const addCommentToPost = (postId, newComment) => {
+export const addCommentToPost = (newComment) => {
   const posts = [...postsVar()];
-  const updatedPosts = posts.map((post) => {
-    let _post = { ...post };
-    if (_post._id === postId) {
-      _post.comments = [newComment._id, ..._post.comments];
-      _post.commentsData = _post.commentsData
-        ? [{ ...newComment }, ..._post.commentsData]
-        : [{ ...newComment }];
-    }
-    return { ..._post };
-  });
-  return postsVar(updatedPosts);
-};
-
-export const addLikeComment = (postId, commentId, userId) => {
-  const posts = [...postsVar()];
-  const updatedPost = posts.map((post) => {
-    let _post = { ...post };
-    if (_post._id === postId && _post.commentsData) {
-      _post.commentsData = _post.commentsData.map((comment) => {
-        let _comment = { ...comment };
-        if (_comment._id === commentId) {
-          _comment.likes = [...new Set([userId, ..._comment.likes])];
+  if (posts.some((post) => post._id === newComment.post)) {
+    const updatedPosts = posts.map((post) => {
+      let _post = { ...post };
+      if (_post._id === newComment.post) {
+        _post.comments = [newComment._id, ..._post.comments];
+        _post.commentsData = _post.commentsData
+          ? [{ ...newComment }, ..._post.commentsData]
+          : [{ ...newComment }];
+      }
+      return { ..._post };
+    });
+    postsVar(updatedPosts);
+  }
+  const curerntPersonalUser = currentPersonalUserVar();
+  if (
+    curerntPersonalUser?.postsData?.some((post) => post._id === newComment.post)
+  ) {
+    const updatedCurrentPostsUser = {
+      ...curerntPersonalUser,
+      postsData: curerntPersonalUser.postsData.map((post) => {
+        let _post = { ...post };
+        if (_post._id === newComment.post) {
+          _post.comments = [newComment._id, ..._post.comments];
+          _post.commentsData = _post.commentsData
+            ? [{ ...newComment }, ..._post.commentsData]
+            : [{ ...newComment }];
         }
-        return { ..._comment };
-      });
-    }
-    return { ..._post };
-  });
-  return postsVar(updatedPost);
+        return { ..._post };
+      }),
+    };
+    currentPersonalUserVar(updatedCurrentPostsUser);
+  }
 };
 
-// export const addLikeResponse = (postId, commentId, responseId, userId) => {
-//   const posts = [...postsVar()];
-//   const findPostByPostId = posts.find((post) => post._id === postId);
-//   if (!findPostByPostId || (findPostByPostId && !findPostByPostId.commentsData))
-//     return;
-//   const findCommentsDataByCommentId = findPostByPostId.commentsData.find(
-//     (comment) => comment._id === commentId
-//   );
-//   if (
-//     !findCommentsDataByCommentId ||
-//     (findCommentsDataByCommentId && !findCommentsDataByCommentId.responsesData)
-//   )
-//     return;
-//   const findResponsesByResponseId =
-//     findCommentsDataByCommentId.responsesData.find(
-//       (response) => response._id === responseId
-//     );
-//   if (!findResponsesByResponseId) return;
+export const addLikeComment = (commentData) => {
+  const posts = postsVar();
 
-//   const updatedPost = posts.map((post) => {
-//     let _post = { ...post };
-//     if (_post._id === postId) {
-//       _post.commentsData = _post.commentsData.map((comment) => {
-//         let _comment = { ...comment };
-//         if (_comment._id === commentId) {
-//           _comment.responsesData = _comment.responsesData.map((response) => {
-//             let _response = { ...response };
-//             if (_response._id === responseId) {
-//               _response.likes = [userId, ..._response.likes];
-//             }
-//             return { ..._response };
-//           });
-//         }
-//         return { ..._comment };
-//       });
-//     }
-//     return { ..._post };
-//   });
+  if (posts?.some((post) => post._id === commentData.post)) {
+    const updatedPosts = posts.map((post) => {
+      if (post._id === commentData.post && post.commentsData) {
+        return {
+          ...post,
+          commentsData: post.commentsData.map((comment) => {
+            if (comment._id === commentData._id) {
+              return { ...comment, ...commentData };
+            }
+            return comment;
+          }),
+        };
+      }
+      return post;
+    });
+    postsVar(updatedPosts);
+  }
 
-//   return postsVar(updatedPost);
-// };
+  const currentPersonalUser = currentPersonalUserVar();
+  if (
+    currentPersonalUser?.postsData?.some(
+      (post) => post._id === commentData.post
+    )
+  ) {
+    const updatedCurrentPersonalUser = {
+      ...currentPersonalUser,
+      postsData: currentPersonalUser.postsData.map((post) => {
+        if (post._id === commentData.post && post.commentsData) {
+          return {
+            ...post,
+            commentsData: post.commentsData.map((comment) => {
+              if (comment._id === commentData._id) {
+                return { ...comment, ...commentData };
+              }
+              return comment;
+            }),
+          };
+        }
+        return post;
+      }),
+    };
 
-export const addLikeResponse = (responseData) => {
+    currentPersonalUserVar(updatedCurrentPersonalUser);
+  }
+};
+
+export const removeLikeComment = (commentData) => {
+  // At home page
+  const posts = postsVar();
+  if (posts.some((post) => post._id === commentData.post)) {
+    const updatedPosts = posts.map((post) => {
+      if (post._id === commentData.post && post.commentsData) {
+        return {
+          ...post,
+          commentsData: post.commentsData.map((comment) => {
+            if (comment._id === commentData._id) {
+              return { ...comment, ...commentData };
+            }
+            return comment;
+          }),
+        };
+      }
+      return post;
+    });
+    postsVar(updatedPosts);
+  }
+  // At current personal user
+  const currentPersonalUser = currentPersonalUserVar();
+  if (
+    currentPersonalUser?.postsData?.some(
+      (post) => post._id === commentData.post
+    )
+  ) {
+    const udpatedCurrentPersonalPostUser = {
+      ...currentPersonalUser,
+      postsData: currentPersonalUser.postsData.map((post) => {
+        if (post._id === commentData.post && post.commentsData) {
+          return {
+            ...post,
+            commentsData: post.commentsData.map((comment) => {
+              if (comment._id === commentData._id) {
+                return { ...comment, ...commentData };
+              }
+              return comment;
+            }),
+          };
+        }
+        return post;
+      }),
+    };
+    currentPersonalUserVar(udpatedCurrentPersonalPostUser);
+  }
+};
+
+export const addLikeResponseAtHomePage = (responseData) => {
+  // At home page
   const posts = postsVar();
 
   const specificPost = posts.find((post) => post._id === responseData.post);
   if (!specificPost || !specificPost.commentsData) return;
-  const specificComments = specificPost.commentsData.find(
+  const specificComment = specificPost.commentsData.find(
     (commentItem) => commentItem._id === responseData.comment
   );
-  if (!specificComments) return;
-  const specificResponse = specificComments.responsesData.find(
+  if (!specificComment || !specificComment.responsesData) return;
+  const specificResponse = specificComment.responsesData.find(
     (response) => response._id === responseData._id
   );
   if (!specificResponse) return;
   const updatedPosts = posts.map((post) => {
-    if (post._id === responseData.post) {
+    if (post._id === responseData.post && post.commentsData) {
       return {
         ...post,
         commentsData: post.commentsData.map((comment) => {
@@ -130,7 +189,7 @@ export const addLikeResponse = (responseData) => {
               ...comment,
               responsesData: comment.responsesData.map((response) => {
                 if (response._id === responseData._id) {
-                  return responseData;
+                  return { ...response, ...responseData };
                 }
                 return response;
               }),
@@ -146,7 +205,54 @@ export const addLikeResponse = (responseData) => {
   postsVar(updatedPosts);
 };
 
-export const addNewResponseToComment = (newResponse) => {
+export const addLikeResponseAtCurrentPersonalUserPage = (responseData) => {
+  const currentPersonalUser = currentPersonalUserVar();
+  if (!currentPersonalUser.postsData) return;
+  const specificPost = currentPersonalUser.postsData.find(
+    (post) => post._id === responseData.post
+  );
+  if (!specificPost || !specificPost.commentsData) return;
+  const specificComments = specificPost.commentsData.find(
+    (commentItem) => commentItem._id === responseData.comment
+  );
+  if (!specificComments) return;
+  const specificResponse = specificComments.responsesData.find(
+    (response) => response._id === responseData._id
+  );
+  if (!specificResponse) return;
+
+  const udpatedCurrentPersonalPostUser = {
+    ...currentPersonalUser,
+    postsData: currentPersonalUser.postsData.map((post) => {
+      if (post._id === responseData.post && post.commentsData) {
+        return {
+          ...post,
+          commentsData: post.commentsData.map((comment) => {
+            if (comment._id === responseData.comment && comment.responsesData) {
+              return {
+                ...comment,
+                responsesData: comment.responsesData.map((response) => {
+                  if (response._id === responseData._id) {
+                    return {
+                      ...response,
+                      ...responseData,
+                    };
+                  }
+                  return response;
+                }),
+              };
+            }
+            return comment;
+          }),
+        };
+      }
+      return post;
+    }),
+  };
+  currentPersonalUserVar(udpatedCurrentPersonalPostUser);
+};
+
+export const addNewResponseToCommentAtHomePage = (newResponse) => {
   const posts = [...postsVar()];
   const specificPost = posts.find((post) => post._id === newResponse.post);
   if (!specificPost || !specificPost.commentsData) return;
@@ -172,7 +278,47 @@ export const addNewResponseToComment = (newResponse) => {
     }
     return { ..._post };
   });
-  return postsVar(updatedPost);
+  postsVar(updatedPost);
+};
+
+export const addNewResponseToCommentAtPersonalUser = (newResponse) => {
+  const currentPersonalUser = currentPersonalUserVar();
+  if (!currentPersonalUser.postsData) return;
+  const specificPost = currentPersonalUser.postsData.find(
+    (post) => post._id === newResponse.post
+  );
+  if (!specificPost || !specificPost.commentsData) return;
+  const specificCommentsData = specificPost.commentsData.find(
+    (commentItem) => commentItem._id === newResponse.comment
+  );
+  if (!specificCommentsData) return;
+
+  const updatedCurrentPersonalPostUser = {
+    ...currentPersonalUser,
+    postsData: currentPersonalUser.postsData.map((post) => {
+      if (post._id === newResponse.post) {
+        let cloned_post = { ...post };
+        cloned_post.responses = [newResponse._id, ...cloned_post.responses];
+        cloned_post.commentsData = post.commentsData.map((comment) => {
+          if (comment._id === newResponse.comment) {
+            let cloned_comment = { ...comment };
+            cloned_comment.responses = [
+              newResponse._id,
+              ...cloned_comment.responses,
+            ];
+            cloned_comment.responsesData = cloned_comment.responsesData
+              ? [{ ...newResponse }, ...cloned_comment.responsesData]
+              : [{ ...newResponse }];
+            return cloned_comment;
+          }
+          return comment;
+        });
+        return cloned_post;
+      }
+      return post;
+    }),
+  };
+  currentPersonalUserVar(updatedCurrentPersonalPostUser);
 };
 
 export const addResponsesToComment = (postId, commentId, responses) => {
@@ -216,78 +362,22 @@ export const removeComment = (postId, commentId) => {
   return postsVar(updatedPosts);
 };
 
-export const removeLikeComment = (postId, commentId, userId) => {
-  const posts = [...postsVar()];
-  const updatedPost = posts.map((post) => {
-    let _post = { ...post };
-    if (_post._id === postId && _post.commentsData) {
-      _post.commentsData = _post.commentsData.map((comment) => {
-        let _comment = { ...comment };
-        if (_comment._id === commentId) {
-          _comment.likes = _comment.likes.filter((_id) => _id !== userId);
-        }
-        return { ..._comment };
-      });
-    }
-    return { ..._post };
-  });
-  return postsVar(updatedPost);
-};
-
-export const removeLikeResponse = (responseData) => {
-  // const posts = [...postsVar()];
-
-  // const findPostByPostId = posts.find((post) => post._id === postId);
-  // if (!findPostByPostId || (findPostByPostId && !findPostByPostId.commentsData))
-  //   return;
-  // const findCommentsDataByCommentId = findPostByPostId.commentsData.find(
-  //   (comment) => comment._id === commentId
-  // );
-  // if (
-  //   !findCommentsDataByCommentId ||
-  //   (findCommentsDataByCommentId && !findCommentsDataByCommentId.responsesData)
-  // )
-  //   return;
-  // const findResponsesByResponseId =
-  //   findCommentsDataByCommentId.responsesData.find(
-  //     (response) => response._id === responseId
-  //   );
-  // if (!findResponsesByResponseId) return;
-
-  // const updatedPost = posts.map((post) => {
-  //   let _post = { ...post };
-  //   if (_post._id === postId) {
-  //     _post.commentsData = _post.commentsData.map((comment) => {
-  //       let _comment = { ...comment };
-  //       if (_comment._id === commentId) {
-  //         _comment.responsesData = _comment.responsesData.map((response) => {
-  //           let _response = { ...response };
-  //           if (_response._id === responseId) {
-  //             _response.likes = _response.likes.filter((_id) => _id !== userId);
-  //           }
-  //           return { ..._response };
-  //         });
-  //       }
-  //       return { ..._comment };
-  //     });
-  //   }
-  //   return { ..._post };
-  // });
-
-  // return postsVar(updatedPost);
+export const removeLikeResponseAtHomePage = (responseData) => {
   const posts = postsVar();
   const specificPost = posts.find((post) => post._id === responseData.post);
   if (!specificPost || !specificPost.commentsData) return;
-  const specificComments = specificPost.commentsData.find(
-    (commentItem) => commentItem._id === responseData.comment
+  const specificComment = specificPost.commentsData.find(
+    (comment) => comment._id === responseData.comment
   );
-  if (!specificComments) return;
-  const specificResponse = specificComments.responsesData.find(
+
+  if (!specificComment || !specificComment.responsesData) return;
+  const specificResponse = specificComment.responsesData.find(
     (response) => response._id === responseData._id
   );
   if (!specificResponse) return;
+
   const updatedPosts = posts.map((post) => {
-    if (post._id === responseData.post) {
+    if (post._id === responseData.post && post.commentsData) {
       return {
         ...post,
         commentsData: post.commentsData.map((comment) => {
@@ -310,6 +400,51 @@ export const removeLikeResponse = (responseData) => {
   });
 
   postsVar(updatedPosts);
+};
+
+export const removeLikeResponseAtCurrentPersonalUser = (responseData) => {
+  const currentPersonalUser = currentPersonalUserVar();
+
+  if (!currentPersonalUser.postsData) return;
+  const specificPost = currentPersonalUser.postsData.find(
+    (post) => post._id === responseData.post
+  );
+  if (!specificPost || !specificPost.commentsData) return;
+  const specificComments = specificPost.commentsData.find(
+    (commentItem) => commentItem._id === responseData.comment
+  );
+  if (!specificComments || !specificComments.responsesData) return;
+  const specificResponse = specificComments.responsesData.find(
+    (response) => response._id === responseData._id
+  );
+  if (!specificResponse) return;
+
+  const updatedCurrentPersonalUser = {
+    ...currentPersonalUser,
+    postsData: currentPersonalUser.postsData.map((post) => {
+      if (post._id === responseData.post && post.commentsData) {
+        return {
+          ...post,
+          commentsData: post.commentsData.map((comment) => {
+            if (comment._id === responseData.comment && comment.responsesData) {
+              return {
+                ...comment,
+                responsesData: comment.responsesData.map((response) => {
+                  if (response._id === responseData._id) {
+                    return { ...response, ...responseData };
+                  }
+                  return response;
+                }),
+              };
+            }
+            return comment;
+          }),
+        };
+      }
+      return post;
+    }),
+  };
+  currentPersonalUserVar(updatedCurrentPersonalUser);
 };
 
 export const removeResponse = (postId, commentId, responseId) => {
@@ -379,6 +514,7 @@ export const updateLikePost = (postId, userId) => {
 };
 
 export const updateLikePostSubscription = (likedPost) => {
+  // At home page
   const posts = postsVar();
   if (posts.some((post) => post._id === likedPost._id)) {
     const updatedPosts = posts.map((post) => {
@@ -387,7 +523,23 @@ export const updateLikePostSubscription = (likedPost) => {
       }
       return post;
     });
-    return postsVar(updatedPosts);
+    postsVar(updatedPosts);
+  }
+  // At Current Personal user page
+  const currentPersonalUser = currentPersonalUserVar();
+  if (
+    currentPersonalUser?.postsData?.some((post) => post._id === likedPost._id)
+  ) {
+    const updatedCurerntPostsUser = {
+      ...currentPersonalUser,
+      postsData: currentPersonalUser.postsData.map((post) => {
+        if (post._id === likedPost._id) {
+          return { ...post, ...likedPost };
+        }
+        return post;
+      }),
+    };
+    currentPersonalUserVar(updatedCurerntPostsUser);
   }
 };
 
@@ -417,7 +569,27 @@ export const removeLikePost = (removedLikePost) => {
       }
       return post;
     });
-    return postsVar(updatedPosts);
+    postsVar(updatedPosts);
+  }
+  const currentPersonalUser = currentPersonalUserVar();
+  if (
+    currentPersonalUser?.postsData?.some(
+      (post) => post._id === removedLikePost._id
+    )
+  ) {
+    const updatedCurrentPersonalUser = {
+      ...currentPersonalUser,
+      postsData: currentPersonalUser.postsData.map((post) => {
+        if (post._id === removedLikePost._id) {
+          return {
+            ...post,
+            ...removedLikePost,
+          };
+        }
+        return post;
+      }),
+    };
+    currentPersonalUserVar(updatedCurrentPersonalUser);
   }
 };
 
@@ -463,7 +635,6 @@ export const updatePostInCurrentPersonalUser = (editedPost) => {
 };
 
 export const userLikePost = (likedPost) => {
-  console.log(likedPost);
   // at current personal user
   let currentUser = { ...currentPersonalUserVar() };
 

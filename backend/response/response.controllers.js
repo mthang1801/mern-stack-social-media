@@ -308,7 +308,11 @@ export const responseControllers = {
     removeLikeResponseSubscription
   ) => {
     const currentUserId = getAuthUser(req);
-    const response = await Response.findById(responseId);
+    const response = await Response.findById(responseId).populate({
+      path: 'author',
+      select: '_id name avatar slug',
+    });
+
     if (!response || !response.likes.includes(currentUserId.toString())) {
       return false;
     }

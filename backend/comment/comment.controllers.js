@@ -221,7 +221,13 @@ export const commentControllers = {
       throw new ApolloError(error.message);
     }
   },
-  likeComment: async (req, commentId, pubsub, likeCommentSubscription) => {
+  likeComment: async (
+    req,
+    commentId,
+    pubsub,
+    likeCommentSubscriptionNotification,
+    likeCommentSubscription
+  ) => {
     const currentUserId = getAuthUser(req);
     const comment = await Comment.findById(commentId).populate({
       path: 'author',
@@ -255,16 +261,14 @@ export const commentControllers = {
         .populate('fieldIdentity.post')
         .populate({ path: 'fieldIdentity.comment', select: 'shortenText' })
         .execPopulate();
+
+      await pubsub.publish(likeCommentSubscriptionNotification, {
+        likeCommentSubscriptionNotification: notification,
+      });
     }
 
-    let likeCommentSubscriptionData = {
-      comment,
-    };
-    if (notification) {
-      likeCommentSubscriptionData.notification = notification._doc;
-    }
     await pubsub.publish(likeCommentSubscription, {
-      likeCommentSubscription: likeCommentSubscriptionData,
+      likeCommentSubscription: comment._doc,
     });
 
     return true;
@@ -273,6 +277,7 @@ export const commentControllers = {
     req,
     commentId,
     pubsub,
+    removeLikeCommentSubscriptionNotification,
     removeLikeCommentSubscription
   ) => {
     const currentUserId = getAuthUser(req);
@@ -297,18 +302,14 @@ export const commentControllers = {
       .populate({ path: 'creator', select: 'name avatar slug' })
       .populate({ path: 'fieldIdentity.post', select: '_id' })
       .populate({ path: 'fieldIdentity.comment', select: '_id' });
-    let removeLikeCommentSubscriptionData = {
-      comment,
-    };
-    if (removedNotification) {
-      await User.findByIdAndUpdate(removedNotification.receiver, {
-        $pull: { notifications: removedNotification._id },
-      });
-      removeLikeCommentSubscriptionData.notification = removedNotification._doc;
-    }
 
+    if (removedNotification) {
+      await pubsub.publish(removeLikeCommentSubscriptionNotification, {
+        removeLikeCommentSubscriptionNotification: removedNotification._doc,
+      });
+    }
     await pubsub.publish(removeLikeCommentSubscription, {
-      removeLikeCommentSubscription: removeLikeCommentSubscriptionData,
+      removeLikeCommentSubscription: comment._doc,
     });
     return true;
   },

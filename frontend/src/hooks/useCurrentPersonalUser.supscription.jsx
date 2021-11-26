@@ -15,17 +15,17 @@ import {
 import { userVar } from '../apollo/cache';
 import {
   addCommentToPost,
-  addLikeComment,
-  addNewResponseToCommentAtHomePage,
+  addNewResponseToCommentAtPersonalUser,
   updatePost,
   updateLikePostSubscription,
   removeLikePost,
-  addLikeResponseAtHomePage,
-  removeLikeResponseAtHomePage,
+  addLikeResponseAtCurrentPersonalUserPage,
+  removeLikeResponseAtCurrentPersonalUser,
+  addLikeComment,
   removeLikeComment,
 } from '../apollo/post/post.caches';
 
-const useHomePostsSubscription = () => {
+const useCurrentPersonalSubscription = () => {
   const { subscribeToMore: subscribePosts } = useQuery(FETCH_POSTS, {
     skip: true,
     fetchPolicy: 'network-only',
@@ -75,7 +75,7 @@ const useHomePostsSubscription = () => {
     onSubscriptionData: ({ client, subscriptionData }) => {
       if (subscriptionData.data?.createResponseSubscription) {
         const { createResponseSubscription } = subscriptionData.data;
-        addNewResponseToCommentAtHomePage(createResponseSubscription);
+        addNewResponseToCommentAtPersonalUser(createResponseSubscription);
       }
     },
   });
@@ -83,7 +83,7 @@ const useHomePostsSubscription = () => {
     onSubscriptionData: ({ client, subscriptionData }) => {
       if (subscriptionData.data.likeResponseSubscription) {
         const { likeResponseSubscription } = subscriptionData.data;
-        addLikeResponseAtHomePage(likeResponseSubscription);
+        addLikeResponseAtCurrentPersonalUserPage(likeResponseSubscription);
       }
     },
   });
@@ -91,7 +91,7 @@ const useHomePostsSubscription = () => {
     onSubscriptionData: ({ client, subscriptionData }) => {
       if (subscriptionData.data.removeLikeResponseSubscription) {
         const { removeLikeResponseSubscription } = subscriptionData.data;
-        removeLikeResponseAtHomePage(removeLikeResponseSubscription);
+        removeLikeResponseAtCurrentPersonalUser(removeLikeResponseSubscription);
       }
     },
   });
@@ -131,4 +131,4 @@ const useHomePostsSubscription = () => {
   }, [user, subscribePosts]);
 };
 
-export default useHomePostsSubscription;
+export default useCurrentPersonalSubscription;

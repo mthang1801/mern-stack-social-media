@@ -6,12 +6,14 @@ import { FETCH_PERSONAL_USER } from '../apollo/user/user.types';
 import Layout from '../containers/Layout';
 import { setCurrentPersonalUser } from '../apollo/user/currentPersonalUser.caches';
 import PersonalPosts from '../components/Personal/PersonalPosts';
+import useCurrentPersonalUser from '../hooks/useCurrentPersonalUser.supscription';
 const PersonalPage = (props) => {
   const { slug } = props.match.params;
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
   const { refetch: fetchCurrentPersonalUser } = useQuery(FETCH_PERSONAL_USER, {
     skip: true,
   });
+  useCurrentPersonalUser();
   const [fetched, setFetched] = useState(false);
   useEffect(() => {
     let _mounted = true;

@@ -208,9 +208,7 @@ const PostEditor = ({
     >
       <Prompt
         when={isBlocking}
-        message={(location) =>
-          `Are you sure you want to go to ${location.pathname}`
-        }
+        message={(location) => `Are you sure to go to ${location.pathname}`}
       />
       <PostEditorHeader
         user={user}

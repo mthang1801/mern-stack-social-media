@@ -84,23 +84,13 @@ const CommentItem = ({ comment, user }) => {
       });
     }
   }, [dialog]);
-  const onLikeComent = () => {
-    likeComment({ variables: { commentId: comment._id } })
-      .then(({ data }) => {
-        if (data.likeComment) {
-          addLikeComment(comment.post, comment._id, user._id);
-        }
-      })
-      .catch((err) => console.log(err));
+  const onLikeComment = () => {
+    likeComment({ variables: { commentId: comment._id } });
   };
   const onRemoveLikeComment = () => {
-    RemoveLikeComment({ variables: { commentId: comment._id } })
-      .then(({ data }) => {
-        if (data.removeLikeComment) {
-          removeLikeComment(comment.post, comment._id, user._id);
-        }
-      })
-      .catch((err) => console.log(err));
+    RemoveLikeComment({ variables: { commentId: comment._id } }).catch((err) =>
+      console.log(err)
+    );
   };
   const onClickResponseComment = useCallback(
     async (data) => {
@@ -171,7 +161,7 @@ const CommentItem = ({ comment, user }) => {
       <CommentCard
         comment={comment}
         user={user}
-        onLike={onLikeComent}
+        onLike={onLikeComment}
         onRemoveLike={onRemoveLikeComment}
         onClickRemoveComment={onClickRemoveComment}
         onClickResponse={onClickResponseComment}

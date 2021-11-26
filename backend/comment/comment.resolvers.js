@@ -32,6 +32,7 @@ export const commentResolvers = {
         req,
         args.commentId,
         pubsub,
+        subscriptionActions.LIKE_COMMENT_SUBSCRIPTION_NOTIFICATION,
         subscriptionActions.LIKE_COMMENT_SUBSCRIPTION
       ),
     removeLikeComment: (_, args, { req }) =>
@@ -39,6 +40,7 @@ export const commentResolvers = {
         req,
         args.commentId,
         pubsub,
+        subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION_NOTIFICATION,
         subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION
       ),
   },
@@ -76,9 +78,21 @@ export const commentResolvers = {
       subscribe: () =>
         pubsub.asyncIterator(subscriptionActions.CREATE_COMMENT_SUBSCIPTION),
     },
+    likeCommentSubscriptionNotification: {
+      subscribe: () =>
+        pubsub.asyncIterator(
+          subscriptionActions.LIKE_COMMENT_SUBSCRIPTION_NOTIFICATION
+        ),
+    },
     likeCommentSubscription: {
       subscribe: () =>
         pubsub.asyncIterator(subscriptionActions.LIKE_COMMENT_SUBSCRIPTION),
+    },
+    removeLikeCommentSubscriptionNotification: {
+      subscribe: () =>
+        pubsub.asyncIterator(
+          subscriptionActions.REMOVE_LIKE_COMMENT_SUBSCRIPTION_NOTIFICATION
+        ),
     },
     removeLikeCommentSubscription: {
       subscribe: () =>

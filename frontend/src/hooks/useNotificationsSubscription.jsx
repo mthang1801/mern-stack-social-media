@@ -19,12 +19,6 @@ import {
   moveSentRequestToFriend,
 } from '../apollo/contact/contact.caches';
 import {
-  addLikeResponse,
-  removeLikeResponse,
-  updateCommentLikes,
-} from '../apollo/post/post.caches';
-import { userLikePost, userRemoveLikePost } from '../apollo/post/post.caches';
-import {
   ACCEPT_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   CANCEL_REQUEST_TO_ADD_FRIEND_SUBSCRIPTION,
   LIKE_COMMENT_SUBSCRIPTION,
@@ -283,17 +277,14 @@ const useNotificationsPostSubscription = () => {
         updateQuery: (_, { subscriptionData }) => {
           console.log(subscriptionData);
           if (subscriptionData) {
-            const { comment, notification } =
-              subscriptionData.data.likeCommentSubscription;
+            const { likeCommentSubscriptionNotification } =
+              subscriptionData.data;
             //create notification to receiver
-            if (notification && notification.receiver === user._id) {
-              updatedAddNotification(notification);
-            }
             if (
-              !notification ||
-              (notification && notification.creator._id !== user._id)
+              likeCommentSubscriptionNotification &&
+              likeCommentSubscriptionNotification.receiver === user._id
             ) {
-              updateCommentLikes(comment);
+              updatedAddNotification(likeCommentSubscriptionNotification);
             }
           }
         },
@@ -301,17 +292,18 @@ const useNotificationsPostSubscription = () => {
       unsubscribeRemoveLikeComment = subscribeToMoreNotifications({
         document: REMOVE_LIKE_COMMENT_SUBSCRIPTION,
         updateQuery: (_, { subscriptionData }) => {
-          if (subscriptionData) {
-            const { comment, notification } =
-              subscriptionData.data.removeLikeCommentSubscription;
-            if (notification && notification.receiver === user._id) {
-              updatedRemoveNotification(notification);
-            }
+          if (
+            subscriptionData.data?.removeLikeCommentSubscriptionNotification
+          ) {
+            const { removeLikeCommentSubscriptionNotification } =
+              subscriptionData.data;
             if (
-              !notification ||
-              (notification && notification.creator._id !== user._id)
+              removeLikeCommentSubscriptionNotification &&
+              removeLikeCommentSubscriptionNotification.receiver === user._id
             ) {
-              updateCommentLikes(comment);
+              updatedRemoveNotification(
+                removeLikeCommentSubscriptionNotification
+              );
             }
           }
         },
