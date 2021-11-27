@@ -55,8 +55,6 @@ const client = new ApolloClient({
 });
 
 const restartWebsocketConnection = () => {
-  // wsLink.subscriptionClient.close();
-  // wsLink.subscriptionClient.connect();
   wsLink.subscriptionClient.tryReconnect();
 };
 const closeWebsocketConnection = () => {

@@ -62,6 +62,41 @@ export const LOGIN = gql`
   }
 `;
 
+export const LOGIN_WITH_GOOGLE = gql`
+  query LoginWithGoogle(
+    $name: String
+    $email: String!
+    $googleId: ID!
+    $imageUrl: String
+  ) {
+    loginUserWithGoogle(
+      data: {
+        name: $name
+        email: $email
+        googleId: $googleId
+        imageUrl: $imageUrl
+      }
+    ) {
+      user {
+        _id
+        name
+        nickname
+        slug
+        email
+        friends
+        notifications
+        avatar
+        following
+        followed
+        sentRequestToAddFriend
+        receivedRequestToAddFriend
+      }
+      token
+      tokenExpire
+    }
+  }
+`;
+
 export const SEARCH_FRIENDS = gql`
   query ($search: String!) {
     searchFriends(search: $search) {

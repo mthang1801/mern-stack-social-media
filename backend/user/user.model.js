@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     avatar: {
       type: String,
@@ -29,6 +29,8 @@ const UserSchema = new mongoose.Schema(
     },
     google: {
       uid: String,
+      familyName: String,
+      givenName: String,
     },
     facebook: {
       uid: String,

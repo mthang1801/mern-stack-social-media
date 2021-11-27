@@ -73,6 +73,41 @@ export const userController = {
       tokenExpire: process.env.JWT_TOKEN_EXPIRE,
     };
   },
+  loginUserWithGoogle: async (data) => {
+    const { email, googleId, name, imageUrl } = data;
+    let user = await User.findOne({ email });
+    if (user && !user.google.uid) {
+      user.google.uid = googleId;
+      if (user.avatar === '/images/avatar-default.png') {
+        user.avatar = imageUrl;
+      }
+    } else if (!user) {
+      let slug = pattern
+        .removeVietnameseTones(name.toLowerCase())
+        .replace(/[^a-z0-9]/gi, '-')
+        .replace(/-+/g, '-');
+      const checkSlugExisting = await User.findOne({ slug });
+      if (checkSlugExisting) {
+        slug = `${slug}_${Date.now().toString(36)}`;
+      }
+      user = new User({
+        name,
+        email,
+        avatar: imageUrl,
+        slug,
+        google: {
+          uid: googleId,
+        },
+      });
+    }
+    await user.save();
+
+    return {
+      user,
+      token: generateToken(user._id),
+      tokenExpire: process.env.JWT_TOKEN_EXPIRE,
+    };
+  },
   fetchCurrentUser: async (req) => {
     console.time('fetch Current User');
     const userId = getAuthUser(req, false);

@@ -11,6 +11,13 @@ export const schemaInput = gql`
     password: String!
   }
 
+  input LoginUserGoogleInput {
+    email: String!
+    googleId: ID!
+    name: String
+    imageUrl: String
+  }
+
   input PostInput {
     text: String
     shortenText: String

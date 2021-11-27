@@ -11,6 +11,9 @@ export const userResolvers = {
     loginUser: (_, args, ctx, info) => {
       return userController.loginUser(args.data);
     },
+    loginUserWithGoogle: (_, args, ctx, info) => {
+      return userController.loginUserWithGoogle(args.data);
+    },
     fetchCurrentUser: (_, args, { req }, info) => {
       return userController.fetchCurrentUser(req);
     },

@@ -12,14 +12,20 @@ import {
 import { fields, contents } from '../notification';
 import decodeBase64 from '../utils/decodeBase64';
 import { raiseError } from '../utils/raiseError';
+import constant from '../config/constant';
 export const postControllers = {
-  fetchPosts: async (req, userId, skip, limit) => {
+  fetchPosts: async (
+    req,
+    userId = null,
+    skip = 0,
+    limit = constant.POSTS_PER_PAGE
+  ) => {
     const currentUserId = getAuthUser(req, false);
     const currentUser = await User.findById(currentUserId);
 
     if (userId) {
       if (userId !== currentUserId) {
-        return Post.find({
+        return await Post.find({
           author: userId,
           $or: [
             { status: POST_STATUS_ENUM.FRIENDS, friends: currentUserId },
@@ -38,7 +44,7 @@ export const postControllers = {
           .skip(+skip)
           .limit(+limit);
       }
-      return Post.find({
+      const post = await Post.find({
         author: userId,
       })
         .populate({
@@ -52,6 +58,7 @@ export const postControllers = {
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);
+      return post;
     }
     if (!currentUser) {
       return [];

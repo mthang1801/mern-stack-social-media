@@ -8,9 +8,9 @@ export const postResolvers = {
     fetchPosts: (_, args, { req }, info) => {
       return postControllers.fetchPosts(
         req,
-        args.userId || null,
-        args.skip || 0,
-        args.limit || constant.POSTS_PER_PAGE
+        args.userId,
+        args.skip,
+        args.limit
       );
     },
   },

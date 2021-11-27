@@ -13,6 +13,7 @@ const PersonalPage = (props) => {
   const { refetch: fetchCurrentPersonalUser } = useQuery(FETCH_PERSONAL_USER, {
     skip: true,
   });
+
   useCurrentPersonalUser();
   const [fetched, setFetched] = useState(false);
   useEffect(() => {

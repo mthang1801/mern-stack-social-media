@@ -16,8 +16,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router-dom';
 import GoogleRecaptcha from './GoogleRecapcha';
-import FacebookAuth from './GoogleAuth';
-import GoogleAuth from './FacebookAuth';
+import FacebookAuth from './FacebookAuth';
+import GoogleAuth from './GoogleAuth';
 import { LOGIN } from '../../apollo/user/user.types';
 import { useLazyQuery } from '@apollo/client';
 import { login } from './Auth.utility';
@@ -106,15 +106,15 @@ const SignIn = withLoginQuery(
 
     onSubmitSigninForm = async (e) => {
       e.preventDefault();
-      this.setState({ loading: true });
+
       const { email, password } = this.state;
       if (!email || !password) {
         this.setState({
           error: 'Email và mật khẩu không được để trống',
-          loading: false,
         });
         return;
       }
+      this.setState({ loading: true });
       this.props.loginUser({ variables: { email, password } });
       this.setState({ loading: false });
     };
@@ -137,7 +137,7 @@ const SignIn = withLoginQuery(
           </FormHeader>
           {error && <ErrorMessage>{error.message}</ErrorMessage>}
           <FlashForm>
-            <FacebookAuth />
+            {/* <FacebookAuth /> */}
             <GoogleAuth />
           </FlashForm>
           <FormGroups>
@@ -167,9 +167,7 @@ const SignIn = withLoginQuery(
               />
             </TextForm>
 
-            {captcha_loaded && (
-              <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />
-            )}
+            <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />
 
             <Button
               variant="outlined"

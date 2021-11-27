@@ -8,6 +8,8 @@ import path from 'path';
 import events from 'events';
 import socketio from 'socket.io';
 import { initSockets } from './socket';
+import validateToken from './utils/validateToken';
+import { User } from './user/user.model';
 events.EventEmitter.defaultMaxListeners = Infinity;
 
 const schemas = mergeSchemas({

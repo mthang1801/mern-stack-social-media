@@ -17,8 +17,8 @@ import { AiFillCheckCircle } from 'react-icons/ai';
 import CustomButton from '../Custom/CustomButton';
 import { withRouter } from 'react-router-dom';
 import GoogleRecaptcha from './GoogleRecapcha';
-import FacebookLogin from './GoogleAuth';
-import GoogleLogin from './FacebookAuth';
+import FacebookLogin from './FacebookAuth';
+import GoogleLogin from './GoogleAuth';
 import { useMutation } from '@apollo/client';
 import { SIGNUP } from '../../apollo/user/user.types';
 import { login } from './Auth.utility';
@@ -241,7 +241,7 @@ const SignUp = withSignUpMutation(
           </FormHeader>
           {error && <ErrorMessage>{error.message}</ErrorMessage>}
           <FlashForm>
-            <FacebookLogin />
+            {/* <FacebookLogin /> */}
             <GoogleLogin />
           </FlashForm>
           <FormGroups>
