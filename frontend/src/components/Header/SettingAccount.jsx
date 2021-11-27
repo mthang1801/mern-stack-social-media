@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { IoIosSettings } from 'react-icons/io';
 import Button from '../Controls/ButtonDefaultCircle';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { useThemeUI } from 'theme-ui';

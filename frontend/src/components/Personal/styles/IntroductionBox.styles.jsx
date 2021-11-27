@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 export const BoxWrapper = styled.div`
   width: 90%;
   max-width: 320px;

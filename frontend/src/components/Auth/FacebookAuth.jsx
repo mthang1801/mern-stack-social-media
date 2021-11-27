@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FacebookLogin from 'react-facebook-login';
 import { TiSocialFacebook } from 'react-icons/ti';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import useLanguage from '../Global/useLanguage';
 const FBAuth = ({ loginFacebook }) => {
   const [loginName, setLoginName] = useState('');

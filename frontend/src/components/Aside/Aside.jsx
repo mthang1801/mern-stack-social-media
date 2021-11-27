@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import useMenuList from '../Menu/useMenuList';
 import MenuList from '../Menu/MenuList';
 import { Scrollbars } from 'react-custom-scrollbars';

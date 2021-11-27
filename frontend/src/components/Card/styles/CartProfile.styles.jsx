@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 export const CardWrapper = styled.aside`
   background-color: ${({ theme }) =>
     theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};

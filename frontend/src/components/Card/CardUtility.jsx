@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useLanguage from '../Global/useLanguage';
 import { useThemeUI } from 'theme-ui';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import ButtonLogin from '../Controls/ButtonLogin';
 import ButtonSignUp from '../Controls/ButtonSignUp';
 import { useLocation } from 'react-router-dom';

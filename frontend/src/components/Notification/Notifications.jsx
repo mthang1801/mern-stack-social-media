@@ -1,6 +1,6 @@
 import React from 'react';
 import NotificationItem from './NotificationItem';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import LazyLoad from 'react-lazyload';
 const Notifications = ({ notifications }) => {
   return (

@@ -18,8 +18,8 @@ import { userVar, toggleFriendsBoardVar, postsVar } from '../apollo/cache';
 import { setToggleFriendsBoard } from '../apollo/controls/controls.caches';
 import { FETCH_POSTS } from '../apollo/post/post.queries';
 import { addFetchedPostToCache } from '../apollo/post/post.caches';
-import { LIKE_POST_SUBSCRIPTION } from '../apollo/post/post.types';
 import constant from '../constant/constant';
+import Backdrop from '@material-ui/core/Backdrop';
 const Home = () => {
   const user = useReactiveVar(userVar);
   const toggleFriendsBoard = useReactiveVar(toggleFriendsBoardVar);
@@ -87,7 +87,7 @@ const Home = () => {
   return (
     <Layout>
       <MainBody>
-        <MainContent>
+        <MainContent openFriendBoard={toggleFriendsBoard}>
           <MainContentLeftSide>
             {user && (
               <LazyLoad once>
@@ -107,8 +107,12 @@ const Home = () => {
         </MainContent>
         {user && (
           <>
-            {' '}
-            {<FriendsBoard />}
+            <Backdrop
+              open={toggleFriendsBoard}
+              style={{ zIndex: 9998 }}
+              onClick={() => toggleFriendsBoardVar(!toggleFriendsBoard)}
+            />
+            <FriendsBoard />
             <ButtonToggleFriendsList
               hide={toggleFriendsBoard}
               onClick={handleOpenFriendsList}

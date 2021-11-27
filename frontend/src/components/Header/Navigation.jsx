@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useLanguage from '../Global/useLanguage';
 import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Tooltips from './Tooltips';
 import { useThemeUI } from 'theme-ui';
 const Navigation = () => {

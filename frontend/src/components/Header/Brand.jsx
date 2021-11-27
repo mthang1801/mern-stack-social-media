@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Image from '../../assets/images/brand-icon.png';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 const Brand = ({ className }) => {
   return (
     <Link to="/" className={className}>

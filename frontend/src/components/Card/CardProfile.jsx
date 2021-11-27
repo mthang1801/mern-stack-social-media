@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { useThemeUI } from 'theme-ui';
 import { Link } from 'react-router-dom';

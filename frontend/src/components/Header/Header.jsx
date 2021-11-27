@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Brand from './Brand';
 import Search from './Search';
 import Navigation from './Navigation';
@@ -11,7 +11,7 @@ import ButtonMenu from '../Controls/ButtonMenu';
 import { toggleMenu } from '../../apollo/controls/controls.caches';
 
 import classNames from 'classnames';
-import { userVar } from '../../apollo//cache';
+import { userVar, toggleFriendsBoardVar } from '../../apollo//cache';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { useLocation } from 'react-router-dom';
 import { useThemeUI } from 'theme-ui';
@@ -22,7 +22,7 @@ const Header = () => {
   const user = useReactiveVar(userVar);
   const { colorMode } = useThemeUI();
   const { pathname } = useLocation();
-
+  const toggleFriendsBoard = useReactiveVar(toggleFriendsBoardVar);
   const NavControls = user ? (
     <div className="nav-controls">
       <div className="center">
@@ -58,7 +58,7 @@ const Header = () => {
   );
 
   return (
-    <Wrapper theme={colorMode}>
+    <Wrapper theme={colorMode} openFriendBoard={toggleFriendsBoard}>
       <div className={classNames('nav-header', { shorten: !openSearch })}>
         <div className={classNames('nav-brand', { hide: openSearch })}>
           <Brand />
@@ -87,6 +87,7 @@ const Header = () => {
 };
 
 const Wrapper = styled.header`
+  filter: ${({ openFriendBoard }) => (openFriendBoard ? 'blur(5px)' : 'unset')};
   width: 100vw;
   height: 60px;
   background-color: ${({ theme }) =>
@@ -204,4 +205,4 @@ const Wrapper = styled.header`
   }
 `;
 
-export default React.memo(Header);
+export default Header;

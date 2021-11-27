@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { useThemeUI } from 'theme-ui';
 import { IoMdContacts, IoMdCloseCircleOutline } from 'react-icons/io';
 import useLanguage from '../Global/useLanguage';

@@ -1,13 +1,13 @@
-import styled, { css } from 'styled-components';
+import styled, { css } from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 
 export const FriendsBoardWrapper = styled.div`
   position: fixed;
-  top: 60px;
+  top: 0;
   right: 0;
-  height: calc(100% - 60px);
+  height: 100%;
   width: 300px;
   overflow: auto;
   transition: var(--mainTransition);
-  z-index: ${({ show }) => (show ? 2 : -1)};
+  z-index: ${({ show }) => (show ? 9999 : -1)};
 `;

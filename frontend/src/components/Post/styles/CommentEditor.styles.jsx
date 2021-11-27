@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 export const CommentInput = styled.div`
   .DraftEditor-root {

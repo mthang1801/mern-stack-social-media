@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/Header/Header';
 import MenuList from '../components/Menu/MenuList';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import classNames from 'classnames';
 import { toggleMenuVar } from '../apollo/cache';
 import useMenuList from '../components/Menu/useMenuList';

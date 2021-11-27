@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 export const Wrapper = styled.div`
   margin-top: 60px;
@@ -12,6 +12,7 @@ export const Wrapper = styled.div`
 
 export const AsideComponent = styled.aside`
   display: none;
+  filter: ${({ openFriendBoard }) => (openFriendBoard ? 'blur(5px)' : 'unset')};
   @media screen and (min-width: 992px) {
     display: -webkit-box;
     position: fixed;

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import ButtonLogin from '../Controls/ButtonLogin';
 import ButtonSignUp from '../Controls/ButtonSignUp';
 import { useThemeUI } from 'theme-ui';

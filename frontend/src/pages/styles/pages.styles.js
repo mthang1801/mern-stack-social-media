@@ -1,9 +1,10 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 export const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   margin: auto;
+  filter: ${({ openFriendBoard }) => (openFriendBoard ? 'blur(5px)' : 'unset')};
   padding: 1.5rem 0;
   @media screen and (min-width: 768px) {
     flex-direction: row;

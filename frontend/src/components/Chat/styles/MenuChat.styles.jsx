@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 export const LinkItem = styled(NavLink)`
   font-size: 1.3rem;

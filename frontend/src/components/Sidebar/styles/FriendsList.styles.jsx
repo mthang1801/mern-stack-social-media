@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css } from 'styled-components/macro';
 
 export const ButtonClose = styled.button`
   outline: none;
@@ -13,10 +13,9 @@ export const ButtonClose = styled.button`
 `;
 
 export const FriendsListWrapper = styled.div`
-  height: auto;
+  height: 100%;
   min-height: 95vh;
   width: 100%;
-  border-radius: 6px;
   box-shadow: var(--mediumShadow);
   transition: var(--mainTransition);
   border-left: 1px solid
@@ -43,7 +42,7 @@ export const LeftSide = styled.div`
   visibility: ${({ hide }) => (hide ? 'hidden' : 'visible')};
   transform: ${({ hide }) => (hide ? 'translateX(-200%)' : 'translateX(0)')};
   transition: 0.12s all;
-  transition-delay: 0.05;
+  transition-delay: 0.1;
 `;
 
 export const TitleContacts = styled.div`

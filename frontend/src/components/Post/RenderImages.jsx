@@ -1,6 +1,6 @@
 import React from 'react';
 import Slider from 'react-slick';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 const RenderImage = ({ images, className }) => {
   const settings = {
     dots: false,

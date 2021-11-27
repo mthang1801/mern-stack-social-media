@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 export const EditorWrapper = styled.section`
   width: ${({ fullWidth }) => (fullWidth ? '100%' : '95%')};
