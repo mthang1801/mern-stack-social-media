@@ -12,20 +12,37 @@ import { User } from '../user/user.model';
 import { Notification } from '../notification/notification.model';
 import { Response } from '../response/response.model';
 import { contents, fields } from '../notification';
+import constant from '../config/constant';
 export const commentControllers = {
-  fetchComments: async (req, postId, except, skip, limit) => {
+  fetchComments: async (
+    req,
+    postId,
+    except = [],
+    skip = 0,
+    limit = constant.POSTS_PER_PAGE
+  ) => {
     try {
-      console.log(postId, except, skip, limit);
-
-      const post = await Post.findById(postId).populate({
-        path: 'comments',
-        populate: {
-          path: 'author',
-          select: 'name avatar slug isOnline offlinedAt',
-        },
-        match: { _id: { $nin: except } },
-        options: { sort: { createdAt: -1 }, skip, limit },
-      });
+      let post;
+      if (except.length) {
+        post = await Post.findById(postId).populate({
+          path: 'comments',
+          match: { _id: { $nin: except } },
+          populate: {
+            path: 'author',
+            select: 'name avatar slug isOnline offlinedAt',
+          },
+          options: { sort: { createdAt: -1 }, skip, limit },
+        });
+      } else {
+        post = await Post.findById(postId).populate({
+          path: 'comments',
+          populate: {
+            path: 'author',
+            select: 'name avatar slug isOnline offlinedAt',
+          },
+          options: { sort: { createdAt: -1 }, skip, limit },
+        });
+      }
 
       return post.comments;
     } catch (error) {

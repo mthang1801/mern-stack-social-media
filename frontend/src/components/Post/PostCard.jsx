@@ -32,8 +32,8 @@ const PostCard = ({ post }) => {
   );
   const onFetchComments = () => {
     setLoading(true);
+    console.log(post._id);
     fetchComments({ postId: post._id }).then(({ data }) => {
-      console.log(data);
       if (data.fetchComments) {
         addFetchedCommentsToPost(post._id, data.fetchComments);
       }
@@ -59,7 +59,6 @@ const PostCard = ({ post }) => {
     }
   }, [isEdited]);
 
-  console.log(post.commentsData);
   return (
     <Wrapper theme={colorMode}>
       <EditPostDialog

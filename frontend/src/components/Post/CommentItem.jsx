@@ -148,7 +148,7 @@ const CommentItem = ({ comment, user }) => {
     });
   };
 
-  console.log(comment);
+  // console.log(comment);
   return (
     <Wrapper>
       <CommentCard

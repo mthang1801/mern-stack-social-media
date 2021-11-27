@@ -2,16 +2,15 @@ import { commentControllers } from './comment.controllers';
 import { pubsub } from '../pubsub';
 import { subscriptionActions } from '../schema';
 import { withFilter } from 'apollo-server-express';
-import constant from '../config/constant';
 export const commentResolvers = {
   Query: {
     fetchComments: (_, args, { req }, info) =>
       commentControllers.fetchComments(
         req,
         args.postId,
-        (args.except = []),
-        (args.skip = 0),
-        (args.limit = constant.POSTS_PER_PAGE)
+        args.except,
+        args.skip,
+        args.limit
       ),
   },
   Mutation: {

@@ -30,8 +30,6 @@ const PersonalPosts = () => {
     },
   });
 
-  console.log(currentPersonalUser);
-
   useEffect(() => {
     let isScrolling;
     function trackUserScroll(e) {
