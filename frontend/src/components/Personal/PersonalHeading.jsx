@@ -13,13 +13,13 @@ import {
 } from './styles/PersonalHeading.styles';
 import BackgroundImage from '../../assets/images/background-wallpaper.jpg';
 import useLanguage from '../Global/useLanguage';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import PersonalHeadingContact from './PersonalHeadingContact';
 
 const PersonalHeading = () => {
   const user = useReactiveVar(userVar);
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { i18n, lang } = useLanguage();
   const [menus, setMenus] = useState([]);
   const [activeLink, setActiveLink] = useState(null);
@@ -36,9 +36,9 @@ const PersonalHeading = () => {
 
   if (!currentPersonalUser) return null;
   return (
-    <Container theme={colorMode}>
-      <PersonalHeadingBackground theme={colorMode} background={BackgroundImage}>
-        <BackgroundImageContainer theme={colorMode}>
+    <Container theme={theme}>
+      <PersonalHeadingBackground theme={theme} background={BackgroundImage}>
+        <BackgroundImageContainer theme={theme}>
           <LazyLoadImage
             src={currentPersonalUser.avatar}
             alt={currentPersonalUser.avatar}
@@ -56,7 +56,7 @@ const PersonalHeading = () => {
                 <ProfileMenuItemLink
                   key={menu.name}
                   to={menu.path(currentPersonalUser.slug)}
-                  theme={colorMode}
+                  theme={theme}
                   active={(
                     activeLink === menu.path(currentPersonalUser.slug)
                   ).toString()}

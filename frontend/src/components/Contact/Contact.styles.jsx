@@ -2,17 +2,13 @@ import styled from 'styled-components/macro';
 
 export const ContactWrapper = styled.div`
   position: relative;
-  border: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
-  box-shadow: var(--lightShadow);
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
+  box-shadow: ${({ theme }) => (theme ? theme.boxShadow : 'var(--boxShadow)')};
   border-radius: 0.5rem;
   padding: 2rem 0;
   margin: 2rem auto 4rem auto;
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
 `;
 
 export const Title = styled.h4`
@@ -20,9 +16,9 @@ export const Title = styled.h4`
   top: -1rem;
   left: 2.5%;
   background: ${({ theme }) =>
-    theme === 'dark'
-      ? 'linear-gradient(to bottom, var(--color-background-dark) 55%, inherit 50%)'
-      : 'linear-gradient(to bottom, var(--color-background-default) 55%, inherit 50%)'};
+    theme
+      ? `linear-gradient(to bottom, ${theme.background} 55%, inherit 50%)`
+      : 'linear-gradient(to bottom, var(--background) 55%, inherit 50%)'};
   padding: 0 1rem;
   font-size: 1.2rem;
 `;
@@ -34,7 +30,7 @@ export const ContactItemWrapper = styled.div`
   padding: 0.5rem 1rem;
   &:hover {
     background-color: ${({ theme }) =>
-      theme === 'dark' ? 'var(--gray-dark)' : 'var(--light)'};
+      theme ? theme.hover.background : 'var(--hover-background)'};
   }
 `;
 
@@ -86,10 +82,10 @@ export const LinkReadMore = styled.div`
   text-align: center;
   margin: 1rem auto 0rem auto;
   & span {
-    color: var(--primary);
+    color: var(--link);
     cursor: pointer;
     &:hover {
-      color: var(--dark-blue);
+      text-decoration: underline;
     }
   }
 `;

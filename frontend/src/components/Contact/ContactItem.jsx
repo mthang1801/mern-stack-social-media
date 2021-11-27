@@ -8,7 +8,7 @@ import {
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Button from '../Controls/ButtonDefault';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import useLanguage from '../Global/useLanguage';
 import { BsChatDots, BsCameraVideo } from 'react-icons/bs';
 import { MdStarBorder } from 'react-icons/md';
@@ -37,7 +37,7 @@ import { useMutation, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/cache';
 
 const ContactItem = ({ userContact, type }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { i18n, lang } = useLanguage();
   const user = useReactiveVar(userVar);
 
@@ -143,7 +143,7 @@ const ContactItem = ({ userContact, type }) => {
     </FriendActions>
   );
   return (
-    <ContactItemWrapper theme={colorMode}>
+    <ContactItemWrapper theme={theme}>
       <ContactInfo>
         <Link to={userContact.slug}>
           <LazyLoadImage src={userContact.avatar} alt={userContact.avatar} />

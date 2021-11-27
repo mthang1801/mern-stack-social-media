@@ -10,11 +10,7 @@ export const Controls = styled.div`
   margin: auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   border-left: none;
   border-right: none;
 `;
@@ -27,13 +23,11 @@ export const Button = styled.button`
   padding: 0.6rem 1rem;
   border: 1px solid transparent;
   background-color: transparent;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   cursor: pointer;
   &:hover {
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-background-dark)'
-        : 'var(--color-background-default)'};
+      theme ? theme.hover.background : 'var(--hover-background)'};
     border-radius: 0.5rem;
   }
   & span {
@@ -49,8 +43,7 @@ export const Button = styled.button`
   ${({ liked }) =>
     liked &&
     `
-    color : var(--blue-1);
-    border: 1px solid var(--blue-1);
+    color : var(--blue-1);   
     border-radius : 0.5rem;
     font-weight :bold;
   `}
@@ -65,7 +58,7 @@ export const LikeButton = styled.button`
   align-items: center;
   background: linear-gradient(
     to right bottom,
-    var(--blue-1) 35%,
+    var(--blue-1) 25%,
     var(--blue-2) 70%,
     var(--blue-3) 100%
   );
@@ -105,7 +98,6 @@ export const PostInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: ;
 `;
 
 export const CounterLike = styled.div`

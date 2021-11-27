@@ -9,9 +9,7 @@ export const LinkItem = styled(Link)`
   &:hover {
     opacity: 1;
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-background-dark)'
-        : 'var(--color-background-default)'};
+      theme ? theme.background : 'var(--background)'};
   }
 `;
 
@@ -22,17 +20,13 @@ export const ImageContainer = styled.div`
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
-    border: 1px solid
-      ${({ theme }) =>
-        theme === 'dark'
-          ? 'var(--color-border-dark)'
-          : 'var(--color-border-default)'};
+    border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   }
   ${({ active }) =>
     active &&
     `
   & img {
-    border: 2px solid var(--green);
+    border: 2px solid var(--green-1);
   }
   &::after{
     position: absolute;
@@ -40,7 +34,7 @@ export const ImageContainer = styled.div`
     height: 0.5rem;
     width: 0.5rem;
     border-radius : 50%;
-    background-color : var(--green);
+    background-color : var(--green-1);
     right: 20%;
     top: 60%;
     z-index: 1001;

@@ -3,9 +3,8 @@ import styled from 'styled-components/macro';
 export const Wrapper = styled.div`
   position: absolute;
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--white)'};
-  // transform : ${({ show }) =>
-    show ? 'translateX(0)' : 'translateX(25rem)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
+  transform: ${({ show }) => (show ? 'translateX(0)' : 'translateX(25rem)')};
   ${({ show }) =>
     show
       ? `
@@ -22,7 +21,7 @@ export const Wrapper = styled.div`
   align-items: flex-start;
   cursor: pointer;
   border-radius: 0.5rem;
-  box-shadow: var(--mediumShadow);
+  box-shadow: ${({ theme }) => (theme ? theme.boxShadow : 'var(--boxShadow)')};
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
   left: -14rem;
@@ -35,8 +34,7 @@ export const Wrapper = styled.div`
     content: ''; /* this is important */
     border: 10px solid blue;
     border-color: transparent transparent
-      ${({ theme }) =>
-        theme === 'dark' ? 'var(--color-card-dark)' : 'var(--white)'}
+    ${({ theme }) => (theme ? theme.card.primary : 'var(--card-primary)')};
       transparent;
     top: -1rem;
     right: 4rem;
@@ -60,5 +58,3 @@ export const SenderName = styled.span`
   font-weight: bold;
   margin-right: 0.5rem;
 `;
-
-export const Content = styled.span``;

@@ -1,16 +1,16 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { IoMdContacts, IoMdCloseCircleOutline } from 'react-icons/io';
 import useLanguage from '../Global/useLanguage';
 const ButtonOpenFriendsList = ({ ...props }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { i18n, lang } = useLanguage();
 
   return (
     <Button
       {...props}
-      theme={colorMode}
+      theme={theme}
       title={i18n.store.data[lang].translation.controls.openFriendsList}
     >
       <IoMdContacts />
@@ -31,7 +31,7 @@ const Button = styled.button`
   border: none;
   outline: none;
   background: linear-gradient(to right bottom, #39f029 40%, #1ede0d 100%);
-  color: var(--light);
+  color: var(--light-gray-1);
   cursor: pointer;
   box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.2);
   &:hover {

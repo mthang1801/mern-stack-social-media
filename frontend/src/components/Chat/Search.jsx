@@ -1,11 +1,11 @@
 import React from 'react';
 import { SearchForm } from './styles/Search.styles';
 import { FaSearch } from 'react-icons/fa';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 const Search = ({ search, onChange, ...props }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   return (
-    <SearchForm theme={colorMode}>
+    <SearchForm theme={theme}>
       <input
         type="text"
         placeholder="Search..."

@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { darken, invert } from 'polished';
 const ButtonDefault = ({ children, ...props }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   return (
-    <Button theme={colorMode} {...props}>
+    <Button theme={theme} {...props}>
       {children}
     </Button>
   );
@@ -20,9 +20,9 @@ const Button = styled.button`
       ? 'transparent'
       : color
       ? `${color}`
-      : theme === 'dark'
-      ? 'var(--gray-dark)'
-      : 'var(--light)'};
+      : theme.name === 'dark'
+      ? 'var(--gray-1)'
+      : 'var(--light-gray-1)'};
   height: ${({ height }) => (height ? `${height}px` : 'auto')};
   width: ${({ width }) => (width ? `${width}px` : 'auto')};
   font-size: 1rem;
@@ -38,7 +38,7 @@ const Button = styled.button`
     background-color: ${({ color, theme }) =>
       color
         ? `${darken(0.1, `${color}`)}`
-        : theme === 'dark'
+        : theme.name === 'dark'
         ? `${darken(0.1, '#454545')}`
         : `${darken(0.005, '#dedede')}`};
   }
@@ -66,7 +66,7 @@ const Button = styled.button`
     reject &&
     `
     background-color : #9e9e9e ;
-    color : var(--dark); 
+    color : var(--gray-2); 
     &:hover{
       background-color : #424242;
       color : var(--white);
@@ -88,7 +88,7 @@ const Button = styled.button`
     call &&
     `
   background-color : transparent ;
-  color : var(--primary); 
+  color : var(--blue-1); 
   font-size : 1.4rem;
   &:hover{
     background-color : transparent ;

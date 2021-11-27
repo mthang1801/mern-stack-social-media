@@ -12,7 +12,7 @@ import {
 } from './styles/CommentCard.styles';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Moment from 'react-moment';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import useLanguage from '../Global/useLanguage';
 import { BiLike } from 'react-icons/bi';
 const CommentCard = ({
@@ -23,7 +23,7 @@ const CommentCard = ({
   onClickResponse,
   onClickRemoveComment,
 }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { i18n, lang } = useLanguage();
   const { controls } = i18n.store.data[lang].translation.comment;
   return (
@@ -36,7 +36,7 @@ const CommentCard = ({
         />
       </UserAvatar>
       <CommentContent>
-        <CommentText theme={colorMode}>
+        <CommentText theme={theme}>
           <UserName to={`/${comment.author.slug}`}>
             {comment.author.name}
           </UserName>
@@ -45,7 +45,7 @@ const CommentCard = ({
             dangerouslySetInnerHTML={{ __html: comment.text }}
           ></div>
           {comment.likes.length ? (
-            <LikeCounters theme={colorMode}>
+            <LikeCounters theme={theme}>
               <LikeButton>
                 <BiLike />
               </LikeButton>

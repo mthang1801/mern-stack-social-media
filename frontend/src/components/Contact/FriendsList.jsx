@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { ContactWrapper, Title } from './Contact.styles';
 import useLanguage from '../Global/useLanguage';
 import ContactItem from './ContactItem';
@@ -10,7 +10,7 @@ import { useQuery } from '@apollo/client';
 import constant from '../../constant/constant';
 import _ from 'lodash';
 const SentRequestsToAddFriend = ({ user, friends }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { i18n, lang } = useLanguage();
   const { refetch: fetchUserFriends } = useQuery(FETCH_USER_FRIENDS_DATA, {
     skip: true,
@@ -31,8 +31,8 @@ const SentRequestsToAddFriend = ({ user, friends }) => {
   };
 
   return (
-    <ContactWrapper theme={colorMode}>
-      <Title theme={colorMode}>
+    <ContactWrapper theme={theme}>
+      <Title theme={theme}>
         {i18n.store.data[lang].translation.contacts.friendsList}
       </Title>
       <InfiniteScroll

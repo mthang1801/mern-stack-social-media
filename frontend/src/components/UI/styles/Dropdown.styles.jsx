@@ -18,17 +18,15 @@ export const DropdownMenu = styled.div`
       ? 'left : 115%'
       : null};
   border-radius: 0.5rem;
-  border: 1px solid var(--gray-light);
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   min-width: 120px;
   overflow-y: hidden;
   width: ${({ width }) => (width ? `${width}px` : 'auto')};
   background: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
   & > *:hover {
     background: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-hover-dark)'
-        : 'var(--color-hover-default)'};
+      theme ? theme.hover.background : 'var(--hover-background)'};
   }
 `;
 

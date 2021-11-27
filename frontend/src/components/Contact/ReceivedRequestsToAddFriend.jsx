@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { FETCH_RECEIVED_REQUESTS_TO_ADD_FRIEND } from '../../apollo/contact/contact.types';
 import { useQuery } from '@apollo/client';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { ContactWrapper, Title, LinkReadMore } from './Contact.styles';
 import { fetchMoreReceivedRequestsToAddFriend } from '../../apollo/contact/contact.caches';
 import useLanguage from '../Global/useLanguage';
@@ -16,7 +16,7 @@ const ReceivedRequestsToAddFriend = ({ user, receivedRequestsToAddFriend }) => {
       skip: true,
     }
   );
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { i18n, lang } = useLanguage();
 
   const getMoreReceivedRequestToAddFriend = () => {
@@ -33,8 +33,8 @@ const ReceivedRequestsToAddFriend = ({ user, receivedRequestsToAddFriend }) => {
     }
   };
   return (
-    <ContactWrapper theme={colorMode}>
-      <Title theme={colorMode}>
+    <ContactWrapper theme={theme}>
+      <Title theme={theme}>
         {i18n.store.data[lang].translation.contacts.userReceivedRequest}
       </Title>
       {receivedRequestsToAddFriend.map((item) => (

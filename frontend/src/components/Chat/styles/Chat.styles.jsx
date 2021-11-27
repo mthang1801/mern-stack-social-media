@@ -13,10 +13,7 @@ export const LeftSide = styled.div`
   height: 90%;
   @media screen and (min-width: 768px) {
     border-right: 1px solid
-      ${({ theme }) =>
-        theme === 'dark'
-          ? 'var(--color-border-dark)'
-          : 'var(--color-border-default)'};
+      ${({ theme }) => (theme ? theme.border : 'var(--border)')};
     box-shadow: var(--lightShadow);
     height: 100%;
     width: 300px;
@@ -52,7 +49,7 @@ export const PopupSettings = styled.div`
   top: ${({ top }) => top - 50 + 'px'};
   width: 12rem;
   background-color: white;
-  border: 1px solid var(--gray-deep);
+  border: 1px solid var(--gray-3);
   border-radius: 0.4rem;
   flex-direction: column;
   font-size: 0.85rem;

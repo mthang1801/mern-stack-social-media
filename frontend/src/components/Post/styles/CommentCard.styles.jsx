@@ -24,11 +24,7 @@ export const CommentContent = styled.div`
 
 export const CommentText = styled.div`
   font-size: 0.88rem;
-  border: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   border-radius: 0.5rem;
   padding: 0.25rem 0.7rem;
   opacity: 0.8;
@@ -54,7 +50,7 @@ export const ControlItem = styled.span`
   ${({ active }) =>
     active &&
     `
-    color: var(--blue-1); 
+    color: var(--link); 
     opacity : 1;
   `};
   &:hover {
@@ -91,8 +87,8 @@ export const LikeCounters = styled.div`
   justify-content: space-between;
   border-radius: 1rem;
   background: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
   padding: 0 0.3rem 0 0;
-  box-shadow: var(--lightShadow);
+  box-shadow: ${({ theme }) => (theme ? theme.boxShadow : 'var(--boxShadow)')};
   border: 1px solid var(--light-gray-1);
 `;

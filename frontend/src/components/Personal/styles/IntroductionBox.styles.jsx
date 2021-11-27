@@ -4,14 +4,14 @@ export const BoxWrapper = styled.div`
   max-width: 320px;
   margin: 1.5rem auto;
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
   padding: 1rem;
   border-radius: 0.5rem;
-  box-shadow: var(--lightShadow);
+  box-shadow: ${({ theme }) => (theme ? theme.boxShadow : 'var(--boxShadow)')};
   & a {
-    color: var(--primary);
+    color: var(--link);
     &:hover {
-      color: var(--blue);
+      text-decoration: underline;
     }
   }
   @media screen and (min-width: 768px) {

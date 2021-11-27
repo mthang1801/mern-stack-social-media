@@ -1,7 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import GlobalStyles from './GlobalStyles';
+import { useTheme } from '../theme';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { useThemeUI } from 'theme-ui';
 import { useQuery } from '@apollo/client';
 import { userVar } from '../apollo/cache';
 import { FETCH_CURRENT_USER } from '../apollo/user/user.types';
@@ -17,7 +17,8 @@ const ContactsPage = lazy(() => import('../pages/contacts'));
 const ChatsPage = lazy(() => import('../pages/chats'));
 
 function App() {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
+  console.log(theme);
   const [isAuth, setIsAuth] = useState(null);
   const { refetch: fetchCurrentUser } = useQuery(FETCH_CURRENT_USER, {
     fetchPolicy: 'no-cache',
@@ -42,7 +43,7 @@ function App() {
 
   return (
     <Router>
-      <GlobalStyles theme={colorMode} />
+      <GlobalStyles theme={theme} />
       <ErrorBoundary>
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>

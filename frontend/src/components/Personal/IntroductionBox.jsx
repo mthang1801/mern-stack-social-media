@@ -6,8 +6,8 @@ import {
   Website,
 } from './styles/IntroductionBox.styles';
 import { useReactiveVar } from '@apollo/client';
-import { currentPersonalUserVar, userVar } from '../../apollo/cache';
-import { useThemeUI } from 'theme-ui';
+import { currentPersonalUserVar } from '../../apollo/cache';
+import { useTheme } from '../../theme';
 import { Link } from 'react-router-dom';
 import { FaGlobe } from 'react-icons/fa';
 import { MdWork } from 'react-icons/md';
@@ -39,10 +39,9 @@ const works = [
 ];
 
 const IntroductionBox = () => {
-  const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   return (
-    <BoxWrapper theme={colorMode}>
+    <BoxWrapper theme={theme}>
       <h4>Introduction</h4>
       {/* Introduce */}
       <Introduce>

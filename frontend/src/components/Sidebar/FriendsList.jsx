@@ -7,7 +7,7 @@ import {
   ButtonClose,
   LeftSide,
 } from './styles/FriendsList.styles';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { userVar, contactVar } from '../../apollo/cache';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { FETCH_USER_FRIENDS_DATA } from '../../apollo/contact/contact.types';
@@ -17,9 +17,9 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import useLanguage from '../Global/useLanguage';
 import { FaSearch } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
-import Grid from '@material-ui/core/Grid';
+
 const FriendsList = ({ show, close }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const [openSearch, setOpenSearch] = useState(false);
   const user = useReactiveVar(userVar);
   const contact = useReactiveVar(contactVar);
@@ -66,7 +66,7 @@ const FriendsList = ({ show, close }) => {
       autoHeightMin={0}
       autoHeightMax={200}
     >
-      <FriendsListWrapper show={show} theme={colorMode}>
+      <FriendsListWrapper show={show} theme={theme}>
         <TitleContacts>
           <LeftSide hide={openSearch}>
             <ButtonClose onClick={close}>
@@ -76,7 +76,7 @@ const FriendsList = ({ show, close }) => {
               {i18n.store.data[lang].translation.contacts.contactsList}
             </FriendsListTitle>
           </LeftSide>
-          <FriendsListSearch show={openSearch} theme={colorMode}>
+          <FriendsListSearch show={openSearch} theme={theme}>
             <input
               ref={inputRef}
               type="text"

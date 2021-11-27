@@ -22,16 +22,12 @@ export const DropdownResponseRequest = styled.div`
   position: absolute;
   top: 110%;
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
   border-radius: 0.5rem;
-  box-shadow: var(--lightShadow);
+  box-shadow: ${({ theme }) => (theme ? theme.boxShadow : 'var(--boxShadow)')};
   display: ${({ open }) => (open ? 'block' : 'none')};
 
-  border: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   div {
     display: flex;
     align-items: center;
@@ -62,12 +58,8 @@ export const DropdownMenu = styled.div`
   right: 0;
   list-style: none;
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
-  border: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+    theme ? theme.background : 'var(--background)'};
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   overflow: hidden;
 `;
 
@@ -87,12 +79,11 @@ export const DropdownItem = styled.span`
     }
   }
   &:not(:last-child) {
-    border-bottom: 1px solid var(--gray-light);
+    border-bottom: 1px solid
+      ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   }
   &:hover {
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-hover-dark)'
-        : 'var(--color-hover-default)'};
+      theme ? theme.hover.background : 'var(--hover-background)'};
   }
 `;

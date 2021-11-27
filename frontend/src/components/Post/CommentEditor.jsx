@@ -13,7 +13,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { SEARCH_FRIENDS } from '../../apollo/user/user.types';
 import { Wrapper } from './PostEditor/styles/PostEditorBody.styles';
 import { CommentInput, CommentControls } from './styles/CommentEditor.styles';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import useLanguage from '../Global/useLanguage';
 import { CREATE_COMMENT } from '../../apollo/post/post.mutations';
 import useDraftEditorPlugin from './useDraftEditorPlugin';
@@ -28,7 +28,7 @@ const CommentEditor = ({ post }) => {
     { fetchPolicy: 'network-only', skip: true }
   );
   const [createComment] = useMutation(CREATE_COMMENT);
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const onOpenChange = useCallback((_open) => setOpenMention(_open), []);
   const [showControls, setShowControls] = useState(false);
   const controlsRef = useRef(null);
@@ -135,7 +135,7 @@ const CommentEditor = ({ post }) => {
   return (
     <Wrapper ref={commentRef}>
       <CommentInput
-        theme={colorMode}
+        theme={theme}
         onClick={() => {
           editorRef.current?.focus();
           setShowControls(true);
@@ -160,7 +160,7 @@ const CommentEditor = ({ post }) => {
       </CommentInput>
       <CommentControls
         ref={controlsRef}
-        theme={colorMode}
+        theme={theme}
         show={showControls}
         onClick={() => setShowControls(true)}
       >

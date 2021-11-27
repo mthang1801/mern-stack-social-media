@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 export const CardWrapper = styled.aside`
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
+    theme ? theme.panelBackground : 'var(--panelBackground)'};
   text-align: center;
   border-radius: 0.7rem;
   overflow: hidden;
@@ -9,7 +9,7 @@ export const CardWrapper = styled.aside`
     height: 5rem;
     width: 100%;
     background-color: ${({ theme }) =>
-      theme === 'dark' ? 'var(--gray-dark)' : 'var(--gray-light)'};
+      theme ? theme.backgroundSecondary : 'var(--backgroundSecondary)'};
     position: relative;
     &__container {
       position: absolute;
@@ -20,10 +20,7 @@ export const CardWrapper = styled.aside`
     &__image {
       border-radius: 50%;
       border: 2px solid
-        ${({ theme }) =>
-          theme === 'dark'
-            ? 'var(-color-border-dark)'
-            : 'var(--color-border-default)'};
+        ${({ theme }) => (theme ? theme.border : 'var(--border)')};
     }
   }
   .user-name {

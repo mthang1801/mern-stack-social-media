@@ -17,18 +17,13 @@ export const ConversationItemWrapper = styled.div`
   }
   &:hover {
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-hover-dark)'
-        : 'var(--color-hover-default)'};
+      theme ? theme.hover.background : 'var(--hover-background)'};
   }
   ${({ active, theme }) =>
     active &&
     `
-    background-color : ${
-      theme === 'dark'
-        ? 'var(--color-hover-dark)'
-        : 'var(--color-hover-default)'
-    };
+    background-color: ${({ theme }) =>
+      theme ? theme.hover.background : 'var(--hover-background)'};
   `}
   ${({ hasSeenLatestMessage }) =>
     !hasSeenLatestMessage &&
@@ -51,7 +46,7 @@ export const Avatar = styled.div`
     active &&
     `
     & img {
-      border: 2px solid var(--green);
+      border: 2px solid var(--green-1);
     }
     &::after{
       position: absolute;
@@ -59,7 +54,7 @@ export const Avatar = styled.div`
       height: 0.5rem;
       width: 0.5rem;
       border-radius : 50%;
-      background-color : var(--green);
+      background-color : var(--green-1);
       right: 0%;
       top: 70%;
     }
@@ -90,7 +85,7 @@ export const ConversationControls = styled.div`
     ${({ hasSeenLatestMessage }) =>
       !hasSeenLatestMessage &&
       `
-      color : var(--red);
+      color : var(--red-1);
       opacity: 1;
     `}
   }

@@ -10,8 +10,9 @@ export const SearchForm = styled.form`
   justify-content: center;
   align-items: center;
   background: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
   color: inherit;
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   border-radius: 1rem;
   overflow: hidden;
   & > input {

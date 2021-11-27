@@ -8,7 +8,7 @@ import {
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Moment from 'react-moment';
 import { usePopupMessagesActions } from './hook/usePopupActions';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import ThreeDotsSetting from '../UI/ThreeDotsSetting';
 import { convertFromRaw, EditorState } from 'draft-js';
 import { UPDATE_HAVE_SEEN_ALL_MESSAGES } from '../../apollo/chat/chat.types';
@@ -27,7 +27,7 @@ const MessageItem = ({
 }) => {
   const [showSetting, setShowSettings] = useState(false);
   const { setPopupPosition, setShowPopup } = usePopupMessagesActions();
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const [updateHaveSeenAllMessages] = useMutation(
     UPDATE_HAVE_SEEN_ALL_MESSAGES
   );
@@ -51,7 +51,7 @@ const MessageItem = ({
   };
   return (
     <ConversationItemWrapper
-      theme={colorMode}
+      theme={theme}
       active={active}
       hasSeenLatestMessage={hasSeenLatestMessage}
       onClick={onClickConversationItem}

@@ -8,9 +8,7 @@ export const ContactItemWrapper = styled.div`
   padding: 0.5rem;
   &:hover {
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-hover-dark)'
-        : 'var(--color-hover-default)'};
+      theme ? theme.hover.background : 'var(--hover-background)'};
   }
 `;
 
@@ -26,7 +24,7 @@ export const Avatar = styled.div`
     active &&
     `
     & img{
-      border: 2px solid var(--green);
+      border: 2px solid var(--green-1);
     }
     &::after{
       position: absolute;
@@ -34,7 +32,7 @@ export const Avatar = styled.div`
       height: 0.5rem;
       width: 0.5rem;
       border-radius : 50%;
-      background-color : var(--green);
+      background-color : var(--green-1);
       right: 0%;
       top: 65%;      
     }

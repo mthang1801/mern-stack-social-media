@@ -1,15 +1,15 @@
 import React from 'react';
 import { Wrapper, AsideComponent, Main } from './styles/MainBody.styles';
 import Aside from '../components/Aside/Aside';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../theme';
 import { toggleFriendsBoardVar } from '../apollo/cache';
 import { useReactiveVar } from '@apollo/client';
 // This body used for home, notifications and global page
 const MainBody = ({ children }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const toggleFriendsBoard = useReactiveVar(toggleFriendsBoardVar);
   return (
-    <Wrapper theme={colorMode}>
+    <Wrapper theme={theme}>
       <AsideComponent openFriendBoard={toggleFriendsBoard}>
         <Aside />
       </AsideComponent>

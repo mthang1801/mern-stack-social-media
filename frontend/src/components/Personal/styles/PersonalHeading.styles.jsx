@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export const Container = styled.div`
   width: 100%;
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
   height: 600px;
   display: flex;
   flex-direction: column;
@@ -32,9 +32,7 @@ export const BackgroundImageContainer = styled.div`
     width: 8rem;
     height: 8rem;
     border-radius: 50%;
-    border: 5px solid
-      ${({ theme }) =>
-        theme === 'dark' ? 'var(--gray)' : 'var(--color-border-default)'};
+    border: 5px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   }
   position: absolute;
   bottom: -8rem;
@@ -92,12 +90,10 @@ export const ProfileMenuItemLink = styled(Link)`
   transition: var(--mainTransition);
   &:hover {
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-background-dark)'
-        : 'var(--color-background-default)'};
+      theme ? theme.hover.background : 'var(--hover-background)'};
     border-radius: ${({ active }) =>
       active === 'true' ? '0.5rem 0.5rem 0 0' : '0.5rem'};
   }
   border-bottom: ${({ active }) =>
-    active === 'true' ? '2px solid var(--primary)' : '2px solid transparent'};
+    active === 'true' ? '2px solid var(--blue-1)' : '2px solid transparent'};
 `;

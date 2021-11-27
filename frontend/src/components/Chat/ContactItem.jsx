@@ -6,7 +6,7 @@ import {
   ContactControls,
 } from './styles/ContactItem.styles';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { usePopupContactActions } from './hook/usePopupActions';
 import ThreeDotsSetting from '../UI/ThreeDotsSetting';
 
@@ -21,7 +21,7 @@ const ContactItem = ({ friend }) => {
   const [showSetting, setShowSettings] = useState(false);
   const messagesStorage = useReactiveVar(messagesStorageVar);
   const { setPopupPosition, setShowPopup } = usePopupContactActions();
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { refetch: fetchSingleChatConversation } = useQuery(
     FETCH_SINGLE_CHAT_CONVERSATION,
     {
@@ -57,7 +57,7 @@ const ContactItem = ({ friend }) => {
   };
   return (
     <ContactItemWrapper
-      theme={colorMode}
+      theme={theme}
       onMouseEnter={() => setShowSettings(true)}
       onMouseLeave={() => setShowSettings(false)}
       onClick={onSetCurrentChat}

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App/App';
-import { ThemeProvider } from 'theme-ui';
-import theme from './theme';
+import { ThemeProvider } from './theme';
+import { theme } from './theme/theme';
 import reportWebVitals from './reportWebVitals';
 import { client } from './apollo/client';
 import { ApolloProvider } from '@apollo/client';

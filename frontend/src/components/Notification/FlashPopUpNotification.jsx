@@ -4,7 +4,7 @@ import {
   SenderAvatar,
   NotificationContent,
 } from './styles/FlashPopUpNotification.styles';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import useLanguage from '../Global/useLanguage';
 import { latestNotificationVar } from '../../apollo/cache';
 import { useReactiveVar } from '@apollo/client';
@@ -14,7 +14,7 @@ import { notificationContent } from '../../utils/notificationContent';
 import { setLatestNotification } from '../../apollo/notification/notification.caches';
 const FlashPopUpNotification = ({ onClick }) => {
   const latestNotification = useReactiveVar(latestNotificationVar);
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { i18n, lang } = useLanguage();
   const { message } = i18n.store.data[lang].translation.notifications;
   useEffect(() => {
@@ -34,7 +34,7 @@ const FlashPopUpNotification = ({ onClick }) => {
   };
 
   return (
-    <Wrapper show={latestNotification} theme={colorMode} onClick={onClickPopup}>
+    <Wrapper show={latestNotification} theme={theme} onClick={onClickPopup}>
       {latestNotification ? (
         <>
           <SenderAvatar>

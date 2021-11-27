@@ -14,9 +14,8 @@ import {
 } from './styles/PostCardFooter.styles';
 import useLanguage from '../Global/useLanguage';
 import { BiLike } from 'react-icons/bi';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { useMutation, useReactiveVar } from '@apollo/client';
-import { userVar } from '../../apollo/cache';
 import { LIKE_POST, REMOVE_LIKE_POST } from '../../apollo/post/post.types';
 
 import LazyLoad from 'react-lazyload';
@@ -24,7 +23,7 @@ import CommentEditor from './CommentEditor';
 const PostCardFooter = ({ post, fetchComments, user }) => {
   const { i18n, lang } = useLanguage();
   const { controls } = i18n.store.data[lang].translation.post;
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const [likePost] = useMutation(LIKE_POST);
   const [removeLikePost] = useMutation(REMOVE_LIKE_POST);
   const [showCommentEditor, setShowCommentEditor] = useState(false);
@@ -59,10 +58,10 @@ const PostCardFooter = ({ post, fetchComments, user }) => {
 
   return (
     <Wrapper>
-      <Controls theme={colorMode}>
+      <Controls theme={theme}>
         {/* Like */}
         <Button
-          theme={colorMode}
+          theme={theme}
           liked={post.likes.includes(user?._id)}
           onClick={onClickLikePost}
         >
@@ -74,12 +73,12 @@ const PostCardFooter = ({ post, fetchComments, user }) => {
           </span>
         </Button>
         {/* Comment */}
-        <Button theme={colorMode} onClick={onClickComment}>
+        <Button theme={theme} onClick={onClickComment}>
           <span>{controls.comment.icon()}</span>
           <span>{controls.comment.name}</span>
         </Button>
         {/* Share */}
-        <Button theme={colorMode}>
+        <Button theme={theme}>
           <span>{controls.share.icon()}</span>
           <span>{controls.share.name}</span>
         </Button>
@@ -111,7 +110,7 @@ const PostCardFooter = ({ post, fetchComments, user }) => {
                   <img src={user.avatar} alt={user.avatar} />
                 </LazyLoad>
               </AvatarContainer>
-              <FormComment theme={colorMode}>
+              <FormComment theme={theme}>
                 <CommentEditor post={post} />
               </FormComment>
             </UserComment>

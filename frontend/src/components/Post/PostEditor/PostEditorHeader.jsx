@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import LazyLoad from 'react-lazyload';
 import useLanguage from '../../Global/useLanguage';
 import { MdZoomOutMap } from 'react-icons/md';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../../theme';
 const PostEditorHeader = ({
   user,
   postStatus,
@@ -24,7 +24,7 @@ const PostEditorHeader = ({
 }) => {
   const { i18n, lang } = useLanguage();
   const { status } = i18n.store.data[lang].translation.post;
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const currentStatus = status?.find(
     (status) => status.name.toLowerCase() === postStatus.toLowerCase()
   );
@@ -43,7 +43,7 @@ const PostEditorHeader = ({
   }, [dropdownRef]);
 
   return (
-    <Wrapper theme={colorMode}>
+    <Wrapper theme={theme}>
       <Information>
         <Link to={`/${user.slug}`}>
           <LazyLoad>
@@ -56,7 +56,7 @@ const PostEditorHeader = ({
           </Link>
           <SelectStatus ref={dropdownRef}>
             <Selected
-              theme={colorMode}
+              theme={theme}
               style={{ textTransform: 'capitalize' }}
               status={currentStatus.name.toLowerCase()}
               onClick={() => setOpenDropdown((prevState) => !prevState)}
@@ -64,7 +64,7 @@ const PostEditorHeader = ({
               <span>{currentStatus.icon()}</span>
               <span>{currentStatus.name}</span>
             </Selected>
-            <DropdownStatus theme={colorMode} open={openDropdown}>
+            <DropdownStatus theme={theme} open={openDropdown}>
               {status &&
                 status
                   .filter(
@@ -73,7 +73,7 @@ const PostEditorHeader = ({
                   )
                   .map(({ name, icon }) => (
                     <StatusItem
-                      theme={colorMode}
+                      theme={theme}
                       key={name}
                       status={name.toLowerCase()}
                       onClick={() => setPostStatus(name.toUpperCase())}

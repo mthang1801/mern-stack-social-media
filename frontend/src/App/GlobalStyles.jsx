@@ -1,148 +1,80 @@
 import { createGlobalStyle } from 'styled-components/macro';
 
 export default createGlobalStyle`
-:root {
-  --maxWidth-none: "none";
-  --maxWidth-xs: 20rem;
-  --maxWidth-sm: 24rem;
-  --maxWidth-md: 28rem;
-  --maxWidth-lg: 32rem;
-  --maxWidth-xl: 36rem;
-  --maxWidth-2xl: 42rem;
-  --maxWidth-3xl: 48rem;
-  --maxWidth-4xl: 56rem;
-  --maxWidth-full: "100%";
-  --maxWidth-wrapper: var(--maxWidth-2xl);
-  --spacing-px: "1px";
-  --spacing-0: 0;
-  --spacing-1: 0.25rem;
-  --spacing-2: 0.5rem;
-  --spacing-3: 0.75rem;
-  --spacing-4: 1rem;
-  --spacing-5: 1.25rem;
-  --spacing-6: 1.5rem;
-  --spacing-8: 2rem;
-  --spacing-10: 2.5rem;
-  --spacing-12: 3rem;
-  --spacing-16: 4rem;
-  --spacing-20: 5rem;
-  --spacing-24: 6rem;
-  --spacing-32: 8rem;    
-  --fontWeight-normal: 400;
-  --fontWeight-medium: 500;
-  --fontWeight-semibold: 600;
-  --fontWeight-bold: 700;
-  --fontWeight-extrabold: 800;
-  --fontWeight-black: 900;
-  --fontSize-root: 16px;
-  --lineHeight-none: 1;
-  --lineHeight-tight: 1.1;
-  --lineHeight-normal: 1.5;
-  --lineHeight-relaxed: 1.625;
-  /* 1.200 Minor Third Type Scale */
-  --fontSize-0: 0.833rem;
-  --fontSize-1: 1rem;
-  --fontSize-2: 1.2rem;
-  --fontSize-3: 1.44rem;
-  --fontSize-4: 1.728rem;
-  --fontSize-5: 2.074rem;
-  --fontSize-6: 2.488rem;
-  --fontSize-7: 2.986rem;
-  --color-primary: #005b99;
-  
-  --color-heading: #1a202c;
-  --color-heading-black: black;
-  --color-accent: #d1dce5;
-  --abyss : #07223d;
+  :root{
+    --white : #fff; 
+    --black : #000;
+    --indigo-1 : #3949ab;
+    --indigo-2 : #283593;
+    --indigo-3 : #1a237e;  
+    --blue-1 : #1e88e5;
+    --blue-2 : #1565c0;
+    --blue-3 : #0d47a1;
+    --light-blue-1 : #039be5;
+    --light-blue-2 : #0277bd;
+    --light-blue-3 : #01579b;
+    --cyan-1 : #00acc1;
+    --cyan-2 : #00838f;
+    --cyan-3 : #006064;
+    --green-1 : #43a047;
+    --green-2 : #2e7d32;
+    --green-3: #1b5e20;
+    --red-1: #e53935 ;   
+    --red-2: #c62828 ;   
+    --red-3: #b71c1c ;   
+    --light-gray-1: #f5f5f5 ;
+    --light-gray-2: #e0e0e0 ;
+    --light-gray-3: #9e9e9e  ;
+    --gray-1 : #616161;
+    --gray-2 : #424242;
+    --gray-3 : #212121;        
+    --amber-1 : #ffb300;
+    --amber-2 : #ffa000;
 
-  --gray-dark : #454545;
-  --gray-light: #dedede;
-  --gray-deep : #bfbfbf;
+    --success :  #43a047;
+    --warning : #ffb300; 
+    --error :  #e53935 ;
 
-  --mainTransition: 0.15s all;
-  --secondTransition : 0.6s all;
-  --transition-delay : 0.5s;
-  --blue: #0d6efd;
-  --blue-1:#1e88e5 ;
-  --blue-2:#1565c0 ;
-  --blue-3:#0d47a1  ;
-  --dark-blue: #003e9a;
-  --indigo-1: #3949ab;
-  --indigo-2 : #283593;   
-  --red: #dc3545;  
-  --green-1: #43a047;  
-  --green-2 : #2e7d32;   
-  --white: #fff;
-  --gray-light-1: #bdbdbd ;
-  --gray-light-2: #9e9e9e;
-  --gray: #6c757d;
-  --gray-dark: #343a40;
-  --primary: #0d6efd;
-  --secondary: #6c757d;
-  --success: #198754;
-  --info: #0dcaf0;
-  --warning: #ffc107;
-  --danger: #dc3545;
-  --light: #f8f9fa;
-  --dark: #212529;  
-  --blue-1 :#1e88e5 ;
-  --blue-2 : #1976d2 ;
-  --blue-3 : #0d47a1;
-  --cyan-1 : #00acc1; 
-  --cyan-2 : #00838f;
-  --color-background-default: #f0f0f0;
-  --color-background-default-secondary : #b4b4b4;
-  --color-text-default : #000;  
+    --mainTransition : all 0.2s;
+    --fontFamily-sans: Montserrat,system-ui,-apple-system,BlinkMacSystemFont, "Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif, "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    --fontFamily-serif: "Merriweather","Georgia",Cambria,"Times New Roman", Times,serif;
 
-  --color-background-dark : #2c2c2c;
-  --color-background-dark-secondary : #0e0d0d; 
-  --color-text-dark : #fff;
-  --color-hover-dark : var(--gray-dark);
 
-  --color-card-dark : #2d2f31;    
-  --color-card-dark-secondary : #17181a;    
-  --color-card-default : #fff;
-  --color-card-default-secondary :#f1f1f1;
-  --color-hover-default : var(--light);
-  
-  --color-border-dark : #616161;   
-  --color-border-default : #e0e0e0;
-
-  --color-notification-hasSeen-dark : #292929;
-  --color-notification-notSeen-dark :#1a1818;
-  --color-notification-hasSeen-default :#f2f2f2;
-  --color-notification-notSeen-default : #d4d4d4;
-
-  --fontFamily-sans: Montserrat, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --fontFamily-serif: "Merriweather", "Georgia", Cambria, "Times New Roman",
-    Times, serif;
-  --fontFamily: system-ui,-apple-system,BlinkMacSystemFont,Roboto,Ubuntu,"Helvetica Neue",sans-serif;
-  --gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));  
-  --lightShadow: 0px 1px 1.5px 1.5px rgba(0, 0, 0, 0.1);
-  --mediumShadow : 2px 3px 3px 1px rgba(0,0,0,0.2);
-  --darkShadow: 4px 10px 5px 1px rgba(0, 0, 0, 0.3);    
-  font-size : ${({ rootFont }) => (rootFont ? `${rootFont}px` : '16px')}  
-}
-  *,:after, :before {
-    padding: 0;
+    --text: #000000;
+    --background: #fff;
+    --backgroundSecondary : #b4b4b4;    
+    --panelBackground: #f9f9f9;
+    --hover-background: #f5f5f5;
+    --hover-text: #ffc107;
+    --border: #e0e0e0;
+    --boxShadow: 0 0 3px 3px #f5f5f5;
+    --disabled-background: #f5f5f5;
+    --disabled-color: #424242;
+    --card-primary: #fff;
+    --card-secondary: #17181a;    
+    --border: #e0e0e0;
+    --notification-hasSeen: #f2f2f2;
+    --notification-unSeen: #d4d4d4;
+    --link : #2e89ff;
+  }
+  *, *:after, *:before{
+    padding : 0; 
     margin: 0;
     box-sizing: border-box;
+  } 
+  html{    
+    overflow-x :hidden;
   }
-  html{
-    line-height: var(--lineHeight-normal);
-    font-size: var(--fontSize-root);    
-    -webkit-text-size-adjust: 100%; /* 2 */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  body {
-    font-family: var(--fontFamily);            
-    font-weight: 400 !important;
-    font-size: var(--fontSize-1);    
-    width : 100vw;
-    overflow-x : hidden;
+  body{    
+    background-color : ${({ theme }) =>
+      theme ? theme.background : '#fff'}    ;
+    color : ${({ theme }) => (theme ? theme.text : 'var(--gray-3)')} ;
+    margin : 0; 
+    padding : 0 ;    
+    overflow-x: hidden;           
+    font-family : var(--fontFamily-sans);
+    transition: background-color 0.1s ease;
+    font-size : 1rem;   
   }
 
   input{
@@ -622,14 +554,8 @@ export default createGlobalStyle`
     overflow: auto;
     & > *{
       background-color : ${({ theme }) =>
-        theme === 'dark'
-          ? 'var(--color-card-dark)'
-          : 'var(--color-card-default)'};
+        theme ? theme.panelBackground : 'var(--panelBackground)'};
       
-      color : ${({ theme }) =>
-        theme === 'dark'
-          ? 'var(--color-text-dark)'
-          : 'var(--color-text-default)'};     
-    }    
+      color : ${({ theme }) => (theme ? theme.text : 'var(--text)')}    
   }
 `;

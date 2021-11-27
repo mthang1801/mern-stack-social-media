@@ -4,10 +4,7 @@ export const Wrapper = styled.div`
   display: flex;
   padding: 0.5rem;
   border-bottom: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+    ${({ theme }) => (theme ? theme.border : 'var(--border)')};
 `;
 
 export const Information = styled.div`

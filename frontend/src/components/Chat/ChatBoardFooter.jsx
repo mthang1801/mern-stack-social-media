@@ -22,7 +22,7 @@ import createMentionPlugin, {
 } from '@draft-js-plugins/mention';
 import createEmojiPlugin from '@draft-js-plugins/emoji';
 import createLinkifyPlugin from '@draft-js-plugins/linkify';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import {
   SEND_MESSAGE_CHAT_TEXT,
   SEND_MESSAGE_CHAT_FILE,
@@ -38,7 +38,7 @@ const ChatBoardFooter = () => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const [suggestions, setSuggestions] = useState(mentions);
   const [open, setOpen] = useState(true);
   const { i18n, lang } = useLanguage();
@@ -224,7 +224,7 @@ const ChatBoardFooter = () => {
             : 'block',
       }}
     >
-      <ChatActions theme={colorMode}>
+      <ChatActions theme={theme}>
         <Label htmlFor="chat-image" style={{ color: '#fb8c00' }}>
           <HiOutlinePhotograph />
           <input

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Wrapper, FetchMoreLink } from './styles/PostCard.styles';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import PostCardHeader from './PostCardHeader';
 import PostCardBody from './PostCardBody';
 import PostCardFooter from './PostCardFooter';
@@ -14,7 +14,7 @@ import EditPostDialog from './EditPostDialog';
 import { addFetchedCommentsToPost } from '../../apollo/post/post.caches';
 
 const PostCard = ({ post }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const user = useReactiveVar(userVar);
   const { refetch: fetchComments } = useQuery(FETCH_COMMENTS, {
     fetchPolicy: 'cache-and-network',
@@ -60,7 +60,7 @@ const PostCard = ({ post }) => {
   }, [isEdited]);
 
   return (
-    <Wrapper theme={colorMode}>
+    <Wrapper theme={theme}>
       <EditPostDialog
         open={isEdited}
         setOpen={setIsEdited}

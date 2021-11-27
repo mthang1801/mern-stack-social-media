@@ -1,5 +1,5 @@
 import React from 'react';
-import { useColorMode } from 'theme-ui';
+import { useTheme } from '../../theme';
 import Switch from 'react-switch';
 import sun from '../../assets/images/sun.png';
 import moon from '../../assets/images/moon.png';
@@ -31,16 +31,14 @@ const uncheckedIcon = (
 );
 
 const ButtonColorMode = () => {
-  const [colorMode, setColorMode] = useColorMode();
+  const { setColorMode, theme } = useTheme();
   return (
     <Switch
       arial-label="Toggle dark mode"
       checkedIcon={checkedIcon}
       uncheckedIcon={uncheckedIcon}
-      checked={colorMode === 'dark'}
-      onChange={() =>
-        setColorMode((prevState) => (prevState === 'dark' ? 'default' : 'dark'))
-      }
+      checked={theme.name === 'light'}
+      onChange={() => setColorMode(theme.name === 'light' ? 'dark' : 'light')}
       height={24}
       width={48}
       handleDiameter={24}

@@ -11,16 +11,16 @@ import ButtonMenu from '../Controls/ButtonMenu';
 import { toggleMenu } from '../../apollo/controls/controls.caches';
 
 import classNames from 'classnames';
-import { userVar, toggleFriendsBoardVar } from '../../apollo//cache';
-import { useQuery, useReactiveVar } from '@apollo/client';
+import { userVar, toggleFriendsBoardVar } from '../../apollo/cache';
+import { useReactiveVar } from '@apollo/client';
 import { useLocation } from 'react-router-dom';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import ButtonLogin from '../Controls/ButtonLogin';
 import ButtonSignUp from '../Controls/ButtonSignUp';
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
   const user = useReactiveVar(userVar);
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { pathname } = useLocation();
   const toggleFriendsBoard = useReactiveVar(toggleFriendsBoardVar);
   const NavControls = user ? (
@@ -58,7 +58,7 @@ const Header = () => {
   );
 
   return (
-    <Wrapper theme={colorMode} openFriendBoard={toggleFriendsBoard}>
+    <Wrapper theme={theme} openFriendBoard={toggleFriendsBoard}>
       <div className={classNames('nav-header', { shorten: !openSearch })}>
         <div className={classNames('nav-brand', { hide: openSearch })}>
           <Brand />
@@ -91,11 +91,9 @@ const Wrapper = styled.header`
   width: 100vw;
   height: 60px;
   background-color: ${({ theme }) =>
-    theme === 'dark'
-      ? 'var(--color-background-dark)'
-      : 'var(--color-background-default)'};
+    theme ? theme.background : 'var(--background)'};
   border-bottom: 1px solid
-    ${({ theme }) => (theme === 'dark' ? 'var(--gray)' : 'var(--gray-light)')};
+    ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   position: fixed;
   top: 0;
   padding: 0 0.4rem;

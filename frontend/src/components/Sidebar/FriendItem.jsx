@@ -7,11 +7,11 @@ import {
   UserInfo,
   ActiveStatus,
 } from './styles/FriendItem.styles';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 const FriendItem = ({ data }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   return (
-    <LinkItem to={data.slug} theme={colorMode}>
+    <LinkItem to={data.slug} theme={theme}>
       <UserInfo>
         <ImageContainer active={data.isOnline}>
           <LazyLoadImage src={data.avatar} alt={data.avatar} />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createRef } from 'react';
 import { Wrapper } from './styles/ChatBoardBody.styles';
 import Bubble from './Bubble';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import {
   userVar,
@@ -24,7 +24,7 @@ const ChatBoardBody = () => {
   });
   const chatBoardBodyRef = createRef(null);
   const [shouldScrollIntoView, setShouldScrollIntoView] = useState(true);
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   useEffect(() => {
     let timer;
     timer = setTimeout(() => {
@@ -115,7 +115,7 @@ const ChatBoardBody = () => {
   console.log(messagesStorage);
   return (
     <Wrapper
-      theme={colorMode}
+      theme={theme}
       id="body-board"
       // onScrollCapture={onScrollBoardBody}
     >

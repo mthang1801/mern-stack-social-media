@@ -3,11 +3,7 @@ import styled from 'styled-components/macro';
 export const CommentInput = styled.div`
   .DraftEditor-root {
     width: 100%;
-    border: 1px solid
-      ${({ theme }) =>
-        theme === 'dark'
-          ? 'var(--color-border-dark)'
-          : 'var(--color-border-default)'};
+    border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
     border-radius: 0.5rem;
     padding: 0.25rem 0.5rem;
     max-height: 5rem;

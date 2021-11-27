@@ -28,7 +28,7 @@ import {
   addNotificationsToNotifcationsList,
   setCountNumberNotificationsUnseen,
 } from '../../apollo/notification/notification.caches';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import constant from '../../constant/constant';
 const Control = () => {
   const [openNotificationBoard, setOpenNotificationBoard] = useState(false);
@@ -38,7 +38,7 @@ const Control = () => {
   const [loadingNotificationsMore, setLoadingNotificationsMore] =
     useState(false);
   const notificationRef = useRef(false);
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { refetch: fetchNumberNotificationsUnseen } = useQuery(
     FETCH_COUNT_NUMBER_NOTIFICATIONS_UNSEEN,
     { skip: true }
@@ -163,7 +163,7 @@ const Control = () => {
           ) : null}
         </Button>
 
-        <NotificationBoard open={openNotificationBoard} theme={colorMode}>
+        <NotificationBoard open={openNotificationBoard} theme={theme}>
           <Scrollbars
             autoHide
             autoHideTimeout={1000}

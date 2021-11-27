@@ -8,7 +8,7 @@ import {
 } from './styles/PostCardHeader.styles';
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import Moment from 'react-moment';
 import Button from '../Controls/ButtonDefaultCircle';
 import { BsThreeDots } from 'react-icons/bs';
@@ -21,7 +21,7 @@ import {
 const PostCardHeader = ({ post, user, setIsEdited }) => {
   const [openSetting, setOpenSetting] = useState(false);
   const { i18n, lang } = useLanguage();
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const {
     status,
     heading: { settingOwnPost },
@@ -44,7 +44,7 @@ const PostCardHeader = ({ post, user, setIsEdited }) => {
     return () => window.removeEventListener('click', trackUserClickEvent);
   });
   return (
-    <Wrapper theme={colorMode}>
+    <Wrapper theme={theme}>
       <Information>
         <Link to={`/${post.author.slug}`}>
           <LazyLoadImage
@@ -72,7 +72,7 @@ const PostCardHeader = ({ post, user, setIsEdited }) => {
             <BsThreeDots />
           </Button>
           {openSetting && (
-            <DropdownMenu position="top" theme={colorMode}>
+            <DropdownMenu position="top" theme={theme}>
               <DropdownItem>
                 <span>{pinPost.icon}</span>
                 <span>{pinPost.name}</span>

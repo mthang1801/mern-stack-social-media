@@ -8,7 +8,6 @@ import {
   CommentResponse,
 } from './styles/CommentItem.styles';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { useThemeUI } from 'theme-ui';
 import useLanguage from '../Global/useLanguage';
 import { BsArrowReturnRight } from 'react-icons/bs';
 import { Response } from './styles/CommentItem.styles';
@@ -33,7 +32,6 @@ import {
 import { setAlertDialog } from '../../apollo/controls/controls.caches';
 import constant from '../../constant/constant';
 const CommentItem = ({ comment, user }) => {
-  const { colorMode } = useThemeUI();
   const { i18n, lang } = useLanguage();
   const [showResponse, setShowResponse] = useState(false);
   const [dataResponse, setDataResponse] = useState('');

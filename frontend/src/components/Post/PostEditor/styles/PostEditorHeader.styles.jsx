@@ -4,10 +4,7 @@ export const Wrapper = styled.div`
   display: flex;
   padding: 0.5rem;
   border-bottom: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+    ${({ theme }) => (theme ? theme.border : 'var(--border)')};
 `;
 
 export const Information = styled.div`
@@ -43,11 +40,7 @@ export const Selected = styled.div`
     display: flex;
     margin: 0 0.2rem;
   }
-  border: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   border-radius: 1rem;
   padding: 0.15rem 0.35rem;
   background-color: ${({ status }) =>
@@ -55,7 +48,7 @@ export const Selected = styled.div`
       ? 'var(--indigo-1)'
       : status === 'friends'
       ? 'var(--green-1)'
-      : 'var(--gray-light-1)'};
+      : 'var(--light-gray-1)'};
   color: ${({ status }) =>
     status === 'public' || status === 'friends'
       ? 'var(--white)'
@@ -66,7 +59,7 @@ export const Selected = styled.div`
         ? 'var(--indigo-2)'
         : status === 'friends'
         ? 'var(--green-2)'
-        : 'var(--gray-light-2)'};
+        : 'var(--light-gray-2)'};
   }
 `;
 
@@ -76,12 +69,9 @@ export const DropdownStatus = styled.div`
   left: 5%;
   flex-direction: column;
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
-  border: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
+
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   border-radius: 0.3rem;
   box-shadow: var(--lightShadow);
   overflow: hidden;
@@ -110,9 +100,7 @@ export const StatusItem = styled.span`
   }
   &:hover {
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-hover-dark)'
-        : 'var(--color-hover-default)'};
+      theme ? theme.hover.background : 'var(--hover-background)'};
   }
 `;
 

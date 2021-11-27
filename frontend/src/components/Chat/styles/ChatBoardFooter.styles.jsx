@@ -572,7 +572,7 @@ export const ChatActions = styled.div`
   display: flex;
   align-items: center;
   padding: 0.5rem;
-  border-bottom: 1px solid var(--gray-deep);
+  border-bottom: 1px solid var(--gray-3);
 `;
 
 export const Label = styled.label`

@@ -1,14 +1,13 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { Link } from 'react-router-dom';
 import { CardWrapper } from './styles/CartProfile.styles';
 const CardProfile = ({ user }) => {
-  const { colorMode } = useThemeUI();
-  console.log(user);
+  const { theme } = useTheme();
   return (
-    <CardWrapper theme={colorMode}>
+    <CardWrapper theme={theme}>
       <div className="user-avatar">
         <Link to={`/${user.slug}`} className="user-avatar__container">
           <LazyLoadImage

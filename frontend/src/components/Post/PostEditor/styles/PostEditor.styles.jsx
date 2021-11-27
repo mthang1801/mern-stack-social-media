@@ -5,8 +5,8 @@ export const EditorWrapper = styled.section`
   max-width: ${({ fullWidth }) => (fullWidth ? 'unset' : '500px')};
   min-height: ${({ fullWidth }) => (fullWidth ? '300px' : 'unset')};
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
-  box-shadow: var(--lightShadow);
+    theme ? theme.card.primary : 'var(--card-primary)'};
+  box-shadow: ${({ theme }) => (theme ? theme.boxShadow : 'var(--boxShadow)')};
   margin: 0 auto 1rem auto;
   border-radius: 0.5rem;
   padding-bottom: 0.25rem;

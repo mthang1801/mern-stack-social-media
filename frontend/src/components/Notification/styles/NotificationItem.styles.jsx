@@ -2,18 +2,16 @@ import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 export const Wrapper = styled.section`
   background-color: ${({ hasSeen, theme }) =>
-    theme === 'dark'
+    theme
       ? hasSeen
-        ? 'var(--color-notification-hasSeen-dark)'
-        : 'var( --color-notification-notSeen-dark)'
+        ? theme.notification.hasSeen
+        : theme.notification.unSeen
       : hasSeen
-      ? 'var( --color-notification-hasSeen-default)'
-      : 'var( --color-notification-notSeen-dark)'};
+      ? 'var(--notification-hasSeen)'
+      : 'var(--notification-unSeen'};
   &:hover {
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-hover-dark)'
-        : 'var(--color-hover-default)'};
+      theme ? theme.hover.background : 'var(--hover-background)'};
   }
 `;
 
@@ -44,12 +42,12 @@ export const Controls = styled.div`
   padding: 0.75rem 1.25rem;
 `;
 
-const ButtonsGroup = styled.div`
+export const ButtonsGroup = styled.div`
   display: flex;
   padding: 1rem;
 `;
 
-const ButtonAccept = styled.button`
+export const ButtonAccept = styled.button`
   padding: 0.5rem 1rem;
   outline: none;
   border: none;
@@ -63,7 +61,7 @@ const ButtonAccept = styled.button`
     background-color: #009651e3;
   }
 `;
-const ButtonDecline = styled.button`
+export const ButtonDecline = styled.button`
   padding: 0.5rem 1rem;
   outline: none;
   border: none;

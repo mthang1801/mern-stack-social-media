@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { darken, invert } from 'polished';
 const ButtonDefaultCircle = ({ children, ...props }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   return (
-    <Button theme={colorMode} {...props}>
+    <Button theme={theme} {...props}>
       {children}
     </Button>
   );
@@ -15,14 +15,8 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${({ variant, color, theme }) =>
-    variant === 'outlined'
-      ? 'transparent'
-      : color
-      ? `${color}`
-      : theme === 'dark'
-      ? 'var(--gray-dark)'
-      : 'var(--light)'};
+  background-color: ${({ theme }) =>
+    theme.name === 'dark' ? 'var(--gray-2)' : 'var(--light-gray-2)'};
   height: 40px;
   width: 40px;
   font-size: 1em;
@@ -31,14 +25,15 @@ const Button = styled.button`
   border: none;
   transition: var(--mainTransition);
   cursor: pointer;
-  color: ${({ color }) => (color ? invert(`${color}`) : 'inherit')};
+  color: ${({ theme }) => (theme ? theme.text : 'var(--text)')};
   &:hover {
     background-color: ${({ color, theme }) =>
       color
         ? `${darken(0.1, `${color}`)}`
-        : theme === 'dark'
+        : theme.name === 'dark'
         ? `${darken(0.1, '#454545')}`
         : `${darken(0.005, '#dedede')}`};
+    opacity: 0.65;
   }
   & img {
     width: 100%;

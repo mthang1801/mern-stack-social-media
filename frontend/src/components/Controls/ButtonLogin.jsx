@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
+
 const ButtonLogin = ({ children, to, from, ...props }) => {
   return (
     <Button to={{ pathname: to, state: { from } }} {...props}>
@@ -21,12 +22,12 @@ const Button = styled(Link)`
   transition: var(--mainTransition);
   text-transform: uppercase;
   font-weight: bolder;
-  border: 1px solid var(--primary);
-  color: var(--primary);
+  border: 1px solid var(--blue-1);
+  color: var(--blue-1);
   &:hover {
-    color: var(--light);
-    background-color: var(--primary);
-    box-shadow: var(--lightShadow);
+    color: var(--light-gray-1);
+    background-color: var(--blue-1);
+    box-shadow: var(--boxShadow);
   }
 
   font-family: var(--fontFamily);

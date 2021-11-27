@@ -29,16 +29,15 @@ import {
 } from '../../apollo/contact/contact.types';
 import { FOLLOW_USER, UNFOLLOW_USER } from '../../apollo/user/user.types';
 import Button from '@material-ui/core/Button';
-import { useQuery, useMutation, useReactiveVar } from '@apollo/client';
+import { useMutation, useReactiveVar } from '@apollo/client';
 
 import {
   dialogVar,
   notificationsVar,
   latestNotificationVar,
-  userVar,
   currentPersonalUserVar,
 } from '../../apollo/cache';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import {
   PersonalContactContainer,
   ResponseRequests,
@@ -53,8 +52,6 @@ import {
   clearAlertDialog,
 } from '../../apollo/controls/controls.caches';
 import {
-  removeNewNotification,
-  decreaseCountNumberNotificationsUnseen,
   removeNotificationItemFromNotificationsList,
   setLatestNotification,
 } from '../../apollo/notification/notification.caches';
@@ -76,7 +73,7 @@ const PersonalContact = ({ user }) => {
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
   const [removeFriend] = useMutation(REMOVE_FRIEND);
   //color theme
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   //useRef
   const responseRef = useRef(false);
   const settingRef = useRef(false);
@@ -257,17 +254,17 @@ const PersonalContact = ({ user }) => {
 
   const MyActionsContact = (
     <>
-      <Button size="large" theme={colorMode} title="update personal">
+      <Button size="large" theme={theme} title="update personal">
         <AiOutlineEdit />
       </Button>
-      <Button size="large" theme={colorMode} title="history actions">
+      <Button size="large" theme={theme} title="history actions">
         <AiOutlineUnorderedList />
       </Button>
     </>
   );
   const FriendActionsContact = (
     <>
-      <Button size="large" theme={colorMode} title="chat">
+      <Button size="large" theme={theme} title="chat">
         <RiMessengerLine />
       </Button>
     </>
@@ -281,7 +278,7 @@ const PersonalContact = ({ user }) => {
       ) ? (
         <Button
           size="large"
-          theme={colorMode}
+          theme={theme}
           title="Cancel request"
           onClick={onCancelRequestToAddFriend}
         >
@@ -293,12 +290,12 @@ const PersonalContact = ({ user }) => {
           currentPersonalUser._id.toString()
         ) ? (
         <ResponseRequests ref={responseRef}>
-          <Button size="large" theme={colorMode} title="Response the request">
+          <Button size="large" theme={theme} title="Response the request">
             <BsQuestionSquare
               onClick={() => setOpenResponse((prevState) => !prevState)}
             />
           </Button>
-          <DropdownResponseRequest theme={colorMode} open={openResponse}>
+          <DropdownResponseRequest theme={theme} open={openResponse}>
             <div onClick={onAcceptRequestToAddFriend}>
               <FcCheckmark /> Accept
             </div>
@@ -309,7 +306,7 @@ const PersonalContact = ({ user }) => {
         </ResponseRequests>
       ) : (
         <Button
-          theme={colorMode}
+          theme={theme}
           title="add friend"
           onClick={onSendRequestToAddFriend}
           size="large"
@@ -318,7 +315,7 @@ const PersonalContact = ({ user }) => {
         </Button>
       )}
 
-      <Button size="large" theme={colorMode} title="Chat">
+      <Button size="large" theme={theme} title="Chat">
         <RiMessengerLine />
       </Button>
     </>
@@ -356,14 +353,14 @@ const PersonalContact = ({ user }) => {
       {openUserInteraction && (
         <DropdownMenu>
           {user.following.includes(currentPersonalUser?._id) ? (
-            <DropdownItem theme={colorMode} onClick={onHandleUnfollowUser}>
+            <DropdownItem theme={theme} onClick={onHandleUnfollowUser}>
               <span>
                 <AiOutlineEyeInvisible />
               </span>
               <span>Unfollow</span>
             </DropdownItem>
           ) : (
-            <DropdownItem theme={colorMode} onClick={onHandleFollowUser}>
+            <DropdownItem theme={theme} onClick={onHandleFollowUser}>
               <span>
                 <AiOutlineEye />
               </span>
@@ -372,7 +369,7 @@ const PersonalContact = ({ user }) => {
           )}
 
           {user.friends.includes(currentPersonalUser?._id) && (
-            <DropdownItem theme={colorMode} onClick={onClickRemoveFriend}>
+            <DropdownItem theme={theme} onClick={onClickRemoveFriend}>
               <span>
                 <FiUserX />
               </span>
@@ -394,14 +391,14 @@ const PersonalContact = ({ user }) => {
         <BsThreeDots />
       </Button>
       {openSettings ? (
-        <DropdownMenu theme={colorMode}>
-          <DropdownItem theme={colorMode}>
+        <DropdownMenu theme={theme}>
+          <DropdownItem theme={theme}>
             <span>
               <BsExclamationSquare />
             </span>
             <span>Find Report</span>
           </DropdownItem>
-          <DropdownItem theme={colorMode}>
+          <DropdownItem theme={theme}>
             <span>
               <BiBlock />
             </span>

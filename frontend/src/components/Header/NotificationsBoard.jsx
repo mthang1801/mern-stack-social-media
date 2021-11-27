@@ -1,26 +1,21 @@
 import React, { memo } from 'react';
-import {
-  Wrapper,
-  Title,
-  Header,
-  Body,
-} from './styles/NotificationsBoard.styles';
+import { Wrapper, Title, Header } from './styles/NotificationsBoard.styles';
 import Button from '../Controls/ButtonDefaultCircle';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import Notifications from '../Notification/Notifications';
 import NotificationItem from '../Notification/NotificationItem';
 const NotificationsBoard = ({ notifications, loading }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   return (
-    <Wrapper theme={colorMode}>
+    <Wrapper theme={theme}>
       <Header>
         <Title>Notifications</Title>
         <Button variant="outlined">
           <BiDotsHorizontalRounded />
         </Button>
       </Header>
-      <Body>
+      <section>
         {loading ? (
           <div>Loading</div>
         ) : notifications.length ? (
@@ -34,7 +29,7 @@ const NotificationsBoard = ({ notifications, loading }) => {
         ) : (
           <div>No notifications</div>
         )}
-      </Body>
+      </section>
     </Wrapper>
   );
 };

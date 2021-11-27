@@ -19,12 +19,10 @@ export const FriendsListWrapper = styled.div`
   box-shadow: var(--mediumShadow);
   transition: var(--mainTransition);
   border-left: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+    ${({ theme }) => (theme ? theme.border : 'var(--border)')};
+
   background-color: ${({ theme }) =>
-    theme === 'dark' ? 'var(--color-card-dark)' : 'var(--color-card-default)'};
+    theme ? theme.card.primary : 'var(--card-primary)'};
   position: relative;
   ${({ show }) =>
     show
@@ -58,10 +56,8 @@ export const FriendsListSearch = styled.div`
   justify-content: space-between;
   position: relative;
   transition: var(--secondTransition);
-  background-color: ${({ theme, show }) =>
-    theme === 'dark'
-      ? 'var(--color-background-dark)'
-      : 'var(--color-background-default)'};
+  background-color: ${({ theme }) =>
+    theme ? theme.background : 'var(--background)'};
   border-radius: 3rem;
   overflow: hidden;
   width: ${({ show }) => (show ? '90%' : '2rem')};
@@ -72,19 +68,11 @@ export const FriendsListSearch = styled.div`
     width: ${({ show }) => (show ? 'calc(100% - 2rem)' : 0)};
     padding: 0 0.7rem;
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-background-dark)'
-        : 'var(--color-background-default)'};
+      theme ? theme.background : 'var(--background)'};
     outline: none;
-    border: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+    border: ${({ theme }) => (theme ? theme.border : 'var(--border)')};
     font-size: 1rem;
-    color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-text-dark)'
-        : 'var(--color-text-default)'};
+    color: ${({ theme }) => (theme ? theme.text : 'var(--text)')};
   }
 
   button {
@@ -94,7 +82,7 @@ export const FriendsListSearch = styled.div`
     width: 2rem;
     height: 2rem;
     background-color: ${({ theme }) =>
-      theme === 'dark' ? 'var(--gray-dark)' : 'var(--gray-light)'};
+      theme ? theme.background : 'var(--background)'};
     border-radius: 50%;
     display: flex;
     align-items: center;

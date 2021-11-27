@@ -3,7 +3,7 @@ import PostEditorHeader from './PostEditorHeader';
 import PostEditorBody from './PostEditorBody';
 import { EditorWrapper } from './styles/PostEditor.styles';
 import draftToHtml from 'draftjs-to-html';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../../theme';
 import { EditorState, convertToRaw } from 'draft-js';
 import useLanguage from '../../Global/useLanguage';
 import _ from 'lodash';
@@ -38,7 +38,7 @@ const PostEditor = ({
   const [images, setImages] = useState([]);
   const [disabledSubmit, setDisabledSubmit] = useState(true);
   const [openPostEditorDialog, setOpenPostEditorDialog] = useState(false);
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const { i18n, lang } = useLanguage();
   const { post } = i18n.store.data[lang].translation;
   const [createPost, { loading: createPostLoading }] = useMutation(CREATE_POST);
@@ -203,7 +203,7 @@ const PostEditor = ({
   const PostEditorRoot = (
     <EditorWrapper
       isEdited={isEdited}
-      theme={colorMode}
+      theme={theme}
       fullWidth={openPostEditorDialog}
     >
       <Prompt

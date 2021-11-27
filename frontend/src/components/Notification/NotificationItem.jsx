@@ -20,7 +20,7 @@ import {
   currentPersonalUserVar,
   newNotificationsVar,
 } from '../../apollo/cache';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import {
   ACCEPT_REQUEST_TO_ADD_FRIEND,
   REJECT_REQUEST_TO_ADD_FRIEND,
@@ -105,10 +105,10 @@ const NotificationItem = ({ notification }) => {
       })
       .catch((err) => console.log(err));
   };
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   if (!user) return null;
   return (
-    <Wrapper theme={colorMode} hasSeen={notification.hasSeen}>
+    <Wrapper theme={theme} hasSeen={notification.hasSeen}>
       <LinkWrapper
         to={notification.url}
         key={notification._id}

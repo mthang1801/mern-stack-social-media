@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 const ButtonMenu = ({ onClick }) => {
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   return (
-    <ToggleButton onClick={onClick} theme={colorMode}>
+    <ToggleButton onClick={onClick} theme={theme}>
       <span></span>
       <span></span>
       <span></span>
@@ -24,17 +24,13 @@ const ToggleButton = styled.div`
     width: 1.5rem;
     height: 2px;
     background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-background-default)'
-        : 'var(--color-background-dark)'};
+      theme ? theme.background : 'var(--background)'};
   }
 
   &:hover {
     span {
       background-color: ${({ theme }) =>
-        theme === 'dark'
-          ? 'var(--color-background-default-secondary)'
-          : 'var(--color-background-dark-secondary)'};
+        theme ? theme.backgroundSecondary : 'var(--backgroundSecondary)'};
     }
   }
 `;

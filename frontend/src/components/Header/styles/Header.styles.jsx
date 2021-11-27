@@ -16,7 +16,7 @@ export const UnseenNotification = styled.div`
   position: absolute;
   top: -20%;
   right: -15%;
-  background-color: var(--red);
+  background-color: var(--red-1);
   padding: 0.15rem 0.4rem;
   color: white;
   font-size: 0.8rem;
@@ -32,11 +32,7 @@ export const NotificationBoard = styled.div`
   transition: var(--mainTransition);
   width: 360px;
   height: ${({ open }) => (open ? '400px' : '0')};
-  border: 1px solid
-    ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-border-dark)'
-        : 'var(--color-border-default)'};
+  border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   overflow: auto;
   visibility: ${({ open }) => (open ? 'visible' : 'hidden')};
   opacity: ${({ open }) => (open ? 1 : 0)};

@@ -7,7 +7,7 @@ import {
 } from './styles/Chat.styles';
 import { userVar } from '../../apollo/cache';
 import Search from './Search';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { setCurrentChat } from '../../apollo/chat/chat.caches';
 import ListContacts from './ListContacts';
 import { FETCH_USER_FRIENDS_DATA } from '../../apollo/contact/contact.queries';
@@ -94,7 +94,7 @@ const Contact = () => {
         handleClickDotsSetting(e);
       });
   });
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
 
   const onChangeSearch = React.useCallback((e) => {
     setSearch(e.target.value);
@@ -116,8 +116,8 @@ const Contact = () => {
         <span>Block</span>
         <span>Delete</span>
       </PopupSettings>
-      <Wrapper theme={colorMode}>
-        <LeftSide theme={colorMode}>
+      <Wrapper theme={theme}>
+        <LeftSide theme={theme}>
           <Search search={search} onChange={onChangeSearch} />
           <hr />
           <ListContacts data={contact.friends} />

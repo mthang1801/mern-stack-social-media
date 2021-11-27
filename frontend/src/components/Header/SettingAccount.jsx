@@ -1,21 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { IoIosSettings } from 'react-icons/io';
 import Button from '../Controls/ButtonDefaultCircle';
-import styled from 'styled-components/macro';
+import { SettingWrapper } from './styles/SettingAccount.styles';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-import { useThemeUI } from 'theme-ui';
+import { useTheme } from '../../theme';
 import { FaChevronRight, FaRegSun } from 'react-icons/fa';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { FiLogOut } from 'react-icons/fi';
 import { MdLanguage } from 'react-icons/md';
-import ButoonColorMode from '../Controls/ButtonColorMode';
+import ButonColorMode from '../Controls/ButtonColorMode';
 import { userVar } from '../../apollo/cache';
 import { useReactiveVar } from '@apollo/client';
 import { logout } from '../Auth/Auth.utility';
 const SettingAccount = ({ className }) => {
   const [togglePopup, setTogglePopup] = useState(false);
-  const { colorMode } = useThemeUI();
+  const { theme } = useTheme();
   const settingRef = useRef(false);
   const user = useReactiveVar(userVar);
   useEffect(() => {
@@ -38,7 +38,7 @@ const SettingAccount = ({ className }) => {
   };
 
   return (
-    <SettingWrapper className={className} ref={settingRef} theme={colorMode}>
+    <SettingWrapper className={className} ref={settingRef} theme={theme}>
       <Button onClick={() => setTogglePopup((prevStatus) => !prevStatus)}>
         <IoIosSettings />
       </Button>
@@ -70,7 +70,7 @@ const SettingAccount = ({ className }) => {
             <span className="popup-item-left__name">Apperance</span>
           </div>
           <div className="popup-item-right">
-            <ButoonColorMode />
+            <ButonColorMode />
           </div>
         </li>
         {/* Setting Language */}
@@ -122,103 +122,4 @@ const SettingAccount = ({ className }) => {
   );
 };
 
-const SettingWrapper = styled.div`
-  position: relative;
-  ul.popup-setting {
-    position: absolute;
-    transition: var(--mainTransition);
-    top: 110%;
-    width: 80vw;
-    max-width: 360px;
-    border: 1px solid var(--gray-light);
-    right: 0;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    padding: 0.4rem;
-    background-color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-card-dark)'
-        : 'var(--color-card-default)'};
-    color: ${({ theme }) =>
-      theme === 'dark'
-        ? 'var(--color-text-dark)'
-        : 'var(--color-text-default)'};
-    box-shadow: var(--lightShadow);
-    z-index: 2;
-    & li {
-      width: 100%;
-      display: flex;
-      padding: 0.3rem 0.7rem;
-      justify-content: space-between;
-      transition: var(--mainTransition);
-      cursor: pointer;
-      &:hover {
-        background-color: ${({ theme }) =>
-          theme === 'dark'
-            ? 'var(--color-background-dark)'
-            : 'var(--color-background-default)'};
-        color: ${({ theme }) =>
-          theme === 'dark'
-            ? 'var(--color-text-dark)'
-            : 'var(--color-text-default)'};
-      }
-    }
-  }
-
-  .popup-item {
-    &-left {
-      display: flex;
-      align-items: center;
-      &__icon {
-        display: flex;
-        font-size: 1.3em;
-        margin-right: 0.25rem;
-        color: ${({ theme }) =>
-          theme === 'dark'
-            ? 'var(--color-text-dark)'
-            : 'var(--color-text-default)'};
-      }
-    }
-    &-right {
-    }
-  }
-
-  .user-profile {
-    border-bottom: 1px solid var(--gray-light);
-    margin-bottom: 0.5rem;
-  }
-
-  .direct-user-profile {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem;
-    .user-image-container {
-      width: 3rem;
-      height: 3rem;
-      & > img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-      }
-    }
-    .user-name {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      margin-left: 1rem;
-    }
-  }
-
-  .popup-item-hide {
-    visibility: hidden;
-    opacity: 0;
-  }
-
-  .popup-setting-hide {
-    visibility: hidden;
-    opacity: 0;
-    transition: var(--mainTransition);
-  }
-`;
-
-export default React.memo(SettingAccount);
+export default SettingAccount;
