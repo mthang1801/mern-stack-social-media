@@ -2,7 +2,6 @@ import { postControllers } from './post.controllers';
 import { pubsub } from '../pubsub';
 import { withFilter } from 'apollo-server-express';
 import { subscriptionActions } from '../schema';
-import constant from '../config/constant';
 export const postResolvers = {
   Query: {
     fetchPosts: (_, args, { req }, info) => {

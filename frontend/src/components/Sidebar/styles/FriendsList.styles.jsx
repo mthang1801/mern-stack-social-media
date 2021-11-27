@@ -1,15 +1,15 @@
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
 
-export const FriendsBoardWrapper = styled.div`
-  position: fixed;
-  top: 60px;
-  right: 0;
-  height: calc(100% - 60px);
-  width: 300px;
-  overflow: auto;
-  transition: var(--mainTransition);
-  z-index: ${({ show }) => (show ? 2 : -1)};
+export const ButtonClose = styled.button`
+  outline: none;
+  border: 1px solid var(--gray-light-1);
+  background-color: var(--gray-light-1);
+  font-size: 1rem;
+  border-radius: 50%;
+  padding: 0.25rem;
+  display: inline-flex;
+  margin-right: 1rem;
+  cursor: pointer;
 `;
 
 export const FriendsListWrapper = styled.div`
@@ -35,6 +35,15 @@ export const FriendsListWrapper = styled.div`
       : css`
           transform: translateX(100%);
         `}
+`;
+
+export const LeftSide = styled.div`
+  display: flex;
+  width: ${({ hide }) => (hide ? '0' : 'auto')};
+  visibility: ${({ hide }) => (hide ? 'hidden' : 'visible')};
+  transform: ${({ hide }) => (hide ? 'translateX(-200%)' : 'translateX(0)')};
+  transition: 0.12s all;
+  transition-delay: 0.05;
 `;
 
 export const TitleContacts = styled.div`
@@ -101,17 +110,4 @@ export const FriendsListSearch = styled.div`
 
 export const FriendsListTitle = styled.h4`
   font-size: 1.1rem;
-  width: ${({ hide }) => (hide ? '0' : 'auto')};
-  visibility: ${({ hide }) => (hide ? 'hidden' : 'visible')};
-  transform: ${({ hide }) => (hide ? 'translateX(-200%)' : 'translateX(0)')};
-  transition: 0.12s all;
-  transition-delay: 0.05;
 `;
-
-export const ButtonClose = styled.button`
-  position: absolute;
-  top: 50vh;
-  right: 0;
-`;
-
-export const ImageContainer = styled.div``;
