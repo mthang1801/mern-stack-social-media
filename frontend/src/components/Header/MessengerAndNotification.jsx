@@ -104,7 +104,7 @@ const Control = () => {
       notifications.length < user.notifications.length
     ) {
       const skip = notifications.length;
-      const limit = +process.env.REACT_APP_NOTIFICATIONS_PER_PAGE;
+      const limit = +constant.REACT_APP_NOTIFICATIONS_PER_PAGE;
       fetchNotifications({ skip, limit })
         .then(({ data: { fetchNotifications } }) => {
           if (_isMounted && fetchNotifications) {

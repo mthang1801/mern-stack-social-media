@@ -17,7 +17,8 @@ export const CustomFormContainer = styled.form`
   font-family: var(--fontFamily);
   @media screen and (max-width: 500px) {
     padding: 1.5rem 2rem;
-  } ;
+  }
+  background-color: white;
 `;
 export const FormHeader = styled.div`
   margin-bottom: 2rem;

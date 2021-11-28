@@ -17,9 +17,13 @@ import { useLocation } from 'react-router-dom';
 import { useTheme } from '../../theme';
 import ButtonLogin from '../Controls/ButtonLogin';
 import ButtonSignUp from '../Controls/ButtonSignUp';
+import useLocale from '../../locales';
 const Header = () => {
   const [openSearch, setOpenSearch] = useState(false);
   const user = useReactiveVar(userVar);
+  const {
+    translation: { auth },
+  } = useLocale();
   const { theme } = useTheme();
   const { pathname } = useLocation();
   const toggleFriendsBoard = useReactiveVar(toggleFriendsBoardVar);
@@ -45,10 +49,10 @@ const Header = () => {
     <div className="nav-controls">
       <div className="nav-auth">
         <ButtonLogin to="/auth" from={pathname}>
-          Login
+          {auth.buttons.login}
         </ButtonLogin>
         <ButtonSignUp to="/auth/signup" from={pathname}>
-          Sign up
+          {auth.buttons.signup}
         </ButtonSignUp>
         <div className="setting-account">
           <SettingAccount />

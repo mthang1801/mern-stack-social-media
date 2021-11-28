@@ -59,7 +59,7 @@ const PostEditorHeader = ({
             <Selected
               theme={theme}
               style={{ textTransform: 'capitalize' }}
-              status={currentStatus.name.toLowerCase()}
+              status={currentStatus.key.toLowerCase()}
               onClick={() => setOpenDropdown((prevState) => !prevState)}
             >
               <span>{currentStatus.icon()}</span>
@@ -70,14 +70,14 @@ const PostEditorHeader = ({
                 status
                   .filter(
                     (status) =>
-                      status.name.toLowerCase() !== postStatus.toLowerCase()
+                      status.key.toLowerCase() !== postStatus.toLowerCase()
                   )
-                  .map(({ name, icon }) => (
+                  .map(({ key, name, icon }) => (
                     <StatusItem
                       theme={theme}
-                      key={name}
+                      key={key}
                       status={name.toLowerCase()}
-                      onClick={() => setPostStatus(name.toUpperCase())}
+                      onClick={() => setPostStatus(key.toLowerCase())}
                     >
                       <span>{icon()}</span>
                       <span>{name}</span>

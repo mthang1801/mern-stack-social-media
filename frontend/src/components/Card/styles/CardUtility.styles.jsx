@@ -9,7 +9,7 @@ export const CardWrapper = styled.aside`
   padding: 1.5rem;
   .auth {
     & > * {
-      margin: 1rem 0;
+      margin: 1rem auto;
     }
   }
 `;

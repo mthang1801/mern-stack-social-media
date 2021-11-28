@@ -23,10 +23,10 @@ const Button = styled(Link)`
   font-weight: bolder;
   border: 1px solid var(--success);
   color: var(--success);
+  max-width: 10rem;
   &:hover {
     color: var(--light);
     background-color: var(--success);
-    box-shadow: var(--lightShadow);
   }
   font-family: var(--fontFamily);
 `;

@@ -160,6 +160,7 @@ export const en = {
       },
     ],
     auth: {
+      requestAuth: 'You need to login or signup to continue',
       login: 'Login Your Account',
       signup: 'Sign up Your Account',
       signout: 'Sign Out This Account',
@@ -338,6 +339,18 @@ export const en = {
         title: 'Warning',
         content: 'Do you want to remove this comment?',
       },
+    },
+    settingAccountDialog: {
+      profile: 'Go to profile',
+      appearance: 'Appearance',
+      language: 'Language',
+      settingAndPrivacy: 'Settings & Privacies',
+      logout: 'Logout',
+    },
+    cards: {
+      friends: 'Friends',
+      following: 'Followings',
+      followed: 'Followed',
     },
     utility: {
       loading: 'Loading',

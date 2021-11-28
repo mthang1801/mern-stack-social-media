@@ -158,6 +158,8 @@ export const vi = {
       },
     ],
     auth: {
+      requestAuth:
+        'Bạn cần đăng nhập vào tài khoản trước khi thực hiện tác vụ này',
       login: 'Đăng nhập Tài khoản',
       signup: 'Đăng ký Tài khoản',
       signout: 'Đăng xuất',
@@ -335,6 +337,18 @@ export const vi = {
         title: 'Cảnh báo',
         content: 'Bạn có muốn xóa bình luận không?',
       },
+    },
+    settingAccountDialog: {
+      profile: 'Đi đến profile',
+      appearance: 'Giao diện',
+      language: 'Ngôn ngữ',
+      settingAndPrivacy: 'Thiết lập và chính sách',
+      logout: 'Đăng xuất',
+    },
+    cards: {
+      friends: 'Bạn bè',
+      following: 'Đang theo dõi',
+      followed: 'Được theo dõi',
     },
     utility: {
       loading: 'Đang tải',

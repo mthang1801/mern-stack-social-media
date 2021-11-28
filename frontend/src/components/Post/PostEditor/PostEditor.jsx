@@ -34,7 +34,7 @@ const PostEditor = ({
 
   const { post } = translation;
   const [postStatus, setPostStatus] = useState(translation.post.status[0].key);
-  console.log(postStatus);
+
   const [editorState, setEditorState] = useState(() =>
     editedEditorState ? editedEditorState : EditorState.createEmpty()
   );

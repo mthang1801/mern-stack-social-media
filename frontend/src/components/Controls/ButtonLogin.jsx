@@ -24,10 +24,10 @@ const Button = styled(Link)`
   font-weight: bolder;
   border: 1px solid var(--blue-1);
   color: var(--blue-1);
+  max-width: 10rem;
   &:hover {
     color: var(--light-gray-1);
     background-color: var(--blue-1);
-    box-shadow: var(--boxShadow);
   }
 
   font-family: var(--fontFamily);

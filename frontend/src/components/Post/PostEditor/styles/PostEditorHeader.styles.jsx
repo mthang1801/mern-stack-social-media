@@ -67,6 +67,7 @@ export const DropdownStatus = styled.div`
   position: absolute;
   top: 110%;
   left: 5%;
+  width: 130px;
   flex-direction: column;
   background-color: ${({ theme }) =>
     theme ? theme.card.primary : 'var(--card-primary)'};
@@ -95,7 +96,7 @@ export const StatusItem = styled.span`
   & span {
     display: flex;
     &:not(last-child) {
-      margin-right: 0.2rem;
+      margin-right: 0.5rem;
     }
   }
   &:hover {

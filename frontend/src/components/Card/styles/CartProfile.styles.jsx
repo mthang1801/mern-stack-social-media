@@ -48,5 +48,8 @@ export const CardWrapper = styled.aside`
         color: var(--success);
       }
     }
+    &__text {
+      font-size: 14px;
+    }
   }
 `;
