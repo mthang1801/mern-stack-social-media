@@ -18,7 +18,7 @@ export const theme = {
         color: '#424242',
       },
       card: {
-        primary: '#fbfbfb',
+        primary: '#f7f7f7',
         secondary: '#17181a',
       },
       border: '#e0e0e0',

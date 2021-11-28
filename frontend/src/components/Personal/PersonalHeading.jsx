@@ -12,7 +12,7 @@ import {
   Footer,
 } from './styles/PersonalHeading.styles';
 import BackgroundImage from '../../assets/images/background-wallpaper.jpg';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { useTheme } from '../../theme';
 import PersonalHeadingContact from './PersonalHeadingContact';
 
@@ -20,13 +20,8 @@ const PersonalHeading = () => {
   const user = useReactiveVar(userVar);
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
   const { theme } = useTheme();
-  const { i18n, lang } = useLanguage();
-  const [menus, setMenus] = useState([]);
+  const { translation } = useLocale();
   const [activeLink, setActiveLink] = useState(null);
-
-  useEffect(() => {
-    setMenus(i18n.store.data[lang].translation.personalMenus);
-  }, [lang]);
 
   useEffect(() => {
     if (currentPersonalUser) {
@@ -51,8 +46,8 @@ const PersonalHeading = () => {
       </PersonalHeadingBackground>
       <Footer>
         <PersonalMenus>
-          {menus.length
-            ? menus.map((menu) => (
+          {translation.personalMenus.length
+            ? translation.personalMenus.map((menu) => (
                 <ProfileMenuItemLink
                   key={menu.name}
                   to={menu.path(currentPersonalUser.slug)}

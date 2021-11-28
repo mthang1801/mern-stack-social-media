@@ -22,12 +22,12 @@ import {
 import SentRequestsToAddFriend from '../components/Contact/SentRequestsToAddFriend';
 import ReceivedRequestsToAddFriend from '../components/Contact/ReceivedRequestsToAddFriend';
 import FriendsList from '../components/Contact/FriendsList';
-import useLanguage from '../components/Global/useLanguage';
+import useLocale from '../locales';
 import constant from '../constant/constant';
 const FriendsPage = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [fetched, setFetched] = useState(false);
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
   const user = useReactiveVar(userVar);
   const contact = useReactiveVar(contactVar);
 
@@ -105,9 +105,7 @@ const FriendsPage = () => {
       <MainBody>
         <MainContent>
           <MainContentFullSize>
-            <ContactTitle>
-              {i18n.store.data[lang].translation.contacts.title}
-            </ContactTitle>
+            <ContactTitle>{translation.contacts.title}</ContactTitle>
             {user && contact.sentRequestsToAddFriend.length ? (
               <SentRequestsToAddFriend
                 user={user}

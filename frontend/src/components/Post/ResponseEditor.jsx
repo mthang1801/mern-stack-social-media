@@ -15,7 +15,7 @@ import { SEARCH_FRIENDS } from '../../apollo/user/user.types';
 import { Wrapper } from './PostEditor/styles/PostEditorBody.styles';
 import { CommentInput, CommentControls } from './styles/CommentEditor.styles';
 import { useTheme } from '../../theme';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { CREATE_RESPONSE } from '../../apollo/post/post.types';
 const CommentEditor = ({
   comment,
@@ -82,8 +82,8 @@ const CommentEditor = ({
   const controlsRef = useRef(null);
   const responseRef = useRef(null);
   const editorRef = useRef(null);
-  const { i18n, lang } = useLanguage();
-  const { commentInputPlaceholder } = i18n.store.data[lang].translation.comment;
+  const { translation } = useLocale();
+  const { commentInputPlaceholder } = translation.comment;
   const onSearchChange = useCallback(({ value }) => {
     if (value) {
       searchFriends({ search: value }).then(({ data }) => {

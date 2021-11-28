@@ -5,18 +5,16 @@ import {
   NotificationContent,
 } from './styles/FlashPopUpNotification.styles';
 import { useTheme } from '../../theme';
-import useLanguage from '../Global/useLanguage';
 import { latestNotificationVar } from '../../apollo/cache';
 import { useReactiveVar } from '@apollo/client';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-
+import useLocale from '../../locales';
 import { notificationContent } from '../../utils/notificationContent';
 import { setLatestNotification } from '../../apollo/notification/notification.caches';
 const FlashPopUpNotification = ({ onClick }) => {
   const latestNotification = useReactiveVar(latestNotificationVar);
   const { theme } = useTheme();
-  const { i18n, lang } = useLanguage();
-  const { message } = i18n.store.data[lang].translation.notifications;
+  const { lang } = useLocale();
   useEffect(() => {
     let timer;
     if (latestNotification) {

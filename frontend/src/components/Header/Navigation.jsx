@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { NavLink } from 'react-router-dom';
 import { NavigationWrapper } from './styles/Navigation.styles';
 import Tooltips from './Tooltips';
 import { useTheme } from '../../theme';
 const Navigation = () => {
-  const { i18n, lang } = useLanguage();
-  const [menu, setMenu] = useState([]);
+  const { translation } = useLocale();
   const [showTooltips, setshowTooltips] = useState('');
   const { theme } = useTheme();
-  useEffect(() => {
-    setMenu(i18n.store.data[lang].translation.navigationAuth);
-  }, [lang, i18n.store.data]);
-  if (!menu.length) return null;
+
   return (
     <NavigationWrapper theme={theme}>
-      {menu.map((item) => (
+      {translation?.navigationAuth?.menu?.map((item) => (
         <li key={item.name} className="nav-item">
           <NavLink
             exact

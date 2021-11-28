@@ -12,7 +12,7 @@ import { useTheme } from '../../theme';
 import Moment from 'react-moment';
 import Button from '../Controls/ButtonDefaultCircle';
 import { BsThreeDots } from 'react-icons/bs';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import {
   DropdownContainer,
   DropdownMenu,
@@ -20,17 +20,24 @@ import {
 } from '../UI/styles/Dropdown.styles';
 const PostCardHeader = ({ post, user, setIsEdited }) => {
   const [openSetting, setOpenSetting] = useState(false);
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
   const { theme } = useTheme();
   const {
     status,
-    heading: { settingOwnPost },
-  } = i18n.store.data[lang].translation.post;
-  const { pinPost, savePost, editPost, editAudience, moveToTrash } =
-    settingOwnPost;
+    heading: {
+      settingOwnPost: {
+        pinPost,
+        savePost,
+        editPost,
+        editAudience,
+        moveToTrash,
+      },
+    },
+  } = translation.post;
+
   const settingRef = useRef(null);
   const postIcon = status.find(
-    (status) => status.name === post.status.toLowerCase()
+    (status) => status.key.toLowerCase() === post.status.toLowerCase()
   ).icon;
 
   useEffect(() => {

@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Button from '../Controls/ButtonDefault';
 import { useTheme } from '../../theme';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { BsChatDots, BsCameraVideo } from 'react-icons/bs';
 import { MdStarBorder } from 'react-icons/md';
 import { IoMdCall } from 'react-icons/io';
@@ -38,7 +38,7 @@ import { userVar } from '../../apollo/cache';
 
 const ContactItem = ({ userContact, type }) => {
   const { theme } = useTheme();
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
   const user = useReactiveVar(userVar);
 
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
@@ -105,20 +105,20 @@ const ContactItem = ({ userContact, type }) => {
 
   const sentActions = (
     <Button cancel onClick={onCancelRequestToAddFriend}>
-      {i18n.store.data[lang].translation.contacts.cancelRequest}
+      {translation.contacts.cancelRequest}
     </Button>
   );
   const receivedActions = (
     <>
       <Button acceptBtn variant="outlined" onClick={onAcceptRequestToAddFriend}>
-        {i18n.store.data[lang].translation.contacts.acceptRequest}
+        {translation.contacts.acceptRequest}
       </Button>
       <Button
         reject
         onClick={onRejectRequestToAddFriend}
         aria-label="reject-button"
       >
-        {i18n.store.data[lang].translation.contacts.rejectRequest}
+        {translation.contacts.rejectRequest}
       </Button>
     </>
   );

@@ -8,7 +8,7 @@ import { client } from './apollo/client';
 import { ApolloProvider } from '@apollo/client';
 import '@draft-js-plugins/mention/lib/plugin.css';
 import '@draft-js-plugins/hashtag/lib/plugin.css';
-import './i18n';
+import './locales/i18n';
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <ApolloProvider client={client}>

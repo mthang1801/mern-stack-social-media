@@ -160,9 +160,14 @@ export const en = {
       },
     ],
     auth: {
-      login: 'Login',
-      signup: 'Sign up',
-      signout: 'Sign Out',
+      login: 'Login Your Account',
+      signup: 'Sign up Your Account',
+      signout: 'Sign Out This Account',
+      buttons: {
+        login: 'Login',
+        signup: 'Signup',
+        signout: 'Signout',
+      },
     },
     mindText: "What's on your mind?",
     menu: 'Menu',
@@ -220,6 +225,10 @@ export const en = {
         acceptRequestToAddFriend: (senderName) =>
           `<strong>${senderName}</strong> has accepted your request to add friend. From now, you and ${senderName} are friends.`,
       },
+      controls: {
+        accept: 'Chấp nhận',
+        reject: 'Từ chối',
+      },
     },
     greeting: {
       welcome: 'Welcome to Pul.com',
@@ -271,15 +280,18 @@ export const en = {
       postPlaceholder: "What's on your mind?",
       status: [
         {
+          key: 'public',
           name: 'public',
           icon: () => <FaGlobeAmericas />,
         },
 
         {
+          key: 'friends',
           name: 'friends',
           icon: () => <FaUserFriends />,
         },
         {
+          key: 'private',
           name: 'private',
           icon: () => <BiLockAlt />,
         },
@@ -326,6 +338,9 @@ export const en = {
         title: 'Warning',
         content: 'Do you want to remove this comment?',
       },
+    },
+    utility: {
+      loading: 'Loading',
     },
   },
 };

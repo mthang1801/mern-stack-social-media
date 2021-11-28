@@ -32,7 +32,7 @@ import { setMessagesStorage } from '../../apollo/chat/chat.caches';
 import { userVar, currentChatVar } from '../../apollo/cache';
 import { useMutation, useReactiveVar } from '@apollo/client';
 import generateBase64Image from '../../utils/generateBase64Image';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 const ChatBoardFooter = () => {
   //useState
   const [editorState, setEditorState] = useState(() =>
@@ -41,8 +41,8 @@ const ChatBoardFooter = () => {
   const { theme } = useTheme();
   const [suggestions, setSuggestions] = useState(mentions);
   const [open, setOpen] = useState(true);
-  const { i18n, lang } = useLanguage();
-  const { chatInputPlaceholder } = i18n.store.data[lang].translation.chat;
+  const { translation } = useLocale();
+  const { chatInputPlaceholder } = translation.chat;
   //useQuery
   const user = useReactiveVar(userVar);
   const currentChat = useReactiveVar(currentChatVar);

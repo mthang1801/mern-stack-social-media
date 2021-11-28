@@ -4,7 +4,7 @@ import { UPDATE_USER_HAS_SEEN_NOTIFICATION } from '../../apollo/notification/not
 import { removeReceivedRequestToAddFriend } from '../../apollo/contact/contact.caches';
 import { AcceptButton, DenyButton } from '../Custom/CustomMaterialButton';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import Moment from 'react-moment';
 import 'moment/locale/vi';
 import {
@@ -45,7 +45,7 @@ const NotificationItem = ({ notification }) => {
   const [updateToHasSeen] = useMutation(UPDATE_USER_HAS_SEEN_NOTIFICATION);
   const [acceptRequestToAddFriend] = useMutation(ACCEPT_REQUEST_TO_ADD_FRIEND);
   const [rejectRequestToAddFriend] = useMutation(REJECT_REQUEST_TO_ADD_FRIEND);
-  const { lang } = useLanguage();
+  const { lang, translation } = useLocale();
   const handleUserClickHasSeen = (notification) => {
     updateToHasSeen({ variables: { notificationId: notification._id } }).then(
       ({ data }) => {
@@ -148,7 +148,7 @@ const NotificationItem = ({ notification }) => {
             color="primary"
             onClick={onAcceptRequestToAddFriend}
           >
-            Accept
+            {translation.notifications.controls.accept}
           </AcceptButton>
           <DenyButton
             variant="contained"
@@ -156,7 +156,7 @@ const NotificationItem = ({ notification }) => {
             color="secondary"
             onClick={onRejectRequestToAddFriend}
           >
-            Reject
+            {translation.notifications.controls.reject}
           </DenyButton>
         </Controls>
       ) : null}

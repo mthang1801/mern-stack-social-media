@@ -158,9 +158,14 @@ export const vi = {
       },
     ],
     auth: {
-      login: 'Đăng nhập',
-      signup: 'Đăng ký',
+      login: 'Đăng nhập Tài khoản',
+      signup: 'Đăng ký Tài khoản',
       signout: 'Đăng xuất',
+      buttons: {
+        login: 'Đăng nhập',
+        signup: 'Đăng ký',
+        signout: 'Đăng xuất',
+      },
     },
     mindText: 'Bạn đang nghĩ gì?',
     menu: 'Danh mục',
@@ -218,6 +223,10 @@ export const vi = {
         acceptRequestToAddFriend: (senderName) =>
           `<strong>${senderName}</strong> đã chấp nhận lời mời kết bạn của bạn.`,
       },
+      controls: {
+        accept: 'Chấp nhận',
+        reject: 'Từ chối',
+      },
     },
     greeting: {
       welcome: 'Chào mừng bạn đã đến với Pul.com',
@@ -238,7 +247,7 @@ export const vi = {
       cancelRequest: 'Hủy Yêu cầu',
       acceptRequest: 'Chấp nhận',
       rejectRequest: 'Từ chối',
-      getMore: 'Lấy thêm',
+      getMore: 'Tải thêm',
     },
     post: {
       post: 'Đăng bài viết',
@@ -246,37 +255,40 @@ export const vi = {
       heading: {
         settingOwnPost: {
           pinPost: {
-            name: 'Pin the post',
+            name: 'Ghim bài viết',
             icon: <VscPinned />,
           },
           savePost: {
-            name: 'Save the post',
+            name: 'Lưu bài viết',
             icon: <AiOutlineSave />,
           },
           editPost: {
-            name: 'Edit Post',
+            name: 'Chỉnh sửa bài viết',
             icon: <FiEdit />,
           },
           editAudience: {
-            name: 'Edit Audience',
+            name: 'Thay đổi người xem',
             icon: <IoMdGlobe />,
           },
           moveToTrash: {
-            name: 'Move To trash',
+            name: 'Xoá bài viết',
             icon: <FiTrash />,
           },
         },
       },
       status: [
         {
+          key: 'public',
           name: 'Công khai',
           icon: () => <FaGlobeAmericas />,
         },
         {
+          key: 'friends',
           name: 'Bạn bè',
           icon: () => <FaUserFriends />,
         },
         {
+          key: 'private',
           name: 'Cá nhân',
           icon: () => <BiLockAlt />,
         },
@@ -323,6 +335,9 @@ export const vi = {
         title: 'Cảnh báo',
         content: 'Bạn có muốn xóa bình luận không?',
       },
+    },
+    utility: {
+      loading: 'Đang tải',
     },
   },
 };

@@ -13,7 +13,7 @@ import {
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Moment from 'react-moment';
 import { useTheme } from '../../theme';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { BiLike } from 'react-icons/bi';
 const CommentCard = ({
   comment,
@@ -24,8 +24,8 @@ const CommentCard = ({
   onClickRemoveComment,
 }) => {
   const { theme } = useTheme();
-  const { i18n, lang } = useLanguage();
-  const { controls } = i18n.store.data[lang].translation.comment;
+  const { translation } = useLocale();
+  const { controls } = translation.comment;
   return (
     <CommentContainer>
       <UserAvatar>

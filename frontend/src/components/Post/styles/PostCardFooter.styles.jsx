@@ -23,7 +23,7 @@ export const Button = styled.button`
   padding: 0.6rem 1rem;
   border: 1px solid transparent;
   background-color: transparent;
-  font-size: 0.85rem;
+  font-size: 12px;
   cursor: pointer;
   &:hover {
     background-color: ${({ theme }) =>

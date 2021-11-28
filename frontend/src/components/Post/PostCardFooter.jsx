@@ -12,7 +12,7 @@ import {
   PostInfo,
   CommentCounter,
 } from './styles/PostCardFooter.styles';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { BiLike } from 'react-icons/bi';
 import { useTheme } from '../../theme';
 import { useMutation, useReactiveVar } from '@apollo/client';
@@ -21,8 +21,8 @@ import { LIKE_POST, REMOVE_LIKE_POST } from '../../apollo/post/post.types';
 import LazyLoad from 'react-lazyload';
 import CommentEditor from './CommentEditor';
 const PostCardFooter = ({ post, fetchComments, user }) => {
-  const { i18n, lang } = useLanguage();
-  const { controls } = i18n.store.data[lang].translation.post;
+  const { translation } = useLocale();
+  const { controls } = translation.post;
   const { theme } = useTheme();
   const [likePost] = useMutation(LIKE_POST);
   const [removeLikePost] = useMutation(REMOVE_LIKE_POST);

@@ -2,16 +2,16 @@ import React from 'react';
 import styled from 'styled-components/macro';
 import { useTheme } from '../../theme';
 import { IoMdContacts, IoMdCloseCircleOutline } from 'react-icons/io';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 const ButtonOpenFriendsList = ({ ...props }) => {
   const { theme } = useTheme();
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
 
   return (
     <Button
       {...props}
       theme={theme}
-      title={i18n.store.data[lang].translation.controls.openFriendsList}
+      title={translation.controls.openFriendsList}
     >
       <IoMdContacts />
     </Button>

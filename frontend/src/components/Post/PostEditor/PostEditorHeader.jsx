@@ -11,7 +11,7 @@ import {
 } from './styles/PostEditorHeader.styles';
 import { Link } from 'react-router-dom';
 import LazyLoad from 'react-lazyload';
-import useLanguage from '../../Global/useLanguage';
+import useLocale from '../../../locales';
 import { MdZoomOutMap } from 'react-icons/md';
 import { useTheme } from '../../../theme';
 const PostEditorHeader = ({
@@ -22,12 +22,13 @@ const PostEditorHeader = ({
   openDialog,
   isEdited,
 }) => {
-  const { i18n, lang } = useLanguage();
-  const { status } = i18n.store.data[lang].translation.post;
+  const { translation } = useLocale();
+  const { status } = translation.post;
   const { theme } = useTheme();
-  const currentStatus = status?.find(
-    (status) => status.name.toLowerCase() === postStatus.toLowerCase()
+  const currentStatus = status.find(
+    (statusItem) => statusItem.key.toLowerCase() === postStatus.toLowerCase()
   );
+
   const [openDropdown, setOpenDropdown] = useState(false);
   const dropdownRef = useRef(null);
 

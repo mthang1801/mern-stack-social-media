@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from '../../theme';
 import { ContactWrapper, Title } from './Contact.styles';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import ContactItem from './ContactItem';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { FETCH_USER_FRIENDS_DATA } from '../../apollo/contact/contact.types';
@@ -11,7 +11,7 @@ import constant from '../../constant/constant';
 import _ from 'lodash';
 const SentRequestsToAddFriend = ({ user, friends }) => {
   const { theme } = useTheme();
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
   const { refetch: fetchUserFriends } = useQuery(FETCH_USER_FRIENDS_DATA, {
     skip: true,
   });
@@ -32,14 +32,12 @@ const SentRequestsToAddFriend = ({ user, friends }) => {
 
   return (
     <ContactWrapper theme={theme}>
-      <Title theme={theme}>
-        {i18n.store.data[lang].translation.contacts.friendsList}
-      </Title>
+      <Title theme={theme}>{translation.contacts.friendsList}</Title>
       <InfiniteScroll
         dataLength={friends.length}
         next={onFetchMoreFriends}
         hasMore={friends.length < user.friends.length}
-        loader={<h4>Loading...</h4>}
+        loader={<h4>{translation.utility.loading}</h4>}
       >
         {friends.map((item) => (
           <ContactItem

@@ -5,7 +5,7 @@ import { EditorWrapper } from './styles/PostEditor.styles';
 import draftToHtml from 'draftjs-to-html';
 import { useTheme } from '../../../theme';
 import { EditorState, convertToRaw } from 'draft-js';
-import useLanguage from '../../Global/useLanguage';
+import useLocale from '../../../locales';
 import _ from 'lodash';
 import { useMutation, useReactiveVar } from '@apollo/client';
 import { EDIT_POST, CREATE_POST } from '../../../apollo/post/post.types';
@@ -30,7 +30,11 @@ const PostEditor = ({
 }) => {
   const user = useReactiveVar(userVar);
   const currentPersonalUser = useReactiveVar(currentPersonalUserVar);
-  const [postStatus, setPostStatus] = useState('PUBLIC');
+  const { translation } = useLocale();
+
+  const { post } = translation;
+  const [postStatus, setPostStatus] = useState(translation.post.status[0].key);
+  console.log(postStatus);
   const [editorState, setEditorState] = useState(() =>
     editedEditorState ? editedEditorState : EditorState.createEmpty()
   );
@@ -39,8 +43,7 @@ const PostEditor = ({
   const [disabledSubmit, setDisabledSubmit] = useState(true);
   const [openPostEditorDialog, setOpenPostEditorDialog] = useState(false);
   const { theme } = useTheme();
-  const { i18n, lang } = useLanguage();
-  const { post } = i18n.store.data[lang].translation;
+
   const [createPost, { loading: createPostLoading }] = useMutation(CREATE_POST);
   const [editPost] = useMutation(EDIT_POST);
   const handleSetPostStatus = useCallback((status) => {
@@ -257,7 +260,7 @@ const PostEditor = ({
       {PostEditorRoot}
     </Dialog>
   );
-  if (createPostLoading) return <div>Loading...</div>;
+  if (createPostLoading) return <div>{translation.utility.loading}</div>;
   return <>{openPostEditorDialog ? PostEditorOnOpenDialog : PostEditorRoot}</>;
 };
 

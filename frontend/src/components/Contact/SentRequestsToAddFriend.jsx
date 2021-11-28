@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import { useTheme } from '../../theme';
 import { fetchMoreSentRequestsToAddFriend } from '../../apollo/contact/contact.caches';
 import { ContactWrapper, Title, LinkReadMore } from './Contact.styles';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import ContactItem from './ContactItem';
 import constant from '../../constant/constant';
 const SentRequestsToAddFriend = ({ user, sentRequestsToAddFriend }) => {
@@ -16,7 +16,7 @@ const SentRequestsToAddFriend = ({ user, sentRequestsToAddFriend }) => {
     }
   );
   const { theme } = useTheme();
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
 
   const getMoreSentRequestToAddFriend = () => {
     const skip = sentRequestsToAddFriend.length;
@@ -32,9 +32,7 @@ const SentRequestsToAddFriend = ({ user, sentRequestsToAddFriend }) => {
 
   return (
     <ContactWrapper theme={theme}>
-      <Title theme={theme}>
-        {i18n.store.data[lang].translation.contacts.userSentRequest}
-      </Title>
+      <Title theme={theme}>{translation.contacts.userSentRequest}</Title>
       {sentRequestsToAddFriend.map((item) => (
         <ContactItem key={item._id} userContact={item} type="sent" />
       ))}
@@ -46,7 +44,7 @@ const SentRequestsToAddFriend = ({ user, sentRequestsToAddFriend }) => {
             aria-label="button"
             onClick={getMoreSentRequestToAddFriend}
           >
-            {i18n.store.data[lang].translation.contacts.getMore}
+            {translation.contacts.getMore}
           </span>
         </LinkReadMore>
       ) : null}

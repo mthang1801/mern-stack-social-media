@@ -6,7 +6,7 @@ export const Wrapper = styled.article`
   background-color: ${({ theme }) =>
     theme ? theme.card.primary : 'var(--card-primary)'};
   box-shadow: var(--lightShadow);
-  margin: 0 auto 1rem auto;
+  margin: 1rem auto 1rem auto;
   border-radius: 0.5rem;
   padding-bottom: 0.25rem;
 `;

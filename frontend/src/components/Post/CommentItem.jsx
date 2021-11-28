@@ -8,7 +8,7 @@ import {
   CommentResponse,
 } from './styles/CommentItem.styles';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { BsArrowReturnRight } from 'react-icons/bs';
 import { Response } from './styles/CommentItem.styles';
 import ResponseEditor from './ResponseEditor';
@@ -32,11 +32,11 @@ import {
 import { setAlertDialog } from '../../apollo/controls/controls.caches';
 import constant from '../../constant/constant';
 const CommentItem = ({ comment, user }) => {
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
+  const { controls } = translation.comment;
+  const { dialog: dialogAlert } = translation;
   const [showResponse, setShowResponse] = useState(false);
   const [dataResponse, setDataResponse] = useState('');
-  const { controls } = i18n.store.data[lang].translation.comment;
-  const { dialog: dialogAlert } = i18n.store.data[lang].translation;
   const [focusResponseEditor, setFocusResponseEditor] = useState(false);
   const dialog = useReactiveVar(dialogVar);
   const [likeComment] = useMutation(LIKE_COMMENT);

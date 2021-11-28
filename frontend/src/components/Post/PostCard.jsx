@@ -8,7 +8,7 @@ import Comments from './Comments';
 import { FETCH_COMMENTS } from '../../apollo/post/post.queries';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/cache';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { EditorState, convertFromRaw } from 'draft-js';
 import EditPostDialog from './EditPostDialog';
 import { addFetchedCommentsToPost } from '../../apollo/post/post.caches';
@@ -21,9 +21,9 @@ const PostCard = ({ post }) => {
     skip: true,
   });
   const [loading, setLoading] = useState(false);
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
 
-  const { fetchMoreComments } = i18n.store.data[lang].translation.comment;
+  const { fetchMoreComments } = translation.comment;
 
   //for edit
   const [isEdited, setIsEdited] = useState(false);

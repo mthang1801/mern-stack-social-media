@@ -6,12 +6,12 @@ import {
   REMOVE_LIKE_RESPONSE,
 } from '../../apollo/post/post.types';
 import { setAlertDialog } from '../../apollo/controls/controls.caches';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 const Responses = ({ responses, user, onClickResponse }) => {
   const [likeResponse] = useMutation(LIKE_RESPONSE);
   const [removeLikeResponse] = useMutation(REMOVE_LIKE_RESPONSE);
-  const { i18n, lang } = useLanguage();
-  const { dialog: dialogAlert } = i18n.store.data[lang].translation;
+  const { translation } = useLocale();
+  const { dialog: dialogAlert } = translation;
 
   const onLikeResponse = useCallback((response) => {
     likeResponse({ variables: { responseId: response._id } });

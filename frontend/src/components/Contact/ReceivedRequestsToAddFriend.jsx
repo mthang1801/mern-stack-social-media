@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import { useTheme } from '../../theme';
 import { ContactWrapper, Title, LinkReadMore } from './Contact.styles';
 import { fetchMoreReceivedRequestsToAddFriend } from '../../apollo/contact/contact.caches';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import ContactItem from './ContactItem';
 import _ from 'lodash';
 import constant from '../../constant/constant';
@@ -17,7 +17,7 @@ const ReceivedRequestsToAddFriend = ({ user, receivedRequestsToAddFriend }) => {
     }
   );
   const { theme } = useTheme();
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
 
   const getMoreReceivedRequestToAddFriend = () => {
     const skip = receivedRequestsToAddFriend.length;
@@ -34,9 +34,7 @@ const ReceivedRequestsToAddFriend = ({ user, receivedRequestsToAddFriend }) => {
   };
   return (
     <ContactWrapper theme={theme}>
-      <Title theme={theme}>
-        {i18n.store.data[lang].translation.contacts.userReceivedRequest}
-      </Title>
+      <Title theme={theme}>{translation.contacts.userReceivedRequest}</Title>
       {receivedRequestsToAddFriend.map((item) => (
         <ContactItem
           key={item._id}
@@ -54,7 +52,7 @@ const ReceivedRequestsToAddFriend = ({ user, receivedRequestsToAddFriend }) => {
             aria-label="button"
             onClick={getMoreReceivedRequestToAddFriend}
           >
-            {i18n.store.data[lang].translation.contacts.getMore}
+            {translation.contacts.getMore}
           </span>
         </LinkReadMore>
       ) : null}

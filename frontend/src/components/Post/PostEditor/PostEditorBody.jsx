@@ -20,7 +20,7 @@ import generateBase64Image from '../../../utils/generateBase64Image';
 import ImagesCarousel from '../../UI/ImagesCarousel';
 import { useQuery } from '@apollo/client';
 import { SEARCH_FRIENDS } from '../../../apollo/user/user.types';
-import useLanguage from '../../Global/useLanguage';
+import useLocale from '../../../locales';
 const PostEditorBody = ({
   editorState,
   setEditorState,
@@ -37,8 +37,9 @@ const PostEditorBody = ({
     SEARCH_FRIENDS,
     { fetchPolicy: 'network-only', skip: true }
   );
-  const { i18n, lang } = useLanguage();
-  const { postPlaceholder } = i18n.store.data[lang].translation.post;
+  const {
+    translation: { postPlaceholder },
+  } = useLocale();
 
   const { plugins, MentionSuggestions, EmojiSelect, EmojiSuggestions } =
     useDraftEditorPlugin();

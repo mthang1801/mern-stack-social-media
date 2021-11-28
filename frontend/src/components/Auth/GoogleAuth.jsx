@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import GoogleLogin from 'react-google-login';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { LOGIN_WITH_GOOGLE } from '../../apollo/user/user.types';
 import { useQuery } from '@apollo/client';
 import { login } from './Auth.utility';
 const GGAuth = () => {
-  const [loginName, setLoginName] = useState('');
   const { refetch: fetchLoginWithGoogle } = useQuery(LOGIN_WITH_GOOGLE, {
     skip: true,
     fetchPolicy: 'network-only',
   });
-  const { i18n, lang } = useLanguage();
-  useEffect(() => {
-    setLoginName(i18n.store.data[lang].translation.auth.login);
-  }, [lang, i18n.store.data, setLoginName]);
+  const { translation } = useLocale();
+
   const responseGoogle = (response) => {
     let { name, email, googleId, imageUrl } = response.profileObj;
     if (!name) {
@@ -37,7 +34,7 @@ const GGAuth = () => {
       onSuccess={responseGoogle}
       onFailure={responseGoogle}
       cookiePolicy={'single_host_origin'}
-      buttonText={loginName}
+      buttonText={translation.auth.login}
       prompt="select_account"
     />
   );

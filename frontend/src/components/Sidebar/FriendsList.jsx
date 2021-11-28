@@ -14,7 +14,7 @@ import { FETCH_USER_FRIENDS_DATA } from '../../apollo/contact/contact.types';
 import { pushFriendsListToContact } from '../../apollo/contact/contact.caches';
 import FriendItem from './FriendItem';
 import { Scrollbars } from 'react-custom-scrollbars';
-import useLanguage from '../Global/useLanguage';
+import useLocale from '../../locales';
 import { FaSearch } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
 
@@ -24,7 +24,7 @@ const FriendsList = ({ show, close }) => {
   const user = useReactiveVar(userVar);
   const contact = useReactiveVar(contactVar);
   const inputRef = useRef(null);
-  const { i18n, lang } = useLanguage();
+  const { translation } = useLocale();
   const [loading, setLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
   const { refetch: fetchUserFriends } = useQuery(FETCH_USER_FRIENDS_DATA, {
@@ -73,14 +73,14 @@ const FriendsList = ({ show, close }) => {
               <IoCloseOutline />
             </ButtonClose>
             <FriendsListTitle>
-              {i18n.store.data[lang].translation.contacts.contactsList}
+              {translation.contacts.contactsList}
             </FriendsListTitle>
           </LeftSide>
           <FriendsListSearch show={openSearch} theme={theme}>
             <input
               ref={inputRef}
               type="text"
-              placeholder={i18n.store.data[lang].translation.controls.search}
+              placeholder={translation.controls.search}
               onBlur={() => setOpenSearch(false)}
             />
             <button onClick={onClickSearchButton}>
