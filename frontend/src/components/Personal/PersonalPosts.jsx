@@ -25,6 +25,7 @@ const PersonalPosts = () => {
     },
     onCompleted: (data) => {
       if (data) {
+        console.log(data);
         addPostsToCurrentPersonalUser(data.fetchPosts);
       }
     },

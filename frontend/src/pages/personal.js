@@ -26,7 +26,6 @@ const PersonalPage = (props) => {
     });
     return () => (_mounted = false);
   }, [slug]);
-
   if (!currentPersonalUser || !fetched) return null;
   return (
     <Layout>

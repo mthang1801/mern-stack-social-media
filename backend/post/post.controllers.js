@@ -22,10 +22,10 @@ export const postControllers = {
   ) => {
     const currentUserId = getAuthUser(req, false);
     const currentUser = await User.findById(currentUserId);
-
+    let posts;
     if (userId) {
       if (userId !== currentUserId) {
-        return await Post.find({
+        posts = await Post.find({
           author: userId,
           $or: [
             { status: POST_STATUS_ENUM.FRIENDS, friends: currentUserId },
@@ -43,43 +43,45 @@ export const postControllers = {
           .sort({ createdAt: -1 })
           .skip(+skip)
           .limit(+limit);
+      } else {
+        posts = await Post.find({
+          author: userId,
+        })
+          .populate({
+            path: 'mentions',
+            select: 'name avatar slug isOnline offlinedAt',
+          })
+          .populate({
+            path: 'author',
+            select: 'name avatar slug isOnline offlinedAt',
+          })
+          .sort({ createdAt: -1 })
+          .skip(+skip)
+          .limit(+limit);
       }
-      const post = await Post.find({
-        author: userId,
+    } else {
+      if (!currentUser) {
+        return [];
+      }
+      //otherwise, current user existed
+      const friendsID = currentUser.friends;
+      posts = await Post.find({
+        author: { $in: friendsID },
+        status: { $in: ['PUBLIC', 'FRIENDS'] },
       })
         .populate({
-          path: 'mentions',
+          path: 'author',
           select: 'name avatar slug isOnline offlinedAt',
         })
         .populate({
-          path: 'author',
+          path: 'mentions',
           select: 'name avatar slug isOnline offlinedAt',
         })
         .sort({ createdAt: -1 })
         .skip(+skip)
         .limit(+limit);
-      return post;
     }
-    if (!currentUser) {
-      return [];
-    }
-    //otherwise, current user existed
-    const friendsID = currentUser.friends;
-    const posts = await Post.find({
-      author: { $in: friendsID },
-      status: { $in: ['PUBLIC', 'FRIENDS'] },
-    })
-      .populate({
-        path: 'author',
-        select: 'name avatar slug isOnline offlinedAt',
-      })
-      .populate({
-        path: 'mentions',
-        select: 'name avatar slug isOnline offlinedAt',
-      })
-      .sort({ createdAt: -1 })
-      .skip(+skip)
-      .limit(+limit);
+
     const standardizedPosts = posts.map((post) => {
       const _post = post._doc;
       if (_post.files) {
