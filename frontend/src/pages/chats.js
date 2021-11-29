@@ -25,7 +25,7 @@ const ChatConversations = lazy(() =>
 );
 const ChatContacts = lazy(() => import('../components/Chat/Contact'));
 
-const ChatsPage = ({ match }) => {
+const ConversationsPage = ({ match }) => {
   const [fetched, setFetched] = useState(false);
   //use Query
   const user = useReactiveVar(userVar);
@@ -102,11 +102,7 @@ const ChatsPage = ({ match }) => {
         <MainTab>
           <Switch>
             <Route exact path={match.path} component={ChatConversations} />
-            <Route
-              exact
-              path={`${match.path}/contacts`}
-              component={ChatContacts}
-            />
+            <Route exact path={`/chats/contacts`} component={ChatContacts} />
           </Switch>
         </MainTab>
       </ChatsWrapper>
@@ -114,4 +110,4 @@ const ChatsPage = ({ match }) => {
   );
 };
 
-export default ChatsPage;
+export default ConversationsPage;

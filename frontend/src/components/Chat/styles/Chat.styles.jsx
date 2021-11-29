@@ -20,10 +20,7 @@ export const LeftSide = styled.div`
     overflow-y: hidden;
   }
   @media screen and (min-width: 992px) {
-    width: 30%;
-  }
-  @media screen and (min-width: 1280px) {
-    width: 25%;
+    width: 360px;
   }
 `;
 
@@ -34,10 +31,7 @@ export const RightSide = styled.div`
     width: calc(100% - 300px);
   }
   @media screen and (min-width: 992px) {
-    width: 70%;
-  }
-  @media screen and (min-width: 1280px) {
-    width: 75%;
+    width: calc(100% - 360px);
   }
 `;
 

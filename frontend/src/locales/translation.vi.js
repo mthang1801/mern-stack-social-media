@@ -70,8 +70,8 @@ export const vi = {
         icon: () => <FaUserFriends />,
       },
       {
-        path: '/chats',
-        name: 'Tin nhắn',
+        path: '/conversations',
+        name: 'Cuộc trò chuyện',
         icon: () => <IoIosChatbubbles />,
       },
       {
@@ -115,14 +115,33 @@ export const vi = {
     ],
     chatMenus: [
       {
-        path: '/chats',
+        oldPath: '/chats',
+        path: '/conversations',
         name: 'Tin nhắn',
         icon: () => <BsChatDots />,
       },
       {
-        path: '/chats/contacts',
+        oldPath: '/chats/contacts',
+        path: '/conversations/contacts',
         name: 'Danh bạ',
         icon: () => <RiContactsBook2Line />,
+      },
+    ],
+    conversationMenus: [
+      {
+        key: 'home',
+        name: 'Cuộc trò chuyện',
+        icon: () => <BsChatDots />,
+      },
+      {
+        key: 'contacts',
+        name: 'Danh bạ',
+        icon: () => <RiContactsBook2Line />,
+      },
+      {
+        key: 'groups',
+        name: 'Nhóm',
+        icon: () => <HiOutlineUserGroup />,
       },
     ],
     explores: [
@@ -349,6 +368,19 @@ export const vi = {
       friends: 'Bạn bè',
       following: 'Đang theo dõi',
       followed: 'Được theo dõi',
+    },
+    search: {
+      notfound: 'Không tìm thấy kết quả.',
+    },
+    conversations: {
+      contact: {
+        dialog: {
+          viewInformation: 'Xem thông tin',
+          setLabel: 'Đặt tên',
+          markFavorite: 'Đánh dấu yêu thích',
+          removeFriend: 'Huỷ kết bạn',
+        },
+      },
     },
     utility: {
       loading: 'Đang tải',

@@ -6,10 +6,8 @@ export const CardWrapper = styled.div`
   width : 90%;
   margin: auto;
   max-width : 400px;
-  background : ${({ theme }) =>
-    theme === 'dark'
-      ? 'linear-gradient(to right bottom, #575757, #383535)'
-      : 'linear-gradient(to right bottom, #e4eced, #dae9eb, #d5eaed)'};
+  background : linear-gradient(to right bottom, var(--indigo-1), var(--indigo-2));
+  color : var(--light-gray-2);
   border-radius : 0.75rem;
   box-shadow : var(--mediumShadow);
   h4{

@@ -15,10 +15,11 @@ const NotificationsPage = lazy(() => import('../pages/notifications'));
 const PersonalPage = lazy(() => import('../pages/personal'));
 const ContactsPage = lazy(() => import('../pages/contacts'));
 const ChatsPage = lazy(() => import('../pages/chats'));
+const ConversationsPage = lazy(() => import('../pages/conversations'));
 
 function App() {
   const { theme } = useTheme();
-  console.log(theme);
+
   const [isAuth, setIsAuth] = useState(null);
   const { refetch: fetchCurrentUser } = useQuery(FETCH_CURRENT_USER, {
     fetchPolicy: 'no-cache',
@@ -55,6 +56,7 @@ function App() {
             />
             <Route exact path="/contacts" component={ContactsPage} />
             <Route path="/chats" component={ChatsPage} />
+            <Route path="/conversations" component={ConversationsPage} />
             <Route path="/notifications" component={NotificationsPage} />
             <Route path="/:slug" component={PersonalPage} />
           </Switch>

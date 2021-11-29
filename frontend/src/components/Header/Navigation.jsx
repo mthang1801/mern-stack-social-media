@@ -11,7 +11,7 @@ const Navigation = () => {
 
   return (
     <NavigationWrapper theme={theme}>
-      {translation?.navigationAuth?.menu?.map((item) => (
+      {translation?.navigationAuth?.map((item) => (
         <li key={item.name} className="nav-item">
           <NavLink
             exact

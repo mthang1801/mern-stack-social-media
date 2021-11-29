@@ -33,7 +33,7 @@ const NotificationsPage = () => {
       user?.notifications?.length &&
       !notifications.length
     ) {
-      fetchNotifications()
+      fetchNotifications({ limit: constant.REACT_APP_NOTIFICATIONS_PER_PAGE })
         .then(({ data }) => {
           console.log(data);
           if (data) {
@@ -58,7 +58,7 @@ const NotificationsPage = () => {
 
   const fetchMoreNotifications = () => {
     const skip = notifications.length;
-    const limit = constant.REACT_APP_NOTIFICATIONS_PER_PAGE;
+    const limit = constant.REACT_APP_FETCH_MORE_NOTIFICATIONS_PER_PAGE;
     fetchNotifications({ skip, limit }).then(({ data }) => {
       if (data) {
         addNotificationsToNotifcationsList(data.fetchNotifications);

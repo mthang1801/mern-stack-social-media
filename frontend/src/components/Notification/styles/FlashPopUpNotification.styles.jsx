@@ -21,13 +21,12 @@ export const Wrapper = styled.div`
   align-items: flex-start;
   cursor: pointer;
   border-radius: 0.5rem;
-  box-shadow: ${({ theme }) => (theme ? theme.boxShadow : 'var(--boxShadow)')};
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
   left: -14rem;
   width: 20rem;
   top: 120%;
-  transition: ${({ show }) => (show ? 'all 1s linear' : 'unset')};
+  transition: ${({ show }) => (show ? 'all 0.3s linear' : 'unset')};
   z-index: ${({ show }) => (show ? 11 : -1)};
   &::after {
     position: absolute;

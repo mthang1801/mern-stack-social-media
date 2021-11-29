@@ -6,6 +6,7 @@ import MainBody from '../containers/MainBody';
 import FriendsBoard from '../components/Sidebar/FriendsBoard';
 import { useReactiveVar, useQuery } from '@apollo/client';
 import ButtonToggleFriendsList from '../components/Controls/ButtonToggleFriendsList';
+import ButtonConversation from '../components/Controls/ButtonConversation';
 import {
   MainContent,
   MainContentLeftSide,
@@ -113,6 +114,7 @@ const Home = () => {
               onClick={() => toggleFriendsBoardVar(!toggleFriendsBoard)}
             />
             <FriendsBoard />
+            <ButtonConversation hide={toggleFriendsBoard} />
             <ButtonToggleFriendsList
               hide={toggleFriendsBoard}
               onClick={handleOpenFriendsList}

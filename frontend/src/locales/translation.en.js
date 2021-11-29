@@ -70,8 +70,8 @@ export const en = {
         icon: () => <FaUserFriends />,
       },
       {
-        path: '/chats',
-        name: 'Chats',
+        path: '/conversations',
+        name: 'Conversations',
         icon: () => <IoIosChatbubbles />,
       },
       {
@@ -137,14 +137,33 @@ export const en = {
     ],
     chatMenus: [
       {
-        path: '/chats',
+        oldPath: '/chats',
+        path: '/conversations',
         name: 'Messages',
         icon: () => <BsChatDots />,
       },
       {
-        path: '/chats/contacts',
+        oldPath: '/chats/contacts',
+        path: '/conversations/contacts',
         name: 'Contacts',
         icon: () => <RiContactsBook2Line />,
+      },
+    ],
+    conversationMenus: [
+      {
+        key: 'home',
+        name: 'Conversations',
+        icon: () => <BsChatDots />,
+      },
+      {
+        key: 'contacts',
+        name: 'Contacts',
+        icon: () => <RiContactsBook2Line />,
+      },
+      {
+        key: 'groups',
+        name: 'Groups',
+        icon: () => <HiOutlineUserGroup />,
       },
     ],
     statusFooter: [
@@ -351,6 +370,19 @@ export const en = {
       friends: 'Friends',
       following: 'Followings',
       followed: 'Followed',
+    },
+    search: {
+      notfound: 'Result not found.',
+    },
+    conversations: {
+      contact: {
+        dialog: {
+          viewInformation: 'Xem thông tin',
+          setLabel: 'Set Label',
+          markFavorite: 'Đánh dấu yêu thích',
+          removeFriend: 'Huỷ kết bạn',
+        },
+      },
     },
     utility: {
       loading: 'Loading',

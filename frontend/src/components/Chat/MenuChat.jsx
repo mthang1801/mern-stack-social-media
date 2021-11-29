@@ -8,7 +8,7 @@ const MenuChat = () => {
     <LinkItem
       key={item.name}
       title={item.name}
-      to={item.path}
+      to={item.oldPath}
       exact
       activeStyle={{ backgroundColor: '#0277bd' }}
     >
