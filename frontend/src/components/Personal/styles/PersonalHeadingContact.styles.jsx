@@ -58,9 +58,10 @@ export const DropdownMenu = styled.div`
   right: 0;
   list-style: none;
   background-color: ${({ theme }) =>
-    theme ? theme.background : 'var(--background)'};
+    theme ? theme.panelBackground : 'var(--panelBackground)'};
   border: 1px solid ${({ theme }) => (theme ? theme.border : 'var(--border)')};
   overflow: hidden;
+  z-index: 11;
 `;
 
 export const DropdownItem = styled.span`

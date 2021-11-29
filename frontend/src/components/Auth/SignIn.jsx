@@ -11,6 +11,7 @@ import {
   FlashForm,
   ErrorMessage,
   TextForm,
+  FormBackground,
 } from './AuthForm';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
@@ -22,6 +23,8 @@ import { LOGIN } from '../../apollo/user/user.types';
 import { useLazyQuery } from '@apollo/client';
 import { login } from './Auth.utility';
 import TextField from '@material-ui/core/TextField';
+import ThemeAuth from '../../assets/images/theme-auth.jpg';
+
 function withLoginQuery(WrappedComponent) {
   return function QueryWrapper(props) {
     const [loginUser, { loading, data, error }] = useLazyQuery(LOGIN, {
@@ -127,75 +130,79 @@ const SignIn = withLoginQuery(
       const { email, password, disabled, loading, captcha_loaded } = this.state;
       const { authPath, error } = this.props;
       return (
-        <CustomFormContainer
-          onSubmit={this.onSubmitSigninForm}
-          ref={this.signInRef}
-        >
-          <FormHeader>
-            <Title>Đăng nhập</Title>
-            <SubTitle>Đăng nhập tài khoản bằng email và mật khẩu</SubTitle>
-          </FormHeader>
-          {error && <ErrorMessage>{error.message}</ErrorMessage>}
-          <FlashForm>
-            {/* <FacebookAuth /> */}
-            <GoogleAuth />
-          </FlashForm>
-          <FormGroups>
-            <TextForm>
-              <TextField
-                variant="outlined"
-                size="small"
-                type="text"
-                name="email"
-                value={email}
-                label="Email"
-                onChange={this.handleChange}
-                required
-              />
-            </TextForm>
-            <TextForm>
-              <TextField
-                variant="outlined"
-                size="small"
-                type="password"
-                name="password"
-                value={password}
-                label="Password"
-                onChange={this.handleChange}
-                required
-                autocomplete="on"
-              />
-            </TextForm>
+        <FormBackground background={ThemeAuth}>
+          <CustomFormContainer
+            onSubmit={this.onSubmitSigninForm}
+            ref={this.signInRef}
+          >
+            <FormHeader>
+              <Title>Đăng nhập</Title>
+              <SubTitle>Đăng nhập tài khoản bằng email và mật khẩu</SubTitle>
+            </FormHeader>
+            {error && <ErrorMessage>{error.message}</ErrorMessage>}
+            <FlashForm>
+              {/* <FacebookAuth /> */}
+              <GoogleAuth />
+            </FlashForm>
+            <FormGroups>
+              <TextForm>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  type="text"
+                  name="email"
+                  value={email}
+                  label="Email"
+                  onChange={this.handleChange}
+                  required
+                />
+              </TextForm>
+              <TextForm>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  type="password"
+                  name="password"
+                  value={password}
+                  label="Password"
+                  onChange={this.handleChange}
+                  required
+                  autocomplete="on"
+                />
+              </TextForm>
 
-            <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />
+              <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />
 
-            <Button
-              variant="outlined"
-              size="medium"
-              disabled={disabled || loading}
-              color="primary"
-              style={{ marginTop: '1rem' }}
-              type="submit"
-            >
-              <span>Sign In</span>
-              {loading && (
-                <CircularProgress size={14} style={{ marginLeft: '1rem' }} />
-              )}
-            </Button>
-          </FormGroups>
-          <FormActions>
-            <Option>
-              Don't have account ?{' '}
-              <StyledLink to={`${authPath}/signup`}>Signup account</StyledLink>
-            </Option>
-            <Option>
-              Forgot password ?{' '}
-              <StyledLink to={`${authPath}/restore-account`}>
-                Get Password Again.
-              </StyledLink>
-            </Option>
-          </FormActions>
-        </CustomFormContainer>
+              <Button
+                variant="outlined"
+                size="medium"
+                disabled={disabled || loading}
+                color="primary"
+                style={{ marginTop: '1rem' }}
+                type="submit"
+              >
+                <span>Sign In</span>
+                {loading && (
+                  <CircularProgress size={14} style={{ marginLeft: '1rem' }} />
+                )}
+              </Button>
+            </FormGroups>
+            <FormActions>
+              <Option>
+                Don't have account ?{' '}
+                <StyledLink to={`${authPath}/signup`}>
+                  Signup account
+                </StyledLink>
+              </Option>
+              <Option>
+                Forgot password ?{' '}
+                <StyledLink to={`${authPath}/restore-account`}>
+                  Get Password Again.
+                </StyledLink>
+              </Option>
+            </FormActions>
+          </CustomFormContainer>
+        </FormBackground>
       );
     }
   }

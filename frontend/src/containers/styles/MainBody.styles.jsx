@@ -24,6 +24,7 @@ export const AsideComponent = styled.aside`
 
 export const Main = styled.div`
   width: 100%;
+  min-height: 100vh;
   @media screen and (min-width: 992px) {
     margin-left: 320px;
     padding: 1.5rem 0;

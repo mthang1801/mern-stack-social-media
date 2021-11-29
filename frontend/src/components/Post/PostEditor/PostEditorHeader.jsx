@@ -26,7 +26,7 @@ const PostEditorHeader = ({
   const { status } = translation.post;
   const { theme } = useTheme();
   const currentStatus = status.find(
-    (statusItem) => statusItem.key.toLowerCase() === postStatus.toLowerCase()
+    (statusItem) => statusItem.key.toUpperCase() === postStatus.toUpperCase()
   );
 
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -53,13 +53,13 @@ const PostEditorHeader = ({
         </Link>
         <div>
           <Link to={`${user.slug}`} style={{ textTransform: 'capitalize' }}>
-            {user.name.toLowerCase()}
+            {user.name.toUpperCase()}
           </Link>
           <SelectStatus ref={dropdownRef}>
             <Selected
               theme={theme}
               style={{ textTransform: 'capitalize' }}
-              status={currentStatus.key.toLowerCase()}
+              status={currentStatus.key.toUpperCase()}
               onClick={() => setOpenDropdown((prevState) => !prevState)}
             >
               <span>{currentStatus.icon()}</span>
@@ -70,14 +70,14 @@ const PostEditorHeader = ({
                 status
                   .filter(
                     (status) =>
-                      status.key.toLowerCase() !== postStatus.toLowerCase()
+                      status.key.toUpperCase() !== postStatus.toUpperCase()
                   )
                   .map(({ key, name, icon }) => (
                     <StatusItem
                       theme={theme}
                       key={key}
-                      status={name.toLowerCase()}
-                      onClick={() => setPostStatus(key.toLowerCase())}
+                      status={name.toUpperCase()}
+                      onClick={() => setPostStatus(key.toUpperCase())}
                     >
                       <span>{icon()}</span>
                       <span>{name}</span>

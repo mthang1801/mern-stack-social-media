@@ -145,6 +145,7 @@ export const postControllers = {
         filename: fileNames[i],
       });
     }
+
     const session = await mongoose.startSession();
     session.startTransaction();
     const newPost = new Post({
@@ -195,7 +196,15 @@ export const postControllers = {
 
     await session.commitTransaction();
     session.endSession();
-    return newPost;
+    let cloned_post = newPost._doc;
+    cloned_post.files = cloned_post.files.map((file) => {
+      let _file = { ...file };
+      _file.data = `data:${file.mimetype};base64,${file.data.toString(
+        'base64'
+      )}`;
+      return _file;
+    });
+    return cloned_post;
   },
   editPost: async (
     req,

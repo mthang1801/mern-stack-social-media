@@ -12,6 +12,7 @@ import {
   ErrorMessage,
   TextForm,
   ValidTextField,
+  FormBackground,
 } from './AuthForm';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import CustomButton from '../Custom/CustomButton';
@@ -25,6 +26,7 @@ import { login } from './Auth.utility';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ThemeAuth from '../../assets/images/theme-auth.jpg';
 const INITIAL_STATE = {
   controls: {
     name: {
@@ -234,79 +236,84 @@ const SignUp = withSignUpMutation(
       });
       const { error, loading } = this.props;
       return (
-        <CustomFormContainer onSubmit={this.handleSubmitSignUpForm}>
-          <FormHeader>
-            <Title>Sign Up</Title>
-            <SubTitle>Sign up your account via email and password.</SubTitle>
-          </FormHeader>
-          {error && <ErrorMessage>{error.message}</ErrorMessage>}
-          <FlashForm>
-            {/* <FacebookLogin /> */}
-            <GoogleLogin />
-          </FlashForm>
-          <FormGroups>
-            {formInputArray.map(
-              ({
-                label,
-                name,
-                touched,
-                type,
-                valid,
-                validation,
-                validationErrors,
-                value,
-              }) => (
-                <TextForm valid={valid && touched}>
-                  <TextField
-                    size="small"
-                    key={name}
-                    type={type}
-                    variant="outlined"
-                    name={name}
-                    value={value}
-                    error={!valid && touched}
-                    label={label}
-                    onChange={(e) => this.handleChange(e, name)}
-                    required={validation.required}
-                    helperText={validationErrors}
-                  />
-                  {valid && touched ? (
-                    <ValidTextField>
-                      <AiFillCheckCircle />
-                    </ValidTextField>
-                  ) : null}
-                </TextForm>
-              )
-            )}
-
-            {captcha_loaded && (
-              <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />
-            )}
-            <Button
-              variant="outlined"
-              size="medium"
-              color="primary"
-              disabled={!formIsValid || disabled}
-              type="submit"
-            >
-              <span>Submit</span>
-              {loading && (
-                <CircularProgress size={12} style={{ marginLeft: '0.5rem' }} />
+        <FormBackground background={ThemeAuth}>
+          <CustomFormContainer onSubmit={this.handleSubmitSignUpForm}>
+            <FormHeader>
+              <Title>Sign Up</Title>
+              <SubTitle>Sign up your account via email and password.</SubTitle>
+            </FormHeader>
+            {error && <ErrorMessage>{error.message}</ErrorMessage>}
+            <FlashForm>
+              {/* <FacebookLogin /> */}
+              <GoogleLogin />
+            </FlashForm>
+            <FormGroups>
+              {formInputArray.map(
+                ({
+                  label,
+                  name,
+                  touched,
+                  type,
+                  valid,
+                  validation,
+                  validationErrors,
+                  value,
+                }) => (
+                  <TextForm valid={valid && touched}>
+                    <TextField
+                      size="small"
+                      key={name}
+                      type={type}
+                      variant="outlined"
+                      name={name}
+                      value={value}
+                      error={!valid && touched}
+                      label={label}
+                      onChange={(e) => this.handleChange(e, name)}
+                      required={validation.required}
+                      helperText={validationErrors}
+                    />
+                    {valid && touched ? (
+                      <ValidTextField>
+                        <AiFillCheckCircle />
+                      </ValidTextField>
+                    ) : null}
+                  </TextForm>
+                )
               )}
-            </Button>
-          </FormGroups>
-          <FormActions>
-            <Option>
-              <StyledLink to="/auth">Signin account</StyledLink>
-            </Option>
-            <Option>
-              Forgot password ?{' '}
-              <StyledLink to="/auth/restore-account">
-                Get Password Again.
-              </StyledLink>
-            </Option>
-          </FormActions>
-        </CustomFormContainer>
+
+              {captcha_loaded && (
+                <GoogleRecaptcha onChange={this.handleChangeGoogleRecaptcha} />
+              )}
+              <Button
+                variant="outlined"
+                size="medium"
+                color="primary"
+                disabled={!formIsValid || disabled}
+                type="submit"
+              >
+                <span>Submit</span>
+                {loading && (
+                  <CircularProgress
+                    size={12}
+                    style={{ marginLeft: '0.5rem' }}
+                  />
+                )}
+              </Button>
+            </FormGroups>
+            <FormActions>
+              <Option>
+                <StyledLink to="/auth">Signin account</StyledLink>
+              </Option>
+              <Option>
+                Forgot password ?{' '}
+                <StyledLink to="/auth/restore-account">
+                  Get Password Again.
+                </StyledLink>
+              </Option>
+            </FormActions>
+          </CustomFormContainer>
+        </FormBackground>
       );
     }
   }

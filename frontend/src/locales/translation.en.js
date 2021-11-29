@@ -300,18 +300,18 @@ export const en = {
       postPlaceholder: "What's on your mind?",
       status: [
         {
-          key: 'public',
+          key: 'PUBLIC',
           name: 'public',
           icon: () => <FaGlobeAmericas />,
         },
 
         {
-          key: 'friends',
+          key: 'FRIENDS',
           name: 'friends',
           icon: () => <FaUserFriends />,
         },
         {
-          key: 'private',
+          key: 'PRIVATE',
           name: 'private',
           icon: () => <BiLockAlt />,
         },
@@ -386,6 +386,9 @@ export const en = {
     },
     utility: {
       loading: 'Loading',
+    },
+    alert: {
+      developing: 'This current page is being developed, we come back soon.',
     },
   },
 };

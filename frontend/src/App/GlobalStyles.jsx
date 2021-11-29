@@ -335,11 +335,12 @@ export default createGlobalStyle`
     top: 100%;
     z-index: 1000;
     box-sizing: content-box;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 4px 30px 0 gainsboro;
+    background: ${({ theme }) =>
+      theme ? theme.panelBackground : 'var(--panelBackground)'};
+    border: 1px solid ${({ theme }) =>
+      theme ? theme.border : 'var(--border)'};
     width: 21rem;
-    overflow-x: hidden;
+    overflow-x: hidden;    
   }
   .e6amujp {
     display: none;
@@ -388,6 +389,11 @@ export default createGlobalStyle`
   .e6nwac2 {
     width: 2.5rem;
     height: 2.5rem;
+    &:hover{
+      background-color : ${({ theme }) =>
+        theme ? theme.hover.background : 'var(--hover-background)'};
+    }
+    
   }
   .e3h4qvg {
     position: absolute;

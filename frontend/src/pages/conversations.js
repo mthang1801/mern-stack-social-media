@@ -20,10 +20,11 @@ import Group from '../components/Conversation/Group';
 import { FETCH_USER_FRIENDS_DATA } from '../apollo/contact/contact.queries';
 import { pushFriendsListToContact } from '../apollo/contact/contact.caches';
 import constant from '../constant/constant';
+import AlertDevelopingDialog from '../components/UI/AlertDevelopingDialog';
 const Conversations = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const contact = useReactiveVar(contactVar);
-
+  const user = useReactiveVar(userVar);
   const { theme } = useTheme();
   const {
     translation: { conversationMenus },
@@ -40,7 +41,8 @@ const Conversations = () => {
     },
   });
 
-  const user = useReactiveVar(userVar);
+  if (process.env.NODE_ENV !== 'development') return <AlertDevelopingDialog />;
+
   if (!user)
     return (
       <Layout>

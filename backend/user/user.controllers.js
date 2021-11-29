@@ -137,21 +137,21 @@ export const userController = {
           collation: { locale: 'en' },
           sort: { isOnline: -1, slug: 1 },
           skip: 0,
-          limit: constant.CONTACT_USERS_PER_PAGE,
+          limit: constant.CONTACT_FRIENDS_PER_PAGE,
         },
       })
       .populate({
         path: 'sentRequestToAddFriend',
         options: {
           sort: { createdAt: -1 },
-          limit: constant.CONTACT_USERS_PER_PAGE,
+          limit: constant.CONTACT_FRIENDS_PER_PAGE,
         },
       })
       .populate({
         path: 'receivedRequestToAddFriend',
         options: {
           sort: { createdAt: -1 },
-          limit: constant.CONTACT_USERS_PER_PAGE,
+          limit: constant.CONTACT_FRIENDS_PER_PAGE,
         },
       });
     if (!currentUser) {

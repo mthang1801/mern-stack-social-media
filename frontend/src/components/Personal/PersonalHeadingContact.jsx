@@ -351,7 +351,7 @@ const PersonalContact = ({ user }) => {
         )}
       </Button>
       {openUserInteraction && (
-        <DropdownMenu>
+        <DropdownMenu theme={theme}>
           {user.following.includes(currentPersonalUser?._id) ? (
             <DropdownItem theme={theme} onClick={onHandleUnfollowUser}>
               <span>

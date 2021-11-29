@@ -118,7 +118,7 @@ const PostEditorBody = ({
           plugins={plugins}
           ref={editorRef}
           tabIndex={0}
-          placeholder={postPlaceholder}
+          placeholder={"What's on your mind?"}
         />
         <MentionSuggestions
           open={openMention}

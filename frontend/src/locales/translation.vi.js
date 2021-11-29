@@ -179,8 +179,8 @@ export const vi = {
     auth: {
       requestAuth:
         'Bạn cần đăng nhập vào tài khoản trước khi thực hiện tác vụ này',
-      login: 'Đăng nhập Tài khoản',
-      signup: 'Đăng ký Tài khoản',
+      login: 'Đăng nhập',
+      signup: 'Đăng ký',
       signout: 'Đăng xuất',
       buttons: {
         login: 'Đăng nhập',
@@ -299,17 +299,17 @@ export const vi = {
       },
       status: [
         {
-          key: 'public',
+          key: 'PUBLIC',
           name: 'Công khai',
           icon: () => <FaGlobeAmericas />,
         },
         {
-          key: 'friends',
+          key: 'FRIENDS',
           name: 'Bạn bè',
           icon: () => <FaUserFriends />,
         },
         {
-          key: 'private',
+          key: 'PRIVATE',
           name: 'Cá nhân',
           icon: () => <BiLockAlt />,
         },
@@ -384,6 +384,9 @@ export const vi = {
     },
     utility: {
       loading: 'Đang tải',
+    },
+    alert: {
+      developing: 'Trang hiện tại đang được phát triển, vui lòng quay lại sau.',
     },
   },
 };

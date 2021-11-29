@@ -44,20 +44,20 @@ export const Selected = styled.div`
   border-radius: 1rem;
   padding: 0.15rem 0.35rem;
   background-color: ${({ status }) =>
-    status === 'public'
+    status === 'PUBLIC'
       ? 'var(--indigo-1)'
-      : status === 'friends'
+      : status === 'FRIENDS'
       ? 'var(--green-1)'
       : 'var(--light-gray-1)'};
   color: ${({ status }) =>
-    status === 'public' || status === 'friends'
+    status === 'PUBLIC' || status === 'FRIENDS'
       ? 'var(--white)'
       : 'var(--black)'};
   &:hover {
     background-color: ${({ status }) =>
-      status === 'public'
+      status === 'PUBLIC'
         ? 'var(--indigo-2)'
-        : status === 'friends'
+        : status === 'FRIENDS'
         ? 'var(--green-2)'
         : 'var(--light-gray-2)'};
   }

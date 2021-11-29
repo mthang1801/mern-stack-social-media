@@ -1,13 +1,21 @@
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
+import ThemeAuth from '../../assets/images/theme-auth.jpg';
+
+export const FormBackground = styled.div`
+  background-image: url(${({ background }) => background});
+  min-height: 100vh;
+`;
+
 export const CustomFormContainer = styled.form`
-  width: 90%;
+  width: 100%;
   max-width: 500px;
+  height: 100vh;
   padding: 2.5rem 3.5rem;
   text-align: center;
   border: 1px solid #ccc;
-  margin: 1rem auto;
-  border-radius: 10px;
+  margin: 0rem auto;
+
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
   background-color: var(--light);
   color: black;
@@ -19,6 +27,14 @@ export const CustomFormContainer = styled.form`
     padding: 1.5rem 2rem;
   }
   background-color: white;
+  @media screen and (min-width: 768px) {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    height: unset;
+  }
 `;
 export const FormHeader = styled.div`
   margin-bottom: 2rem;
