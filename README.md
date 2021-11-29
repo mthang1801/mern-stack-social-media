@@ -1,22 +1,28 @@
 # WELCOME TO Pul.com
 
----
+> 🔑 **This is an unofficial version, we are trying to improve it as soon as possible**
 
-#### This is social network platform developed by @mvt
+## The core of app
 
-#### Contact me via :
+- Backend : Node.js (ExpressJS)
+- Frontend : ReactJS
+- Database : MongoDB
+- Both using Apollo GraphQL.
+- Using websocket which is available in Apollo WS and socket.io library to run real-time some required features.
 
-- email : mthang1801@gmail.com
-- facebook : [@fb_mvt](https://www.facebook.com/mvt.dev)
+## How to use
 
-## TERMINOLOGY
+In order to use app, you need to install NodeJS version `16.*`, NPM version `7.*` and install MongoDB
 
-### Chat model
+1. Open folder in vscode
+2. Open terminal or command line and type : **npm run install-all**
+3. create file `.env`, coppy all the contents in `.env.example` to it. If you want to run mongodb from cloud, you can update mongo URI to filepath `backend/config/connectDB.js`
+4. Finally, type in terminal : **npm run dev**
 
-- scope: "GROUP" or "PERSONAL"
+## Some features from app
 
-## Note
+- Signup, Signin with Password or authentication via Google.
+- Logout account
+- Restore Password (Unavailable)
 
-### Resetting auth token in connectionParams
-
-[https://spectrum.chat/apollo/subscriptions/resetting-auth-token-in-connectionparams~19706e38-8e22-42f6-b4d1-a0e1a07c3a5c](https://spectrum.chat/apollo/subscriptions/resetting-auth-token-in-connectionparams~19706e38-8e22-42f6-b4d1-a0e1a07c3a5c)
+![image_1]("https://www.dropbox.com/s/5nsd5ba76pa5qs4/image_1.png")
