@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Social Media using MERN stack",
   "main": "index.js",
+  "engines": {
+    "node": "v16.9.1",
+    "npm": "7.21.1"
+  },
   "scripts": {
     "install-all": "npm install --prefix frontend && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
