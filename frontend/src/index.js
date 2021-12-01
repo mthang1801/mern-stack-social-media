@@ -9,6 +9,9 @@ import { ApolloProvider } from '@apollo/client';
 import '@draft-js-plugins/mention/lib/plugin.css';
 import '@draft-js-plugins/hashtag/lib/plugin.css';
 import './locales/i18n';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <ApolloProvider client={client}>

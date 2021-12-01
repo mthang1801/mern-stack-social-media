@@ -13,9 +13,9 @@ const CardProfile = ({ user }) => {
     <CardWrapper theme={theme}>
       <div className="user-avatar">
         <Link to={`/${user.slug}`} className="user-avatar__container">
-          <LazyLoadImage
+          <img
             src={user.avatar}
-            alt={user.avatar}
+            alt={'avatar'}
             effect="blur"
             width="60px"
             height="60px"

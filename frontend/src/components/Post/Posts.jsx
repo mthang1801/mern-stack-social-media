@@ -5,9 +5,9 @@ const Posts = ({ posts }) => {
   return (
     <section>
       {posts.map((post) => (
-        <LazyLoad key={`post-${post._id}`} placeholder="<div>Loading...</div>">
+        <div key={`post-${post._id}`} placeholder="<div>Loading...</div>">
           <PostCard post={post} />
-        </LazyLoad>
+        </div>
       ))}
     </section>
   );

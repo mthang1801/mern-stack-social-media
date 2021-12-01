@@ -50,9 +50,9 @@ const PostCardBody = ({ post }) => {
         </CardPreview>
       )}
       {images.length ? (
-        <LazyLoad>
+        <div>
           <ImagesCarousel images={images} />
-        </LazyLoad>
+        </div>
       ) : null}
     </>
   );

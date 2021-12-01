@@ -3,11 +3,16 @@ import styled from 'styled-components/macro';
 export const Wrapper = styled.div`
   margin: 1.5rem auto;
   @media screen and (min-width: 992px) {
-    width: 85%;
+    width: 85vw;
     display: flex;
   }
   @media screen and (min-width: 1280px) {
-    width: 65%;
+    width: 75vw;
+  }
+  @media screen and (min-width: 1920px) {
+    width: 50vw;
+    display: flex;
+    justify-content: space-between;
   }
 `;
 
@@ -16,7 +21,7 @@ export const LeftSide = styled.div`
     width: 360px;
   }
   @media screen and (min-width: 1280px) {
-    width: 40%;
+    width: 400px;
   }
 `;
 
@@ -25,6 +30,6 @@ export const RightSide = styled.div`
     width: calc(100% - 360px);
   }
   @media screen and (min-width: 1280px) {
-    width: 60%;
+    width: 48%;
   }
 `;

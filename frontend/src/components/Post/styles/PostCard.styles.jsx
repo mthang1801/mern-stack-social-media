@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 
 export const Wrapper = styled.article`
-  width: 95%;
+  width: 100%;
   max-width: 500px;
   background-color: ${({ theme }) =>
     theme ? theme.card.primary : 'var(--card-primary)'};

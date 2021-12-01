@@ -1,5 +1,7 @@
 import styled from 'styled-components/macro';
 
+export const Wrapper = styled.div``;
+
 export const ImageContainer = styled.div`
   margin: 0 1rem;
   cursor: pointer;
@@ -10,16 +12,18 @@ export const ImageContainer = styled.div`
 `;
 
 export const NextArrow = styled.div`
-  right: 1rem;
-  z-index: 1;
+  z-index: 1 !important;
+  right: 0 !important;
   &::before {
-    color: var(--gray-light-2);
+    color: ${({ theme }) =>
+      theme ? theme.hover.background : 'var(--hover-background)'} !important;
   }
 `;
 export const PrevArrow = styled.div`
-  left: 1rem;
+  left: 0 !important;
   z-index: 1;
   &::before {
-    color: var(--gray-light-2);
+    color: ${({ theme }) =>
+      theme ? theme.hover.background : 'var(--hover-background)'} !important;
   }
 `;

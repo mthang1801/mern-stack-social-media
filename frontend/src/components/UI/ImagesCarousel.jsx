@@ -7,6 +7,7 @@ import {
   NextArrow,
   PrevArrow,
 } from './styles/ImagesCarousel.styles';
+import { useTheme } from '../../theme';
 
 function CustomNextArrow(props) {
   return <NextArrow {...props} />;
@@ -17,6 +18,7 @@ function CustomPrevArrow(props) {
 }
 
 const ImagesCarousel = ({ images }) => {
+  const { theme } = useTheme();
   const [openLightBox, setOpenLightBox] = useState(-1);
   let dragging = false;
   const settings = {
@@ -27,14 +29,16 @@ const ImagesCarousel = ({ images }) => {
     slidesToScroll: images.length > 2 ? 2 : images.length,
     swipeToSlide: true,
     lazyLoad: true,
+    centerPadding: '60px',
     beforeChange: () => (dragging = true),
     afterChange: () => (dragging = false),
-    nextArrow: <CustomNextArrow />,
-    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow theme={theme} />,
+    prevArrow: <CustomPrevArrow theme={theme} />,
   };
+
   if (!images.length) return null;
   return (
-    <>
+    <div>
       {openLightBox !== -1 && (
         <LightBox
           mainSrc={images[openLightBox].src}
@@ -52,7 +56,7 @@ const ImagesCarousel = ({ images }) => {
           </ImageContainer>
         ))}
       </Slider>
-    </>
+    </div>
   );
 };
 

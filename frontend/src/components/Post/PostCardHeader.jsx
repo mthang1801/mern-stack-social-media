@@ -54,11 +54,7 @@ const PostCardHeader = ({ post, user, setIsEdited }) => {
     <Wrapper theme={theme}>
       <Information>
         <Link to={`/${post.author.slug}`}>
-          <LazyLoadImage
-            effect="blur"
-            src={post.author.avatar}
-            alt={post.author.avatar}
-          />
+          <img effect="blur" src={post.author.avatar} alt={'avtar'} />
         </Link>
         <Timeline>
           <Link
