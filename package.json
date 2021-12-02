@@ -16,7 +16,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "dev": "concurrently \"npm run client\" \"npm run server\" ",
     "build": "npm run build --prefix frontend",
-    "heroku-postbuild": "npm install --prefix frontend && npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "npm install --prefix frontend && npm install --only=dev --no-shrinkwrap && npm run build --prefix frontend && npm run build"
   },
   "keywords": [],
   "author": "",
