@@ -10,8 +10,8 @@
   "scripts": {
     "install-all": "npm install --prefix frontend && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
-    "start": "node -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
+    "server": "nodemon -r dotenv/config backend/index.js dotenv_config_path=.env",
+    "start": "node -r dotenv/config backend/index.js dotenv_config_path=.env",
     "client": "npm run dev --prefix frontend",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "dev": "concurrently \"npm run server\" \"npm run client\"  ",
