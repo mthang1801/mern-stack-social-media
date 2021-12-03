@@ -1,7 +1,7 @@
 const { chatControllers } = require('./chat.controllers');
-const { pubsub } = require('../pubsub');
+const { publish } = require('../pubsub');
 const { withFilter } = require('apollo-server-express');
-const { subscriptionActions } = require('../schema');
+const { subscriptionActions } = require('../schema/schema.subscription');
 const constant = require('../config/constant');
 exports.chatResolvers = {
   Query: {

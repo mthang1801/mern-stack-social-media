@@ -1,7 +1,7 @@
 const { notificationControllers } = require('./notification.controllers');
 const { pubsub } = require('../pubsub');
 const { withFilter } = require('apollo-server-express');
-const { subscriptionActions } = require('../schema');
+const { subscriptionActions } = require('../schema/schema.subscription');
 const constant = require('../config/constant');
 exports.notificationResolvers = {
   Query: {

@@ -1,6 +1,6 @@
 const { userController } = require('./user.controllers');
 const { pubsub } = require('../pubsub');
-const { subscriptionActions } = require('../schema/index');
+const { subscriptionActions } = require('../schema/schema.subscription');
 const { withFilter } = require('apollo-server-express');
 const constant = require('../config/constant');
 exports.userResolvers = {

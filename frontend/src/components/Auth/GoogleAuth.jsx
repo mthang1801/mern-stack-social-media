@@ -30,7 +30,7 @@ const GGAuth = () => {
   };
   return (
     <GoogleLogin
-      clientId="660605287272-bcknbfn9c01uuf8rimiefiblh5587gij.apps.googleusercontent.com"
+      clientId="555824210946-qokgl4kacbb7pgbn7v2p8cps1nekli69.apps.googleusercontent.com"
       onSuccess={responseGoogle}
       onFailure={responseGoogle}
       cookiePolicy={'single_host_origin'}

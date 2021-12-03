@@ -1,7 +1,7 @@
 const { postControllers } = require('./post.controllers');
 const { pubsub } = require('../pubsub');
 const { withFilter } = require('apollo-server-express');
-const { subscriptionActions } = require('../schema');
+const { subscriptionActions } = require('../schema/schema.subscription');
 exports.postResolvers = {
   Query: {
     fetchPosts: (_, args, { req }, info) => {

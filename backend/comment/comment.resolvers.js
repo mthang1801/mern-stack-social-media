@@ -1,6 +1,6 @@
 const { commentControllers } = require('./comment.controllers');
 const { pubsub } = require('../pubsub');
-const { subscriptionActions } = require('../schema');
+const { subscriptionActions } = require('../schema/schema.subscription');
 const { withFilter } = require('apollo-server-express');
 exports.commentResolvers = {
   Query: {
