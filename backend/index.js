@@ -29,9 +29,9 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 if (process.env.NODE_ENV === 'production') {
   //set static
-  app.use(express.static(path.join(__dirname, 'frontend', 'build')));
+  app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
   app.get('*', (req, res, next) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
   });
 }
 
