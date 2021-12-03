@@ -1,9 +1,9 @@
-import { Contact } from './contact.model';
-import { User } from '../user/user.model';
-import getAuthUser from '../utils/getAuthUser';
-import { CheckResultAndHandleErrors } from 'apollo-server-express';
-import mongoose from 'mongoose';
-export const contactControllers = {
+const { Contact } = require('./contact.model');
+const { User } = require('../user/user.model');
+const getAuthUser = require('../utils/getAuthUser');
+const { CheckResultAndHandleErrors } = require('apollo-server-express');
+const mongoose = require('mongoose');
+exports.contactControllers = {
   addContact: async (req, receiverId, message, pubsub, contactActions) => {
     const myUserId = getAuthUser(req);
     const checkContactExisting = await Contact.findOne({

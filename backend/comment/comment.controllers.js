@@ -1,19 +1,19 @@
-import getAuthUser from '../utils/getAuthUser';
-import {
+const getAuthUser = require('../utils/getAuthUser');
+const {
   ApolloError,
   ValidationError,
   CheckResultAndHandleErrors,
   UserInputError,
-} from 'apollo-server-express';
-import mongoose from 'mongoose';
-import { Post } from '../post/post.model';
-import { Comment } from './comment.model';
-import { User } from '../user/user.model';
-import { Notification } from '../notification/notification.model';
-import { Response } from '../response/response.model';
-import { contents, fields } from '../notification';
-import constant from '../config/constant';
-export const commentControllers = {
+} = require('apollo-server-express');
+const mongoose = require('mongoose');
+const { Post } = require('../post/post.model');
+const { Comment } = require('./comment.model');
+const { User } = require('../user/user.model');
+const { Notification } = require('../notification/notification.model');
+const { Response } = require('../response/response.model');
+const { contents, fields } = require('../notification');
+const constant = require('../config/constant');
+exports.commentControllers = {
   fetchComments: async (
     req,
     postId,

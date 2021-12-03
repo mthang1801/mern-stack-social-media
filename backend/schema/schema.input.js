@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-express';
+const { gql } = require('apollo-server-express');
 
-export const schemaInput = gql`
+exports.schemaInput = gql`
   input CreateUserInput {
     name: String!
     email: String!

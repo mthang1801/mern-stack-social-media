@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-express';
+const { gql } = require('apollo-server-express');
 
-export const schemaEnum = gql`
+exports.schemaEnum = gql`
   enum PostStatusEnum {
     PUBLIC
     PRIVATE

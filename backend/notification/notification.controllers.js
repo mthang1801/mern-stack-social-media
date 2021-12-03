@@ -1,8 +1,11 @@
-import getAuthUser from '../utils/getAuthUser';
-import { User } from '../user/user.model';
-import { Notification } from './notification.model';
-import { ValidationError, AuthenticationError } from 'apollo-server-express';
-export const notificationControllers = {
+const getAuthUser = require('../utils/getAuthUser');
+const { User } = require('../user/user.model');
+const { Notification } = require('./notification.model');
+const {
+  ValidationError,
+  AuthenticationError,
+} = require('apollo-server-express');
+exports.notificationControllers = {
   fetchNotifications: async (req, skip, limit) => {
     const currentUserId = await getAuthUser(req);
     console.log(skip, limit);

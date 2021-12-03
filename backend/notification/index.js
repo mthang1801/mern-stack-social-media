@@ -1,2 +1,2 @@
-export { contents } from './notification.contents';
-export { fields } from './notification.fields';
+exports.contents = { contents } = require('./notification.contents');
+exports.fields = { fields } = require('./notification.fields');

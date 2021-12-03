@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-export const POST_STATUS_ENUM = {
+const mongoose = require('mongoose');
+const POST_STATUS_ENUM = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
   FRIENDS: 'FRIENDS',
@@ -79,5 +79,5 @@ const PostSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-export const Post = mongoose.model('posts', PostSchema);
+exports.POST_STATUS_ENUM = POST_STATUS_ENUM;
+exports.Post = mongoose.model('posts', PostSchema);

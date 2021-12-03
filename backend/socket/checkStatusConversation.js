@@ -1,10 +1,10 @@
-import {
+const {
   pushSocketIdIntoArray,
   emitResponseToArray,
   removeSocketIdFromArray,
-} from './socketio.utility';
+} = require('./socketio.utility');
 
-const checkStatusConversation = (io) => {
+exports.checkStatusConversation = (io) => {
   let clients = {};
   io.on('connection', (socket) => {
     socket.on('client-send-user-info', async (user) => {
@@ -18,5 +18,3 @@ const checkStatusConversation = (io) => {
     });
   });
 };
-
-export { checkStatusConversation };

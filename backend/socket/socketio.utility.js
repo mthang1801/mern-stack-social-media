@@ -1,6 +1,6 @@
-import { User } from '../user/user.model';
+const { User } = require('../user/user.model');
 
-const pushSocketIdIntoArray = async (io, clients, userId, socketId) => {
+exports.pushSocketIdIntoArray = async (io, clients, userId, socketId) => {
   if (clients[userId]) {
     clients[userId] = clients[userId].filter((id) => {
       return io.sockets.sockets.get(id)?.connected;
@@ -14,7 +14,7 @@ const pushSocketIdIntoArray = async (io, clients, userId, socketId) => {
   return clients;
 };
 
-const emitResponseToArray = (io, clients, userId, eventName, data) => {
+exports.emitResponseToArray = (io, clients, userId, eventName, data) => {
   clients[userId].forEach((socketId) => {
     try {
       io.to(socketId).emit(eventName, data);
@@ -24,7 +24,7 @@ const emitResponseToArray = (io, clients, userId, eventName, data) => {
   });
 };
 
-const removeSocketIdFromArray = async (io, clients, socket) => {
+exports.removeSocketIdFromArray = async (io, clients, socket) => {
   const socketId = socket.id;
   for (let userId in clients) {
     console.log(clients);
@@ -45,5 +45,3 @@ const removeSocketIdFromArray = async (io, clients, socket) => {
   }
   return clients;
 };
-
-export { pushSocketIdIntoArray, emitResponseToArray, removeSocketIdFromArray };

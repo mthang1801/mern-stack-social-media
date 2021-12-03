@@ -1,7 +1,7 @@
-import { ApolloError } from 'apollo-server-express';
-import getAuthUser from '../utils/getAuthUser';
+const { ApolloError } = require('apollo-server-express');
+const getAuthUser = require('../utils/getAuthUser');
 
-export const conversationControllers = {
+exports.conversationControllers = {
   fetchConversations: async (req, except, skip, limit) => {
     try {
       let objectedExcept = {};

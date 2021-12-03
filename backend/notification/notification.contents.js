@@ -1,4 +1,4 @@
-export const contents = {
+exports.contents = {
   CREATED: 'CREATED',
   ADDED: 'ADDED',
   ACCEPTED: 'ACCEPTED',

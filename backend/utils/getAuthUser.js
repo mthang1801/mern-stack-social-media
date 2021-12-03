@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
-import { AuthenticationError } from 'apollo-server-express';
-export default (req, required = true) => {
+const jwt = require('jsonwebtoken');
+const { AuthenticationError } = require('apollo-server-express');
+module.exports = (req, required = true) => {
   const authorization = req.headers.authorization;
   if (authorization) {
     const token = authorization.replace(/bearer/i, '').trim();

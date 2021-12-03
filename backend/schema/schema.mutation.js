@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-express';
+const { gql } = require('apollo-server-express');
 
-export const schemaMutation = gql`
+exports.schemaMutation = gql`
   type Mutation {
     createUser(data: CreateUserInput!): UserAuthPayload!
     createPost(data: PostInput!): Post!

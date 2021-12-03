@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
 const validateToken = (authToken) => {
   const token = authToken.replace(/bearer/i, '').trim();
@@ -6,4 +6,4 @@ const validateToken = (authToken) => {
   return userId;
 };
 
-export default validateToken;
+module.exports = validateToken;

@@ -1,11 +1,15 @@
-import { userResolvers } from '../user/user.resolvers';
-import { postResolvers } from '../post/post.resolvers';
-import { commentResolvers } from '../comment/comment.resolvers';
-import { contactResolvers } from '../contact/contact.resolvers';
-import { chatResolvers } from '../chat/chat.resolvers';
-import { notificationResolvers } from '../notification/notification.resolvers';
-import { conversationsResolvers } from '../conversation/conversation.resovers';
-import { responseResolvers } from '../response/response.resolvers';
+const { userResolvers } = require('../user/user.resolvers');
+const { postResolvers } = require('../post/post.resolvers');
+const { commentResolvers } = require('../comment/comment.resolvers');
+const { contactResolvers } = require('../contact/contact.resolvers');
+const { chatResolvers } = require('../chat/chat.resolvers');
+const {
+  notificationResolvers,
+} = require('../notification/notification.resolvers');
+const {
+  conversationsResolvers,
+} = require('../conversation/conversation.resovers');
+const { responseResolvers } = require('../response/response.resolvers');
 const resolvers = [
   userResolvers,
   postResolvers,
@@ -17,4 +21,4 @@ const resolvers = [
   conversationsResolvers,
 ];
 
-export default resolvers;
+module.exports = resolvers;

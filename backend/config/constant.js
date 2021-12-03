@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   POSTS_PER_PAGE: 7,
   COMMENTS_PER_POST: 10,
   RESPONSES_PER_COMMENT: 10,

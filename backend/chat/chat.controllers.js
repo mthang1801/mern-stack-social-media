@@ -1,13 +1,13 @@
-import getAuthUser from '../utils/getAuthUser';
-import { PersonalChat } from './personal-chat.model';
-import { User } from '../user/user.model';
-import { ApolloError, UserInputError } from 'apollo-server-express';
-import _ from 'lodash';
-import decodeBase64 from '../utils/decodeBase64';
-import mongoose from 'mongoose';
-import constant from '../config/constant';
+const getAuthUser = require('../utils/getAuthUser');
+const { PersonalChat } = require('./personal-chat.model');
+const { User } = require('../user/user.model');
+const { ApolloError, UserInputError } = require('apollo-server-express');
+const _ = require('lodash');
+const decodeBase64 = require('../utils/decodeBase64');
+const mongoose = require('mongoose');
+const constant = require('../config/constant');
 
-export const chatControllers = {
+exports.chatControllers = {
   fetchChatConversations: async (req, except, skip, limit) => {
     //when fetch chat messages, we need update status is delivered message is delivered if it is on sent status
     try {

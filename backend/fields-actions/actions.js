@@ -1,4 +1,4 @@
-export const actions = {
+exports.actions = {
   CREATED: 'CREATED',
   ADDED: 'ADDED',
   ACCEPTED: 'ACCEPTED',

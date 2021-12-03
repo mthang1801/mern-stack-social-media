@@ -1,15 +1,15 @@
-import { ApolloServer, mergeSchemas } from 'apollo-server-express';
-import express from 'express';
-import connectDB from './config/connectDB';
-import schema from './schema';
-import resolvers from './resolvers';
-import { createServer } from 'http';
-import path from 'path';
-import events from 'events';
-import socketio from 'socket.io';
-import { initSockets } from './socket';
-import validateToken from './utils/validateToken';
-import { User } from './user/user.model';
+const { ApolloServer, mergeSchemas } = require('apollo-server-express');
+const express = require('express');
+const connectDB = require('./config/connectDB');
+const schema = require('./schema');
+const resolvers = require('./resolvers');
+const { createServer } = require('http');
+const path = require('path');
+const events = require('events');
+const socketio = require('socket.io');
+const { initSockets } = require('./socket');
+const validateToken = require('./utils/validateToken');
+const { User } = require('./user/user.model');
 events.EventEmitter.defaultMaxListeners = Infinity;
 
 const schemas = mergeSchemas({

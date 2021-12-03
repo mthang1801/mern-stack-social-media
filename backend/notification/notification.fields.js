@@ -1,4 +1,4 @@
-export const fields = {
+exports.fields = {
   POST: 'POST',
   USER: 'USER',
   COMMENT: 'COMMENT',

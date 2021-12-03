@@ -1,8 +1,8 @@
-import { postControllers } from './post.controllers';
-import { pubsub } from '../pubsub';
-import { withFilter } from 'apollo-server-express';
-import { subscriptionActions } from '../schema';
-export const postResolvers = {
+const { postControllers } = require('./post.controllers');
+const { pubsub } = require('../pubsub');
+const { withFilter } = require('apollo-server-express');
+const { subscriptionActions } = require('../schema');
+exports.postResolvers = {
   Query: {
     fetchPosts: (_, args, { req }, info) => {
       return postControllers.fetchPosts(

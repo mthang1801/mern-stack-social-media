@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const PersonalChatSchema = new mongoose.Schema(
   {
@@ -45,7 +45,4 @@ const PersonalChatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const PersonalChat = mongoose.model(
-  'personal-chats',
-  PersonalChatSchema
-);
+exports.PersonalChat = mongoose.model('personal-chats', PersonalChatSchema);

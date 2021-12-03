@@ -1,2 +1,5 @@
-export { actions } from './actions';
-export { fields } from './fields';
+const { actions } = require('./actions');
+const { fields } = require('./fields');
+
+exports.actions;
+exports.fields;

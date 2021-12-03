@@ -1,9 +1,9 @@
-import { notificationControllers } from './notification.controllers';
-import { pubsub } from '../pubsub';
-import { withFilter } from 'apollo-server-express';
-import { subscriptionActions } from '../schema';
-import constant from '../config/constant';
-export const notificationResolvers = {
+const { notificationControllers } = require('./notification.controllers');
+const { pubsub } = require('../pubsub');
+const { withFilter } = require('apollo-server-express');
+const { subscriptionActions } = require('../schema');
+const constant = require('../config/constant');
+exports.notificationResolvers = {
   Query: {
     fetchNotifications: (_, args, { req }, info) =>
       notificationControllers.fetchNotifications(

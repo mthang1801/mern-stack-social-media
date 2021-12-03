@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-express';
+const { gql } = require('apollo-server-express');
 
-export const schemaQuery = gql`
+exports.schemaQuery = gql`
   type Query {
     users: [User!]!
     fetchCurrentUser: User

@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-express';
+const { gql } = require('apollo-server-express');
 
-export const schemaType = gql`
+exports.schemaType = gql`
   type User {
     _id: ID!
     name: String!

@@ -1,10 +1,13 @@
-import { makeExecutableSchema } from 'apollo-server-express';
-import { schemaQuery } from './schema.query';
-import { schemaType } from './schema.type';
-import { schemaMutation } from './schema.mutation';
-import { schemaInput } from './schema.input';
-import { schemaEnum } from './schema.enum';
-import { schemaSubscription, subscriptionActions } from './schema.subscription';
+const { makeExecutableSchema } = require('apollo-server-express');
+const { schemaQuery } = require('./schema.query');
+const { schemaType } = require('./schema.type');
+const { schemaMutation } = require('./schema.mutation');
+const { schemaInput } = require('./schema.input');
+const { schemaEnum } = require('./schema.enum');
+const {
+  schemaSubscription,
+  subscriptionActions,
+} = require('./schema.subscription');
 const schema = makeExecutableSchema({
   typeDefs: [
     schemaQuery,
@@ -15,4 +18,5 @@ const schema = makeExecutableSchema({
     schemaSubscription,
   ],
 });
-export { schema as default, subscriptionActions };
+exports.subscriptionActions = subscriptionActions;
+module.exports = schema;

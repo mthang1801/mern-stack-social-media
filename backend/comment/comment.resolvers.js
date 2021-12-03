@@ -1,8 +1,8 @@
-import { commentControllers } from './comment.controllers';
-import { pubsub } from '../pubsub';
-import { subscriptionActions } from '../schema';
-import { withFilter } from 'apollo-server-express';
-export const commentResolvers = {
+const { commentControllers } = require('./comment.controllers');
+const { pubsub } = require('../pubsub');
+const { subscriptionActions } = require('../schema');
+const { withFilter } = require('apollo-server-express');
+exports.commentResolvers = {
   Query: {
     fetchComments: (_, args, { req }, info) =>
       commentControllers.fetchComments(

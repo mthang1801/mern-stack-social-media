@@ -1,17 +1,17 @@
-import { Response } from './response.model';
-import getAuthUser from '../utils/getAuthUser';
-import { User } from '../user/user.model';
-import { Comment } from '../comment/comment.model';
-import { Post } from '../post/post.model';
-import { Notification } from '../notification/notification.model';
-import {
+const { Response } = require('./response.model');
+const getAuthUser = require('../utils/getAuthUser');
+const { User } = require('../user/user.model');
+const { Comment } = require('../comment/comment.model');
+const { Post } = require('../post/post.model');
+const { Notification } = require('../notification/notification.model');
+const {
   ApolloError,
   AuthenticationError,
   ValidationError,
-} from 'apollo-server-express';
-import { fields, contents } from '../notification';
-import mongoose from 'mongoose';
-export const responseControllers = {
+} = require('apollo-server-express');
+const { fields, contents } = require('../notification');
+const mongoose = require('mongoose');
+exports.responseControllers = {
   fetchResponses: async (commentId, skip, limit) => {
     try {
       console.log(commentId, skip, limit);

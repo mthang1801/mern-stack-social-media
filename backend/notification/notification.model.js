@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
-import { fields, contents } from './index';
+const mongoose = require('mongoose');
+const { contents } = require('./notification.contents');
+const { fields } = require('./notification.fields');
 const NotificationSchema = new mongoose.Schema(
   {
     field: {
@@ -74,6 +75,4 @@ const NotificationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Notification = mongoose.model('notifications', NotificationSchema);
-
-export { Notification };
+exports.Notification = mongoose.model('notifications', NotificationSchema);

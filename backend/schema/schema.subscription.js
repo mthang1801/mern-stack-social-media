@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-express';
+const { gql } = require('apollo-server-express');
 
-export const schemaSubscription = gql`
+exports.schemaSubscription = gql`
   type Subscription {
     notifyMentionedUsersInPost(userId: ID!): Notification!
     likePostSubscriptionNotification: Notification!
@@ -55,7 +55,7 @@ export const schemaSubscription = gql`
   }
 `;
 
-export const subscriptionActions = {
+exports.subscriptionActions = {
   SEND_REQUEST_TO_ADD_FRIEND: 'SEND_REQUEST_TO_ADD_FRIEND',
   CANCEL_REQUEST_TO_ADD_FRIEND: 'CANCEL_REQUEST_TO_ADD_FRIEND',
   REJECT_REQUEST_TO_ADD_FRIEND: 'REJECT_REQUEST_TO_ADD_FRIEND',

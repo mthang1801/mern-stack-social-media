@@ -7,4 +7,4 @@ function bufferToBase64(buffer) {
   );
 }
 
-export default bufferToBase64;
+module.exports = bufferToBase64;

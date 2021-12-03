@@ -1,9 +1,9 @@
-import { responseControllers } from './response.controllers';
-import { pubsub } from '../pubsub';
-import { subscriptionActions } from '../schema';
-import { withFilter } from 'apollo-server-express';
-import constant from '../config/constant';
-export const responseResolvers = {
+const { responseControllers } = require('./response.controllers');
+const { pubsub } = require('../pubsub');
+const { subscriptionActions } = require('../schema');
+const { withFilter } = require('apollo-server-express');
+const constant = require('../config/constant');
+exports.responseResolvers = {
   Query: {
     fetchResponses: (_, args, { req }, info) =>
       responseControllers.fetchResponses(

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const ResponseSchema = new mongoose.Schema(
   {
@@ -49,4 +49,4 @@ const ResponseSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Response = mongoose.model('responses', ResponseSchema);
+exports.Response = mongoose.model('responses', ResponseSchema);

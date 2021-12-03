@@ -1,9 +1,9 @@
-import { userController } from './user.controllers';
-import { pubsub } from '../pubsub';
-import { subscriptionActions } from '../schema/index';
-import { withFilter } from 'apollo-server-express';
-import constant from '../config/constant';
-export const userResolvers = {
+const { userController } = require('./user.controllers');
+const { pubsub } = require('../pubsub');
+const { subscriptionActions } = require('../schema/index');
+const { withFilter } = require('apollo-server-express');
+const constant = require('../config/constant');
+exports.userResolvers = {
   Query: {
     users: (_, args, ctx, info) => {
       return userController.users();

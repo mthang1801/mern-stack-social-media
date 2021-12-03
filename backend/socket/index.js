@@ -1,6 +1,4 @@
-import { checkStatusConversation } from './checkStatusConversation';
-const initSockets = (io) => {
+const { checkStatusConversation } = require('./checkStatusConversation');
+exports.initSockets = (io) => {
   checkStatusConversation(io);
 };
-
-export { initSockets };

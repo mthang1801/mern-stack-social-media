@@ -1,20 +1,20 @@
-import { User } from './user.model';
-import {
+const { User } = require('./user.model');
+const {
   UserInputError,
   AuthenticationError,
   ApolloError,
-} from 'apollo-server-express';
-import { generateToken } from '../utils/token';
-import bcrypt from 'bcryptjs';
-import getAuthUser from '../utils/getAuthUser';
-import { fields, contents } from '../notification';
-import { Notification } from '../notification/notification.model';
-import constant from '../config/constant';
-import mongoose from 'mongoose';
-import _ from 'lodash';
-import { raiseError } from '../utils/raiseError';
-import pattern from '../config/pattern';
-export const userController = {
+} = require('apollo-server-express');
+const { generateToken } = require('../utils/token');
+const bcrypt = require('bcryptjs');
+const getAuthUser = require('../utils/getAuthUser');
+const { fields, contents } = require('../notification');
+const { Notification } = require('../notification/notification.model');
+const constant = require('../config/constant');
+const mongoose = require('mongoose');
+const _ = require('lodash');
+const { raiseError } = require('../utils/raiseError');
+const pattern = require('../config/pattern');
+exports.userController = {
   users: () => User.find(),
   createUser: async (data) => {
     const { name, email, password } = data;

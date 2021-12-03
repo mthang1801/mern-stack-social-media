@@ -14,9 +14,9 @@
     "start": "node -r dotenv/config backend/index.js dotenv_config_path=.env --exec babel-node",
     "client": "npm run dev --prefix frontend",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "dev": "concurrently \"npm run client\" \"npm run server\" ",
+    "dev": "concurrently \"npm run server\" \"npm run client\"  ",
     "build": "npm run build --prefix frontend",
-    "heroku-postbuild": "npm install --prefix frontend && npm install --only=dev --no-shrinkwrap && npm run build && npm run build --prefix frontend"
+    "heroku-postbuild": "npm install --prefix frontend && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "keywords": [],
   "author": "",

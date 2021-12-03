@@ -1,19 +1,19 @@
-import getAuthUser from '../utils/getAuthUser';
-import { User } from '../user/user.model';
-import { Post } from '../post/post.model';
-import { Notification } from '../notification/notification.model';
-import mongoose from 'mongoose';
-import { POST_STATUS_ENUM } from './post.model';
-import {
+const getAuthUser = require('../utils/getAuthUser');
+const { User } = require('../user/user.model');
+const { Post } = require('../post/post.model');
+const { Notification } = require('../notification/notification.model');
+const mongoose = require('mongoose');
+const { POST_STATUS_ENUM } = require('./post.model');
+const {
   UserInputError,
   AuthenticationError,
   ApolloError,
-} from 'apollo-server-express';
-import { fields, contents } from '../notification';
-import decodeBase64 from '../utils/decodeBase64';
-import { raiseError } from '../utils/raiseError';
-import constant from '../config/constant';
-export const postControllers = {
+} = require('apollo-server-express');
+const { fields, contents } = require('../notification');
+const decodeBase64 = require('../utils/decodeBase64');
+const { raiseError } = require('../utils/raiseError');
+const constant = require('../config/constant');
+exports.postControllers = {
   fetchPosts: async (
     req,
     userId = null,

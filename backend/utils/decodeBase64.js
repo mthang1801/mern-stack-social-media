@@ -14,4 +14,4 @@ function decodeBase64(dataString) {
   return response;
 }
 
-export default decodeBase64;
+module.exports = decodeBase64;

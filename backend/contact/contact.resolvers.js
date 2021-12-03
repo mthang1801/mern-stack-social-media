@@ -1,8 +1,8 @@
-import { contactControllers } from './contact.controllers';
-import { withFilter } from 'apollo-server';
-import { pubsub } from '../pubsub';
-import { subscriptionActions } from '../schema';
-export const contactResolvers = {
+const { contactControllers } = require('./contact.controllers');
+const { withFilter } = require('apollo-server');
+const { pubsub } = require('../pubsub');
+const { subscriptionActions } = require('../schema');
+exports.contactResolvers = {
   Mutation: {
     addContact: (_, args, { req }, info) =>
       contactControllers.addContact(
